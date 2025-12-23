@@ -1,0 +1,3 @@
+class: CheckOrganizationResponse
+fields:
+  exists: bool

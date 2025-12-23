@@ -1,0 +1,13 @@
+class: AddTicketDTO
+fields:
+  ticketName: String
+  ticketBody: String
+  statusId: int
+  priorityId: int
+  typeId: int
+  deadline: DateTime?
+  creds: int
+  checklist: String
+  flows: String
+  attachments: List<TicketAttachmentDTO>
+  assignees: List<PlannerAssignee>

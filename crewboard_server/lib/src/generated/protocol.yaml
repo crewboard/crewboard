@@ -1,0 +1,32 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+jwtRefresh:
+  - refreshAccessToken:
+admin:
+  - getApps:
+  - addApp:
+auth:
+  - checkOrganization:
+  - registerAdmin:
+chat:
+  - getRooms:
+  - getMessages:
+  - sendMessage:
+planner:
+  - getPlannerData:
+  - getAddTicketData:
+  - addTicket:
+  - getAllTickets:
+  - getTicketData:
+  - getTicketComments:
+  - addComment:
+  - addBucket:
+  - changeBucket:
+greeting:
+  - hello:

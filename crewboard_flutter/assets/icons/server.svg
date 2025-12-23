@@ -1,0 +1,23 @@
+<svg width="14" height="19" viewBox="0 0 14 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1_5)">
+<rect x="0.25" y="0.25" width="13.5" height="18.5" rx="1.75" fill="#252728" stroke="#BEBEBE" stroke-width="0.5"/>
+<rect x="1.25" y="2.25" width="10.5" height="4.5" rx="0.75" fill="#323337" stroke="#BEBEBE" stroke-width="0.5"/>
+<circle cx="10.5" cy="3.5" r="0.5" fill="#89E90F"/>
+<rect x="2" y="3" width="6" height="1" rx="0.5" fill="#89E90F"/>
+<rect x="1.25" y="14.25" width="10.5" height="2.5" rx="0.75" fill="#323337" stroke="#BEBEBE" stroke-width="0.5"/>
+<path d="M2 8.25H11C11.4142 8.25 11.75 8.58579 11.75 9V12C11.75 12.4142 11.4142 12.75 11 12.75H2C1.58579 12.75 1.25 12.4142 1.25 12V9C1.25 8.58579 1.58579 8.25 2 8.25Z" fill="#323337" stroke="#BEBEBE" stroke-width="0.5"/>
+<rect x="2" y="5" width="6" height="1" rx="0.5" fill="#89E90F"/>
+<circle cx="10.5" cy="5.5" r="0.5" fill="#89E90F"/>
+<circle cx="10.5" cy="9.5" r="0.5" fill="#89E90F"/>
+<circle cx="10.5" cy="15.5" r="0.5" fill="#89E90F"/>
+<rect x="2" y="9" width="6" height="1" rx="0.5" fill="#89E90F"/>
+<rect x="2" y="15" width="6" height="1" rx="0.5" fill="#89E90F"/>
+<rect x="2" y="11" width="6" height="1" rx="0.5" fill="#89E90F"/>
+<circle cx="10.5" cy="11.5" r="0.5" fill="#89E90F"/>
+</g>
+<defs>
+<clipPath id="clip0_1_5">
+<rect width="14" height="19" fill="white"/>
+</clipPath>
+</defs>
+</svg>

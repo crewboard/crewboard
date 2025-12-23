@@ -1,0 +1,8 @@
+class: PlannerNotification
+table: planner_notifications
+fields:
+  notification: String
+  notificationType: String
+  ticket: Ticket?, relation
+  user: User?, relation
+  seenUserList: List<int>

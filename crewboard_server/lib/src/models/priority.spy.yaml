@@ -1,0 +1,5 @@
+class: Priority
+table: priority
+fields:
+  priorityName: String
+  priority: int

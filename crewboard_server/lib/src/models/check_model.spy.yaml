@@ -1,0 +1,4 @@
+class: CheckModel
+fields:
+  label: String
+  selected: bool

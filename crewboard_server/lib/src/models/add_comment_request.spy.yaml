@@ -1,0 +1,4 @@
+class: AddCommentRequest
+fields:
+  ticketId: int
+  message: String

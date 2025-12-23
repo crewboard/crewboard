@@ -1,0 +1,108 @@
+import 'package:crewboard_client/crewboard_client.dart';
+import 'package:flutter/material.dart';
+import 'package:serverpod_flutter/serverpod_flutter.dart';
+import 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+
+import 'config/app_config.dart';
+import 'config/palette.dart';
+import 'controllers/auth_controller.dart';
+import 'screens/home.dart';
+import 'screens/auth/signin_page.dart';
+
+late final Client client;
+late final FlutterAuthSessionManager sessionManager;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load config
+  const serverUrlFromEnv = String.fromEnvironment('SERVER_URL');
+  final config = await AppConfig.loadConfig();
+  final serverUrl = serverUrlFromEnv.isEmpty
+      ? config.apiUrl ?? 'http://localhost:8080/'
+      : serverUrlFromEnv;
+
+  // Initialize modular Session Manager
+  sessionManager = FlutterAuthSessionManager();
+
+  client = Client(
+    serverUrl,
+  )..connectivityMonitor = FlutterConnectivityMonitor();
+
+  // Set the session manager for the client
+  client.authSessionManager = sessionManager;
+
+  await sessionManager.initialize();
+
+  runApp(const MyApp());
+
+  // Window setup for Desktop
+  doWhenWindowReady(() {
+    const initialSize = Size(1280, 720);
+    appWindow.minSize = initialSize;
+    // appWindow.size = initialSize; // Let OS decide or restore
+    appWindow.alignment = Alignment.center;
+    appWindow.title = "Crewboard";
+    appWindow.show();
+  });
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Crewboard',
+      theme: ThemeData(
+        textTheme: GoogleFonts.latoTextTheme(
+          const TextTheme(
+            displayLarge: TextStyle(color: Color(0xFF2C3E50)),
+            displayMedium: TextStyle(color: Color(0xFF2C3E50)),
+            bodyMedium: TextStyle(color: Color(0xFF7F8C8D)),
+            titleMedium: TextStyle(color: Color(0xFF2C3E50)),
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF2C3E50)),
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      home: const AppEntry(),
+    );
+  }
+}
+
+class AppEntry extends StatefulWidget {
+  const AppEntry({super.key});
+
+  @override
+  State<AppEntry> createState() => _AppEntryState();
+}
+
+class _AppEntryState extends State<AppEntry> {
+  late AuthController authController;
+
+  @override
+  void initState() {
+    super.initState();
+    authController = Get.put(AuthController());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Initialize Window dimensions for sidebar
+    Window.width = MediaQuery.of(context).size.width;
+    Window.height = MediaQuery.of(context).size.height;
+
+    return Obx(() {
+      if (!authController.isAuthenticated.value) {
+        return const SignInPage();
+      }
+      return const Home();
+    });
+  }
+}

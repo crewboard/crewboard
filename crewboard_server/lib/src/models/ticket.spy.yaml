@@ -1,0 +1,14 @@
+class: Ticket
+table: tickets
+fields:
+  userId: int
+  appId: int
+  ticketName: String
+  ticketBody: String
+  statusId: int
+  priorityId: int
+  typeId: int
+  checklist: String
+  flows: String
+  creds: int
+  deadline: DateTime?

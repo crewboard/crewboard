@@ -1,0 +1,7 @@
+class: UserDevice
+table: user_devices
+fields:
+  user: User?, relation
+  deviceType: DeviceType
+  hardwareId: String
+  socketId: String?

@@ -1,0 +1,3 @@
+class: GetTicketCommentsResponse
+fields:
+  comments: List<CommentModel>

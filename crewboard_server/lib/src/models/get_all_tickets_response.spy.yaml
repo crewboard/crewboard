@@ -1,0 +1,3 @@
+class: GetAllTicketsResponse
+fields:
+  tickets: List<PlannerTicket>

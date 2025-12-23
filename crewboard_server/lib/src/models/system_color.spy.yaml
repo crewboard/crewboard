@@ -1,0 +1,6 @@
+class: SystemColor
+table: system_color
+fields:
+  colorName: String?
+  color: String
+  isDefault: bool

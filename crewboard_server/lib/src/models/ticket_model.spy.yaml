@@ -1,0 +1,14 @@
+class: TicketModel
+fields:
+  id: int
+  ticketName: String
+  ticketBody: String
+  status: StatusModel
+  priority: PriorityModel
+  type: TypeModel
+  checklist: List<CheckModel>
+  flows: String?
+  deadline: String?
+  creds: double
+  assignees: List<UserModel>
+  attachments: List<AttachmentModel>

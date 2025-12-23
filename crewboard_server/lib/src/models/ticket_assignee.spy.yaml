@@ -1,0 +1,5 @@
+class: TicketAssignee
+table: ticket_assignee
+fields:
+  ticket: Ticket?, relation
+  user: User?, relation

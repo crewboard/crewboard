@@ -1,0 +1,13 @@
+class: PlannerTicket
+fields:
+  id: int
+  ticketName: String
+  ticketBody: String
+  statusName: String
+  priorityName: String
+  typeName: String
+  typeColor: String
+  deadline: String?
+  assignees: List<PlannerAssignee>
+  holder: String
+  creds: double?

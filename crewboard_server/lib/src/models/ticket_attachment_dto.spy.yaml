@@ -1,0 +1,6 @@
+class: TicketAttachmentDTO
+fields:
+  name: String
+  size: double
+  url: String
+  type: String

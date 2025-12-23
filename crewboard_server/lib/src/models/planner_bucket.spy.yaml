@@ -1,0 +1,5 @@
+class: PlannerBucket
+fields:
+  bucketId: int
+  bucketName: String
+  tickets: List<PlannerTicket>

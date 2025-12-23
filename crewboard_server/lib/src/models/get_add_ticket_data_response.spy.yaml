@@ -1,0 +1,7 @@
+class: GetAddTicketDataResponse
+fields:
+  users: List<UserModel>
+  statuses: List<StatusModel>
+  priorities: List<PriorityModel>
+  types: List<TypeModel>
+  flows: List<FlowModel>

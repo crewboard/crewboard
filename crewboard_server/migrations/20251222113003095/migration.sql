@@ -1,0 +1,504 @@
+BEGIN;
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "attendance" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "inTime" text,
+    "outTime" text,
+    "inTimeStatus" text,
+    "outTimeStatus" text,
+    "overTime" text,
+    "earlyTime" text,
+    "date" timestamp without time zone NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "breaks" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "breakStart" text,
+    "breakEnd" text,
+    "breakTime" bigint,
+    "date" timestamp without time zone NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "bucket_ticket_map" (
+    "id" bigserial PRIMARY KEY,
+    "bucketId" bigint NOT NULL,
+    "ticketId" bigint NOT NULL,
+    "order" bigint NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "buckets" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "appId" text NOT NULL,
+    "bucketName" text NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "leave_config" (
+    "id" bigserial PRIMARY KEY,
+    "configName" text NOT NULL,
+    "fullDay" bigint NOT NULL,
+    "halfDay" bigint NOT NULL,
+    "config" text
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "leave_request" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "request" text NOT NULL,
+    "accepted" boolean,
+    "date" timestamp without time zone
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "organization" (
+    "id" bigserial PRIMARY KEY,
+    "name" text NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "planner_notifications" (
+    "id" bigserial PRIMARY KEY,
+    "notification" text NOT NULL,
+    "notificationType" text NOT NULL,
+    "ticketId" bigint NOT NULL,
+    "userId" bigint NOT NULL,
+    "seenUserList" json NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "priority" (
+    "id" bigserial PRIMARY KEY,
+    "priorityName" text NOT NULL,
+    "priority" bigint NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "status" (
+    "id" bigserial PRIMARY KEY,
+    "statusName" text NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "system_color" (
+    "id" bigserial PRIMARY KEY,
+    "colorName" text,
+    "color" text NOT NULL,
+    "isDefault" boolean NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "ticket_assignee" (
+    "id" bigserial PRIMARY KEY,
+    "ticketId" bigint NOT NULL,
+    "userId" bigint NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "ticket_attachments" (
+    "id" bigserial PRIMARY KEY,
+    "ticketId" bigint NOT NULL,
+    "attachmentName" text NOT NULL,
+    "attachmentSize" double precision NOT NULL,
+    "attachmentUrl" text NOT NULL,
+    "attachmentType" text NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "ticket_comments" (
+    "id" bigserial PRIMARY KEY,
+    "ticketId" bigint NOT NULL,
+    "userId" bigint NOT NULL,
+    "message" text NOT NULL,
+    "createdAt" timestamp without time zone
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "ticket_status_change" (
+    "id" bigserial PRIMARY KEY,
+    "ticketId" bigint NOT NULL,
+    "userId" bigint NOT NULL,
+    "oldStatusId" bigint NOT NULL,
+    "newStatusId" bigint NOT NULL,
+    "changedAt" timestamp without time zone
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "ticket_type" (
+    "id" bigserial PRIMARY KEY,
+    "typeName" text NOT NULL,
+    "colorId" bigint NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "tickets" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "ticketName" text NOT NULL,
+    "ticketBody" text NOT NULL,
+    "statusId" bigint NOT NULL,
+    "priorityId" bigint NOT NULL,
+    "typeId" bigint NOT NULL,
+    "checklist" text NOT NULL,
+    "flows" text NOT NULL,
+    "creds" bigint NOT NULL,
+    "deadline" timestamp without time zone
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "user_devices" (
+    "id" bigserial PRIMARY KEY,
+    "userId" bigint NOT NULL,
+    "deviceType" text NOT NULL,
+    "hardwareId" text NOT NULL,
+    "socketId" text
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "user_types" (
+    "id" bigserial PRIMARY KEY,
+    "userType" text NOT NULL,
+    "colorId" bigint NOT NULL,
+    "permissions" text NOT NULL,
+    "isAdmin" boolean NOT NULL
+);
+
+--
+-- ACTION CREATE TABLE
+--
+CREATE TABLE "users" (
+    "id" bigserial PRIMARY KEY,
+    "userName" text NOT NULL,
+    "password" text NOT NULL,
+    "image" text,
+    "organizationId" bigint NOT NULL,
+    "colorId" bigint NOT NULL,
+    "userTypeId" bigint NOT NULL,
+    "leaveConfigId" bigint NOT NULL,
+    "performanceConfigId" bigint,
+    "firstName" text NOT NULL,
+    "lastName" text NOT NULL,
+    "gender" text NOT NULL,
+    "dateOfBirth" timestamp without time zone,
+    "phone" text NOT NULL,
+    "email" text NOT NULL,
+    "bloodGroup" text,
+    "salary" text,
+    "experience" text,
+    "punchId" text,
+    "attachments" text,
+    "performance" bigint NOT NULL,
+    "plannerVariables" text,
+    "online" boolean NOT NULL,
+    "onsite" boolean NOT NULL,
+    "deleted" boolean NOT NULL
+);
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "attendance"
+    ADD CONSTRAINT "attendance_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "breaks"
+    ADD CONSTRAINT "breaks_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "bucket_ticket_map"
+    ADD CONSTRAINT "bucket_ticket_map_fk_0"
+    FOREIGN KEY("bucketId")
+    REFERENCES "buckets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "bucket_ticket_map"
+    ADD CONSTRAINT "bucket_ticket_map_fk_1"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "buckets"
+    ADD CONSTRAINT "buckets_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "leave_request"
+    ADD CONSTRAINT "leave_request_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "planner_notifications"
+    ADD CONSTRAINT "planner_notifications_fk_0"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "planner_notifications"
+    ADD CONSTRAINT "planner_notifications_fk_1"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "ticket_assignee"
+    ADD CONSTRAINT "ticket_assignee_fk_0"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "ticket_assignee"
+    ADD CONSTRAINT "ticket_assignee_fk_1"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "ticket_attachments"
+    ADD CONSTRAINT "ticket_attachments_fk_0"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "ticket_comments"
+    ADD CONSTRAINT "ticket_comments_fk_0"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "ticket_comments"
+    ADD CONSTRAINT "ticket_comments_fk_1"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "ticket_status_change"
+    ADD CONSTRAINT "ticket_status_change_fk_0"
+    FOREIGN KEY("ticketId")
+    REFERENCES "tickets"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "ticket_status_change"
+    ADD CONSTRAINT "ticket_status_change_fk_1"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "ticket_status_change"
+    ADD CONSTRAINT "ticket_status_change_fk_2"
+    FOREIGN KEY("oldStatusId")
+    REFERENCES "status"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "ticket_status_change"
+    ADD CONSTRAINT "ticket_status_change_fk_3"
+    FOREIGN KEY("newStatusId")
+    REFERENCES "status"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "ticket_type"
+    ADD CONSTRAINT "ticket_type_fk_0"
+    FOREIGN KEY("colorId")
+    REFERENCES "system_color"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "tickets"
+    ADD CONSTRAINT "tickets_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "tickets"
+    ADD CONSTRAINT "tickets_fk_1"
+    FOREIGN KEY("statusId")
+    REFERENCES "status"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "tickets"
+    ADD CONSTRAINT "tickets_fk_2"
+    FOREIGN KEY("priorityId")
+    REFERENCES "priority"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "tickets"
+    ADD CONSTRAINT "tickets_fk_3"
+    FOREIGN KEY("typeId")
+    REFERENCES "ticket_type"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "user_devices"
+    ADD CONSTRAINT "user_devices_fk_0"
+    FOREIGN KEY("userId")
+    REFERENCES "users"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "user_types"
+    ADD CONSTRAINT "user_types_fk_0"
+    FOREIGN KEY("colorId")
+    REFERENCES "system_color"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
+-- ACTION CREATE FOREIGN KEY
+--
+ALTER TABLE ONLY "users"
+    ADD CONSTRAINT "users_fk_0"
+    FOREIGN KEY("organizationId")
+    REFERENCES "organization"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "users"
+    ADD CONSTRAINT "users_fk_1"
+    FOREIGN KEY("colorId")
+    REFERENCES "system_color"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "users"
+    ADD CONSTRAINT "users_fk_2"
+    FOREIGN KEY("userTypeId")
+    REFERENCES "user_types"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+ALTER TABLE ONLY "users"
+    ADD CONSTRAINT "users_fk_3"
+    FOREIGN KEY("leaveConfigId")
+    REFERENCES "leave_config"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+
+--
+-- MIGRATION VERSION FOR crewboard
+--
+INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
+    VALUES ('crewboard', '20251222113003095', now())
+    ON CONFLICT ("module")
+    DO UPDATE SET "version" = '20251222113003095', "timestamp" = now();
+
+--
+-- MIGRATION VERSION FOR serverpod
+--
+INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
+    VALUES ('serverpod', '20251208110333922-v3-0-0', now())
+    ON CONFLICT ("module")
+    DO UPDATE SET "version" = '20251208110333922-v3-0-0', "timestamp" = now();
+
+--
+-- MIGRATION VERSION FOR serverpod_auth_idp
+--
+INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
+    VALUES ('serverpod_auth_idp', '20251208110420531-v3-0-0', now())
+    ON CONFLICT ("module")
+    DO UPDATE SET "version" = '20251208110420531-v3-0-0', "timestamp" = now();
+
+--
+-- MIGRATION VERSION FOR serverpod_auth_core
+--
+INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
+    VALUES ('serverpod_auth_core', '20251208110412389-v3-0-0', now())
+    ON CONFLICT ("module")
+    DO UPDATE SET "version" = '20251208110412389-v3-0-0', "timestamp" = now();
+
+
+COMMIT;

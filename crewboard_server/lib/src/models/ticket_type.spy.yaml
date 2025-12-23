@@ -1,0 +1,5 @@
+class: TicketType
+table: ticket_type
+fields:
+  typeName: String
+  colorId: int

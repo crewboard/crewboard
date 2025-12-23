@@ -1,0 +1,11 @@
+class: Attendance
+table: attendance
+fields:
+  user: User?, relation
+  inTime: String?
+  outTime: String?
+  inTimeStatus: String?
+  outTimeStatus: String?
+  overTime: String?
+  earlyTime: String?
+  date: DateTime

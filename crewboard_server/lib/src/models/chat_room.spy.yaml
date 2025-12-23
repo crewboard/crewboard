@@ -1,0 +1,8 @@
+class: ChatRoom
+table: chat_room
+fields:
+  roomName: String?
+  roomType: String # 'direct' or 'group'
+  lastMessageId: int? # Reference to last message ID
+  messageCount: int
+  # lastSeenMessage: int? # This should probably be in a separate map table

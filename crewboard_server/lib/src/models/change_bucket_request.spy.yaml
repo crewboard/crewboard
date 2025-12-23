@@ -1,0 +1,6 @@
+class: ChangeBucketRequest
+fields:
+  ticketId: int
+  oldBucketId: int
+  newBucketId: int
+  newOrder: int

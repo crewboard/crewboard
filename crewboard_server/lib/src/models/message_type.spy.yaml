@@ -1,0 +1,9 @@
+enum: MessageType
+values:
+  - text
+  - image
+  - video
+  - audio
+  - file
+  - gif
+  - sticker

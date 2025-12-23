@@ -1,0 +1,5 @@
+class: AddTicketRequest
+fields:
+  appId: int
+  bucketId: int
+  ticket: TicketModel

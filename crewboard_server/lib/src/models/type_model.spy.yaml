@@ -1,0 +1,5 @@
+class: TypeModel
+fields:
+  typeId: int
+  typeName: String
+  color: String

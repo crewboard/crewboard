@@ -1,0 +1,92 @@
+/* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
+/*   To generate run: "serverpod generate"    */
+
+// ignore_for_file: implementation_imports
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
+// ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:serverpod_client/serverpod_client.dart' as _i1;
+
+abstract class TypeModel implements _i1.SerializableModel {
+  TypeModel._({
+    required this.typeId,
+    required this.typeName,
+    required this.color,
+  });
+
+  factory TypeModel({
+    required int typeId,
+    required String typeName,
+    required String color,
+  }) = _TypeModelImpl;
+
+  factory TypeModel.fromJson(Map<String, dynamic> jsonSerialization) {
+    return TypeModel(
+      typeId: jsonSerialization['typeId'] as int,
+      typeName: jsonSerialization['typeName'] as String,
+      color: jsonSerialization['color'] as String,
+    );
+  }
+
+  int typeId;
+
+  String typeName;
+
+  String color;
+
+  /// Returns a shallow copy of this [TypeModel]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  TypeModel copyWith({
+    int? typeId,
+    String? typeName,
+    String? color,
+  });
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      '__className__': 'TypeModel',
+      'typeId': typeId,
+      'typeName': typeName,
+      'color': color,
+    };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
+  }
+}
+
+class _TypeModelImpl extends TypeModel {
+  _TypeModelImpl({
+    required int typeId,
+    required String typeName,
+    required String color,
+  }) : super._(
+         typeId: typeId,
+         typeName: typeName,
+         color: color,
+       );
+
+  /// Returns a shallow copy of this [TypeModel]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  @override
+  TypeModel copyWith({
+    int? typeId,
+    String? typeName,
+    String? color,
+  }) {
+    return TypeModel(
+      typeId: typeId ?? this.typeId,
+      typeName: typeName ?? this.typeName,
+      color: color ?? this.color,
+    );
+  }
+}

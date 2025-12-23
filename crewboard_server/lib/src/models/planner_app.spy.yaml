@@ -1,0 +1,6 @@
+class: PlannerApp
+table: planner_apps
+fields:
+  appName: String
+  colorId: int
+  organizationId: int?
