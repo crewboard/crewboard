@@ -67,7 +67,8 @@ class BucketView extends StatelessWidget {
           const SizedBox(height: 15),
           Expanded(
             child: DragTarget<Map<String, dynamic>>(
-              onAccept: (data) {
+              onAcceptWithDetails: (details) {
+                final data = details.data;
                 if (data['bucketId'] != bucket.bucketId) {
                   controller.changeBucket(
                     ChangeBucketRequest(

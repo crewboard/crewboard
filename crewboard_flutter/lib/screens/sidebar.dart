@@ -168,7 +168,7 @@ class SideBar extends StatelessWidget {
                             }
                           }),
                           const SizedBox(height: 5),
-                          Divider(color: Pallet.font3.withOpacity(0.5)),
+                          Divider(color: Pallet.font3.withValues(alpha: 0.5)),
                           InkWell(
                             onTap: () {
                               controller.navigate(CurrentPage.settings);
@@ -258,7 +258,7 @@ class MenuItem extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               border: Border.all(color: color),
               borderRadius: BorderRadius.circular(10),
             ),

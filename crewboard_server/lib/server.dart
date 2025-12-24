@@ -83,7 +83,7 @@ void run(List<String> args) async {
     await seedDatabase(session);
     await session.close();
   } catch (e) {
-    print('Error during database seeding: $e');
+    stdout.writeln('Error during database seeding: $e');
   }
 }
 

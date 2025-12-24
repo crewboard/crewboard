@@ -21,7 +21,7 @@ class MessagesController extends GetxController {
       );
       messages.assignAll(response);
     } catch (e) {
-      print('Error loading messages: $e');
+      debugPrint('Error loading messages: $e');
     } finally {
       isLoading.value = false;
     }
@@ -54,7 +54,7 @@ class MessagesController extends GetxController {
       // Optionally reload or wait for stream
       await loadInitialMessages(roomId: selectedRoom.id!);
     } catch (e) {
-      print('Error sending message: $e');
+      debugPrint('Error sending message: $e');
     }
   }
 

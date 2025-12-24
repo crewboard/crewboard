@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'dart:math';
-import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 
 // Generate random salt
 String generateSalt([int length = 16]) {

@@ -55,7 +55,7 @@ class ChatEndpoint extends Endpoint {
       await ChatRoom.db.updateRow(session, room);
     }
 
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'chat_${message.roomId}',
       savedMessage,
     );
@@ -68,6 +68,7 @@ class ChatEndpoint extends Endpoint {
   ) async {
     if (message is ChatRoom) {
       session.messages.addListener('chat_${message.id}', (msg) {
+        // ignore: deprecated_member_use
         sendStreamMessage(session, msg);
       });
     }

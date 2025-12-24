@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 import 'generated/protocol.dart';
 import 'database/planner_seed.dart';
+import 'dart:io';
 
 Future<void> seedDatabase(Session session) async {
   // 1. Seed SystemColor
@@ -8,7 +9,7 @@ Future<void> seedDatabase(Session session) async {
   SystemColor defaultColor;
 
   if (colors.length < 4) {
-    print('Seeding additional SystemColors...');
+    stdout.writeln('Seeding additional SystemColors...');
     final existingColors = colors.map((c) => c.color).toSet();
     final defaultColors = [
       SystemColor(colorName: 'Primary Blue', color: '#3498DB', isDefault: true),
@@ -40,7 +41,7 @@ Future<void> seedDatabase(Session session) async {
   );
 
   if (adminType == null) {
-    print('Seeding admin UserType...');
+    stdout.writeln('Seeding admin UserType...');
     adminType = UserTypes(
       userType: 'admin',
       isAdmin: true,
@@ -56,7 +57,7 @@ Future<void> seedDatabase(Session session) async {
   );
 
   if (userType == null) {
-    print('Seeding user UserType...');
+    stdout.writeln('Seeding user UserType...');
     userType = UserTypes(
       userType: 'user',
       isAdmin: false,
@@ -69,7 +70,7 @@ Future<void> seedDatabase(Session session) async {
   // 3. Seed LeaveConfig
   var leaveConfig = await LeaveConfig.db.findFirstRow(session);
   if (leaveConfig == null) {
-    print('Seeding default LeaveConfig...');
+    stdout.writeln('Seeding default LeaveConfig...');
     leaveConfig = LeaveConfig(
       configName: 'Default Policy',
       fullDay: 8,
@@ -82,7 +83,7 @@ Future<void> seedDatabase(Session session) async {
   // 4. Seed ChatRoom and UserRoomMap for testing
   var testRoom = await ChatRoom.db.findFirstRow(session);
   if (testRoom == null) {
-    print('Seeding test ChatRoom...');
+    stdout.writeln('Seeding test ChatRoom...');
     testRoom = ChatRoom(
       roomName: 'General',
       roomType: 'public',
@@ -104,8 +105,8 @@ Future<void> seedDatabase(Session session) async {
   try {
     await PlannerSeed.seedAll(session);
   } catch (e) {
-    print('Error seeding planner data: $e');
+    stdout.writeln('Error seeding planner data: $e');
   }
 
-  print('Database seeding completed.');
+  stdout.writeln('Database seeding completed.');
 }

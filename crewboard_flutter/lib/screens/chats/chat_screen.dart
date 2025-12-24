@@ -126,21 +126,21 @@ class Keyboard extends StatelessWidget {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: Pallet.font3.withOpacity(0.25),
+                        color: Pallet.font3.withValues(alpha: 0.25),
                         width: 1,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: Pallet.font3.withOpacity(0.5),
+                        color: Pallet.font3.withValues(alpha: 0.5),
                         width: 1.5,
                       ),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: Pallet.font3.withOpacity(0.25),
+                        color: Pallet.font3.withValues(alpha: 0.25),
                         width: 1,
                       ),
                     ),

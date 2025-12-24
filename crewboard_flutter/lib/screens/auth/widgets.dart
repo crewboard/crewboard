@@ -59,7 +59,10 @@ class AuthFormContainer extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return Container(
       margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
       width: 460,
       height: height * 0.8,
       child: child,
@@ -101,7 +104,7 @@ class AuthIllustration extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // 3D Character Illustration
-                Container(
+                SizedBox(
                   width: 250,
                   height: 300,
                   child: Stack(
@@ -114,7 +117,7 @@ class AuthIllustration extends StatelessWidget {
                           width: 60,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
@@ -132,11 +135,11 @@ class AuthIllustration extends StatelessWidget {
                           width: 120,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                               ),
@@ -149,7 +152,7 @@ class AuthIllustration extends StatelessWidget {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.3),
+                                  color: Colors.white.withValues(alpha: 0.3),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -163,7 +166,7 @@ class AuthIllustration extends StatelessWidget {
                                 width: 80,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Icon(
@@ -184,7 +187,7 @@ class AuthIllustration extends StatelessWidget {
                           width: 30,
                           height: 30,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -201,7 +204,7 @@ class AuthIllustration extends StatelessWidget {
                           width: 25,
                           height: 25,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -229,7 +232,7 @@ class AuthIllustration extends StatelessWidget {
                   subtitle,
                   style: GoogleFonts.lato(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -246,7 +249,7 @@ class DotsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+      ..color = Colors.white.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 50; i++) {
@@ -325,15 +328,22 @@ class AuthInputField extends StatelessWidget {
         errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: errorText != null ? Colors.red : const Color(0xFFE0E0E0)),
+          borderSide: BorderSide(
+            color: errorText != null ? Colors.red : const Color(0xFFE0E0E0),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: errorText != null ? Colors.red : const Color(0xFFE0E0E0)),
+          borderSide: BorderSide(
+            color: errorText != null ? Colors.red : const Color(0xFFE0E0E0),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: errorText != null ? Colors.red : const Color(0xFF3498DB), width: 2),
+          borderSide: BorderSide(
+            color: errorText != null ? Colors.red : const Color(0xFF3498DB),
+            width: 2,
+          ),
         ),
         filled: true,
         fillColor: Colors.white,

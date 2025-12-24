@@ -4,6 +4,7 @@ import '../utils.dart';
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
+import 'dart:io';
 
 class AuthEndpoint extends Endpoint {
   Future<CheckOrganizationResponse> checkOrganization(
@@ -17,7 +18,7 @@ class AuthEndpoint extends Endpoint {
       );
       return CheckOrganizationResponse(exists: org != null);
     } catch (e) {
-      print('Check organization error: $e');
+      stdout.writeln('Check organization error: $e');
       return CheckOrganizationResponse(exists: false);
     }
   }
@@ -55,7 +56,9 @@ class AuthEndpoint extends Endpoint {
         where: (t) => t.userName.equals(username),
       );
       if (existingUser != null) {
-        print('Registration failed: Username $username already exists');
+        stdout.writeln(
+          'Registration failed: Username $username already exists',
+        );
         return RegisterAdminResponse(
           success: false,
           message: 'Username already exists',
@@ -131,17 +134,17 @@ class AuthEndpoint extends Endpoint {
         deleted: false,
       );
 
-      print('Creating custom User record for $username...');
+      stdout.writeln('Creating custom User record for $username...');
       final insertedUser = await User.db.insertRow(session, newUser);
 
       // --- serverpod_auth integration ---
-      print('Syncing with serverpod_auth for $email...');
+      stdout.writeln('Syncing with serverpod_auth for $email...');
       // Create AuthUser
       final authUser = await AuthServices.instance.authUsers.create(
         session,
       );
       final authUserId = authUser.id;
-      print('AuthUser created with ID: $authUserId');
+      stdout.writeln('AuthUser created with ID: $authUserId');
 
       // Create UserProfile
       await AuthServices.instance.userProfiles.createUserProfile(
@@ -152,7 +155,7 @@ class AuthEndpoint extends Endpoint {
           userName: username,
         ),
       );
-      print('UserProfile created.');
+      stdout.writeln('UserProfile created.');
 
       // Create Email Authentication
       final emailIdp = AuthServices.getIdentityProvider<EmailIdp>();
@@ -162,17 +165,17 @@ class AuthEndpoint extends Endpoint {
         email: email,
         password: password,
       );
-      print('EmailAuthentication created for $email.');
+      stdout.writeln('EmailAuthentication created for $email.');
       // ----------------------------------
 
-      print('Registration successful for $username');
+      stdout.writeln('Registration successful for $username');
       return RegisterAdminResponse(
         success: true,
         message: 'User registered successfully',
         userId: insertedUser.id.toString(),
       );
     } catch (e) {
-      print('Registration error: $e');
+      stdout.writeln('Registration error: $e');
       return RegisterAdminResponse(
         success: false,
         message: 'Registration failed',

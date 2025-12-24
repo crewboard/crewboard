@@ -377,7 +377,7 @@ class CustomBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: color),
       ),
@@ -495,7 +495,7 @@ class _MultiSelectState extends State<MultiSelect> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: widget.selected.contains(item)
-                                          ? Pallet.font1.withOpacity(0.1)
+                                          ? Pallet.font1.withValues(alpha: 0.1)
                                           : Colors.transparent,
                                     ),
                                     child: Row(
@@ -553,7 +553,7 @@ class _MultiSelectState extends State<MultiSelect> {
     return Colors.blue;
   }
 
-  close() {
+  void close() {
     if (isOpen) {
       dropdown!.remove();
       isOpen = false;
@@ -688,7 +688,7 @@ class _OptionsState extends State<Options> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: widget.selected == item
-                                          ? Pallet.font1.withOpacity(0.1)
+                                          ? Pallet.font1.withValues(alpha: 0.1)
                                           : Colors.transparent,
                                     ),
                                     child: Text(
@@ -724,7 +724,7 @@ class _OptionsState extends State<Options> {
     return item.toString();
   }
 
-  close() {
+  void close() {
     if (isOpen) {
       dropdown!.remove();
       isOpen = false;
@@ -803,7 +803,7 @@ class RadialCheckBox extends StatelessWidget {
                   height: 12,
                   decoration: BoxDecoration(
                     color: Pallet.font1,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 )
               : null,

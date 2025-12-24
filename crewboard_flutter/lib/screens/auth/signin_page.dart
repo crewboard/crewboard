@@ -28,10 +28,11 @@ class _SignInPageState extends State<SignInPage> {
 
   // ignore: unused_field
   Timer? _debounceTimer;
+  // ignore: unused_field
   bool _isVerifyingEndpoint = false;
+  // ignore: unused_field
   bool _endpointVerified = false;
   String? _endpointError;
-  String? _organizationId;
 
   @override
   void dispose() {
@@ -247,7 +248,9 @@ class _SignInPageState extends State<SignInPage> {
                       style: TextStyle(fontSize: 15),
                     ),
                     value: 'organization',
+                    // ignore: deprecated_member_use
                     groupValue: _signinType,
+                    // ignore: deprecated_member_use
                     onChanged: (value) {
                       setState(() {
                         _signinType = value!;
@@ -263,7 +266,9 @@ class _SignInPageState extends State<SignInPage> {
                       style: TextStyle(fontSize: 15),
                     ),
                     value: 'self-hosting',
+                    // ignore: deprecated_member_use
                     groupValue: _signinType,
+                    // ignore: deprecated_member_use
                     onChanged: (value) {
                       setState(() {
                         _signinType = value!;

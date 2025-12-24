@@ -157,7 +157,9 @@ class _SearchViewState extends State<SearchView> {
       width: 250,
       decoration: BoxDecoration(
         color: Pallet.inside1,
-        border: Border(left: BorderSide(color: Pallet.font3.withOpacity(0.1))),
+        border: Border(
+          left: BorderSide(color: Pallet.font3.withValues(alpha: 0.1)),
+        ),
       ),
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -240,7 +242,7 @@ class _SearchViewState extends State<SearchView> {
                     ),
                     decoration: BoxDecoration(
                       color: current == _getItemName(item)
-                          ? Pallet.font1.withOpacity(0.1)
+                          ? Pallet.font1.withValues(alpha: 0.1)
                           : Pallet.inside2,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(

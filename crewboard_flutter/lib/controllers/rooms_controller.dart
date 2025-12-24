@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:crewboard_client/crewboard_client.dart';
+import 'package:flutter/material.dart';
 import '../../main.dart'; // For client
 
 class RoomsController extends GetxController {
@@ -21,7 +22,7 @@ class RoomsController extends GetxController {
       rooms.assignAll(response);
       _backup.assignAll(response);
     } catch (e) {
-      print('Error getting rooms: $e');
+      debugPrint('Error getting rooms: $e');
     } finally {
       isLoading.value = false;
     }

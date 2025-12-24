@@ -22,12 +22,12 @@ class Pallet {
     end: Alignment.bottomLeft,
   );
 
-  static Color divider = const Color(0xFF728b99).withOpacity(0.3);
+  static Color divider = const Color(0xFF728b99).withValues(alpha: 0.3);
   static Color font1 = const Color(0xFFe6e8ed);
   static Color font2 = const Color(0xFFc9ccd3);
   static Color font3 = const Color(0xFF728b99);
 
-  static Color inside1 = Colors.white.withOpacity(0.1);
-  static Color inside2 = Colors.white.withOpacity(0.1);
-  static Color inside3 = Colors.white.withOpacity(0.1);
+  static Color inside1 = Colors.white.withValues(alpha: 0.1);
+  static Color inside2 = Colors.white.withValues(alpha: 0.1);
+  static Color inside3 = Colors.white.withValues(alpha: 0.1);
 }

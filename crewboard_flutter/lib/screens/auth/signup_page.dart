@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:crewboard_flutter/main.dart'; // For client and sessionManager
-import 'widgets.dart';
+import 'package:crewboard_flutter/main.dart'; // For client
 import 'signin_page.dart';
+import 'widgets.dart';
 
 class SignupPage extends StatefulWidget {
-  final VoidCallback? onAuthenticationSuccess;
-
-  const SignupPage({super.key, this.onAuthenticationSuccess});
+  const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -19,29 +17,26 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   final _organizationNameController = TextEditingController();
-  final _endpointController = TextEditingController();
+  final _organizationIdController = TextEditingController();
 
   bool _isLoading = false;
-  String? _errorMessage;
   String? _successMessage;
+  String? _errorMessage;
   String _signupType = 'organization'; // 'organization' or 'self-hosting'
+
+  // ignore: unused_field
   Timer? _debounceTimer;
   bool _isCheckingOrganization = false;
-  bool _organizationExists = false;
-  bool _isVerifyingEndpoint = false;
-  bool _endpointVerified = false;
-  String? _endpointError;
-  int? _organizationId;
+  bool _organizationValid = false;
+  String? _organizationError;
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     _organizationNameController.dispose();
-    _endpointController.dispose();
+    _organizationIdController.dispose();
     _debounceTimer?.cancel();
     super.dispose();
   }
@@ -49,102 +44,57 @@ class _SignupPageState extends State<SignupPage> {
   void _onOrganizationNameChanged(String value) {
     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      _checkOrganizationName(value.trim());
+      _checkOrganization();
     });
   }
 
-  void _onEndpointChanged(String value) {
-    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      _verifyEndpoint();
-    });
-  }
-
-  Future<void> _checkOrganizationName(String name) async {
-    if (name.isEmpty || name.length < 2) {
+  Future<void> _checkOrganization() async {
+    final name = _organizationNameController.text.trim();
+    if (name.isEmpty) {
       setState(() {
-        _organizationExists = false;
-        _isCheckingOrganization = false;
+        _organizationError = 'Please enter organization name';
+        _organizationValid = false;
       });
       return;
     }
 
-    setState(() => _isCheckingOrganization = true);
+    setState(() {
+      _isCheckingOrganization = true;
+      _organizationError = null;
+      _organizationValid = false;
+    });
 
     try {
       final response = await client.auth.checkOrganization(name);
       setState(() {
-        _organizationExists = response.exists;
+        if (response.exists) {
+          _organizationError = 'Organization name already exists';
+          _organizationValid = false;
+        } else {
+          _organizationValid = true;
+          _organizationError = null;
+        }
         _isCheckingOrganization = false;
       });
     } catch (e) {
       setState(() {
-        _organizationExists = false;
+        _organizationError = 'Failed to check organization name';
         _isCheckingOrganization = false;
+        _organizationValid = false;
       });
     }
   }
 
-  Future<void> _verifyEndpoint() async {
-    final endpoint = _endpointController.text.trim();
-    if (endpoint.isEmpty || !Uri.parse(endpoint).isAbsolute) {
-      setState(() {
-        _endpointError = 'Please enter a valid endpoint URL';
-        _endpointVerified = false;
-      });
-      return;
-    }
-
+  Future<void> _signUp() async {
+    if (!_formKey.currentState!.validate()) return;
     setState(() {
-      _isVerifyingEndpoint = true;
-      _endpointError = null;
-      _endpointVerified = false;
-    });
-
-    try {
-      // TODO: Implement actual endpoint verification if needed for self-hosting
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      setState(() {
-        _endpointVerified = true;
-        _isVerifyingEndpoint = false;
-        _endpointError = null;
-        // _organizationId = ...;
-      });
-    } catch (e) {
-      setState(() {
-        _endpointError = 'Failed to verify endpoint: ${e.toString()}';
-        _isVerifyingEndpoint = false;
-        _endpointVerified = false;
-      });
-    }
-  }
-
-  Future<void> _registerUser() async {
-    setState(() {
+      _isLoading = true;
       _errorMessage = null;
       _successMessage = null;
     });
-
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isLoading = true);
-
     try {
-      // Check if organization name exists if organization signup
-      if (_signupType == 'organization') {
-        if (_organizationExists) {
-          setState(() {
-            _errorMessage = 'Organization name already exists';
-            _isLoading = false;
-          });
-          return;
-        }
-      }
-
-      final generatedEmail = _usernameController.text.trim().isNotEmpty
-          ? _usernameController.text.trim() + '@local.local'
-          : '';
+      final generatedEmail =
+          '${_usernameController.text.trim().toLowerCase()}@local.local';
 
       final response = await client.auth.registerAdmin(
         generatedEmail,
@@ -154,7 +104,9 @@ class _SignupPageState extends State<SignupPage> {
         _signupType == 'organization'
             ? _organizationNameController.text.trim()
             : null,
-        _signupType == 'self-hosting' ? _organizationId : null,
+        _signupType == 'self-hosting'
+            ? int.tryParse(_organizationIdController.text)
+            : null,
       );
 
       if (response.success ||
@@ -166,17 +118,6 @@ class _SignupPageState extends State<SignupPage> {
               ? response.message
               : 'User already exists';
           _isLoading = false;
-        });
-
-        _usernameController.clear();
-        _passwordController.clear();
-
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const SignInPage()),
-            );
-          }
         });
       } else {
         setState(() {
@@ -204,6 +145,7 @@ class _SignupPageState extends State<SignupPage> {
             width: width,
             height: height,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(
@@ -286,7 +228,7 @@ class _SignupPageState extends State<SignupPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Create the first admin account.',
+              'Create an account to get started with CrewBoard.',
               style: GoogleFonts.lato(
                 fontSize: 16,
                 color: const Color(0xFF7F8C8D),
@@ -295,8 +237,8 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(height: 32),
 
             // Messages
-            AuthMessage(message: _successMessage, isError: false),
             AuthMessage(message: _errorMessage, isError: true),
+            AuthMessage(message: _successMessage, isError: false),
 
             // Signup Type Selection
             const SizedBox(height: 16),
@@ -318,7 +260,9 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(fontSize: 13),
                     ),
                     value: 'organization',
+                    // ignore: deprecated_member_use
                     groupValue: _signupType,
+                    // ignore: deprecated_member_use
                     onChanged: (value) {
                       setState(() {
                         _signupType = value!;
@@ -334,7 +278,9 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(fontSize: 13),
                     ),
                     value: 'self-hosting',
+                    // ignore: deprecated_member_use
                     groupValue: _signupType,
+                    // ignore: deprecated_member_use
                     onChanged: (value) {
                       setState(() {
                         _signupType = value!;
@@ -354,6 +300,7 @@ class _SignupPageState extends State<SignupPage> {
                 label: 'Organization Name',
                 icon: Icons.business,
                 onChanged: _onOrganizationNameChanged,
+                errorText: _organizationError,
                 suffixIcon: _isCheckingOrganization
                     ? const SizedBox(
                         width: 20,
@@ -363,8 +310,8 @@ class _SignupPageState extends State<SignupPage> {
                     : _organizationNameController.text.isNotEmpty &&
                           !_isCheckingOrganization
                     ? Icon(
-                        _organizationExists ? Icons.error : Icons.check_circle,
-                        color: _organizationExists ? Colors.red : Colors.green,
+                        _organizationValid ? Icons.check_circle : Icons.error,
+                        color: _organizationValid ? Colors.green : Colors.red,
                       )
                     : null,
                 validator: (value) {
@@ -374,30 +321,28 @@ class _SignupPageState extends State<SignupPage> {
                   if (value.length < 2) {
                     return 'Organization name must be at least 2 characters';
                   }
-                  if (_organizationExists) {
-                    return 'Organization name already exists';
+                  if (!_organizationValid) {
+                    return 'Please choose a unique organization name';
                   }
                   return null;
                 },
               ),
             ],
 
-            // Endpoint Field (only show if self-hosting is selected)
+            // Organization ID Field (only show if self-hosting is selected)
             if (_signupType == 'self-hosting') ...[
               const SizedBox(height: 20),
               AuthInputField(
-                controller: _endpointController,
-                label: 'Endpoint',
-                icon: Icons.link,
-                onChanged: _onEndpointChanged,
-                errorText: _endpointError,
+                controller: _organizationIdController,
+                label: 'Organization ID',
+                icon: Icons.tag,
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter endpoint';
+                    return 'Please enter organization ID';
                   }
-                  // Basic URL validation
-                  if (!Uri.parse(value).isAbsolute) {
-                    return 'Please enter a valid URL';
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
                   }
                   return null;
                 },
@@ -435,32 +380,6 @@ class _SignupPageState extends State<SignupPage> {
                 if (value.length < 8) {
                   return 'Password must be at least 8 characters';
                 }
-                if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                  return 'Password must contain at least one uppercase letter';
-                }
-                if (!RegExp(r'[a-z]').hasMatch(value)) {
-                  return 'Password must contain at least one lowercase letter';
-                }
-                if (!RegExp(r'\d').hasMatch(value)) {
-                  return 'Password must contain at least one number';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            // Confirm Password Field
-            AuthInputField(
-              controller: _confirmPasswordController,
-              label: 'Confirm Password',
-              icon: Icons.lock_outline,
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please confirm your password';
-                }
-                if (value != _passwordController.text) {
-                  return 'Passwords do not match';
-                }
                 return null;
               },
             ),
@@ -468,8 +387,8 @@ class _SignupPageState extends State<SignupPage> {
 
             // Sign Up Button
             AuthButton(
-              text: 'Create Admin Account',
-              onPressed: _registerUser,
+              text: 'Sign Up',
+              onPressed: _signUp,
               isLoading: _isLoading,
             ),
             const SizedBox(height: 24),
