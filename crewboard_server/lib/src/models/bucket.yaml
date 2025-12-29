@@ -1,0 +1,7 @@
+class: Bucket
+table: buckets
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  appId: UuidValue
+  bucketName: String

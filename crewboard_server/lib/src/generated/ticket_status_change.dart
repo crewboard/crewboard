@@ -19,7 +19,7 @@ import 'status.dart' as _i4;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i5;
 
 abstract class TicketStatusChange
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   TicketStatusChange._({
     this.id,
     required this.ticketId,
@@ -34,36 +34,44 @@ abstract class TicketStatusChange
   });
 
   factory TicketStatusChange({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required int oldStatusId,
+    required _i1.UuidValue oldStatusId,
     _i4.Status? oldStatus,
-    required int newStatusId,
+    required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   }) = _TicketStatusChangeImpl;
 
   factory TicketStatusChange.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketStatusChange(
-      id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i5.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i5.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      oldStatusId: jsonSerialization['oldStatusId'] as int,
+      oldStatusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['oldStatusId'],
+      ),
       oldStatus: jsonSerialization['oldStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
               jsonSerialization['oldStatus'],
             ),
-      newStatusId: jsonSerialization['newStatusId'] as int,
+      newStatusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['newStatusId'],
+      ),
       newStatus: jsonSerialization['newStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
@@ -80,41 +88,41 @@ abstract class TicketStatusChange
   static const db = TicketStatusChangeRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
-  int oldStatusId;
+  _i1.UuidValue oldStatusId;
 
   _i4.Status? oldStatus;
 
-  int newStatusId;
+  _i1.UuidValue newStatusId;
 
   _i4.Status? newStatus;
 
   DateTime? changedAt;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [TicketStatusChange]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketStatusChange copyWith({
-    int? id,
-    int? ticketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
-    int? oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
-    int? newStatusId,
+    _i1.UuidValue? newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   });
@@ -122,14 +130,14 @@ abstract class TicketStatusChange
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketStatusChange',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'oldStatusId': oldStatusId,
+      'oldStatusId': oldStatusId.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJson(),
-      'newStatusId': newStatusId,
+      'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJson(),
       if (changedAt != null) 'changedAt': changedAt?.toJson(),
     };
@@ -139,14 +147,14 @@ abstract class TicketStatusChange
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TicketStatusChange',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
-      'oldStatusId': oldStatusId,
+      'oldStatusId': oldStatusId.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJsonForProtocol(),
-      'newStatusId': newStatusId,
+      'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJsonForProtocol(),
       if (changedAt != null) 'changedAt': changedAt?.toJson(),
     };
@@ -196,14 +204,14 @@ class _Undefined {}
 
 class _TicketStatusChangeImpl extends TicketStatusChange {
   _TicketStatusChangeImpl({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required int oldStatusId,
+    required _i1.UuidValue oldStatusId,
     _i4.Status? oldStatus,
-    required int newStatusId,
+    required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   }) : super._(
@@ -225,18 +233,18 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
   @override
   TicketStatusChange copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
-    int? oldStatusId,
+    _i1.UuidValue? oldStatusId,
     Object? oldStatus = _Undefined,
-    int? newStatusId,
+    _i1.UuidValue? newStatusId,
     Object? newStatus = _Undefined,
     Object? changedAt = _Undefined,
   }) {
     return TicketStatusChange(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       ticketId: ticketId ?? this.ticketId,
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       userId: userId ?? this.userId,
@@ -258,22 +266,28 @@ class TicketStatusChangeUpdateTable
     extends _i1.UpdateTable<TicketStatusChangeTable> {
   TicketStatusChangeUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.ticketId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> oldStatusId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> oldStatusId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.oldStatusId,
     value,
   );
 
-  _i1.ColumnValue<int, int> newStatusId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> newStatusId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.newStatusId,
     value,
   );
@@ -285,23 +299,23 @@ class TicketStatusChangeUpdateTable
       );
 }
 
-class TicketStatusChangeTable extends _i1.Table<int?> {
+class TicketStatusChangeTable extends _i1.Table<_i1.UuidValue?> {
   TicketStatusChangeTable({super.tableRelation})
     : super(tableName: 'ticket_status_change') {
     updateTable = TicketStatusChangeUpdateTable(this);
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
-    oldStatusId = _i1.ColumnInt(
+    oldStatusId = _i1.ColumnUuid(
       'oldStatusId',
       this,
     );
-    newStatusId = _i1.ColumnInt(
+    newStatusId = _i1.ColumnUuid(
       'newStatusId',
       this,
     );
@@ -313,19 +327,19 @@ class TicketStatusChangeTable extends _i1.Table<int?> {
 
   late final TicketStatusChangeUpdateTable updateTable;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i2.TicketTable? _ticket;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i3.UserTable? _user;
 
-  late final _i1.ColumnInt oldStatusId;
+  late final _i1.ColumnUuid oldStatusId;
 
   _i4.StatusTable? _oldStatus;
 
-  late final _i1.ColumnInt newStatusId;
+  late final _i1.ColumnUuid newStatusId;
 
   _i4.StatusTable? _newStatus;
 
@@ -441,7 +455,7 @@ class TicketStatusChangeInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => TicketStatusChange.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketStatusChange.t;
 }
 
 class TicketStatusChangeIncludeList extends _i1.IncludeList {
@@ -461,7 +475,7 @@ class TicketStatusChangeIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => TicketStatusChange.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketStatusChange.t;
 }
 
 class TicketStatusChangeRepository {
@@ -555,7 +569,7 @@ class TicketStatusChangeRepository {
   /// Finds a single [TicketStatusChange] by its [id] or null if no such row exists.
   Future<TicketStatusChange?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketStatusChangeInclude? include,
   }) async {
@@ -635,7 +649,7 @@ class TicketStatusChangeRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketStatusChange?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketStatusChangeUpdateTable>
     columnValues,
     _i1.Transaction? transaction,

@@ -1,0 +1,8 @@
+class: UserDevice
+table: user_devices
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  deviceType: DeviceType
+  hardwareId: String
+  socketId: String?

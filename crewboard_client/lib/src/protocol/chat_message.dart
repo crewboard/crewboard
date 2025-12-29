@@ -29,13 +29,13 @@ abstract class ChatMessage implements _i1.SerializableModel {
   });
 
   factory ChatMessage({
-    int? id,
-    required int roomId,
-    int? parentMessageId,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    _i1.UuidValue? parentMessageId,
+    required _i1.UuidValue userId,
     required String message,
     required _i2.MessageType messageType,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
@@ -43,15 +43,21 @@ abstract class ChatMessage implements _i1.SerializableModel {
 
   factory ChatMessage.fromJson(Map<String, dynamic> jsonSerialization) {
     return ChatMessage(
-      id: jsonSerialization['id'] as int?,
-      roomId: jsonSerialization['roomId'] as int,
-      parentMessageId: jsonSerialization['parentMessageId'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      roomId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['roomId']),
+      parentMessageId: jsonSerialization['parentMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['parentMessageId'],
+            ),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       message: jsonSerialization['message'] as String,
       messageType: _i2.MessageType.fromJson(
         (jsonSerialization['messageType'] as String),
       ),
-      seenUserList: _i3.Protocol().deserialize<List<int>>(
+      seenUserList: _i3.Protocol().deserialize<List<_i1.UuidValue>>(
         jsonSerialization['seenUserList'],
       ),
       sameUser: jsonSerialization['sameUser'] as bool,
@@ -65,19 +71,19 @@ abstract class ChatMessage implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int roomId;
+  _i1.UuidValue roomId;
 
-  int? parentMessageId;
+  _i1.UuidValue? parentMessageId;
 
-  int userId;
+  _i1.UuidValue userId;
 
   String message;
 
   _i2.MessageType messageType;
 
-  List<int> seenUserList;
+  List<_i1.UuidValue> seenUserList;
 
   bool sameUser;
 
@@ -89,13 +95,13 @@ abstract class ChatMessage implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   ChatMessage copyWith({
-    int? id,
-    int? roomId,
-    int? parentMessageId,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? parentMessageId,
+    _i1.UuidValue? userId,
     String? message,
     _i2.MessageType? messageType,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
@@ -104,13 +110,13 @@ abstract class ChatMessage implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'ChatMessage',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      if (parentMessageId != null) 'parentMessageId': parentMessageId,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      if (parentMessageId != null) 'parentMessageId': parentMessageId?.toJson(),
+      'userId': userId.toJson(),
       'message': message,
       'messageType': messageType.toJson(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
@@ -127,13 +133,13 @@ class _Undefined {}
 
 class _ChatMessageImpl extends ChatMessage {
   _ChatMessageImpl({
-    int? id,
-    required int roomId,
-    int? parentMessageId,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    _i1.UuidValue? parentMessageId,
+    required _i1.UuidValue userId,
     required String message,
     required _i2.MessageType messageType,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
@@ -156,20 +162,20 @@ class _ChatMessageImpl extends ChatMessage {
   @override
   ChatMessage copyWith({
     Object? id = _Undefined,
-    int? roomId,
+    _i1.UuidValue? roomId,
     Object? parentMessageId = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     String? message,
     _i2.MessageType? messageType,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
   }) {
     return ChatMessage(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomId: roomId ?? this.roomId,
-      parentMessageId: parentMessageId is int?
+      parentMessageId: parentMessageId is _i1.UuidValue?
           ? parentMessageId
           : this.parentMessageId,
       userId: userId ?? this.userId,

@@ -21,20 +21,20 @@ abstract class TypeModel
   });
 
   factory TypeModel({
-    required int typeId,
+    required _i1.UuidValue typeId,
     required String typeName,
     required String color,
   }) = _TypeModelImpl;
 
   factory TypeModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return TypeModel(
-      typeId: jsonSerialization['typeId'] as int,
+      typeId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['typeId']),
       typeName: jsonSerialization['typeName'] as String,
       color: jsonSerialization['color'] as String,
     );
   }
 
-  int typeId;
+  _i1.UuidValue typeId;
 
   String typeName;
 
@@ -44,7 +44,7 @@ abstract class TypeModel
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TypeModel copyWith({
-    int? typeId,
+    _i1.UuidValue? typeId,
     String? typeName,
     String? color,
   });
@@ -52,7 +52,7 @@ abstract class TypeModel
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TypeModel',
-      'typeId': typeId,
+      'typeId': typeId.toJson(),
       'typeName': typeName,
       'color': color,
     };
@@ -62,7 +62,7 @@ abstract class TypeModel
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TypeModel',
-      'typeId': typeId,
+      'typeId': typeId.toJson(),
       'typeName': typeName,
       'color': color,
     };
@@ -76,7 +76,7 @@ abstract class TypeModel
 
 class _TypeModelImpl extends TypeModel {
   _TypeModelImpl({
-    required int typeId,
+    required _i1.UuidValue typeId,
     required String typeName,
     required String color,
   }) : super._(
@@ -90,7 +90,7 @@ class _TypeModelImpl extends TypeModel {
   @_i1.useResult
   @override
   TypeModel copyWith({
-    int? typeId,
+    _i1.UuidValue? typeId,
     String? typeName,
     String? color,
   }) {

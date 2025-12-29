@@ -1,0 +1,7 @@
+class: AttachmentModel
+fields:
+  id: UuidValue
+  name: String
+  url: String
+  size: double
+  type: String

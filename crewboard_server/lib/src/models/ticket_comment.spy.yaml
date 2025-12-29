@@ -1,7 +1,0 @@
-class: TicketComment
-table: ticket_comments
-fields:
-  ticket: Ticket?, relation
-  user: User?, relation
-  message: String
-  createdAt: DateTime?

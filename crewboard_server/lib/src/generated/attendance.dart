@@ -17,7 +17,7 @@ import 'user.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class Attendance
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   Attendance._({
     this.id,
     required this.userId,
@@ -32,8 +32,8 @@ abstract class Attendance
   });
 
   factory Attendance({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -46,8 +46,10 @@ abstract class Attendance
 
   factory Attendance.fromJson(Map<String, dynamic> jsonSerialization) {
     return Attendance(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -66,9 +68,9 @@ abstract class Attendance
   static const db = AttendanceRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -87,14 +89,14 @@ abstract class Attendance
   DateTime date;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [Attendance]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Attendance copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -108,8 +110,8 @@ abstract class Attendance
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Attendance',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       if (inTime != null) 'inTime': inTime,
       if (outTime != null) 'outTime': outTime,
@@ -125,8 +127,8 @@ abstract class Attendance
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Attendance',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       if (inTime != null) 'inTime': inTime,
       if (outTime != null) 'outTime': outTime,
@@ -172,8 +174,8 @@ class _Undefined {}
 
 class _AttendanceImpl extends Attendance {
   _AttendanceImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -201,7 +203,7 @@ class _AttendanceImpl extends Attendance {
   @override
   Attendance copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     Object? inTime = _Undefined,
     Object? outTime = _Undefined,
@@ -212,7 +214,7 @@ class _AttendanceImpl extends Attendance {
     DateTime? date,
   }) {
     return Attendance(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       inTime: inTime is String? ? inTime : this.inTime,
@@ -231,10 +233,11 @@ class _AttendanceImpl extends Attendance {
 class AttendanceUpdateTable extends _i1.UpdateTable<AttendanceTable> {
   AttendanceUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> inTime(String? value) => _i1.ColumnValue(
     table.inTime,
@@ -274,10 +277,10 @@ class AttendanceUpdateTable extends _i1.UpdateTable<AttendanceTable> {
   );
 }
 
-class AttendanceTable extends _i1.Table<int?> {
+class AttendanceTable extends _i1.Table<_i1.UuidValue?> {
   AttendanceTable({super.tableRelation}) : super(tableName: 'attendance') {
     updateTable = AttendanceUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -313,7 +316,7 @@ class AttendanceTable extends _i1.Table<int?> {
 
   late final AttendanceUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
 
@@ -377,7 +380,7 @@ class AttendanceInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'user': _user};
 
   @override
-  _i1.Table<int?> get table => Attendance.t;
+  _i1.Table<_i1.UuidValue?> get table => Attendance.t;
 }
 
 class AttendanceIncludeList extends _i1.IncludeList {
@@ -397,7 +400,7 @@ class AttendanceIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Attendance.t;
+  _i1.Table<_i1.UuidValue?> get table => Attendance.t;
 }
 
 class AttendanceRepository {
@@ -491,7 +494,7 @@ class AttendanceRepository {
   /// Finds a single [Attendance] by its [id] or null if no such row exists.
   Future<Attendance?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AttendanceInclude? include,
   }) async {
@@ -571,7 +574,7 @@ class AttendanceRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Attendance?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AttendanceUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

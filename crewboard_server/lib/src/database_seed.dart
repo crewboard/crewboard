@@ -1,9 +1,19 @@
 import 'package:serverpod/serverpod.dart';
 import 'generated/protocol.dart';
 import 'database/planner_seed.dart';
+import 'services/user_service.dart';
 import 'dart:io';
+import 'dart:convert';
 
 Future<void> seedDatabase(Session session) async {
+  // 0. Seed Organization
+  var defaultOrg = await Organization.db.findFirstRow(session);
+  if (defaultOrg == null) {
+    stdout.writeln('Seeding default Organization...');
+    defaultOrg = Organization(name: 'Default Organization');
+    defaultOrg = await Organization.db.insertRow(session, defaultOrg);
+  }
+
   // 1. Seed SystemColor
   final colors = await SystemColor.db.find(session);
   SystemColor defaultColor;
@@ -71,16 +81,103 @@ Future<void> seedDatabase(Session session) async {
   var leaveConfig = await LeaveConfig.db.findFirstRow(session);
   if (leaveConfig == null) {
     stdout.writeln('Seeding default LeaveConfig...');
+    final days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    final configMap = {
+      for (var day in days)
+        day: {
+          "in": "09:00",
+          "inType": "am",
+          "out": "05:00",
+          "outType": "pm",
+          "buffer": "15",
+          "bufferType": "min",
+          "leave": day == "Sunday",
+        },
+    };
+
     leaveConfig = LeaveConfig(
-      configName: 'Default Policy',
+      configName: 'Default',
       fullDay: 8,
       halfDay: 4,
-      config: '{}',
+      config: jsonEncode(configMap),
     );
-    await LeaveConfig.db.insertRow(session, leaveConfig);
+    leaveConfig = await LeaveConfig.db.insertRow(session, leaveConfig);
   }
 
-  // 4. Seed ChatRoom and UserRoomMap for testing
+  // 3.5 Seed Default Admin User
+  final existingAdmin = await User.db.findFirstRow(
+    session,
+    where: (t) => t.email.equals('admin@crewboard.com'),
+  );
+  if (existingAdmin == null) {
+    stdout.writeln('Seeding default Admin user...');
+
+    // Check dependencies
+    if (defaultOrg != null &&
+        defaultColor != null &&
+        adminType != null &&
+        leaveConfig != null) {
+      // Create default admin user using unified service
+      final newUser = User(
+        userName: 'admin',
+        email: 'admin@crewboard.com',
+        organizationId: defaultOrg.id!,
+        colorId: defaultColor.id!,
+        userTypeId: adminType.id!,
+        leaveConfigId: leaveConfig.id!,
+        firstName: 'Admin',
+        lastName: 'User',
+        gender: 'unspecified',
+        phone: '',
+        performance: 0,
+        online: false,
+        onsite: false,
+        deleted: false,
+      );
+
+      await UserService.createUserWithAuth(
+        session,
+        newUser,
+        'password',
+      );
+
+      stdout.writeln('Default Admin created: admin@crewboard.com / password');
+    } else {
+      stdout.writeln(
+        'Skipping default admin seed: Missing dependencies. '
+        'Org: ${defaultOrg != null}, Color: ${defaultColor != null}, '
+        'Type: ${adminType != null}, Leave: ${leaveConfig != null}',
+      );
+    }
+  }
+
+  // 4. Seed SystemVariables
+  var systemVars = await SystemVariables.db.findFirstRow(session);
+  if (systemVars == null) {
+    stdout.writeln('Seeding default SystemVariables...');
+    systemVars = SystemVariables(
+      punchingMode: 'manual_user',
+      lineHeight: 25,
+      processWidth: 100,
+      conditionWidth: 100,
+      terminalWidth: 100,
+      allowEdit: true,
+      showEdit: true,
+      allowDelete: true,
+      showDelete: true,
+    );
+    await SystemVariables.db.insertRow(session, systemVars);
+  }
+
+  // 5. Seed ChatRoom for testing
   var testRoom = await ChatRoom.db.findFirstRow(session);
   if (testRoom == null) {
     stdout.writeln('Seeding test ChatRoom...');
@@ -91,14 +188,15 @@ Future<void> seedDatabase(Session session) async {
     );
     testRoom = await ChatRoom.db.insertRow(session, testRoom);
 
-    // Seed a map for possible userId 1
-    await UserRoomMap.db.insertRow(
-      session,
-      UserRoomMap(
-        roomId: testRoom.id!,
-        userId: 1,
-      ),
-    );
+    // TODO: Seed UserRoomMap once actual users are seeded
+    // UserRoomMap requires a valid UuidValue for userId, not an int
+    // await UserRoomMap.db.insertRow(
+    //   session,
+    //   UserRoomMap(
+    //     roomId: testRoom.id!,
+    //     userId: <valid-uuid-value>,
+    //   ),
+    // );
   }
 
   // 5. Seed Planner data

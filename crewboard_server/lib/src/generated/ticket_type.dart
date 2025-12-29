@@ -9,28 +9,43 @@
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
 
+// ignore_for_file: unnecessary_null_comparison
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'system_color.dart' as _i2;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class TicketType
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   TicketType._({
     this.id,
     required this.typeName,
     required this.colorId,
+    this.color,
   });
 
   factory TicketType({
-    int? id,
+    _i1.UuidValue? id,
     required String typeName,
-    required int colorId,
+    required _i1.UuidValue colorId,
+    _i2.SystemColor? color,
   }) = _TicketTypeImpl;
 
   factory TicketType.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketType(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       typeName: jsonSerialization['typeName'] as String,
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
+      color: jsonSerialization['color'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.SystemColor>(
+              jsonSerialization['color'],
+            ),
     );
   }
 
@@ -39,30 +54,34 @@ abstract class TicketType
   static const db = TicketTypeRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String typeName;
 
-  int colorId;
+  _i1.UuidValue colorId;
+
+  _i2.SystemColor? color;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [TicketType]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketType copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? typeName,
-    int? colorId,
+    _i1.UuidValue? colorId,
+    _i2.SystemColor? color,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketType',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'typeName': typeName,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
+      if (color != null) 'color': color?.toJson(),
     };
   }
 
@@ -70,14 +89,15 @@ abstract class TicketType
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TicketType',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'typeName': typeName,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
+      if (color != null) 'color': color?.toJsonForProtocol(),
     };
   }
 
-  static TicketTypeInclude include() {
-    return TicketTypeInclude._();
+  static TicketTypeInclude include({_i2.SystemColorInclude? color}) {
+    return TicketTypeInclude._(color: color);
   }
 
   static TicketTypeIncludeList includeList({
@@ -110,13 +130,15 @@ class _Undefined {}
 
 class _TicketTypeImpl extends TicketType {
   _TicketTypeImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String typeName,
-    required int colorId,
+    required _i1.UuidValue colorId,
+    _i2.SystemColor? color,
   }) : super._(
          id: id,
          typeName: typeName,
          colorId: colorId,
+         color: color,
        );
 
   /// Returns a shallow copy of this [TicketType]
@@ -126,12 +148,14 @@ class _TicketTypeImpl extends TicketType {
   TicketType copyWith({
     Object? id = _Undefined,
     String? typeName,
-    int? colorId,
+    _i1.UuidValue? colorId,
+    Object? color = _Undefined,
   }) {
     return TicketType(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       typeName: typeName ?? this.typeName,
       colorId: colorId ?? this.colorId,
+      color: color is _i2.SystemColor? ? color : this.color?.copyWith(),
     );
   }
 }
@@ -144,20 +168,21 @@ class TicketTypeUpdateTable extends _i1.UpdateTable<TicketTypeTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> colorId(int value) => _i1.ColumnValue(
-    table.colorId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> colorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.colorId,
+        value,
+      );
 }
 
-class TicketTypeTable extends _i1.Table<int?> {
+class TicketTypeTable extends _i1.Table<_i1.UuidValue?> {
   TicketTypeTable({super.tableRelation}) : super(tableName: 'ticket_type') {
     updateTable = TicketTypeUpdateTable(this);
     typeName = _i1.ColumnString(
       'typeName',
       this,
     );
-    colorId = _i1.ColumnInt(
+    colorId = _i1.ColumnUuid(
       'colorId',
       this,
     );
@@ -167,7 +192,22 @@ class TicketTypeTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString typeName;
 
-  late final _i1.ColumnInt colorId;
+  late final _i1.ColumnUuid colorId;
+
+  _i2.SystemColorTable? _color;
+
+  _i2.SystemColorTable get color {
+    if (_color != null) return _color!;
+    _color = _i1.createRelationTable(
+      relationFieldName: 'color',
+      field: TicketType.t.colorId,
+      foreignField: _i2.SystemColor.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.SystemColorTable(tableRelation: foreignTableRelation),
+    );
+    return _color!;
+  }
 
   @override
   List<_i1.Column> get columns => [
@@ -175,16 +215,28 @@ class TicketTypeTable extends _i1.Table<int?> {
     typeName,
     colorId,
   ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'color') {
+      return color;
+    }
+    return null;
+  }
 }
 
 class TicketTypeInclude extends _i1.IncludeObject {
-  TicketTypeInclude._();
+  TicketTypeInclude._({_i2.SystemColorInclude? color}) {
+    _color = color;
+  }
+
+  _i2.SystemColorInclude? _color;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'color': _color};
 
   @override
-  _i1.Table<int?> get table => TicketType.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketType.t;
 }
 
 class TicketTypeIncludeList extends _i1.IncludeList {
@@ -204,11 +256,13 @@ class TicketTypeIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => TicketType.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketType.t;
 }
 
 class TicketTypeRepository {
   const TicketTypeRepository._();
+
+  final attachRow = const TicketTypeAttachRowRepository._();
 
   /// Returns a list of [TicketType]s matching the given query parameters.
   ///
@@ -241,6 +295,7 @@ class TicketTypeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<TicketTypeTable>? orderByList,
     _i1.Transaction? transaction,
+    TicketTypeInclude? include,
   }) async {
     return session.db.find<TicketType>(
       where: where?.call(TicketType.t),
@@ -250,6 +305,7 @@ class TicketTypeRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -278,6 +334,7 @@ class TicketTypeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<TicketTypeTable>? orderByList,
     _i1.Transaction? transaction,
+    TicketTypeInclude? include,
   }) async {
     return session.db.findFirstRow<TicketType>(
       where: where?.call(TicketType.t),
@@ -286,18 +343,21 @@ class TicketTypeRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
   /// Finds a single [TicketType] by its [id] or null if no such row exists.
   Future<TicketType?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    TicketTypeInclude? include,
   }) async {
     return session.db.findById<TicketType>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -370,7 +430,7 @@ class TicketTypeRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketType?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketTypeUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {
@@ -455,6 +515,33 @@ class TicketTypeRepository {
     return session.db.count<TicketType>(
       where: where?.call(TicketType.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+}
+
+class TicketTypeAttachRowRepository {
+  const TicketTypeAttachRowRepository._();
+
+  /// Creates a relation between the given [TicketType] and [SystemColor]
+  /// by setting the [TicketType]'s foreign key `colorId` to refer to the [SystemColor].
+  Future<void> color(
+    _i1.Session session,
+    TicketType ticketType,
+    _i2.SystemColor color, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticketType.id == null) {
+      throw ArgumentError.notNull('ticketType.id');
+    }
+    if (color.id == null) {
+      throw ArgumentError.notNull('color.id');
+    }
+
+    var $ticketType = ticketType.copyWith(colorId: color.id);
+    await session.db.updateRow<TicketType>(
+      $ticketType,
+      columns: [TicketType.t.colorId],
       transaction: transaction,
     );
   }

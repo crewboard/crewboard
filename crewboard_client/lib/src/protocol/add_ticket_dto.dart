@@ -33,9 +33,9 @@ abstract class AddTicketDTO implements _i1.SerializableModel {
   factory AddTicketDTO({
     required String ticketName,
     required String ticketBody,
-    required int statusId,
-    required int priorityId,
-    required int typeId,
+    required _i1.UuidValue statusId,
+    required _i1.UuidValue priorityId,
+    required _i1.UuidValue typeId,
     DateTime? deadline,
     required int creds,
     required String checklist,
@@ -48,9 +48,13 @@ abstract class AddTicketDTO implements _i1.SerializableModel {
     return AddTicketDTO(
       ticketName: jsonSerialization['ticketName'] as String,
       ticketBody: jsonSerialization['ticketBody'] as String,
-      statusId: jsonSerialization['statusId'] as int,
-      priorityId: jsonSerialization['priorityId'] as int,
-      typeId: jsonSerialization['typeId'] as int,
+      statusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['statusId'],
+      ),
+      priorityId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['priorityId'],
+      ),
+      typeId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['typeId']),
       deadline: jsonSerialization['deadline'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['deadline']),
@@ -70,11 +74,11 @@ abstract class AddTicketDTO implements _i1.SerializableModel {
 
   String ticketBody;
 
-  int statusId;
+  _i1.UuidValue statusId;
 
-  int priorityId;
+  _i1.UuidValue priorityId;
 
-  int typeId;
+  _i1.UuidValue typeId;
 
   DateTime? deadline;
 
@@ -94,9 +98,9 @@ abstract class AddTicketDTO implements _i1.SerializableModel {
   AddTicketDTO copyWith({
     String? ticketName,
     String? ticketBody,
-    int? statusId,
-    int? priorityId,
-    int? typeId,
+    _i1.UuidValue? statusId,
+    _i1.UuidValue? priorityId,
+    _i1.UuidValue? typeId,
     DateTime? deadline,
     int? creds,
     String? checklist,
@@ -110,9 +114,9 @@ abstract class AddTicketDTO implements _i1.SerializableModel {
       '__className__': 'AddTicketDTO',
       'ticketName': ticketName,
       'ticketBody': ticketBody,
-      'statusId': statusId,
-      'priorityId': priorityId,
-      'typeId': typeId,
+      'statusId': statusId.toJson(),
+      'priorityId': priorityId.toJson(),
+      'typeId': typeId.toJson(),
       if (deadline != null) 'deadline': deadline?.toJson(),
       'creds': creds,
       'checklist': checklist,
@@ -134,9 +138,9 @@ class _AddTicketDTOImpl extends AddTicketDTO {
   _AddTicketDTOImpl({
     required String ticketName,
     required String ticketBody,
-    required int statusId,
-    required int priorityId,
-    required int typeId,
+    required _i1.UuidValue statusId,
+    required _i1.UuidValue priorityId,
+    required _i1.UuidValue typeId,
     DateTime? deadline,
     required int creds,
     required String checklist,
@@ -164,9 +168,9 @@ class _AddTicketDTOImpl extends AddTicketDTO {
   AddTicketDTO copyWith({
     String? ticketName,
     String? ticketBody,
-    int? statusId,
-    int? priorityId,
-    int? typeId,
+    _i1.UuidValue? statusId,
+    _i1.UuidValue? priorityId,
+    _i1.UuidValue? typeId,
     Object? deadline = _Undefined,
     int? creds,
     String? checklist,

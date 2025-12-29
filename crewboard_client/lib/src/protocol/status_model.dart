@@ -19,18 +19,20 @@ abstract class StatusModel implements _i1.SerializableModel {
   });
 
   factory StatusModel({
-    required int statusId,
+    required _i1.UuidValue statusId,
     required String statusName,
   }) = _StatusModelImpl;
 
   factory StatusModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return StatusModel(
-      statusId: jsonSerialization['statusId'] as int,
+      statusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['statusId'],
+      ),
       statusName: jsonSerialization['statusName'] as String,
     );
   }
 
-  int statusId;
+  _i1.UuidValue statusId;
 
   String statusName;
 
@@ -38,14 +40,14 @@ abstract class StatusModel implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   StatusModel copyWith({
-    int? statusId,
+    _i1.UuidValue? statusId,
     String? statusName,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'StatusModel',
-      'statusId': statusId,
+      'statusId': statusId.toJson(),
       'statusName': statusName,
     };
   }
@@ -58,7 +60,7 @@ abstract class StatusModel implements _i1.SerializableModel {
 
 class _StatusModelImpl extends StatusModel {
   _StatusModelImpl({
-    required int statusId,
+    required _i1.UuidValue statusId,
     required String statusName,
   }) : super._(
          statusId: statusId,
@@ -70,7 +72,7 @@ class _StatusModelImpl extends StatusModel {
   @_i1.useResult
   @override
   StatusModel copyWith({
-    int? statusId,
+    _i1.UuidValue? statusId,
     String? statusName,
   }) {
     return StatusModel(

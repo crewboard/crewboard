@@ -31,36 +31,44 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
   });
 
   factory TicketStatusChange({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required int oldStatusId,
+    required _i1.UuidValue oldStatusId,
     _i4.Status? oldStatus,
-    required int newStatusId,
+    required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   }) = _TicketStatusChangeImpl;
 
   factory TicketStatusChange.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketStatusChange(
-      id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i5.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i5.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      oldStatusId: jsonSerialization['oldStatusId'] as int,
+      oldStatusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['oldStatusId'],
+      ),
       oldStatus: jsonSerialization['oldStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
               jsonSerialization['oldStatus'],
             ),
-      newStatusId: jsonSerialization['newStatusId'] as int,
+      newStatusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['newStatusId'],
+      ),
       newStatus: jsonSerialization['newStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
@@ -75,21 +83,21 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
-  int oldStatusId;
+  _i1.UuidValue oldStatusId;
 
   _i4.Status? oldStatus;
 
-  int newStatusId;
+  _i1.UuidValue newStatusId;
 
   _i4.Status? newStatus;
 
@@ -99,14 +107,14 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketStatusChange copyWith({
-    int? id,
-    int? ticketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
-    int? oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
-    int? newStatusId,
+    _i1.UuidValue? newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   });
@@ -114,14 +122,14 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketStatusChange',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'oldStatusId': oldStatusId,
+      'oldStatusId': oldStatusId.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJson(),
-      'newStatusId': newStatusId,
+      'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJson(),
       if (changedAt != null) 'changedAt': changedAt?.toJson(),
     };
@@ -137,14 +145,14 @@ class _Undefined {}
 
 class _TicketStatusChangeImpl extends TicketStatusChange {
   _TicketStatusChangeImpl({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required int oldStatusId,
+    required _i1.UuidValue oldStatusId,
     _i4.Status? oldStatus,
-    required int newStatusId,
+    required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
     DateTime? changedAt,
   }) : super._(
@@ -166,18 +174,18 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
   @override
   TicketStatusChange copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
-    int? oldStatusId,
+    _i1.UuidValue? oldStatusId,
     Object? oldStatus = _Undefined,
-    int? newStatusId,
+    _i1.UuidValue? newStatusId,
     Object? newStatus = _Undefined,
     Object? changedAt = _Undefined,
   }) {
     return TicketStatusChange(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       ticketId: ticketId ?? this.ticketId,
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       userId: userId ?? this.userId,

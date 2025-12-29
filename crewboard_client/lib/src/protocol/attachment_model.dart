@@ -22,7 +22,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
   });
 
   factory AttachmentModel({
-    required int id,
+    required _i1.UuidValue id,
     required String name,
     required String url,
     required double size,
@@ -31,7 +31,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
 
   factory AttachmentModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return AttachmentModel(
-      id: jsonSerialization['id'] as int,
+      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       url: jsonSerialization['url'] as String,
       size: (jsonSerialization['size'] as num).toDouble(),
@@ -39,7 +39,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
     );
   }
 
-  int id;
+  _i1.UuidValue id;
 
   String name;
 
@@ -53,7 +53,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   AttachmentModel copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? url,
     double? size,
@@ -63,7 +63,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'AttachmentModel',
-      'id': id,
+      'id': id.toJson(),
       'name': name,
       'url': url,
       'size': size,
@@ -79,7 +79,7 @@ abstract class AttachmentModel implements _i1.SerializableModel {
 
 class _AttachmentModelImpl extends AttachmentModel {
   _AttachmentModelImpl({
-    required int id,
+    required _i1.UuidValue id,
     required String name,
     required String url,
     required double size,
@@ -97,7 +97,7 @@ class _AttachmentModelImpl extends AttachmentModel {
   @_i1.useResult
   @override
   AttachmentModel copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? url,
     double? size,

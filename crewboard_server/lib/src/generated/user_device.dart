@@ -18,7 +18,7 @@ import 'device_type.dart' as _i3;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i4;
 
 abstract class UserDevice
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   UserDevice._({
     this.id,
     required this.userId,
@@ -29,8 +29,8 @@ abstract class UserDevice
   });
 
   factory UserDevice({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required _i3.DeviceType deviceType,
     required String hardwareId,
@@ -39,8 +39,10 @@ abstract class UserDevice
 
   factory UserDevice.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserDevice(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -57,9 +59,9 @@ abstract class UserDevice
   static const db = UserDeviceRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -70,14 +72,14 @@ abstract class UserDevice
   String? socketId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [UserDevice]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserDevice copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     _i3.DeviceType? deviceType,
     String? hardwareId,
@@ -87,8 +89,8 @@ abstract class UserDevice
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserDevice',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'deviceType': deviceType.toJson(),
       'hardwareId': hardwareId,
@@ -100,8 +102,8 @@ abstract class UserDevice
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'UserDevice',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       'deviceType': deviceType.toJson(),
       'hardwareId': hardwareId,
@@ -143,8 +145,8 @@ class _Undefined {}
 
 class _UserDeviceImpl extends UserDevice {
   _UserDeviceImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required _i3.DeviceType deviceType,
     required String hardwareId,
@@ -164,14 +166,14 @@ class _UserDeviceImpl extends UserDevice {
   @override
   UserDevice copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     _i3.DeviceType? deviceType,
     String? hardwareId,
     Object? socketId = _Undefined,
   }) {
     return UserDevice(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       deviceType: deviceType ?? this.deviceType,
@@ -184,10 +186,11 @@ class _UserDeviceImpl extends UserDevice {
 class UserDeviceUpdateTable extends _i1.UpdateTable<UserDeviceTable> {
   UserDeviceUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<_i3.DeviceType, _i3.DeviceType> deviceType(
     _i3.DeviceType value,
@@ -207,10 +210,10 @@ class UserDeviceUpdateTable extends _i1.UpdateTable<UserDeviceTable> {
   );
 }
 
-class UserDeviceTable extends _i1.Table<int?> {
+class UserDeviceTable extends _i1.Table<_i1.UuidValue?> {
   UserDeviceTable({super.tableRelation}) : super(tableName: 'user_devices') {
     updateTable = UserDeviceUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -231,7 +234,7 @@ class UserDeviceTable extends _i1.Table<int?> {
 
   late final UserDeviceUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
 
@@ -283,7 +286,7 @@ class UserDeviceInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'user': _user};
 
   @override
-  _i1.Table<int?> get table => UserDevice.t;
+  _i1.Table<_i1.UuidValue?> get table => UserDevice.t;
 }
 
 class UserDeviceIncludeList extends _i1.IncludeList {
@@ -303,7 +306,7 @@ class UserDeviceIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => UserDevice.t;
+  _i1.Table<_i1.UuidValue?> get table => UserDevice.t;
 }
 
 class UserDeviceRepository {
@@ -397,7 +400,7 @@ class UserDeviceRepository {
   /// Finds a single [UserDevice] by its [id] or null if no such row exists.
   Future<UserDevice?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserDeviceInclude? include,
   }) async {
@@ -477,7 +480,7 @@ class UserDeviceRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserDevice?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserDeviceUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

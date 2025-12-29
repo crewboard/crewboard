@@ -1,0 +1,6 @@
+class: Priority
+table: priority
+fields:
+  id: UuidValue?, defaultPersist=random
+  priorityName: String
+  priority: int

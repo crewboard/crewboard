@@ -29,20 +29,22 @@ abstract class TicketAssignee
 
   factory TicketAssignee({
     int? id,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
   }) = _TicketAssigneeImpl;
 
   factory TicketAssignee.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketAssignee(
       id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
@@ -56,11 +58,11 @@ abstract class TicketAssignee
   @override
   int? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
@@ -72,9 +74,9 @@ abstract class TicketAssignee
   @_i1.useResult
   TicketAssignee copyWith({
     int? id,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
   });
   @override
@@ -82,9 +84,9 @@ abstract class TicketAssignee
     return {
       '__className__': 'TicketAssignee',
       if (id != null) 'id': id,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
     };
   }
@@ -94,9 +96,9 @@ abstract class TicketAssignee
     return {
       '__className__': 'TicketAssignee',
       if (id != null) 'id': id,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
     };
   }
@@ -142,9 +144,9 @@ class _Undefined {}
 class _TicketAssigneeImpl extends TicketAssignee {
   _TicketAssigneeImpl({
     int? id,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
   }) : super._(
          id: id,
@@ -160,9 +162,9 @@ class _TicketAssigneeImpl extends TicketAssignee {
   @override
   TicketAssignee copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
   }) {
     return TicketAssignee(
@@ -178,26 +180,28 @@ class _TicketAssigneeImpl extends TicketAssignee {
 class TicketAssigneeUpdateTable extends _i1.UpdateTable<TicketAssigneeTable> {
   TicketAssigneeUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.ticketId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 }
 
 class TicketAssigneeTable extends _i1.Table<int?> {
   TicketAssigneeTable({super.tableRelation})
     : super(tableName: 'ticket_assignee') {
     updateTable = TicketAssigneeUpdateTable(this);
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -205,11 +209,11 @@ class TicketAssigneeTable extends _i1.Table<int?> {
 
   late final TicketAssigneeUpdateTable updateTable;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i2.TicketTable? _ticket;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i3.UserTable? _user;
 

@@ -1,7 +1,0 @@
-class: LeaveRequest
-table: leave_request
-fields:
-  user: User?, relation
-  request: String
-  accepted: bool?
-  date: DateTime?

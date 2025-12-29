@@ -1,0 +1,9 @@
+class: TicketStatusChange
+table: ticket_status_change
+fields:
+  id: UuidValue?, defaultPersist=random
+  ticket: Ticket?, relation
+  user: User?, relation
+  oldStatus: Status?, relation
+  newStatus: Status?, relation
+  changedAt: DateTime?

@@ -1,6 +1,0 @@
-class: SignInResponse
-fields:
-  success: bool
-  message: String
-  userId: String?
-  organizationId: String?

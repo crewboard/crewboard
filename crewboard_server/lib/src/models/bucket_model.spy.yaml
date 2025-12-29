@@ -1,5 +1,0 @@
-class: BucketModel
-fields:
-  bucketId: int
-  bucketName: String
-  tickets: List<PlannerTicket>

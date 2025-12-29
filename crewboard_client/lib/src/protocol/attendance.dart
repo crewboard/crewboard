@@ -29,8 +29,8 @@ abstract class Attendance implements _i1.SerializableModel {
   });
 
   factory Attendance({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -43,8 +43,10 @@ abstract class Attendance implements _i1.SerializableModel {
 
   factory Attendance.fromJson(Map<String, dynamic> jsonSerialization) {
     return Attendance(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -61,9 +63,9 @@ abstract class Attendance implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -85,8 +87,8 @@ abstract class Attendance implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Attendance copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -100,8 +102,8 @@ abstract class Attendance implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Attendance',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       if (inTime != null) 'inTime': inTime,
       if (outTime != null) 'outTime': outTime,
@@ -123,8 +125,8 @@ class _Undefined {}
 
 class _AttendanceImpl extends Attendance {
   _AttendanceImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? inTime,
     String? outTime,
@@ -152,7 +154,7 @@ class _AttendanceImpl extends Attendance {
   @override
   Attendance copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     Object? inTime = _Undefined,
     Object? outTime = _Undefined,
@@ -163,7 +165,7 @@ class _AttendanceImpl extends Attendance {
     DateTime? date,
   }) {
     return Attendance(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       inTime: inTime is String? ? inTime : this.inTime,

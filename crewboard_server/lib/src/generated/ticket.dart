@@ -9,35 +9,52 @@
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
 
+// ignore_for_file: unnecessary_null_comparison
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'user.dart' as _i2;
+import 'status.dart' as _i3;
+import 'priority.dart' as _i4;
+import 'ticket_type.dart' as _i5;
+import 'check_model.dart' as _i6;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i7;
 
-abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Ticket
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   Ticket._({
     this.id,
     required this.userId,
+    this.user,
     required this.appId,
     required this.ticketName,
     required this.ticketBody,
     required this.statusId,
+    this.status,
     required this.priorityId,
+    this.priority,
     required this.typeId,
-    required this.checklist,
+    this.type,
+    this.checklist,
     required this.flows,
     required this.creds,
     this.deadline,
   });
 
   factory Ticket({
-    int? id,
-    required int userId,
-    required int appId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
+    _i2.User? user,
+    required _i1.UuidValue appId,
     required String ticketName,
     required String ticketBody,
-    required int statusId,
-    required int priorityId,
-    required int typeId,
-    required String checklist,
+    required _i1.UuidValue statusId,
+    _i3.Status? status,
+    required _i1.UuidValue priorityId,
+    _i4.Priority? priority,
+    required _i1.UuidValue typeId,
+    _i5.TicketType? type,
+    List<_i6.CheckModel>? checklist,
     required String flows,
     required int creds,
     DateTime? deadline,
@@ -45,15 +62,41 @@ abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   factory Ticket.fromJson(Map<String, dynamic> jsonSerialization) {
     return Ticket(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
-      appId: jsonSerialization['appId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      user: jsonSerialization['user'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
       ticketName: jsonSerialization['ticketName'] as String,
       ticketBody: jsonSerialization['ticketBody'] as String,
-      statusId: jsonSerialization['statusId'] as int,
-      priorityId: jsonSerialization['priorityId'] as int,
-      typeId: jsonSerialization['typeId'] as int,
-      checklist: jsonSerialization['checklist'] as String,
+      statusId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['statusId'],
+      ),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i3.Status>(jsonSerialization['status']),
+      priorityId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['priorityId'],
+      ),
+      priority: jsonSerialization['priority'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i4.Priority>(
+              jsonSerialization['priority'],
+            ),
+      typeId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['typeId']),
+      type: jsonSerialization['type'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i5.TicketType>(
+              jsonSerialization['type'],
+            ),
+      checklist: jsonSerialization['checklist'] == null
+          ? null
+          : _i7.Protocol().deserialize<List<_i6.CheckModel>>(
+              jsonSerialization['checklist'],
+            ),
       flows: jsonSerialization['flows'] as String,
       creds: jsonSerialization['creds'] as int,
       deadline: jsonSerialization['deadline'] == null
@@ -67,23 +110,31 @@ abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = TicketRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
-  int appId;
+  _i2.User? user;
+
+  _i1.UuidValue appId;
 
   String ticketName;
 
   String ticketBody;
 
-  int statusId;
+  _i1.UuidValue statusId;
 
-  int priorityId;
+  _i3.Status? status;
 
-  int typeId;
+  _i1.UuidValue priorityId;
 
-  String checklist;
+  _i4.Priority? priority;
+
+  _i1.UuidValue typeId;
+
+  _i5.TicketType? type;
+
+  List<_i6.CheckModel>? checklist;
 
   String flows;
 
@@ -92,21 +143,25 @@ abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   DateTime? deadline;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [Ticket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Ticket copyWith({
-    int? id,
-    int? userId,
-    int? appId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
+    _i2.User? user,
+    _i1.UuidValue? appId,
     String? ticketName,
     String? ticketBody,
-    int? statusId,
-    int? priorityId,
-    int? typeId,
-    String? checklist,
+    _i1.UuidValue? statusId,
+    _i3.Status? status,
+    _i1.UuidValue? priorityId,
+    _i4.Priority? priority,
+    _i1.UuidValue? typeId,
+    _i5.TicketType? type,
+    List<_i6.CheckModel>? checklist,
     String? flows,
     int? creds,
     DateTime? deadline,
@@ -115,15 +170,20 @@ abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Ticket',
-      if (id != null) 'id': id,
-      'userId': userId,
-      'appId': appId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJson(),
+      'appId': appId.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
-      'statusId': statusId,
-      'priorityId': priorityId,
-      'typeId': typeId,
-      'checklist': checklist,
+      'statusId': statusId.toJson(),
+      if (status != null) 'status': status?.toJson(),
+      'priorityId': priorityId.toJson(),
+      if (priority != null) 'priority': priority?.toJson(),
+      'typeId': typeId.toJson(),
+      if (type != null) 'type': type?.toJson(),
+      if (checklist != null)
+        'checklist': checklist?.toJson(valueToJson: (v) => v.toJson()),
       'flows': flows,
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
@@ -134,23 +194,40 @@ abstract class Ticket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Ticket',
-      if (id != null) 'id': id,
-      'userId': userId,
-      'appId': appId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJsonForProtocol(),
+      'appId': appId.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
-      'statusId': statusId,
-      'priorityId': priorityId,
-      'typeId': typeId,
-      'checklist': checklist,
+      'statusId': statusId.toJson(),
+      if (status != null) 'status': status?.toJsonForProtocol(),
+      'priorityId': priorityId.toJson(),
+      if (priority != null) 'priority': priority?.toJsonForProtocol(),
+      'typeId': typeId.toJson(),
+      if (type != null) 'type': type?.toJsonForProtocol(),
+      if (checklist != null)
+        'checklist': checklist?.toJson(
+          valueToJson: (v) => v.toJsonForProtocol(),
+        ),
       'flows': flows,
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
     };
   }
 
-  static TicketInclude include() {
-    return TicketInclude._();
+  static TicketInclude include({
+    _i2.UserInclude? user,
+    _i3.StatusInclude? status,
+    _i4.PriorityInclude? priority,
+    _i5.TicketTypeInclude? type,
+  }) {
+    return TicketInclude._(
+      user: user,
+      status: status,
+      priority: priority,
+      type: type,
+    );
   }
 
   static TicketIncludeList includeList({
@@ -183,27 +260,35 @@ class _Undefined {}
 
 class _TicketImpl extends Ticket {
   _TicketImpl({
-    int? id,
-    required int userId,
-    required int appId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
+    _i2.User? user,
+    required _i1.UuidValue appId,
     required String ticketName,
     required String ticketBody,
-    required int statusId,
-    required int priorityId,
-    required int typeId,
-    required String checklist,
+    required _i1.UuidValue statusId,
+    _i3.Status? status,
+    required _i1.UuidValue priorityId,
+    _i4.Priority? priority,
+    required _i1.UuidValue typeId,
+    _i5.TicketType? type,
+    List<_i6.CheckModel>? checklist,
     required String flows,
     required int creds,
     DateTime? deadline,
   }) : super._(
          id: id,
          userId: userId,
+         user: user,
          appId: appId,
          ticketName: ticketName,
          ticketBody: ticketBody,
          statusId: statusId,
+         status: status,
          priorityId: priorityId,
+         priority: priority,
          typeId: typeId,
+         type: type,
          checklist: checklist,
          flows: flows,
          creds: creds,
@@ -216,28 +301,40 @@ class _TicketImpl extends Ticket {
   @override
   Ticket copyWith({
     Object? id = _Undefined,
-    int? userId,
-    int? appId,
+    _i1.UuidValue? userId,
+    Object? user = _Undefined,
+    _i1.UuidValue? appId,
     String? ticketName,
     String? ticketBody,
-    int? statusId,
-    int? priorityId,
-    int? typeId,
-    String? checklist,
+    _i1.UuidValue? statusId,
+    Object? status = _Undefined,
+    _i1.UuidValue? priorityId,
+    Object? priority = _Undefined,
+    _i1.UuidValue? typeId,
+    Object? type = _Undefined,
+    Object? checklist = _Undefined,
     String? flows,
     int? creds,
     Object? deadline = _Undefined,
   }) {
     return Ticket(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
+      user: user is _i2.User? ? user : this.user?.copyWith(),
       appId: appId ?? this.appId,
       ticketName: ticketName ?? this.ticketName,
       ticketBody: ticketBody ?? this.ticketBody,
       statusId: statusId ?? this.statusId,
+      status: status is _i3.Status? ? status : this.status?.copyWith(),
       priorityId: priorityId ?? this.priorityId,
+      priority: priority is _i4.Priority?
+          ? priority
+          : this.priority?.copyWith(),
       typeId: typeId ?? this.typeId,
-      checklist: checklist ?? this.checklist,
+      type: type is _i5.TicketType? ? type : this.type?.copyWith(),
+      checklist: checklist is List<_i6.CheckModel>?
+          ? checklist
+          : this.checklist?.map((e0) => e0.copyWith()).toList(),
       flows: flows ?? this.flows,
       creds: creds ?? this.creds,
       deadline: deadline is DateTime? ? deadline : this.deadline,
@@ -248,15 +345,17 @@ class _TicketImpl extends Ticket {
 class TicketUpdateTable extends _i1.UpdateTable<TicketTable> {
   TicketUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> appId(int value) => _i1.ColumnValue(
-    table.appId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> appId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.appId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> ticketName(String value) => _i1.ColumnValue(
     table.ticketName,
@@ -268,22 +367,28 @@ class TicketUpdateTable extends _i1.UpdateTable<TicketTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> statusId(int value) => _i1.ColumnValue(
-    table.statusId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> statusId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.statusId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> priorityId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> priorityId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.priorityId,
     value,
   );
 
-  _i1.ColumnValue<int, int> typeId(int value) => _i1.ColumnValue(
-    table.typeId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> typeId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.typeId,
+        value,
+      );
 
-  _i1.ColumnValue<String, String> checklist(String value) => _i1.ColumnValue(
+  _i1.ColumnValue<List<_i6.CheckModel>, List<_i6.CheckModel>> checklist(
+    List<_i6.CheckModel>? value,
+  ) => _i1.ColumnValue(
     table.checklist,
     value,
   );
@@ -305,14 +410,14 @@ class TicketUpdateTable extends _i1.UpdateTable<TicketTable> {
       );
 }
 
-class TicketTable extends _i1.Table<int?> {
+class TicketTable extends _i1.Table<_i1.UuidValue?> {
   TicketTable({super.tableRelation}) : super(tableName: 'tickets') {
     updateTable = TicketUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
-    appId = _i1.ColumnInt(
+    appId = _i1.ColumnUuid(
       'appId',
       this,
     );
@@ -324,19 +429,19 @@ class TicketTable extends _i1.Table<int?> {
       'ticketBody',
       this,
     );
-    statusId = _i1.ColumnInt(
+    statusId = _i1.ColumnUuid(
       'statusId',
       this,
     );
-    priorityId = _i1.ColumnInt(
+    priorityId = _i1.ColumnUuid(
       'priorityId',
       this,
     );
-    typeId = _i1.ColumnInt(
+    typeId = _i1.ColumnUuid(
       'typeId',
       this,
     );
-    checklist = _i1.ColumnString(
+    checklist = _i1.ColumnSerializable<List<_i6.CheckModel>>(
       'checklist',
       this,
     );
@@ -356,27 +461,87 @@ class TicketTable extends _i1.Table<int?> {
 
   late final TicketUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
-  late final _i1.ColumnInt appId;
+  _i2.UserTable? _user;
+
+  late final _i1.ColumnUuid appId;
 
   late final _i1.ColumnString ticketName;
 
   late final _i1.ColumnString ticketBody;
 
-  late final _i1.ColumnInt statusId;
+  late final _i1.ColumnUuid statusId;
 
-  late final _i1.ColumnInt priorityId;
+  _i3.StatusTable? _status;
 
-  late final _i1.ColumnInt typeId;
+  late final _i1.ColumnUuid priorityId;
 
-  late final _i1.ColumnString checklist;
+  _i4.PriorityTable? _priority;
+
+  late final _i1.ColumnUuid typeId;
+
+  _i5.TicketTypeTable? _type;
+
+  late final _i1.ColumnSerializable<List<_i6.CheckModel>> checklist;
 
   late final _i1.ColumnString flows;
 
   late final _i1.ColumnInt creds;
 
   late final _i1.ColumnDateTime deadline;
+
+  _i2.UserTable get user {
+    if (_user != null) return _user!;
+    _user = _i1.createRelationTable(
+      relationFieldName: 'user',
+      field: Ticket.t.userId,
+      foreignField: _i2.User.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.UserTable(tableRelation: foreignTableRelation),
+    );
+    return _user!;
+  }
+
+  _i3.StatusTable get status {
+    if (_status != null) return _status!;
+    _status = _i1.createRelationTable(
+      relationFieldName: 'status',
+      field: Ticket.t.statusId,
+      foreignField: _i3.Status.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i3.StatusTable(tableRelation: foreignTableRelation),
+    );
+    return _status!;
+  }
+
+  _i4.PriorityTable get priority {
+    if (_priority != null) return _priority!;
+    _priority = _i1.createRelationTable(
+      relationFieldName: 'priority',
+      field: Ticket.t.priorityId,
+      foreignField: _i4.Priority.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i4.PriorityTable(tableRelation: foreignTableRelation),
+    );
+    return _priority!;
+  }
+
+  _i5.TicketTypeTable get type {
+    if (_type != null) return _type!;
+    _type = _i1.createRelationTable(
+      relationFieldName: 'type',
+      field: Ticket.t.typeId,
+      foreignField: _i5.TicketType.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i5.TicketTypeTable(tableRelation: foreignTableRelation),
+    );
+    return _type!;
+  }
 
   @override
   List<_i1.Column> get columns => [
@@ -393,16 +558,56 @@ class TicketTable extends _i1.Table<int?> {
     creds,
     deadline,
   ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'user') {
+      return user;
+    }
+    if (relationField == 'status') {
+      return status;
+    }
+    if (relationField == 'priority') {
+      return priority;
+    }
+    if (relationField == 'type') {
+      return type;
+    }
+    return null;
+  }
 }
 
 class TicketInclude extends _i1.IncludeObject {
-  TicketInclude._();
+  TicketInclude._({
+    _i2.UserInclude? user,
+    _i3.StatusInclude? status,
+    _i4.PriorityInclude? priority,
+    _i5.TicketTypeInclude? type,
+  }) {
+    _user = user;
+    _status = status;
+    _priority = priority;
+    _type = type;
+  }
+
+  _i2.UserInclude? _user;
+
+  _i3.StatusInclude? _status;
+
+  _i4.PriorityInclude? _priority;
+
+  _i5.TicketTypeInclude? _type;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {
+    'user': _user,
+    'status': _status,
+    'priority': _priority,
+    'type': _type,
+  };
 
   @override
-  _i1.Table<int?> get table => Ticket.t;
+  _i1.Table<_i1.UuidValue?> get table => Ticket.t;
 }
 
 class TicketIncludeList extends _i1.IncludeList {
@@ -422,11 +627,13 @@ class TicketIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Ticket.t;
+  _i1.Table<_i1.UuidValue?> get table => Ticket.t;
 }
 
 class TicketRepository {
   const TicketRepository._();
+
+  final attachRow = const TicketAttachRowRepository._();
 
   /// Returns a list of [Ticket]s matching the given query parameters.
   ///
@@ -459,6 +666,7 @@ class TicketRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<TicketTable>? orderByList,
     _i1.Transaction? transaction,
+    TicketInclude? include,
   }) async {
     return session.db.find<Ticket>(
       where: where?.call(Ticket.t),
@@ -468,6 +676,7 @@ class TicketRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -496,6 +705,7 @@ class TicketRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<TicketTable>? orderByList,
     _i1.Transaction? transaction,
+    TicketInclude? include,
   }) async {
     return session.db.findFirstRow<Ticket>(
       where: where?.call(Ticket.t),
@@ -504,18 +714,21 @@ class TicketRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
   /// Finds a single [Ticket] by its [id] or null if no such row exists.
   Future<Ticket?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    TicketInclude? include,
   }) async {
     return session.db.findById<Ticket>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -588,7 +801,7 @@ class TicketRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Ticket?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {
@@ -673,6 +886,102 @@ class TicketRepository {
     return session.db.count<Ticket>(
       where: where?.call(Ticket.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+}
+
+class TicketAttachRowRepository {
+  const TicketAttachRowRepository._();
+
+  /// Creates a relation between the given [Ticket] and [User]
+  /// by setting the [Ticket]'s foreign key `userId` to refer to the [User].
+  Future<void> user(
+    _i1.Session session,
+    Ticket ticket,
+    _i2.User user, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticket.id == null) {
+      throw ArgumentError.notNull('ticket.id');
+    }
+    if (user.id == null) {
+      throw ArgumentError.notNull('user.id');
+    }
+
+    var $ticket = ticket.copyWith(userId: user.id);
+    await session.db.updateRow<Ticket>(
+      $ticket,
+      columns: [Ticket.t.userId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between the given [Ticket] and [Status]
+  /// by setting the [Ticket]'s foreign key `statusId` to refer to the [Status].
+  Future<void> status(
+    _i1.Session session,
+    Ticket ticket,
+    _i3.Status status, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticket.id == null) {
+      throw ArgumentError.notNull('ticket.id');
+    }
+    if (status.id == null) {
+      throw ArgumentError.notNull('status.id');
+    }
+
+    var $ticket = ticket.copyWith(statusId: status.id);
+    await session.db.updateRow<Ticket>(
+      $ticket,
+      columns: [Ticket.t.statusId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between the given [Ticket] and [Priority]
+  /// by setting the [Ticket]'s foreign key `priorityId` to refer to the [Priority].
+  Future<void> priority(
+    _i1.Session session,
+    Ticket ticket,
+    _i4.Priority priority, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticket.id == null) {
+      throw ArgumentError.notNull('ticket.id');
+    }
+    if (priority.id == null) {
+      throw ArgumentError.notNull('priority.id');
+    }
+
+    var $ticket = ticket.copyWith(priorityId: priority.id);
+    await session.db.updateRow<Ticket>(
+      $ticket,
+      columns: [Ticket.t.priorityId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between the given [Ticket] and [TicketType]
+  /// by setting the [Ticket]'s foreign key `typeId` to refer to the [TicketType].
+  Future<void> type(
+    _i1.Session session,
+    Ticket ticket,
+    _i5.TicketType type, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticket.id == null) {
+      throw ArgumentError.notNull('ticket.id');
+    }
+    if (type.id == null) {
+      throw ArgumentError.notNull('type.id');
+    }
+
+    var $ticket = ticket.copyWith(typeId: type.id);
+    await session.db.updateRow<Ticket>(
+      $ticket,
+      columns: [Ticket.t.typeId],
       transaction: transaction,
     );
   }

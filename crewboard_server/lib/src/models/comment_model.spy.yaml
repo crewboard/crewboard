@@ -1,7 +1,0 @@
-class: CommentModel
-fields:
-  commentId: int
-  userId: int
-  userName: String
-  message: String
-  createdAt: String

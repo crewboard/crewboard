@@ -19,7 +19,17 @@ class AuthButton extends StatelessWidget {
       width: double.infinity,
       height: 50,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: isLoading
+            ? null
+            : () {
+                print('WIDGET_TAP: AuthButton raw tap triggered ($text)');
+                if (onPressed == null) {
+                  print('WIDGET_TAP: ERROR: onPressed is NULL for $text');
+                } else {
+                  print('WIDGET_TAP: Calling onPressed callback for $text');
+                  onPressed?.call();
+                }
+              },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF3498DB),
           foregroundColor: Colors.white,

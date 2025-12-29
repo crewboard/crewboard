@@ -26,8 +26,8 @@ abstract class UserDevice implements _i1.SerializableModel {
   });
 
   factory UserDevice({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required _i3.DeviceType deviceType,
     required String hardwareId,
@@ -36,8 +36,10 @@ abstract class UserDevice implements _i1.SerializableModel {
 
   factory UserDevice.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserDevice(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -52,9 +54,9 @@ abstract class UserDevice implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -68,8 +70,8 @@ abstract class UserDevice implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserDevice copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     _i3.DeviceType? deviceType,
     String? hardwareId,
@@ -79,8 +81,8 @@ abstract class UserDevice implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserDevice',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'deviceType': deviceType.toJson(),
       'hardwareId': hardwareId,
@@ -98,8 +100,8 @@ class _Undefined {}
 
 class _UserDeviceImpl extends UserDevice {
   _UserDeviceImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required _i3.DeviceType deviceType,
     required String hardwareId,
@@ -119,14 +121,14 @@ class _UserDeviceImpl extends UserDevice {
   @override
   UserDevice copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     _i3.DeviceType? deviceType,
     String? hardwareId,
     Object? socketId = _Undefined,
   }) {
     return UserDevice(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       deviceType: deviceType ?? this.deviceType,

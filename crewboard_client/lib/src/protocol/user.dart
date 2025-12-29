@@ -21,7 +21,6 @@ abstract class User implements _i1.SerializableModel {
   User._({
     this.id,
     required this.userName,
-    required this.password,
     this.image,
     required this.organizationId,
     this.organization,
@@ -51,17 +50,16 @@ abstract class User implements _i1.SerializableModel {
   });
 
   factory User({
-    int? id,
+    _i1.UuidValue? id,
     required String userName,
-    required String password,
     String? image,
-    required int organizationId,
+    required _i1.UuidValue organizationId,
     _i2.Organization? organization,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i3.SystemColor? color,
-    required int userTypeId,
+    required _i1.UuidValue userTypeId,
     _i4.UserTypes? userType,
-    required int leaveConfigId,
+    required _i1.UuidValue leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     required String firstName,
@@ -84,29 +82,38 @@ abstract class User implements _i1.SerializableModel {
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userName: jsonSerialization['userName'] as String,
-      password: jsonSerialization['password'] as String,
       image: jsonSerialization['image'] as String?,
-      organizationId: jsonSerialization['organizationId'] as int,
+      organizationId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['organizationId'],
+      ),
       organization: jsonSerialization['organization'] == null
           ? null
           : _i6.Protocol().deserialize<_i2.Organization>(
               jsonSerialization['organization'],
             ),
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
       color: jsonSerialization['color'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.SystemColor>(
               jsonSerialization['color'],
             ),
-      userTypeId: jsonSerialization['userTypeId'] as int,
+      userTypeId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['userTypeId'],
+      ),
       userType: jsonSerialization['userType'] == null
           ? null
           : _i6.Protocol().deserialize<_i4.UserTypes>(
               jsonSerialization['userType'],
             ),
-      leaveConfigId: jsonSerialization['leaveConfigId'] as int,
+      leaveConfigId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['leaveConfigId'],
+      ),
       leaveConfig: jsonSerialization['leaveConfig'] == null
           ? null
           : _i6.Protocol().deserialize<_i5.LeaveConfig>(
@@ -139,27 +146,25 @@ abstract class User implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String userName;
 
-  String password;
-
   String? image;
 
-  int organizationId;
+  _i1.UuidValue organizationId;
 
   _i2.Organization? organization;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
   _i3.SystemColor? color;
 
-  int userTypeId;
+  _i1.UuidValue userTypeId;
 
   _i4.UserTypes? userType;
 
-  int leaveConfigId;
+  _i1.UuidValue leaveConfigId;
 
   _i5.LeaveConfig? leaveConfig;
 
@@ -201,17 +206,16 @@ abstract class User implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   User copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? userName,
-    String? password,
     String? image,
-    int? organizationId,
+    _i1.UuidValue? organizationId,
     _i2.Organization? organization,
-    int? colorId,
+    _i1.UuidValue? colorId,
     _i3.SystemColor? color,
-    int? userTypeId,
+    _i1.UuidValue? userTypeId,
     _i4.UserTypes? userType,
-    int? leaveConfigId,
+    _i1.UuidValue? leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     String? firstName,
@@ -235,17 +239,16 @@ abstract class User implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'User',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userName': userName,
-      'password': password,
       if (image != null) 'image': image,
-      'organizationId': organizationId,
+      'organizationId': organizationId.toJson(),
       if (organization != null) 'organization': organization?.toJson(),
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJson(),
-      'userTypeId': userTypeId,
+      'userTypeId': userTypeId.toJson(),
       if (userType != null) 'userType': userType?.toJson(),
-      'leaveConfigId': leaveConfigId,
+      'leaveConfigId': leaveConfigId.toJson(),
       if (leaveConfig != null) 'leaveConfig': leaveConfig?.toJson(),
       if (performanceConfigId != null)
         'performanceConfigId': performanceConfigId,
@@ -278,17 +281,16 @@ class _Undefined {}
 
 class _UserImpl extends User {
   _UserImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String userName,
-    required String password,
     String? image,
-    required int organizationId,
+    required _i1.UuidValue organizationId,
     _i2.Organization? organization,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i3.SystemColor? color,
-    required int userTypeId,
+    required _i1.UuidValue userTypeId,
     _i4.UserTypes? userType,
-    required int leaveConfigId,
+    required _i1.UuidValue leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     required String firstName,
@@ -310,7 +312,6 @@ class _UserImpl extends User {
   }) : super._(
          id: id,
          userName: userName,
-         password: password,
          image: image,
          organizationId: organizationId,
          organization: organization,
@@ -346,15 +347,14 @@ class _UserImpl extends User {
   User copyWith({
     Object? id = _Undefined,
     String? userName,
-    String? password,
     Object? image = _Undefined,
-    int? organizationId,
+    _i1.UuidValue? organizationId,
     Object? organization = _Undefined,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? color = _Undefined,
-    int? userTypeId,
+    _i1.UuidValue? userTypeId,
     Object? userType = _Undefined,
-    int? leaveConfigId,
+    _i1.UuidValue? leaveConfigId,
     Object? leaveConfig = _Undefined,
     Object? performanceConfigId = _Undefined,
     String? firstName,
@@ -375,9 +375,8 @@ class _UserImpl extends User {
     bool? deleted,
   }) {
     return User(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userName: userName ?? this.userName,
-      password: password ?? this.password,
       image: image is String? ? image : this.image,
       organizationId: organizationId ?? this.organizationId,
       organization: organization is _i2.Organization?

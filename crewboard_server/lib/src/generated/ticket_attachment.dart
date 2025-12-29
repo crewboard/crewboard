@@ -17,7 +17,7 @@ import 'ticket.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class TicketAttachment
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   TicketAttachment._({
     this.id,
     required this.ticketId,
@@ -29,8 +29,8 @@ abstract class TicketAttachment
   });
 
   factory TicketAttachment({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
     required String attachmentName,
     required double attachmentSize,
@@ -40,8 +40,12 @@ abstract class TicketAttachment
 
   factory TicketAttachment.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketAttachment(
-      id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
@@ -57,9 +61,9 @@ abstract class TicketAttachment
   static const db = TicketAttachmentRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
@@ -72,14 +76,14 @@ abstract class TicketAttachment
   String attachmentType;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [TicketAttachment]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketAttachment copyWith({
-    int? id,
-    int? ticketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
     String? attachmentName,
     double? attachmentSize,
@@ -90,8 +94,8 @@ abstract class TicketAttachment
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketAttachment',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
       'attachmentName': attachmentName,
       'attachmentSize': attachmentSize,
@@ -104,8 +108,8 @@ abstract class TicketAttachment
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TicketAttachment',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
       'attachmentName': attachmentName,
       'attachmentSize': attachmentSize,
@@ -148,8 +152,8 @@ class _Undefined {}
 
 class _TicketAttachmentImpl extends TicketAttachment {
   _TicketAttachmentImpl({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
     required String attachmentName,
     required double attachmentSize,
@@ -171,7 +175,7 @@ class _TicketAttachmentImpl extends TicketAttachment {
   @override
   TicketAttachment copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
     String? attachmentName,
     double? attachmentSize,
@@ -179,7 +183,7 @@ class _TicketAttachmentImpl extends TicketAttachment {
     String? attachmentType,
   }) {
     return TicketAttachment(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       ticketId: ticketId ?? this.ticketId,
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       attachmentName: attachmentName ?? this.attachmentName,
@@ -194,10 +198,11 @@ class TicketAttachmentUpdateTable
     extends _i1.UpdateTable<TicketAttachmentTable> {
   TicketAttachmentUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.ticketId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> attachmentName(String value) =>
       _i1.ColumnValue(
@@ -224,11 +229,11 @@ class TicketAttachmentUpdateTable
       );
 }
 
-class TicketAttachmentTable extends _i1.Table<int?> {
+class TicketAttachmentTable extends _i1.Table<_i1.UuidValue?> {
   TicketAttachmentTable({super.tableRelation})
     : super(tableName: 'ticket_attachments') {
     updateTable = TicketAttachmentUpdateTable(this);
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
@@ -252,7 +257,7 @@ class TicketAttachmentTable extends _i1.Table<int?> {
 
   late final TicketAttachmentUpdateTable updateTable;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i2.TicketTable? _ticket;
 
@@ -307,7 +312,7 @@ class TicketAttachmentInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'ticket': _ticket};
 
   @override
-  _i1.Table<int?> get table => TicketAttachment.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketAttachment.t;
 }
 
 class TicketAttachmentIncludeList extends _i1.IncludeList {
@@ -327,7 +332,7 @@ class TicketAttachmentIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => TicketAttachment.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketAttachment.t;
 }
 
 class TicketAttachmentRepository {
@@ -421,7 +426,7 @@ class TicketAttachmentRepository {
   /// Finds a single [TicketAttachment] by its [id] or null if no such row exists.
   Future<TicketAttachment?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketAttachmentInclude? include,
   }) async {
@@ -501,7 +506,7 @@ class TicketAttachmentRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketAttachment?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketAttachmentUpdateTable>
     columnValues,
     _i1.Transaction? transaction,

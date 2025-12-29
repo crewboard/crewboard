@@ -1,0 +1,9 @@
+class: UserBreak
+table: breaks
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  breakStart: String?
+  breakEnd: String?
+  breakTime: int?
+  date: DateTime

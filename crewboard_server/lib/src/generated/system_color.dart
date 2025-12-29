@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class SystemColor
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   SystemColor._({
     this.id,
     this.colorName,
@@ -22,7 +22,7 @@ abstract class SystemColor
   });
 
   factory SystemColor({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     required String color,
     required bool isDefault,
@@ -30,7 +30,9 @@ abstract class SystemColor
 
   factory SystemColor.fromJson(Map<String, dynamic> jsonSerialization) {
     return SystemColor(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       colorName: jsonSerialization['colorName'] as String?,
       color: jsonSerialization['color'] as String,
       isDefault: jsonSerialization['isDefault'] as bool,
@@ -42,7 +44,7 @@ abstract class SystemColor
   static const db = SystemColorRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String? colorName;
 
@@ -51,13 +53,13 @@ abstract class SystemColor
   bool isDefault;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [SystemColor]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   SystemColor copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     String? color,
     bool? isDefault,
@@ -66,7 +68,7 @@ abstract class SystemColor
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'SystemColor',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (colorName != null) 'colorName': colorName,
       'color': color,
       'isDefault': isDefault,
@@ -77,7 +79,7 @@ abstract class SystemColor
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'SystemColor',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (colorName != null) 'colorName': colorName,
       'color': color,
       'isDefault': isDefault,
@@ -118,7 +120,7 @@ class _Undefined {}
 
 class _SystemColorImpl extends SystemColor {
   _SystemColorImpl({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     required String color,
     required bool isDefault,
@@ -140,7 +142,7 @@ class _SystemColorImpl extends SystemColor {
     bool? isDefault,
   }) {
     return SystemColor(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       colorName: colorName is String? ? colorName : this.colorName,
       color: color ?? this.color,
       isDefault: isDefault ?? this.isDefault,
@@ -167,7 +169,7 @@ class SystemColorUpdateTable extends _i1.UpdateTable<SystemColorTable> {
   );
 }
 
-class SystemColorTable extends _i1.Table<int?> {
+class SystemColorTable extends _i1.Table<_i1.UuidValue?> {
   SystemColorTable({super.tableRelation}) : super(tableName: 'system_color') {
     updateTable = SystemColorUpdateTable(this);
     colorName = _i1.ColumnString(
@@ -208,7 +210,7 @@ class SystemColorInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => SystemColor.t;
+  _i1.Table<_i1.UuidValue?> get table => SystemColor.t;
 }
 
 class SystemColorIncludeList extends _i1.IncludeList {
@@ -228,7 +230,7 @@ class SystemColorIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => SystemColor.t;
+  _i1.Table<_i1.UuidValue?> get table => SystemColor.t;
 }
 
 class SystemColorRepository {
@@ -316,7 +318,7 @@ class SystemColorRepository {
   /// Finds a single [SystemColor] by its [id] or null if no such row exists.
   Future<SystemColor?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<SystemColor>(
@@ -394,7 +396,7 @@ class SystemColorRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<SystemColor?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<SystemColorUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

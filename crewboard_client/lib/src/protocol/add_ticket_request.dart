@@ -22,24 +22,26 @@ abstract class AddTicketRequest implements _i1.SerializableModel {
   });
 
   factory AddTicketRequest({
-    required int appId,
-    required int bucketId,
+    required _i1.UuidValue appId,
+    required _i1.UuidValue bucketId,
     required _i2.TicketModel ticket,
   }) = _AddTicketRequestImpl;
 
   factory AddTicketRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return AddTicketRequest(
-      appId: jsonSerialization['appId'] as int,
-      bucketId: jsonSerialization['bucketId'] as int,
+      appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
+      bucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['bucketId'],
+      ),
       ticket: _i3.Protocol().deserialize<_i2.TicketModel>(
         jsonSerialization['ticket'],
       ),
     );
   }
 
-  int appId;
+  _i1.UuidValue appId;
 
-  int bucketId;
+  _i1.UuidValue bucketId;
 
   _i2.TicketModel ticket;
 
@@ -47,16 +49,16 @@ abstract class AddTicketRequest implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   AddTicketRequest copyWith({
-    int? appId,
-    int? bucketId,
+    _i1.UuidValue? appId,
+    _i1.UuidValue? bucketId,
     _i2.TicketModel? ticket,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'AddTicketRequest',
-      'appId': appId,
-      'bucketId': bucketId,
+      'appId': appId.toJson(),
+      'bucketId': bucketId.toJson(),
       'ticket': ticket.toJson(),
     };
   }
@@ -69,8 +71,8 @@ abstract class AddTicketRequest implements _i1.SerializableModel {
 
 class _AddTicketRequestImpl extends AddTicketRequest {
   _AddTicketRequestImpl({
-    required int appId,
-    required int bucketId,
+    required _i1.UuidValue appId,
+    required _i1.UuidValue bucketId,
     required _i2.TicketModel ticket,
   }) : super._(
          appId: appId,
@@ -83,8 +85,8 @@ class _AddTicketRequestImpl extends AddTicketRequest {
   @_i1.useResult
   @override
   AddTicketRequest copyWith({
-    int? appId,
-    int? bucketId,
+    _i1.UuidValue? appId,
+    _i1.UuidValue? bucketId,
     _i2.TicketModel? ticket,
   }) {
     return AddTicketRequest(

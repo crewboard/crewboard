@@ -20,14 +20,16 @@ abstract class Priority implements _i1.SerializableModel {
   });
 
   factory Priority({
-    int? id,
+    _i1.UuidValue? id,
     required String priorityName,
     required int priority,
   }) = _PriorityImpl;
 
   factory Priority.fromJson(Map<String, dynamic> jsonSerialization) {
     return Priority(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       priorityName: jsonSerialization['priorityName'] as String,
       priority: jsonSerialization['priority'] as int,
     );
@@ -36,7 +38,7 @@ abstract class Priority implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String priorityName;
 
@@ -46,7 +48,7 @@ abstract class Priority implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Priority copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? priorityName,
     int? priority,
   });
@@ -54,7 +56,7 @@ abstract class Priority implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Priority',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'priorityName': priorityName,
       'priority': priority,
     };
@@ -70,7 +72,7 @@ class _Undefined {}
 
 class _PriorityImpl extends Priority {
   _PriorityImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String priorityName,
     required int priority,
   }) : super._(
@@ -89,7 +91,7 @@ class _PriorityImpl extends Priority {
     int? priority,
   }) {
     return Priority(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       priorityName: priorityName ?? this.priorityName,
       priority: priority ?? this.priority,
     );

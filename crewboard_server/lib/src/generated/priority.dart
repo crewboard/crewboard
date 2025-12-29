@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class Priority
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   Priority._({
     this.id,
     required this.priorityName,
@@ -21,14 +21,16 @@ abstract class Priority
   });
 
   factory Priority({
-    int? id,
+    _i1.UuidValue? id,
     required String priorityName,
     required int priority,
   }) = _PriorityImpl;
 
   factory Priority.fromJson(Map<String, dynamic> jsonSerialization) {
     return Priority(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       priorityName: jsonSerialization['priorityName'] as String,
       priority: jsonSerialization['priority'] as int,
     );
@@ -39,20 +41,20 @@ abstract class Priority
   static const db = PriorityRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String priorityName;
 
   int priority;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [Priority]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Priority copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? priorityName,
     int? priority,
   });
@@ -60,7 +62,7 @@ abstract class Priority
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Priority',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'priorityName': priorityName,
       'priority': priority,
     };
@@ -70,7 +72,7 @@ abstract class Priority
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Priority',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'priorityName': priorityName,
       'priority': priority,
     };
@@ -110,7 +112,7 @@ class _Undefined {}
 
 class _PriorityImpl extends Priority {
   _PriorityImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String priorityName,
     required int priority,
   }) : super._(
@@ -129,7 +131,7 @@ class _PriorityImpl extends Priority {
     int? priority,
   }) {
     return Priority(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       priorityName: priorityName ?? this.priorityName,
       priority: priority ?? this.priority,
     );
@@ -150,7 +152,7 @@ class PriorityUpdateTable extends _i1.UpdateTable<PriorityTable> {
   );
 }
 
-class PriorityTable extends _i1.Table<int?> {
+class PriorityTable extends _i1.Table<_i1.UuidValue?> {
   PriorityTable({super.tableRelation}) : super(tableName: 'priority') {
     updateTable = PriorityUpdateTable(this);
     priorityName = _i1.ColumnString(
@@ -184,7 +186,7 @@ class PriorityInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Priority.t;
+  _i1.Table<_i1.UuidValue?> get table => Priority.t;
 }
 
 class PriorityIncludeList extends _i1.IncludeList {
@@ -204,7 +206,7 @@ class PriorityIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Priority.t;
+  _i1.Table<_i1.UuidValue?> get table => Priority.t;
 }
 
 class PriorityRepository {
@@ -292,7 +294,7 @@ class PriorityRepository {
   /// Finds a single [Priority] by its [id] or null if no such row exists.
   Future<Priority?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Priority>(
@@ -370,7 +372,7 @@ class PriorityRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Priority?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<PriorityUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

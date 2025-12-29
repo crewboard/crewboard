@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -105,7 +106,7 @@ class _SignupPageState extends State<SignupPage> {
             ? _organizationNameController.text.trim()
             : null,
         _signupType == 'self-hosting'
-            ? int.tryParse(_organizationIdController.text)
+            ? UuidValue.fromString(_organizationIdController.text)
             : null,
       );
 
@@ -341,8 +342,10 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter organization ID';
                   }
-                  if (int.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                  try {
+                    UuidValue.fromString(value);
+                  } catch (e) {
+                    return 'Please enter a valid UUID';
                   }
                   return null;
                 },

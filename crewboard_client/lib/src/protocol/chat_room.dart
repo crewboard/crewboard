@@ -22,19 +22,25 @@ abstract class ChatRoom implements _i1.SerializableModel {
   });
 
   factory ChatRoom({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     required String roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     required int messageCount,
   }) = _ChatRoomImpl;
 
   factory ChatRoom.fromJson(Map<String, dynamic> jsonSerialization) {
     return ChatRoom(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       roomName: jsonSerialization['roomName'] as String?,
       roomType: jsonSerialization['roomType'] as String,
-      lastMessageId: jsonSerialization['lastMessageId'] as int?,
+      lastMessageId: jsonSerialization['lastMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['lastMessageId'],
+            ),
       messageCount: jsonSerialization['messageCount'] as int,
     );
   }
@@ -42,13 +48,13 @@ abstract class ChatRoom implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String? roomName;
 
   String roomType;
 
-  int? lastMessageId;
+  _i1.UuidValue? lastMessageId;
 
   int messageCount;
 
@@ -56,20 +62,20 @@ abstract class ChatRoom implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   ChatRoom copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     String? roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     int? messageCount,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'ChatRoom',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
-      if (lastMessageId != null) 'lastMessageId': lastMessageId,
+      if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
       'messageCount': messageCount,
     };
   }
@@ -84,10 +90,10 @@ class _Undefined {}
 
 class _ChatRoomImpl extends ChatRoom {
   _ChatRoomImpl({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     required String roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     required int messageCount,
   }) : super._(
          id: id,
@@ -109,10 +115,12 @@ class _ChatRoomImpl extends ChatRoom {
     int? messageCount,
   }) {
     return ChatRoom(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomName: roomName is String? ? roomName : this.roomName,
       roomType: roomType ?? this.roomType,
-      lastMessageId: lastMessageId is int? ? lastMessageId : this.lastMessageId,
+      lastMessageId: lastMessageId is _i1.UuidValue?
+          ? lastMessageId
+          : this.lastMessageId,
       messageCount: messageCount ?? this.messageCount,
     );
   }

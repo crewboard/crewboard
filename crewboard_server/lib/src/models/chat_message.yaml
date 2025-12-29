@@ -1,0 +1,13 @@
+class: ChatMessage
+table: chat_message
+fields:
+  id: UuidValue?, defaultPersist=random
+  roomId: UuidValue
+  parentMessageId: UuidValue?
+  userId: UuidValue # Sender ID
+  message: String
+  messageType: MessageType
+  seenUserList: List<UuidValue> # List of user IDs who saw the message
+  sameUser: bool # UI optimization from old project
+  deleted: bool
+  createdAt: DateTime

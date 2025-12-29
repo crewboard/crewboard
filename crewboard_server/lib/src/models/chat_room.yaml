@@ -1,0 +1,9 @@
+class: ChatRoom
+table: chat_room
+fields:
+  id: UuidValue?, defaultPersist=random
+  roomName: String?
+  roomType: String # 'direct' or 'group'
+  lastMessageId: UuidValue? # Reference to last message ID
+  messageCount: int
+  # lastSeenMessage: int? # This should probably be in a separate map table

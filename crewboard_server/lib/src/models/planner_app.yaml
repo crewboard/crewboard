@@ -1,0 +1,7 @@
+class: PlannerApp
+table: planner_apps
+fields:
+  id: UuidValue?, defaultPersist=random
+  appName: String
+  colorId: UuidValue
+  organizationId: UuidValue?

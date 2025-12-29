@@ -1,0 +1,5 @@
+class: Organization
+table: organization
+fields:
+  id: UuidValue?, defaultPersist=random
+  name: String

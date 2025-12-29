@@ -22,14 +22,16 @@ abstract class PlannerBucket implements _i1.SerializableModel {
   });
 
   factory PlannerBucket({
-    required int bucketId,
+    required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
   }) = _PlannerBucketImpl;
 
   factory PlannerBucket.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerBucket(
-      bucketId: jsonSerialization['bucketId'] as int,
+      bucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['bucketId'],
+      ),
       bucketName: jsonSerialization['bucketName'] as String,
       tickets: _i3.Protocol().deserialize<List<_i2.PlannerTicket>>(
         jsonSerialization['tickets'],
@@ -37,7 +39,7 @@ abstract class PlannerBucket implements _i1.SerializableModel {
     );
   }
 
-  int bucketId;
+  _i1.UuidValue bucketId;
 
   String bucketName;
 
@@ -47,7 +49,7 @@ abstract class PlannerBucket implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerBucket copyWith({
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
   });
@@ -55,7 +57,7 @@ abstract class PlannerBucket implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerBucket',
-      'bucketId': bucketId,
+      'bucketId': bucketId.toJson(),
       'bucketName': bucketName,
       'tickets': tickets.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -69,7 +71,7 @@ abstract class PlannerBucket implements _i1.SerializableModel {
 
 class _PlannerBucketImpl extends PlannerBucket {
   _PlannerBucketImpl({
-    required int bucketId,
+    required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
   }) : super._(
@@ -83,7 +85,7 @@ class _PlannerBucketImpl extends PlannerBucket {
   @_i1.useResult
   @override
   PlannerBucket copyWith({
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
   }) {

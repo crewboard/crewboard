@@ -1,0 +1,5 @@
+class: TypeModel
+fields:
+  typeId: UuidValue
+  typeName: String
+  color: String

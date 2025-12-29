@@ -1,0 +1,9 @@
+class: Doc
+table: doc
+fields:
+  id: UuidValue?, defaultPersist=random
+  appId: UuidValue
+  name: String
+  doc: String?
+  outline: String?
+  lastUpdated: DateTime

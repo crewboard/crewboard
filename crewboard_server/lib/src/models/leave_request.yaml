@@ -1,0 +1,8 @@
+class: LeaveRequest
+table: leave_request
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  request: String
+  accepted: bool?
+  date: DateTime?

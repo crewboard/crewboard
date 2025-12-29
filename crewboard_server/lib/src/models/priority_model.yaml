@@ -1,0 +1,5 @@
+class: PriorityModel
+fields:
+  priorityId: UuidValue
+  priorityName: String
+  priority: int

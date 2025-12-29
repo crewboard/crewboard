@@ -11,7 +11,7 @@ class MessagesController extends GetxController {
 
   final TextEditingController messageController = TextEditingController();
 
-  Future<void> loadInitialMessages({required int roomId}) async {
+  Future<void> loadInitialMessages({required UuidValue roomId}) async {
     try {
       isLoading.value = true;
       final response = await client.chat.getMessages(
@@ -45,7 +45,9 @@ class MessagesController extends GetxController {
       sameUser: false,
       deleted: false,
       createdAt: DateTime.now(),
-      userId: 0, // Will be set by server
+      userId: UuidValue.fromString(
+        '00000000-0000-4000-8000-000000000000',
+      ), // TODO: Get from auth
     );
 
     try {
@@ -58,7 +60,7 @@ class MessagesController extends GetxController {
     }
   }
 
-  void subscribeToRoom(int roomId) {
+  void subscribeToRoom(UuidValue roomId) {
     // Implement Serverpod streaming subscription here
     // For now we just reload periodically or manual refresh
   }

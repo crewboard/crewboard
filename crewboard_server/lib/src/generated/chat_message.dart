@@ -15,7 +15,7 @@ import 'message_type.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class ChatMessage
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   ChatMessage._({
     this.id,
     required this.roomId,
@@ -30,13 +30,13 @@ abstract class ChatMessage
   });
 
   factory ChatMessage({
-    int? id,
-    required int roomId,
-    int? parentMessageId,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    _i1.UuidValue? parentMessageId,
+    required _i1.UuidValue userId,
     required String message,
     required _i2.MessageType messageType,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
@@ -44,15 +44,21 @@ abstract class ChatMessage
 
   factory ChatMessage.fromJson(Map<String, dynamic> jsonSerialization) {
     return ChatMessage(
-      id: jsonSerialization['id'] as int?,
-      roomId: jsonSerialization['roomId'] as int,
-      parentMessageId: jsonSerialization['parentMessageId'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      roomId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['roomId']),
+      parentMessageId: jsonSerialization['parentMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['parentMessageId'],
+            ),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       message: jsonSerialization['message'] as String,
       messageType: _i2.MessageType.fromJson(
         (jsonSerialization['messageType'] as String),
       ),
-      seenUserList: _i3.Protocol().deserialize<List<int>>(
+      seenUserList: _i3.Protocol().deserialize<List<_i1.UuidValue>>(
         jsonSerialization['seenUserList'],
       ),
       sameUser: jsonSerialization['sameUser'] as bool,
@@ -68,19 +74,19 @@ abstract class ChatMessage
   static const db = ChatMessageRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int roomId;
+  _i1.UuidValue roomId;
 
-  int? parentMessageId;
+  _i1.UuidValue? parentMessageId;
 
-  int userId;
+  _i1.UuidValue userId;
 
   String message;
 
   _i2.MessageType messageType;
 
-  List<int> seenUserList;
+  List<_i1.UuidValue> seenUserList;
 
   bool sameUser;
 
@@ -89,19 +95,19 @@ abstract class ChatMessage
   DateTime createdAt;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [ChatMessage]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   ChatMessage copyWith({
-    int? id,
-    int? roomId,
-    int? parentMessageId,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? parentMessageId,
+    _i1.UuidValue? userId,
     String? message,
     _i2.MessageType? messageType,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
@@ -110,13 +116,13 @@ abstract class ChatMessage
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'ChatMessage',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      if (parentMessageId != null) 'parentMessageId': parentMessageId,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      if (parentMessageId != null) 'parentMessageId': parentMessageId?.toJson(),
+      'userId': userId.toJson(),
       'message': message,
       'messageType': messageType.toJson(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
@@ -127,13 +133,13 @@ abstract class ChatMessage
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'ChatMessage',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      if (parentMessageId != null) 'parentMessageId': parentMessageId,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      if (parentMessageId != null) 'parentMessageId': parentMessageId?.toJson(),
+      'userId': userId.toJson(),
       'message': message,
       'messageType': messageType.toJson(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
@@ -174,13 +180,13 @@ class _Undefined {}
 
 class _ChatMessageImpl extends ChatMessage {
   _ChatMessageImpl({
-    int? id,
-    required int roomId,
-    int? parentMessageId,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    _i1.UuidValue? parentMessageId,
+    required _i1.UuidValue userId,
     required String message,
     required _i2.MessageType messageType,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
@@ -203,20 +209,20 @@ class _ChatMessageImpl extends ChatMessage {
   @override
   ChatMessage copyWith({
     Object? id = _Undefined,
-    int? roomId,
+    _i1.UuidValue? roomId,
     Object? parentMessageId = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     String? message,
     _i2.MessageType? messageType,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
   }) {
     return ChatMessage(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomId: roomId ?? this.roomId,
-      parentMessageId: parentMessageId is int?
+      parentMessageId: parentMessageId is _i1.UuidValue?
           ? parentMessageId
           : this.parentMessageId,
       userId: userId ?? this.userId,
@@ -233,20 +239,24 @@ class _ChatMessageImpl extends ChatMessage {
 class ChatMessageUpdateTable extends _i1.UpdateTable<ChatMessageTable> {
   ChatMessageUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> roomId(int value) => _i1.ColumnValue(
-    table.roomId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> roomId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.roomId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> parentMessageId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> parentMessageId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
     table.parentMessageId,
     value,
   );
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> message(String value) => _i1.ColumnValue(
     table.message,
@@ -260,11 +270,12 @@ class ChatMessageUpdateTable extends _i1.UpdateTable<ChatMessageTable> {
     value,
   );
 
-  _i1.ColumnValue<List<int>, List<int>> seenUserList(List<int> value) =>
-      _i1.ColumnValue(
-        table.seenUserList,
-        value,
-      );
+  _i1.ColumnValue<List<_i1.UuidValue>, List<_i1.UuidValue>> seenUserList(
+    List<_i1.UuidValue> value,
+  ) => _i1.ColumnValue(
+    table.seenUserList,
+    value,
+  );
 
   _i1.ColumnValue<bool, bool> sameUser(bool value) => _i1.ColumnValue(
     table.sameUser,
@@ -283,18 +294,18 @@ class ChatMessageUpdateTable extends _i1.UpdateTable<ChatMessageTable> {
       );
 }
 
-class ChatMessageTable extends _i1.Table<int?> {
+class ChatMessageTable extends _i1.Table<_i1.UuidValue?> {
   ChatMessageTable({super.tableRelation}) : super(tableName: 'chat_message') {
     updateTable = ChatMessageUpdateTable(this);
-    roomId = _i1.ColumnInt(
+    roomId = _i1.ColumnUuid(
       'roomId',
       this,
     );
-    parentMessageId = _i1.ColumnInt(
+    parentMessageId = _i1.ColumnUuid(
       'parentMessageId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -307,7 +318,7 @@ class ChatMessageTable extends _i1.Table<int?> {
       this,
       _i1.EnumSerialization.byName,
     );
-    seenUserList = _i1.ColumnSerializable<List<int>>(
+    seenUserList = _i1.ColumnSerializable<List<_i1.UuidValue>>(
       'seenUserList',
       this,
     );
@@ -327,17 +338,17 @@ class ChatMessageTable extends _i1.Table<int?> {
 
   late final ChatMessageUpdateTable updateTable;
 
-  late final _i1.ColumnInt roomId;
+  late final _i1.ColumnUuid roomId;
 
-  late final _i1.ColumnInt parentMessageId;
+  late final _i1.ColumnUuid parentMessageId;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   late final _i1.ColumnString message;
 
   late final _i1.ColumnEnum<_i2.MessageType> messageType;
 
-  late final _i1.ColumnSerializable<List<int>> seenUserList;
+  late final _i1.ColumnSerializable<List<_i1.UuidValue>> seenUserList;
 
   late final _i1.ColumnBool sameUser;
 
@@ -367,7 +378,7 @@ class ChatMessageInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => ChatMessage.t;
+  _i1.Table<_i1.UuidValue?> get table => ChatMessage.t;
 }
 
 class ChatMessageIncludeList extends _i1.IncludeList {
@@ -387,7 +398,7 @@ class ChatMessageIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => ChatMessage.t;
+  _i1.Table<_i1.UuidValue?> get table => ChatMessage.t;
 }
 
 class ChatMessageRepository {
@@ -475,7 +486,7 @@ class ChatMessageRepository {
   /// Finds a single [ChatMessage] by its [id] or null if no such row exists.
   Future<ChatMessage?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<ChatMessage>(
@@ -553,7 +564,7 @@ class ChatMessageRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<ChatMessage?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<ChatMessageUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

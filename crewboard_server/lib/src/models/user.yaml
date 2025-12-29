@@ -1,0 +1,28 @@
+class: User
+table: users
+fields:
+  id: UuidValue?, defaultPersist=random
+  userName: String
+  password: String?, scope=none
+  image: String?
+  organization: Organization?, relation
+  color: SystemColor?, relation
+  userType: UserTypes?, relation
+  leaveConfig: LeaveConfig?, relation
+  performanceConfigId: int?
+  firstName: String
+  lastName: String
+  gender: String
+  dateOfBirth: DateTime?
+  phone: String
+  email: String
+  bloodGroup: String?
+  salary: String?
+  experience: String?
+  punchId: String?
+  attachments: String?
+  performance: int
+  plannerVariables: String?
+  online: bool
+  onsite: bool
+  deleted: bool

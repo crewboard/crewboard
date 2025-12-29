@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class PlannerApp
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   PlannerApp._({
     this.id,
     required this.appName,
@@ -22,18 +22,26 @@ abstract class PlannerApp
   });
 
   factory PlannerApp({
-    int? id,
+    _i1.UuidValue? id,
     required String appName,
-    required int colorId,
-    int? organizationId,
+    required _i1.UuidValue colorId,
+    _i1.UuidValue? organizationId,
   }) = _PlannerAppImpl;
 
   factory PlannerApp.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerApp(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       appName: jsonSerialization['appName'] as String,
-      colorId: jsonSerialization['colorId'] as int,
-      organizationId: jsonSerialization['organizationId'] as int?,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
+      organizationId: jsonSerialization['organizationId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['organizationId'],
+            ),
     );
   }
 
@@ -42,34 +50,34 @@ abstract class PlannerApp
   static const db = PlannerAppRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String appName;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
-  int? organizationId;
+  _i1.UuidValue? organizationId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [PlannerApp]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerApp copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? appName,
-    int? colorId,
-    int? organizationId,
+    _i1.UuidValue? colorId,
+    _i1.UuidValue? organizationId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerApp',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'appName': appName,
-      'colorId': colorId,
-      if (organizationId != null) 'organizationId': organizationId,
+      'colorId': colorId.toJson(),
+      if (organizationId != null) 'organizationId': organizationId?.toJson(),
     };
   }
 
@@ -77,10 +85,10 @@ abstract class PlannerApp
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'PlannerApp',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'appName': appName,
-      'colorId': colorId,
-      if (organizationId != null) 'organizationId': organizationId,
+      'colorId': colorId.toJson(),
+      if (organizationId != null) 'organizationId': organizationId?.toJson(),
     };
   }
 
@@ -118,10 +126,10 @@ class _Undefined {}
 
 class _PlannerAppImpl extends PlannerApp {
   _PlannerAppImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String appName,
-    required int colorId,
-    int? organizationId,
+    required _i1.UuidValue colorId,
+    _i1.UuidValue? organizationId,
   }) : super._(
          id: id,
          appName: appName,
@@ -136,14 +144,14 @@ class _PlannerAppImpl extends PlannerApp {
   PlannerApp copyWith({
     Object? id = _Undefined,
     String? appName,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? organizationId = _Undefined,
   }) {
     return PlannerApp(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       appName: appName ?? this.appName,
       colorId: colorId ?? this.colorId,
-      organizationId: organizationId is int?
+      organizationId: organizationId is _i1.UuidValue?
           ? organizationId
           : this.organizationId,
     );
@@ -158,29 +166,32 @@ class PlannerAppUpdateTable extends _i1.UpdateTable<PlannerAppTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> colorId(int value) => _i1.ColumnValue(
-    table.colorId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> colorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.colorId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> organizationId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> organizationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
     table.organizationId,
     value,
   );
 }
 
-class PlannerAppTable extends _i1.Table<int?> {
+class PlannerAppTable extends _i1.Table<_i1.UuidValue?> {
   PlannerAppTable({super.tableRelation}) : super(tableName: 'planner_apps') {
     updateTable = PlannerAppUpdateTable(this);
     appName = _i1.ColumnString(
       'appName',
       this,
     );
-    colorId = _i1.ColumnInt(
+    colorId = _i1.ColumnUuid(
       'colorId',
       this,
     );
-    organizationId = _i1.ColumnInt(
+    organizationId = _i1.ColumnUuid(
       'organizationId',
       this,
     );
@@ -190,9 +201,9 @@ class PlannerAppTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString appName;
 
-  late final _i1.ColumnInt colorId;
+  late final _i1.ColumnUuid colorId;
 
-  late final _i1.ColumnInt organizationId;
+  late final _i1.ColumnUuid organizationId;
 
   @override
   List<_i1.Column> get columns => [
@@ -210,7 +221,7 @@ class PlannerAppInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => PlannerApp.t;
+  _i1.Table<_i1.UuidValue?> get table => PlannerApp.t;
 }
 
 class PlannerAppIncludeList extends _i1.IncludeList {
@@ -230,7 +241,7 @@ class PlannerAppIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => PlannerApp.t;
+  _i1.Table<_i1.UuidValue?> get table => PlannerApp.t;
 }
 
 class PlannerAppRepository {
@@ -318,7 +329,7 @@ class PlannerAppRepository {
   /// Finds a single [PlannerApp] by its [id] or null if no such row exists.
   Future<PlannerApp?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<PlannerApp>(
@@ -396,7 +407,7 @@ class PlannerAppRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<PlannerApp?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<PlannerAppUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

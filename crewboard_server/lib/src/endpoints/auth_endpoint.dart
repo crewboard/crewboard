@@ -1,12 +1,27 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
-import '../utils.dart';
+import '../services/user_service.dart';
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
-import 'package:serverpod_auth_idp_server/core.dart';
 import 'dart:io';
 
 class AuthEndpoint extends Endpoint {
+  Future<CheckUsernameResponse> checkUsername(
+    Session session,
+    String userName,
+  ) async {
+    try {
+      final user = await User.db.findFirstRow(
+        session,
+        where: (t) => t.userName.equals(userName),
+      );
+      return CheckUsernameResponse(exists: user != null);
+    } catch (e) {
+      stdout.writeln('Check username error: $e');
+      return CheckUsernameResponse(exists: false);
+    }
+  }
+
   Future<CheckOrganizationResponse> checkOrganization(
     Session session,
     String name,
@@ -30,12 +45,11 @@ class AuthEndpoint extends Endpoint {
     String password,
     String signupType,
     String? organizationName,
-    int? organizationId,
+    UuidValue? organizationId,
   ) async {
     try {
-      // 1. Validate email (basic regex)
-      final emailRegex = RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$");
-      if (!emailRegex.hasMatch(email)) {
+      // 1. Validate email
+      if (!UserService.isValidEmail(email)) {
         return RegisterAdminResponse(
           success: false,
           message: 'Invalid email format',
@@ -43,14 +57,15 @@ class AuthEndpoint extends Endpoint {
       }
 
       // 2. Validate password
-      if (password.length < 8) {
+      final passwordError = UserService.validatePassword(password);
+      if (passwordError != null) {
         return RegisterAdminResponse(
           success: false,
-          message: 'Password too short',
+          message: passwordError,
         );
       }
 
-      // 3. Check username
+      // 3. Check username availability
       final existingUser = await User.db.findFirstRow(
         session,
         where: (t) => t.userName.equals(username),
@@ -60,17 +75,13 @@ class AuthEndpoint extends Endpoint {
           'Registration failed: Username $username already exists',
         );
         return RegisterAdminResponse(
-          success: false,
+          success: true,
           message: 'Username already exists',
           userId: existingUser.id.toString(),
         );
       }
 
-      // 4. Defaults
-      // Need default SystemColor, UserType(admin), LeaveConfig.
-      // This implies we have seeded data. If not, this might fail or we create them.
-      // For now, let's look for defaults.
-
+      // 4. Get system defaults
       final adminUserType = await UserTypes.db.findFirstRow(
         session,
         where: (t) => t.userType.equals('admin'),
@@ -90,9 +101,10 @@ class AuthEndpoint extends Endpoint {
         );
       }
 
-      int finalOrgId;
+      // 5. Determine organization ID
+      UuidValue finalOrgId;
       if (signupType == 'organization') {
-        // Create Org
+        // Create new organization
         final org = Organization(
           name: organizationName ?? 'Default Organization',
         );
@@ -113,18 +125,15 @@ class AuthEndpoint extends Endpoint {
         );
       }
 
-      // 5. Create User
-      final hashedPassword = hashPassword(password);
-
+      // 6. Create user with auth integration using unified service
       final newUser = User(
         userName: username,
-        password: hashedPassword,
         email: email,
         organizationId: finalOrgId,
         colorId: defaultColor.id!,
         userTypeId: adminUserType.id!,
         leaveConfigId: defaultLeaveConfig.id!,
-        firstName: username, // Default
+        firstName: username,
         lastName: '',
         gender: 'unspecified',
         phone: '',
@@ -134,39 +143,11 @@ class AuthEndpoint extends Endpoint {
         deleted: false,
       );
 
-      stdout.writeln('Creating custom User record for $username...');
-      final insertedUser = await User.db.insertRow(session, newUser);
-
-      // --- serverpod_auth integration ---
-      stdout.writeln('Syncing with serverpod_auth for $email...');
-      // Create AuthUser
-      final authUser = await AuthServices.instance.authUsers.create(
+      final insertedUser = await UserService.createUserWithAuth(
         session,
+        newUser,
+        password,
       );
-      final authUserId = authUser.id;
-      stdout.writeln('AuthUser created with ID: $authUserId');
-
-      // Create UserProfile
-      await AuthServices.instance.userProfiles.createUserProfile(
-        session,
-        authUserId,
-        UserProfileData(
-          email: email,
-          userName: username,
-        ),
-      );
-      stdout.writeln('UserProfile created.');
-
-      // Create Email Authentication
-      final emailIdp = AuthServices.getIdentityProvider<EmailIdp>();
-      await emailIdp.admin.createEmailAuthentication(
-        session,
-        authUserId: authUserId,
-        email: email,
-        password: password,
-      );
-      stdout.writeln('EmailAuthentication created for $email.');
-      // ----------------------------------
 
       stdout.writeln('Registration successful for $username');
       return RegisterAdminResponse(
@@ -178,7 +159,61 @@ class AuthEndpoint extends Endpoint {
       stdout.writeln('Registration error: $e');
       return RegisterAdminResponse(
         success: false,
-        message: 'Registration failed',
+        message: 'Registration failed: ${e.toString()}',
+      );
+    }
+  }
+
+  Future<SignInResponse> simpleLogin(
+    Session session,
+    String username,
+    String password,
+  ) async {
+    try {
+      // 1. Find User to get email from Custom User table (UserInfo is legacy/unused)
+      final user = await User.db.findFirstRow(
+        session,
+        where: (t) => t.userName.equals(username),
+      );
+
+      if (user == null) {
+        return SignInResponse(
+          success: false,
+          message: 'User not found',
+        );
+      }
+
+      // 2. Use EmailIdp to login
+      try {
+        final emailIdp = AuthServices.getIdentityProvider<EmailIdp>();
+        final authSuccess = await emailIdp.login(
+          session,
+          email: user.email,
+          password: password,
+        );
+
+        return SignInResponse(
+          success: true,
+          message: 'Login successful',
+          userId: user.id.toString(),
+          organizationId: user.organizationId.toString(),
+          authKeyId: 0, // Dummy ID, SAS uses encoded token
+          authToken: authSuccess.token,
+          authUserId: authSuccess.authUserId.toString(),
+        );
+      } catch (e) {
+        // EmailIdp throws exceptions for invalid credentials
+        stdout.writeln('EmailIdp login error: $e');
+        return SignInResponse(
+          success: false,
+          message: 'Invalid credentials',
+        );
+      }
+    } catch (e) {
+      stdout.writeln('Simple login error: $e');
+      return SignInResponse(
+        success: false,
+        message: 'Login failed: ${e.toString()}',
       );
     }
   }

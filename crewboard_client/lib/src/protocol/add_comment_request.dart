@@ -19,18 +19,20 @@ abstract class AddCommentRequest implements _i1.SerializableModel {
   });
 
   factory AddCommentRequest({
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     required String message,
   }) = _AddCommentRequestImpl;
 
   factory AddCommentRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return AddCommentRequest(
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       message: jsonSerialization['message'] as String,
     );
   }
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   String message;
 
@@ -38,14 +40,14 @@ abstract class AddCommentRequest implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   AddCommentRequest copyWith({
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     String? message,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'AddCommentRequest',
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       'message': message,
     };
   }
@@ -58,7 +60,7 @@ abstract class AddCommentRequest implements _i1.SerializableModel {
 
 class _AddCommentRequestImpl extends AddCommentRequest {
   _AddCommentRequestImpl({
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     required String message,
   }) : super._(
          ticketId: ticketId,
@@ -70,7 +72,7 @@ class _AddCommentRequestImpl extends AddCommentRequest {
   @_i1.useResult
   @override
   AddCommentRequest copyWith({
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     String? message,
   }) {
     return AddCommentRequest(

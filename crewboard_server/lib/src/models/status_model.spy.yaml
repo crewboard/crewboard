@@ -1,4 +1,0 @@
-class: StatusModel
-fields:
-  statusId: int
-  statusName: String

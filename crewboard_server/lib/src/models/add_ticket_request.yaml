@@ -1,0 +1,5 @@
+class: AddTicketRequest
+fields:
+  appId: UuidValue
+  bucketId: UuidValue
+  ticket: TicketModel

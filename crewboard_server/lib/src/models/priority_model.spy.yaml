@@ -1,5 +1,0 @@
-class: PriorityModel
-fields:
-  priorityId: int
-  priorityName: String
-  priority: int

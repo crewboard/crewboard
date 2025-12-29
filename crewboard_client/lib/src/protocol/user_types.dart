@@ -25,9 +25,9 @@ abstract class UserTypes implements _i1.SerializableModel {
   });
 
   factory UserTypes({
-    int? id,
+    _i1.UuidValue? id,
     required String userType,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i2.SystemColor? color,
     required String permissions,
     required bool isAdmin,
@@ -35,9 +35,13 @@ abstract class UserTypes implements _i1.SerializableModel {
 
   factory UserTypes.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserTypes(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userType: jsonSerialization['userType'] as String,
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
       color: jsonSerialization['color'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.SystemColor>(
@@ -51,11 +55,11 @@ abstract class UserTypes implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String userType;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
   _i2.SystemColor? color;
 
@@ -67,9 +71,9 @@ abstract class UserTypes implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserTypes copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? userType,
-    int? colorId,
+    _i1.UuidValue? colorId,
     _i2.SystemColor? color,
     String? permissions,
     bool? isAdmin,
@@ -78,9 +82,9 @@ abstract class UserTypes implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserTypes',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userType': userType,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJson(),
       'permissions': permissions,
       'isAdmin': isAdmin,
@@ -97,9 +101,9 @@ class _Undefined {}
 
 class _UserTypesImpl extends UserTypes {
   _UserTypesImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String userType,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i2.SystemColor? color,
     required String permissions,
     required bool isAdmin,
@@ -119,13 +123,13 @@ class _UserTypesImpl extends UserTypes {
   UserTypes copyWith({
     Object? id = _Undefined,
     String? userType,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? color = _Undefined,
     String? permissions,
     bool? isAdmin,
   }) {
     return UserTypes(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userType: userType ?? this.userType,
       colorId: colorId ?? this.colorId,
       color: color is _i2.SystemColor? ? color : this.color?.copyWith(),

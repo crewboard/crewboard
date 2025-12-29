@@ -16,20 +16,26 @@ import '../auth/jwt_refresh_endpoint.dart' as _i3;
 import '../endpoints/admin_endpoint.dart' as _i4;
 import '../endpoints/auth_endpoint.dart' as _i5;
 import '../endpoints/chat_endpoint.dart' as _i6;
-import '../endpoints/planner_endpoint.dart' as _i7;
-import '../greetings/greeting_endpoint.dart' as _i8;
-import 'package:crewboard_server/src/generated/chat_message.dart' as _i9;
-import 'package:crewboard_server/src/generated/add_ticket_request.dart' as _i10;
+import '../endpoints/docs_endpoint.dart' as _i7;
+import '../endpoints/planner_endpoint.dart' as _i8;
+import '../greetings/greeting_endpoint.dart' as _i9;
+import 'package:crewboard_server/src/generated/user_types.dart' as _i10;
+import 'package:crewboard_server/src/generated/user.dart' as _i11;
+import 'package:crewboard_server/src/generated/leave_config.dart' as _i12;
+import 'package:crewboard_server/src/generated/leave_request.dart' as _i13;
+import 'package:crewboard_server/src/generated/chat_message.dart' as _i14;
+import 'package:crewboard_server/src/generated/flow_model.dart' as _i15;
+import 'package:crewboard_server/src/generated/add_ticket_request.dart' as _i16;
 import 'package:crewboard_server/src/generated/add_comment_request.dart'
-    as _i11;
-import 'package:crewboard_server/src/generated/add_bucket_request.dart' as _i12;
+    as _i17;
+import 'package:crewboard_server/src/generated/add_bucket_request.dart' as _i18;
 import 'package:crewboard_server/src/generated/change_bucket_request.dart'
-    as _i13;
+    as _i19;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i14;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i15;
+    as _i20;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i21;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i16;
+    as _i22;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -65,13 +71,19 @@ class Endpoints extends _i1.EndpointDispatch {
           'chat',
           null,
         ),
-      'planner': _i7.PlannerEndpoint()
+      'docs': _i7.DocsEndpoint()
+        ..initialize(
+          server,
+          'docs',
+          null,
+        ),
+      'planner': _i8.PlannerEndpoint()
         ..initialize(
           server,
           'planner',
           null,
         ),
-      'greeting': _i8.GreetingEndpoint()
+      'greeting': _i9.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -286,6 +298,16 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async =>
                   (endpoints['admin'] as _i4.AdminEndpoint).getApps(session),
         ),
+        'getSystemVariables': _i1.MethodConnector(
+          name: 'getSystemVariables',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint)
+                  .getSystemVariables(session),
+        ),
         'addApp': _i1.MethodConnector(
           name: 'addApp',
           params: {
@@ -296,7 +318,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'colorId': _i1.ParameterDescription(
               name: 'colorId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -310,12 +332,225 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['colorId'],
               ),
         ),
+        'getUsers': _i1.MethodConnector(
+          name: 'getUsers',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).getUsers(session),
+        ),
+        'getUserTypes': _i1.MethodConnector(
+          name: 'getUserTypes',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).getUserTypes(
+                session,
+              ),
+        ),
+        'addUserType': _i1.MethodConnector(
+          name: 'addUserType',
+          params: {
+            'type': _i1.ParameterDescription(
+              name: 'type',
+              type: _i1.getType<_i10.UserTypes>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).addUserType(
+                session,
+                params['type'],
+              ),
+        ),
+        'getAttendance': _i1.MethodConnector(
+          name: 'getAttendance',
+          params: {
+            'date': _i1.ParameterDescription(
+              name: 'date',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).getAttendance(
+                    session,
+                    params['date'],
+                  ),
+        ),
+        'punch': _i1.MethodConnector(
+          name: 'punch',
+          params: {
+            'mode': _i1.ParameterDescription(
+              name: 'mode',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).punch(
+                session,
+                params['mode'],
+              ),
+        ),
+        'getLeaveConfigs': _i1.MethodConnector(
+          name: 'getLeaveConfigs',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint)
+                  .getLeaveConfigs(session),
+        ),
+        'getColors': _i1.MethodConnector(
+          name: 'getColors',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).getColors(session),
+        ),
+        'addColor': _i1.MethodConnector(
+          name: 'addColor',
+          params: {
+            'hex': _i1.ParameterDescription(
+              name: 'hex',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).addColor(
+                session,
+                params['hex'],
+              ),
+        ),
+        'createUser': _i1.MethodConnector(
+          name: 'createUser',
+          params: {
+            'user': _i1.ParameterDescription(
+              name: 'user',
+              type: _i1.getType<_i11.User>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).createUser(
+                session,
+                params['user'],
+                params['password'],
+              ),
+        ),
+        'getAttendanceData': _i1.MethodConnector(
+          name: 'getAttendanceData',
+          params: {
+            'date': _i1.ParameterDescription(
+              name: 'date',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).getAttendanceData(
+                    session,
+                    params['date'],
+                  ),
+        ),
+        'saveLeaveConfig': _i1.MethodConnector(
+          name: 'saveLeaveConfig',
+          params: {
+            'config': _i1.ParameterDescription(
+              name: 'config',
+              type: _i1.getType<_i12.LeaveConfig>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).saveLeaveConfig(
+                    session,
+                    params['config'],
+                  ),
+        ),
+        'saveLeaveRequest': _i1.MethodConnector(
+          name: 'saveLeaveRequest',
+          params: {
+            'request': _i1.ParameterDescription(
+              name: 'request',
+              type: _i1.getType<_i13.LeaveRequest>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i4.AdminEndpoint).saveLeaveRequest(
+                    session,
+                    params['request'],
+                  ),
+        ),
       },
     );
     connectors['auth'] = _i1.EndpointConnector(
       name: 'auth',
       endpoint: endpoints['auth']!,
       methodConnectors: {
+        'checkUsername': _i1.MethodConnector(
+          name: 'checkUsername',
+          params: {
+            'userName': _i1.ParameterDescription(
+              name: 'userName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i5.AuthEndpoint).checkUsername(
+                session,
+                params['userName'],
+              ),
+        ),
         'checkOrganization': _i1.MethodConnector(
           name: 'checkOrganization',
           params: {
@@ -365,7 +600,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'organizationId': _i1.ParameterDescription(
               name: 'organizationId',
-              type: _i1.getType<int?>(),
+              type: _i1.getType<_i1.UuidValue?>(),
               nullable: true,
             ),
           },
@@ -381,6 +616,30 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['signupType'],
                 params['organizationName'],
                 params['organizationId'],
+              ),
+        ),
+        'simpleLogin': _i1.MethodConnector(
+          name: 'simpleLogin',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i5.AuthEndpoint).simpleLogin(
+                session,
+                params['username'],
+                params['password'],
               ),
         ),
       },
@@ -399,12 +658,49 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async =>
                   (endpoints['chat'] as _i6.ChatEndpoint).getRooms(session),
         ),
+        'searchUsers': _i1.MethodConnector(
+          name: 'searchUsers',
+          params: {
+            'query': _i1.ParameterDescription(
+              name: 'query',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['chat'] as _i6.ChatEndpoint).searchUsers(
+                session,
+                params['query'],
+              ),
+        ),
+        'createDirectRoom': _i1.MethodConnector(
+          name: 'createDirectRoom',
+          params: {
+            'otherUserId': _i1.ParameterDescription(
+              name: 'otherUserId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['chat'] as _i6.ChatEndpoint).createDirectRoom(
+                    session,
+                    params['otherUserId'],
+                  ),
+        ),
         'getMessages': _i1.MethodConnector(
           name: 'getMessages',
           params: {
             'roomId': _i1.ParameterDescription(
               name: 'roomId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'limit': _i1.ParameterDescription(
@@ -434,7 +730,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'message': _i1.ParameterDescription(
               name: 'message',
-              type: _i1.getType<_i9.ChatMessage>(),
+              type: _i1.getType<_i14.ChatMessage>(),
               nullable: false,
             ),
           },
@@ -449,6 +745,174 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['docs'] = _i1.EndpointConnector(
+      name: 'docs',
+      endpoint: endpoints['docs']!,
+      methodConnectors: {
+        'createFlow': _i1.MethodConnector(
+          name: 'createFlow',
+          params: {
+            'flow': _i1.ParameterDescription(
+              name: 'flow',
+              type: _i1.getType<_i15.FlowModel>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).createFlow(
+                session,
+                params['flow'],
+              ),
+        ),
+        'updateFlow': _i1.MethodConnector(
+          name: 'updateFlow',
+          params: {
+            'flow': _i1.ParameterDescription(
+              name: 'flow',
+              type: _i1.getType<_i15.FlowModel>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).updateFlow(
+                session,
+                params['flow'],
+              ),
+        ),
+        'getFlows': _i1.MethodConnector(
+          name: 'getFlows',
+          params: {
+            'appId': _i1.ParameterDescription(
+              name: 'appId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).getFlows(
+                session,
+                params['appId'],
+              ),
+        ),
+        'getFlow': _i1.MethodConnector(
+          name: 'getFlow',
+          params: {
+            'flowId': _i1.ParameterDescription(
+              name: 'flowId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).getFlow(
+                session,
+                params['flowId'],
+              ),
+        ),
+        'deleteFlow': _i1.MethodConnector(
+          name: 'deleteFlow',
+          params: {
+            'flowId': _i1.ParameterDescription(
+              name: 'flowId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).deleteFlow(
+                session,
+                params['flowId'],
+              ),
+        ),
+        'getDocs': _i1.MethodConnector(
+          name: 'getDocs',
+          params: {
+            'appId': _i1.ParameterDescription(
+              name: 'appId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).getDocs(
+                session,
+                params['appId'],
+              ),
+        ),
+        'addDoc': _i1.MethodConnector(
+          name: 'addDoc',
+          params: {
+            'appId': _i1.ParameterDescription(
+              name: 'appId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'name': _i1.ParameterDescription(
+              name: 'name',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).addDoc(
+                session,
+                params['appId'],
+                params['name'],
+              ),
+        ),
+        'saveDoc': _i1.MethodConnector(
+          name: 'saveDoc',
+          params: {
+            'docId': _i1.ParameterDescription(
+              name: 'docId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'docContent': _i1.ParameterDescription(
+              name: 'docContent',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'outline': _i1.ParameterDescription(
+              name: 'outline',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['docs'] as _i7.DocsEndpoint).saveDoc(
+                session,
+                params['docId'],
+                params['docContent'],
+                params['outline'],
+              ),
+        ),
+      },
+    );
     connectors['planner'] = _i1.EndpointConnector(
       name: 'planner',
       endpoint: endpoints['planner']!,
@@ -458,7 +922,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'appId': _i1.ParameterDescription(
               name: 'appId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -467,7 +931,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).getPlannerData(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).getPlannerData(
                     session,
                     params['appId'],
                   ),
@@ -479,7 +943,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['planner'] as _i7.PlannerEndpoint)
+              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
                   .getAddTicketData(session),
         ),
         'addTicket': _i1.MethodConnector(
@@ -487,7 +951,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i10.AddTicketRequest>(),
+              type: _i1.getType<_i16.AddTicketRequest>(),
               nullable: false,
             ),
           },
@@ -496,7 +960,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).addTicket(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).addTicket(
                     session,
                     params['request'],
                   ),
@@ -506,7 +970,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'appId': _i1.ParameterDescription(
               name: 'appId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -515,7 +979,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).getAllTickets(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).getAllTickets(
                     session,
                     params['appId'],
                   ),
@@ -525,7 +989,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'ticketId': _i1.ParameterDescription(
               name: 'ticketId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -534,7 +998,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).getTicketData(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).getTicketData(
                     session,
                     params['ticketId'],
                   ),
@@ -544,7 +1008,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'ticketId': _i1.ParameterDescription(
               name: 'ticketId',
-              type: _i1.getType<int>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -552,7 +1016,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['planner'] as _i7.PlannerEndpoint)
+              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
                   .getTicketComments(
                     session,
                     params['ticketId'],
@@ -563,7 +1027,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i11.AddCommentRequest>(),
+              type: _i1.getType<_i17.AddCommentRequest>(),
               nullable: false,
             ),
           },
@@ -572,7 +1036,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).addComment(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).addComment(
                     session,
                     params['request'],
                   ),
@@ -582,7 +1046,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i12.AddBucketRequest>(),
+              type: _i1.getType<_i18.AddBucketRequest>(),
               nullable: false,
             ),
           },
@@ -591,7 +1055,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).addBucket(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).addBucket(
                     session,
                     params['request'],
                   ),
@@ -601,7 +1065,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i13.ChangeBucketRequest>(),
+              type: _i1.getType<_i19.ChangeBucketRequest>(),
               nullable: false,
             ),
           },
@@ -610,7 +1074,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i7.PlannerEndpoint).changeBucket(
+                  (endpoints['planner'] as _i8.PlannerEndpoint).changeBucket(
                     session,
                     params['request'],
                   ),
@@ -634,17 +1098,17 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['greeting'] as _i8.GreetingEndpoint).hello(
+              ) async => (endpoints['greeting'] as _i9.GreetingEndpoint).hello(
                 session,
                 params['name'],
               ),
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i14.Endpoints()
+    modules['serverpod_auth_idp'] = _i20.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth'] = _i15.Endpoints()..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i16.Endpoints()
+    modules['serverpod_auth'] = _i21.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth_core'] = _i22.Endpoints()
       ..initializeEndpoints(server);
   }
 }

@@ -18,7 +18,7 @@ import 'user.dart' as _i3;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i4;
 
 abstract class TicketComment
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   TicketComment._({
     this.id,
     required this.ticketId,
@@ -30,10 +30,10 @@ abstract class TicketComment
   });
 
   factory TicketComment({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
     required String message,
     DateTime? createdAt,
@@ -41,12 +41,16 @@ abstract class TicketComment
 
   factory TicketComment.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketComment(
-      id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
@@ -62,13 +66,13 @@ abstract class TicketComment
   static const db = TicketCommentRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
@@ -77,16 +81,16 @@ abstract class TicketComment
   DateTime? createdAt;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [TicketComment]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketComment copyWith({
-    int? id,
-    int? ticketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
     String? message,
     DateTime? createdAt,
@@ -95,10 +99,10 @@ abstract class TicketComment
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketComment',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'message': message,
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
@@ -109,10 +113,10 @@ abstract class TicketComment
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TicketComment',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       'message': message,
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
@@ -159,10 +163,10 @@ class _Undefined {}
 
 class _TicketCommentImpl extends TicketComment {
   _TicketCommentImpl({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
     required String message,
     DateTime? createdAt,
@@ -182,15 +186,15 @@ class _TicketCommentImpl extends TicketComment {
   @override
   TicketComment copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? message,
     Object? createdAt = _Undefined,
   }) {
     return TicketComment(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       ticketId: ticketId ?? this.ticketId,
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       userId: userId ?? this.userId,
@@ -204,15 +208,17 @@ class _TicketCommentImpl extends TicketComment {
 class TicketCommentUpdateTable extends _i1.UpdateTable<TicketCommentTable> {
   TicketCommentUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.ticketId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> message(String value) => _i1.ColumnValue(
     table.message,
@@ -226,15 +232,15 @@ class TicketCommentUpdateTable extends _i1.UpdateTable<TicketCommentTable> {
       );
 }
 
-class TicketCommentTable extends _i1.Table<int?> {
+class TicketCommentTable extends _i1.Table<_i1.UuidValue?> {
   TicketCommentTable({super.tableRelation})
     : super(tableName: 'ticket_comments') {
     updateTable = TicketCommentUpdateTable(this);
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -250,11 +256,11 @@ class TicketCommentTable extends _i1.Table<int?> {
 
   late final TicketCommentUpdateTable updateTable;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i2.TicketTable? _ticket;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i3.UserTable? _user;
 
@@ -329,7 +335,7 @@ class TicketCommentInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => TicketComment.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketComment.t;
 }
 
 class TicketCommentIncludeList extends _i1.IncludeList {
@@ -349,7 +355,7 @@ class TicketCommentIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => TicketComment.t;
+  _i1.Table<_i1.UuidValue?> get table => TicketComment.t;
 }
 
 class TicketCommentRepository {
@@ -443,7 +449,7 @@ class TicketCommentRepository {
   /// Finds a single [TicketComment] by its [id] or null if no such row exists.
   Future<TicketComment?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketCommentInclude? include,
   }) async {
@@ -523,7 +529,7 @@ class TicketCommentRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketComment?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketCommentUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

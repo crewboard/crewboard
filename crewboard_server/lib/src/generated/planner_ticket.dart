@@ -31,7 +31,7 @@ abstract class PlannerTicket
   });
 
   factory PlannerTicket({
-    required int id,
+    required _i1.UuidValue id,
     required String ticketName,
     required String ticketBody,
     required String statusName,
@@ -46,7 +46,7 @@ abstract class PlannerTicket
 
   factory PlannerTicket.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerTicket(
-      id: jsonSerialization['id'] as int,
+      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       ticketName: jsonSerialization['ticketName'] as String,
       ticketBody: jsonSerialization['ticketBody'] as String,
       statusName: jsonSerialization['statusName'] as String,
@@ -62,7 +62,7 @@ abstract class PlannerTicket
     );
   }
 
-  int id;
+  _i1.UuidValue id;
 
   String ticketName;
 
@@ -88,7 +88,7 @@ abstract class PlannerTicket
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerTicket copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? ticketName,
     String? ticketBody,
     String? statusName,
@@ -104,7 +104,7 @@ abstract class PlannerTicket
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerTicket',
-      'id': id,
+      'id': id.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
       'statusName': statusName,
@@ -122,7 +122,7 @@ abstract class PlannerTicket
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'PlannerTicket',
-      'id': id,
+      'id': id.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
       'statusName': statusName,
@@ -146,7 +146,7 @@ class _Undefined {}
 
 class _PlannerTicketImpl extends PlannerTicket {
   _PlannerTicketImpl({
-    required int id,
+    required _i1.UuidValue id,
     required String ticketName,
     required String ticketBody,
     required String statusName,
@@ -176,7 +176,7 @@ class _PlannerTicketImpl extends PlannerTicket {
   @_i1.useResult
   @override
   PlannerTicket copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? ticketName,
     String? ticketBody,
     String? statusName,

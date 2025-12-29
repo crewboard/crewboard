@@ -1,6 +1,0 @@
-class: Bucket
-table: buckets
-fields:
-  userId: int
-  appId: int
-  bucketName: String

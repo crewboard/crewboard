@@ -122,7 +122,7 @@ class DraggableCard extends StatelessWidget {
     required this.bucketId,
   });
   final PlannerTicket ticket;
-  final int bucketId;
+  final UuidValue bucketId;
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class TicketWidget extends StatelessWidget {
     required this.bucketId,
   });
   final PlannerTicket ticket;
-  final int bucketId;
+  final UuidValue bucketId;
 
   @override
   Widget build(BuildContext context) {

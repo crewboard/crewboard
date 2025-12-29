@@ -22,7 +22,7 @@ abstract class LeaveConfig implements _i1.SerializableModel {
   });
 
   factory LeaveConfig({
-    int? id,
+    _i1.UuidValue? id,
     required String configName,
     required int fullDay,
     required int halfDay,
@@ -31,7 +31,9 @@ abstract class LeaveConfig implements _i1.SerializableModel {
 
   factory LeaveConfig.fromJson(Map<String, dynamic> jsonSerialization) {
     return LeaveConfig(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       configName: jsonSerialization['configName'] as String,
       fullDay: jsonSerialization['fullDay'] as int,
       halfDay: jsonSerialization['halfDay'] as int,
@@ -42,7 +44,7 @@ abstract class LeaveConfig implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String configName;
 
@@ -56,7 +58,7 @@ abstract class LeaveConfig implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   LeaveConfig copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? configName,
     int? fullDay,
     int? halfDay,
@@ -66,7 +68,7 @@ abstract class LeaveConfig implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'LeaveConfig',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'configName': configName,
       'fullDay': fullDay,
       'halfDay': halfDay,
@@ -84,7 +86,7 @@ class _Undefined {}
 
 class _LeaveConfigImpl extends LeaveConfig {
   _LeaveConfigImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String configName,
     required int fullDay,
     required int halfDay,
@@ -109,7 +111,7 @@ class _LeaveConfigImpl extends LeaveConfig {
     Object? config = _Undefined,
   }) {
     return LeaveConfig(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       configName: configName ?? this.configName,
       fullDay: fullDay ?? this.fullDay,
       halfDay: halfDay ?? this.halfDay,

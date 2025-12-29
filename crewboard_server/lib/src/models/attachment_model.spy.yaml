@@ -1,7 +1,0 @@
-class: AttachmentModel
-fields:
-  id: int
-  name: String
-  url: String
-  size: double
-  type: String

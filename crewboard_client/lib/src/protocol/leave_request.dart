@@ -25,8 +25,8 @@ abstract class LeaveRequest implements _i1.SerializableModel {
   });
 
   factory LeaveRequest({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required String request,
     bool? accepted,
@@ -35,8 +35,10 @@ abstract class LeaveRequest implements _i1.SerializableModel {
 
   factory LeaveRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return LeaveRequest(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -51,9 +53,9 @@ abstract class LeaveRequest implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -67,8 +69,8 @@ abstract class LeaveRequest implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   LeaveRequest copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? request,
     bool? accepted,
@@ -78,8 +80,8 @@ abstract class LeaveRequest implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'LeaveRequest',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'request': request,
       if (accepted != null) 'accepted': accepted,
@@ -97,8 +99,8 @@ class _Undefined {}
 
 class _LeaveRequestImpl extends LeaveRequest {
   _LeaveRequestImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required String request,
     bool? accepted,
@@ -118,14 +120,14 @@ class _LeaveRequestImpl extends LeaveRequest {
   @override
   LeaveRequest copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? request,
     Object? accepted = _Undefined,
     Object? date = _Undefined,
   }) {
     return LeaveRequest(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       request: request ?? this.request,

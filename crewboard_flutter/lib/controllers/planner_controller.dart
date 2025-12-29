@@ -10,7 +10,7 @@ class PlannerController extends GetxController {
   final RxList<PlannerApp> apps = <PlannerApp>[].obs;
 
   // Observable selected app ID
-  final RxInt selectedAppId = 0.obs;
+  final Rxn<UuidValue> selectedAppId = Rxn<UuidValue>();
 
   // Observable current subpage (buckets or search)
   final Rx<PlannerSubPage> currentSubPage = PlannerSubPage.bucket.obs;
@@ -62,7 +62,7 @@ class PlannerController extends GetxController {
       final response = await client.admin.getApps();
       apps.assignAll(response);
 
-      if (apps.isNotEmpty && selectedAppId.value == 0) {
+      if (apps.isNotEmpty && selectedAppId.value == null) {
         selectApp(apps.first.id!);
       }
     } catch (e) {
@@ -73,7 +73,7 @@ class PlannerController extends GetxController {
   }
 
   // Method to add a new app
-  Future<void> addApp(String name, int colorId) async {
+  Future<void> addApp(String name, UuidValue colorId) async {
     try {
       await client.admin.addApp(name, colorId);
       await loadApps();
@@ -83,7 +83,7 @@ class PlannerController extends GetxController {
   }
 
   // Select an app and load its planner data
-  void selectApp(int appId) {
+  void selectApp(UuidValue appId) {
     selectedAppId.value = appId;
     loadPlannerData();
     getAddTicketData(); // Pre-load metadata for the project context
@@ -95,7 +95,7 @@ class PlannerController extends GetxController {
   // Change subpage (Kanban/Search)
   void changeSubPage(PlannerSubPage subPage) {
     currentSubPage.value = subPage;
-    if (selectedAppId.value != 0) {
+    if (selectedAppId.value != null) {
       if (subPage == PlannerSubPage.search) {
         loadAllTickets();
       } else {
@@ -106,10 +106,12 @@ class PlannerController extends GetxController {
 
   // Fetch Kanban data
   Future<void> loadPlannerData() async {
-    if (selectedAppId.value == 0) return;
+    if (selectedAppId.value == null) return;
     try {
       isLoadingPlanner.value = true;
-      final response = await client.planner.getPlannerData(selectedAppId.value);
+      final response = await client.planner.getPlannerData(
+        selectedAppId.value!,
+      );
       buckets.value = response.buckets;
     } catch (e) {
       debugPrint('Error loading planner data: $e');
@@ -120,9 +122,9 @@ class PlannerController extends GetxController {
 
   // Fetch search view data
   Future<void> loadAllTickets() async {
-    if (selectedAppId.value == 0) return;
+    if (selectedAppId.value == null) return;
     try {
-      final response = await client.planner.getAllTickets(selectedAppId.value);
+      final response = await client.planner.getAllTickets(selectedAppId.value!);
       allTickets.value = response.tickets;
     } catch (e) {
       debugPrint('Error loading all tickets: $e');
@@ -130,7 +132,7 @@ class PlannerController extends GetxController {
   }
 
   // Fetch full ticket data
-  Future<TicketModel?> getTicketData(int ticketId) async {
+  Future<TicketModel?> getTicketData(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketData(ticketId);
       return response.ticket;
@@ -171,7 +173,7 @@ class PlannerController extends GetxController {
   }
 
   // Load ticket data for viewing/editing
-  Future<void> getTicketDataFull(int ticketId) async {
+  Future<void> getTicketDataFull(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketData(ticketId);
       final ticket = response.ticket;
@@ -190,7 +192,7 @@ class PlannerController extends GetxController {
     }
   }
 
-  Future<void> getTicketCommentsFull(int ticketId) async {
+  Future<void> getTicketCommentsFull(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketComments(ticketId);
       comments.assignAll(response.comments);
@@ -199,7 +201,7 @@ class PlannerController extends GetxController {
     }
   }
 
-  Future<void> save(int bucketId) async {
+  Future<void> save(UuidValue bucketId) async {
     error.value = "";
     if (title.value.text.isEmpty) {
       error.value = "title cannot be empty";
@@ -220,7 +222,9 @@ class PlannerController extends GetxController {
 
     try {
       final ticketModel = TicketModel(
-        id: 0,
+        id: UuidValue.fromString(
+          '00000000-0000-4000-8000-000000000000',
+        ), // Dummy
         ticketName: title.value.text,
         ticketBody: body.value.text,
         status: status.value!,
@@ -236,7 +240,7 @@ class PlannerController extends GetxController {
 
       final success = await client.planner.addTicket(
         AddTicketRequest(
-          appId: selectedAppId.value,
+          appId: selectedAppId.value!,
           bucketId: bucketId,
           ticket: ticketModel,
         ),
@@ -266,7 +270,7 @@ class PlannerController extends GetxController {
     checklist.add(CheckModel(label: label, selected: false));
   }
 
-  Future<void> saveEditStack(int ticketId) async {
+  Future<void> saveEditStack(UuidValue ticketId) async {
     debugPrint('Saving edit stack for ticket $ticketId: $editStack');
     // Implement field updates if needed
   }
@@ -287,11 +291,11 @@ class PlannerController extends GetxController {
 
   // Add a new bucket
   Future<bool> addBucket(String name) async {
-    if (selectedAppId.value == 0) return false;
+    if (selectedAppId.value == null) return false;
     try {
       final success = await client.planner.addBucket(
         AddBucketRequest(
-          appId: selectedAppId.value,
+          appId: selectedAppId.value!,
           bucketName: name,
         ),
       );
@@ -307,20 +311,22 @@ class PlannerController extends GetxController {
 
   // Create a new ticket
   Future<bool> addTicket({
-    required int bucketId,
+    required UuidValue bucketId,
     required String title,
     required String body,
-    required int statusId,
-    required int priorityId,
-    required int typeId,
-    required List<int> assigneeIds,
+    required UuidValue statusId,
+    required UuidValue priorityId,
+    required UuidValue typeId,
+    required List<UuidValue> assigneeIds,
     String? deadline,
     double? creds,
   }) async {
-    if (selectedAppId.value == 0) return false;
+    if (selectedAppId.value == null) return false;
     try {
       final ticketModel = TicketModel(
-        id: 0, // Server will assign
+        id: UuidValue.fromString(
+          '00000000-0000-4000-8000-000000000000',
+        ), // Server will assign
         ticketName: title,
         ticketBody: body,
         status: statuses.firstWhere((s) => s.statusId == statusId),
@@ -336,7 +342,7 @@ class PlannerController extends GetxController {
 
       final success = await client.planner.addTicket(
         AddTicketRequest(
-          appId: selectedAppId.value,
+          appId: selectedAppId.value!,
           bucketId: bucketId,
           ticket: ticketModel,
         ),
@@ -357,7 +363,7 @@ class PlannerController extends GetxController {
   }
 
   // Fetch comments for a ticket
-  Future<List<CommentModel>> getTicketComments(int ticketId) async {
+  Future<List<CommentModel>> getTicketComments(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketComments(ticketId);
       return response.comments;

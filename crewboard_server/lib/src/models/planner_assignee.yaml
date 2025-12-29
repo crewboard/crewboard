@@ -1,0 +1,6 @@
+class: PlannerAssignee
+fields:
+  userId: UuidValue
+  userName: String
+  color: String
+  selected: bool

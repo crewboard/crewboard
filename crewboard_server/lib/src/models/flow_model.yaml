@@ -1,0 +1,8 @@
+class: FlowModel
+table: flow
+fields:
+  id: UuidValue?, defaultPersist=random
+  appId: UuidValue
+  name: String
+  flow: String # JSON blob
+  lastUpdated: DateTime

@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class UserRoomMap
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   UserRoomMap._({
     this.id,
     required this.roomId,
@@ -22,18 +22,24 @@ abstract class UserRoomMap
   });
 
   factory UserRoomMap({
-    int? id,
-    required int roomId,
-    required int userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    required _i1.UuidValue userId,
+    _i1.UuidValue? lastSeenMessageId,
   }) = _UserRoomMapImpl;
 
   factory UserRoomMap.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserRoomMap(
-      id: jsonSerialization['id'] as int?,
-      roomId: jsonSerialization['roomId'] as int,
-      userId: jsonSerialization['userId'] as int,
-      lastSeenMessageId: jsonSerialization['lastSeenMessageId'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      roomId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['roomId']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      lastSeenMessageId: jsonSerialization['lastSeenMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['lastSeenMessageId'],
+            ),
     );
   }
 
@@ -42,34 +48,35 @@ abstract class UserRoomMap
   static const db = UserRoomMapRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int roomId;
+  _i1.UuidValue roomId;
 
-  int userId;
+  _i1.UuidValue userId;
 
-  int? lastSeenMessageId;
+  _i1.UuidValue? lastSeenMessageId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [UserRoomMap]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserRoomMap copyWith({
-    int? id,
-    int? roomId,
-    int? userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? userId,
+    _i1.UuidValue? lastSeenMessageId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserRoomMap',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      'userId': userId,
-      if (lastSeenMessageId != null) 'lastSeenMessageId': lastSeenMessageId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      'userId': userId.toJson(),
+      if (lastSeenMessageId != null)
+        'lastSeenMessageId': lastSeenMessageId?.toJson(),
     };
   }
 
@@ -77,10 +84,11 @@ abstract class UserRoomMap
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'UserRoomMap',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      'userId': userId,
-      if (lastSeenMessageId != null) 'lastSeenMessageId': lastSeenMessageId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      'userId': userId.toJson(),
+      if (lastSeenMessageId != null)
+        'lastSeenMessageId': lastSeenMessageId?.toJson(),
     };
   }
 
@@ -118,10 +126,10 @@ class _Undefined {}
 
 class _UserRoomMapImpl extends UserRoomMap {
   _UserRoomMapImpl({
-    int? id,
-    required int roomId,
-    required int userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    required _i1.UuidValue userId,
+    _i1.UuidValue? lastSeenMessageId,
   }) : super._(
          id: id,
          roomId: roomId,
@@ -135,15 +143,15 @@ class _UserRoomMapImpl extends UserRoomMap {
   @override
   UserRoomMap copyWith({
     Object? id = _Undefined,
-    int? roomId,
-    int? userId,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? userId,
     Object? lastSeenMessageId = _Undefined,
   }) {
     return UserRoomMap(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomId: roomId ?? this.roomId,
       userId: userId ?? this.userId,
-      lastSeenMessageId: lastSeenMessageId is int?
+      lastSeenMessageId: lastSeenMessageId is _i1.UuidValue?
           ? lastSeenMessageId
           : this.lastSeenMessageId,
     );
@@ -153,34 +161,38 @@ class _UserRoomMapImpl extends UserRoomMap {
 class UserRoomMapUpdateTable extends _i1.UpdateTable<UserRoomMapTable> {
   UserRoomMapUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> roomId(int value) => _i1.ColumnValue(
-    table.roomId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> roomId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.roomId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> lastSeenMessageId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> lastSeenMessageId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
     table.lastSeenMessageId,
     value,
   );
 }
 
-class UserRoomMapTable extends _i1.Table<int?> {
+class UserRoomMapTable extends _i1.Table<_i1.UuidValue?> {
   UserRoomMapTable({super.tableRelation}) : super(tableName: 'user_room_map') {
     updateTable = UserRoomMapUpdateTable(this);
-    roomId = _i1.ColumnInt(
+    roomId = _i1.ColumnUuid(
       'roomId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
-    lastSeenMessageId = _i1.ColumnInt(
+    lastSeenMessageId = _i1.ColumnUuid(
       'lastSeenMessageId',
       this,
     );
@@ -188,11 +200,11 @@ class UserRoomMapTable extends _i1.Table<int?> {
 
   late final UserRoomMapUpdateTable updateTable;
 
-  late final _i1.ColumnInt roomId;
+  late final _i1.ColumnUuid roomId;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
-  late final _i1.ColumnInt lastSeenMessageId;
+  late final _i1.ColumnUuid lastSeenMessageId;
 
   @override
   List<_i1.Column> get columns => [
@@ -210,7 +222,7 @@ class UserRoomMapInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => UserRoomMap.t;
+  _i1.Table<_i1.UuidValue?> get table => UserRoomMap.t;
 }
 
 class UserRoomMapIncludeList extends _i1.IncludeList {
@@ -230,7 +242,7 @@ class UserRoomMapIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => UserRoomMap.t;
+  _i1.Table<_i1.UuidValue?> get table => UserRoomMap.t;
 }
 
 class UserRoomMapRepository {
@@ -318,7 +330,7 @@ class UserRoomMapRepository {
   /// Finds a single [UserRoomMap] by its [id] or null if no such row exists.
   Future<UserRoomMap?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<UserRoomMap>(
@@ -396,7 +408,7 @@ class UserRoomMapRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserRoomMap?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserRoomMapUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

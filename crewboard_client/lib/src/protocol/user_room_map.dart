@@ -21,49 +21,56 @@ abstract class UserRoomMap implements _i1.SerializableModel {
   });
 
   factory UserRoomMap({
-    int? id,
-    required int roomId,
-    required int userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    required _i1.UuidValue userId,
+    _i1.UuidValue? lastSeenMessageId,
   }) = _UserRoomMapImpl;
 
   factory UserRoomMap.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserRoomMap(
-      id: jsonSerialization['id'] as int?,
-      roomId: jsonSerialization['roomId'] as int,
-      userId: jsonSerialization['userId'] as int,
-      lastSeenMessageId: jsonSerialization['lastSeenMessageId'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      roomId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['roomId']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      lastSeenMessageId: jsonSerialization['lastSeenMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['lastSeenMessageId'],
+            ),
     );
   }
 
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int roomId;
+  _i1.UuidValue roomId;
 
-  int userId;
+  _i1.UuidValue userId;
 
-  int? lastSeenMessageId;
+  _i1.UuidValue? lastSeenMessageId;
 
   /// Returns a shallow copy of this [UserRoomMap]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserRoomMap copyWith({
-    int? id,
-    int? roomId,
-    int? userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? userId,
+    _i1.UuidValue? lastSeenMessageId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserRoomMap',
-      if (id != null) 'id': id,
-      'roomId': roomId,
-      'userId': userId,
-      if (lastSeenMessageId != null) 'lastSeenMessageId': lastSeenMessageId,
+      if (id != null) 'id': id?.toJson(),
+      'roomId': roomId.toJson(),
+      'userId': userId.toJson(),
+      if (lastSeenMessageId != null)
+        'lastSeenMessageId': lastSeenMessageId?.toJson(),
     };
   }
 
@@ -77,10 +84,10 @@ class _Undefined {}
 
 class _UserRoomMapImpl extends UserRoomMap {
   _UserRoomMapImpl({
-    int? id,
-    required int roomId,
-    required int userId,
-    int? lastSeenMessageId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue roomId,
+    required _i1.UuidValue userId,
+    _i1.UuidValue? lastSeenMessageId,
   }) : super._(
          id: id,
          roomId: roomId,
@@ -94,15 +101,15 @@ class _UserRoomMapImpl extends UserRoomMap {
   @override
   UserRoomMap copyWith({
     Object? id = _Undefined,
-    int? roomId,
-    int? userId,
+    _i1.UuidValue? roomId,
+    _i1.UuidValue? userId,
     Object? lastSeenMessageId = _Undefined,
   }) {
     return UserRoomMap(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomId: roomId ?? this.roomId,
       userId: userId ?? this.userId,
-      lastSeenMessageId: lastSeenMessageId is int?
+      lastSeenMessageId: lastSeenMessageId is _i1.UuidValue?
           ? lastSeenMessageId
           : this.lastSeenMessageId,
     );

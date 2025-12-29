@@ -15,7 +15,22 @@ class AuthController extends GetxController {
   }
 
   void _onSessionChanged() {
+    print('AUTH: Session changed event received.');
+    print('AUTH: IsAuthenticated status: ${sessionManager.isAuthenticated}');
     isAuthenticated.value = sessionManager.isAuthenticated;
+  }
+
+  void checkStatus() {
+    print('AUTH: Manual status check requested.');
+    // Don't override if already authenticated (forced login)
+    if (!isAuthenticated.value) {
+      isAuthenticated.value = sessionManager.isAuthenticated;
+    }
+  }
+
+  void forceAuthenticated() {
+    print('AUTH: Forcing authenticated state to true.');
+    isAuthenticated.value = true;
   }
 
   @override

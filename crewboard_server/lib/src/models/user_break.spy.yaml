@@ -1,8 +1,0 @@
-class: UserBreak
-table: breaks
-fields:
-  user: User?, relation
-  breakStart: String?
-  breakEnd: String?
-  breakTime: int?
-  date: DateTime

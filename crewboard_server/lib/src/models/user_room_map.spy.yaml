@@ -1,6 +1,0 @@
-class: UserRoomMap
-table: user_room_map
-fields:
-  roomId: int
-  userId: int
-  lastSeenMessageId: int?

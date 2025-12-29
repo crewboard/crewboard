@@ -1,0 +1,8 @@
+class: UserTypes
+table: user_types
+fields:
+  id: UuidValue?, defaultPersist=random
+  userType: String
+  color: SystemColor?, relation
+  permissions: String
+  isAdmin: bool

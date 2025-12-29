@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class LeaveConfig
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   LeaveConfig._({
     this.id,
     required this.configName,
@@ -23,7 +23,7 @@ abstract class LeaveConfig
   });
 
   factory LeaveConfig({
-    int? id,
+    _i1.UuidValue? id,
     required String configName,
     required int fullDay,
     required int halfDay,
@@ -32,7 +32,9 @@ abstract class LeaveConfig
 
   factory LeaveConfig.fromJson(Map<String, dynamic> jsonSerialization) {
     return LeaveConfig(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       configName: jsonSerialization['configName'] as String,
       fullDay: jsonSerialization['fullDay'] as int,
       halfDay: jsonSerialization['halfDay'] as int,
@@ -45,7 +47,7 @@ abstract class LeaveConfig
   static const db = LeaveConfigRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String configName;
 
@@ -56,13 +58,13 @@ abstract class LeaveConfig
   String? config;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [LeaveConfig]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   LeaveConfig copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? configName,
     int? fullDay,
     int? halfDay,
@@ -72,7 +74,7 @@ abstract class LeaveConfig
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'LeaveConfig',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'configName': configName,
       'fullDay': fullDay,
       'halfDay': halfDay,
@@ -84,7 +86,7 @@ abstract class LeaveConfig
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'LeaveConfig',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'configName': configName,
       'fullDay': fullDay,
       'halfDay': halfDay,
@@ -126,7 +128,7 @@ class _Undefined {}
 
 class _LeaveConfigImpl extends LeaveConfig {
   _LeaveConfigImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String configName,
     required int fullDay,
     required int halfDay,
@@ -151,7 +153,7 @@ class _LeaveConfigImpl extends LeaveConfig {
     Object? config = _Undefined,
   }) {
     return LeaveConfig(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       configName: configName ?? this.configName,
       fullDay: fullDay ?? this.fullDay,
       halfDay: halfDay ?? this.halfDay,
@@ -184,7 +186,7 @@ class LeaveConfigUpdateTable extends _i1.UpdateTable<LeaveConfigTable> {
   );
 }
 
-class LeaveConfigTable extends _i1.Table<int?> {
+class LeaveConfigTable extends _i1.Table<_i1.UuidValue?> {
   LeaveConfigTable({super.tableRelation}) : super(tableName: 'leave_config') {
     updateTable = LeaveConfigUpdateTable(this);
     configName = _i1.ColumnString(
@@ -232,7 +234,7 @@ class LeaveConfigInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => LeaveConfig.t;
+  _i1.Table<_i1.UuidValue?> get table => LeaveConfig.t;
 }
 
 class LeaveConfigIncludeList extends _i1.IncludeList {
@@ -252,7 +254,7 @@ class LeaveConfigIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => LeaveConfig.t;
+  _i1.Table<_i1.UuidValue?> get table => LeaveConfig.t;
 }
 
 class LeaveConfigRepository {
@@ -340,7 +342,7 @@ class LeaveConfigRepository {
   /// Finds a single [LeaveConfig] by its [id] or null if no such row exists.
   Future<LeaveConfig?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<LeaveConfig>(
@@ -418,7 +420,7 @@ class LeaveConfigRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<LeaveConfig?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<LeaveConfigUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

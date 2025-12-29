@@ -1,0 +1,8 @@
+class: CommentModel
+fields:
+  commentId: UuidValue
+  userId: UuidValue
+  userName: String
+  message: String
+  createdAt: String
+  userColor: String?

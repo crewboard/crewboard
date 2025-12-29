@@ -1,7 +1,0 @@
-class: LeaveConfig
-table: leave_config
-fields:
-  configName: String
-  fullDay: int
-  halfDay: int
-  config: String?

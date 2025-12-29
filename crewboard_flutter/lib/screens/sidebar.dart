@@ -5,6 +5,11 @@ import '../config/palette.dart';
 import '../controllers/sidebar_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/glass_morph.dart';
+import '../screens/planner/apps_sidebar.dart';
+import '../screens/chats/rooms_widget.dart';
+
+import '../screens/admin/settings_sidebar.dart';
+import '../screens/docs/docs_sidebar.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key, required this.children});
@@ -30,7 +35,7 @@ class SideBar extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: Window.sideBarWidth,
-                height: Window.height,
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,14 +101,14 @@ class SideBar extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 20),
                                   MenuItem(
-                                    name: "Flowie",
+                                    name: "Documentation",
                                     color: const Color.fromARGB(
                                       255,
                                       228,
                                       202,
                                       5,
                                     ),
-                                    subtitle: "Flowie",
+                                    subtitle: "Documentation",
                                     onPress: () {
                                       controller.navigate(CurrentPage.flowie);
                                     },
@@ -149,14 +154,14 @@ class SideBar extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 20),
                                   MenuItem(
-                                    name: "Flowie",
+                                    name: "Documentation",
                                     color: const Color.fromARGB(
                                       255,
                                       228,
                                       202,
                                       5,
                                     ),
-                                    subtitle: "Flowie",
+                                    subtitle: "Documentation",
                                     onPress: () {
                                       controller.navigate(CurrentPage.flowie);
                                     },
@@ -213,7 +218,28 @@ class SideBar extends StatelessWidget {
                         ],
                       ),
                     ),
-                    for (var child in children) child,
+                    if (controller.currentPage.value == CurrentPage.planner ||
+                        controller.currentPage.value == CurrentPage.chat ||
+                        controller.currentPage.value == CurrentPage.settings ||
+                        controller.currentPage.value == CurrentPage.flowie)
+                      Expanded(
+                        child: Obx(() {
+                          if (controller.currentPage.value ==
+                              CurrentPage.planner) {
+                            return const AppsSidebar();
+                          } else if (controller.currentPage.value ==
+                              CurrentPage.chat) {
+                            return const Rooms();
+                          } else if (controller.currentPage.value ==
+                              CurrentPage.settings) {
+                            return const SettingsSidebar();
+                          } else if (controller.currentPage.value ==
+                              CurrentPage.flowie) {
+                            return const DocsSidebar();
+                          }
+                          return const SizedBox();
+                        }),
+                      ),
                   ],
                 ),
               ),

@@ -1,0 +1,7 @@
+class: BucketTicketMap
+table: bucket_ticket_map
+fields:
+  id: UuidValue?, defaultPersist=random
+  bucket: Bucket?, relation
+  ticket: Ticket?, relation
+  order: int

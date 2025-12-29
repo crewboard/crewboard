@@ -28,30 +28,34 @@ abstract class PlannerNotification implements _i1.SerializableModel {
   });
 
   factory PlannerNotification({
-    int? id,
+    _i1.UuidValue? id,
     required String notification,
     required String notificationType,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
   }) = _PlannerNotificationImpl;
 
   factory PlannerNotification.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerNotification(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       notification: jsonSerialization['notification'] as String,
       notificationType: jsonSerialization['notificationType'] as String,
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      seenUserList: _i4.Protocol().deserialize<List<int>>(
+      seenUserList: _i4.Protocol().deserialize<List<_i1.UuidValue>>(
         jsonSerialization['seenUserList'],
       ),
     );
@@ -60,47 +64,47 @@ abstract class PlannerNotification implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String notification;
 
   String notificationType;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
-  List<int> seenUserList;
+  List<_i1.UuidValue> seenUserList;
 
   /// Returns a shallow copy of this [PlannerNotification]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerNotification copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? notification,
     String? notificationType,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerNotification',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'notification': notification,
       'notificationType': notificationType,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -114,14 +118,14 @@ class _Undefined {}
 
 class _PlannerNotificationImpl extends PlannerNotification {
   _PlannerNotificationImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String notification,
     required String notificationType,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
   }) : super._(
          id: id,
          notification: notification,
@@ -141,14 +145,14 @@ class _PlannerNotificationImpl extends PlannerNotification {
     Object? id = _Undefined,
     String? notification,
     String? notificationType,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
   }) {
     return PlannerNotification(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       notification: notification ?? this.notification,
       notificationType: notificationType ?? this.notificationType,
       ticketId: ticketId ?? this.ticketId,

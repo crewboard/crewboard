@@ -14,39 +14,67 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 abstract class FlowModel implements _i1.SerializableModel {
   FlowModel._({
-    required this.flowId,
-    required this.flowName,
+    this.id,
+    required this.appId,
+    required this.name,
+    required this.flow,
+    required this.lastUpdated,
   });
 
   factory FlowModel({
-    required int flowId,
-    required String flowName,
+    _i1.UuidValue? id,
+    required _i1.UuidValue appId,
+    required String name,
+    required String flow,
+    required DateTime lastUpdated,
   }) = _FlowModelImpl;
 
   factory FlowModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return FlowModel(
-      flowId: jsonSerialization['flowId'] as int,
-      flowName: jsonSerialization['flowName'] as String,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
+      name: jsonSerialization['name'] as String,
+      flow: jsonSerialization['flow'] as String,
+      lastUpdated: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['lastUpdated'],
+      ),
     );
   }
 
-  int flowId;
+  /// The database id, set if the object has been inserted into the
+  /// database or if it has been fetched from the database. Otherwise,
+  /// the id will be null.
+  _i1.UuidValue? id;
 
-  String flowName;
+  _i1.UuidValue appId;
+
+  String name;
+
+  String flow;
+
+  DateTime lastUpdated;
 
   /// Returns a shallow copy of this [FlowModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   FlowModel copyWith({
-    int? flowId,
-    String? flowName,
+    _i1.UuidValue? id,
+    _i1.UuidValue? appId,
+    String? name,
+    String? flow,
+    DateTime? lastUpdated,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'FlowModel',
-      'flowId': flowId,
-      'flowName': flowName,
+      if (id != null) 'id': id?.toJson(),
+      'appId': appId.toJson(),
+      'name': name,
+      'flow': flow,
+      'lastUpdated': lastUpdated.toJson(),
     };
   }
 
@@ -56,13 +84,21 @@ abstract class FlowModel implements _i1.SerializableModel {
   }
 }
 
+class _Undefined {}
+
 class _FlowModelImpl extends FlowModel {
   _FlowModelImpl({
-    required int flowId,
-    required String flowName,
+    _i1.UuidValue? id,
+    required _i1.UuidValue appId,
+    required String name,
+    required String flow,
+    required DateTime lastUpdated,
   }) : super._(
-         flowId: flowId,
-         flowName: flowName,
+         id: id,
+         appId: appId,
+         name: name,
+         flow: flow,
+         lastUpdated: lastUpdated,
        );
 
   /// Returns a shallow copy of this [FlowModel]
@@ -70,12 +106,18 @@ class _FlowModelImpl extends FlowModel {
   @_i1.useResult
   @override
   FlowModel copyWith({
-    int? flowId,
-    String? flowName,
+    Object? id = _Undefined,
+    _i1.UuidValue? appId,
+    String? name,
+    String? flow,
+    DateTime? lastUpdated,
   }) {
     return FlowModel(
-      flowId: flowId ?? this.flowId,
-      flowName: flowName ?? this.flowName,
+      id: id is _i1.UuidValue? ? id : this.id,
+      appId: appId ?? this.appId,
+      name: name ?? this.name,
+      flow: flow ?? this.flow,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }
 }

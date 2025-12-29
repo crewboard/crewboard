@@ -1,7 +1,0 @@
-class: UserTypes
-table: user_types
-fields:
-  userType: String
-  color: SystemColor?, relation
-  permissions: String
-  isAdmin: bool

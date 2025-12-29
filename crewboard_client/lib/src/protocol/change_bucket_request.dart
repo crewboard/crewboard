@@ -21,26 +21,32 @@ abstract class ChangeBucketRequest implements _i1.SerializableModel {
   });
 
   factory ChangeBucketRequest({
-    required int ticketId,
-    required int oldBucketId,
-    required int newBucketId,
+    required _i1.UuidValue ticketId,
+    required _i1.UuidValue oldBucketId,
+    required _i1.UuidValue newBucketId,
     required int newOrder,
   }) = _ChangeBucketRequestImpl;
 
   factory ChangeBucketRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return ChangeBucketRequest(
-      ticketId: jsonSerialization['ticketId'] as int,
-      oldBucketId: jsonSerialization['oldBucketId'] as int,
-      newBucketId: jsonSerialization['newBucketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
+      oldBucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['oldBucketId'],
+      ),
+      newBucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['newBucketId'],
+      ),
       newOrder: jsonSerialization['newOrder'] as int,
     );
   }
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
-  int oldBucketId;
+  _i1.UuidValue oldBucketId;
 
-  int newBucketId;
+  _i1.UuidValue newBucketId;
 
   int newOrder;
 
@@ -48,18 +54,18 @@ abstract class ChangeBucketRequest implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   ChangeBucketRequest copyWith({
-    int? ticketId,
-    int? oldBucketId,
-    int? newBucketId,
+    _i1.UuidValue? ticketId,
+    _i1.UuidValue? oldBucketId,
+    _i1.UuidValue? newBucketId,
     int? newOrder,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'ChangeBucketRequest',
-      'ticketId': ticketId,
-      'oldBucketId': oldBucketId,
-      'newBucketId': newBucketId,
+      'ticketId': ticketId.toJson(),
+      'oldBucketId': oldBucketId.toJson(),
+      'newBucketId': newBucketId.toJson(),
       'newOrder': newOrder,
     };
   }
@@ -72,9 +78,9 @@ abstract class ChangeBucketRequest implements _i1.SerializableModel {
 
 class _ChangeBucketRequestImpl extends ChangeBucketRequest {
   _ChangeBucketRequestImpl({
-    required int ticketId,
-    required int oldBucketId,
-    required int newBucketId,
+    required _i1.UuidValue ticketId,
+    required _i1.UuidValue oldBucketId,
+    required _i1.UuidValue newBucketId,
     required int newOrder,
   }) : super._(
          ticketId: ticketId,
@@ -88,9 +94,9 @@ class _ChangeBucketRequestImpl extends ChangeBucketRequest {
   @_i1.useResult
   @override
   ChangeBucketRequest copyWith({
-    int? ticketId,
-    int? oldBucketId,
-    int? newBucketId,
+    _i1.UuidValue? ticketId,
+    _i1.UuidValue? oldBucketId,
+    _i1.UuidValue? newBucketId,
     int? newOrder,
   }) {
     return ChangeBucketRequest(

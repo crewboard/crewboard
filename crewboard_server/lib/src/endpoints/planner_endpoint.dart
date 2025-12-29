@@ -1,5 +1,6 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
+import '../utils.dart';
 
 class PlannerEndpoint extends Endpoint {
   @override
@@ -8,104 +9,74 @@ class PlannerEndpoint extends Endpoint {
   /// Get planner data (buckets with tickets) for an app
   Future<GetPlannerDataResponse> getPlannerData(
     Session session,
-    int appId,
+    UuidValue appId,
   ) async {
-    // TODO: Resolve auth extension issue in Serverpod 3.1
-    // Using placeholder userId 1 for initial development/seeding
-    const userId = 1;
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final appIdVal = appId;
+
+    // Check if app belongs to the same organization
+    final app = await PlannerApp.db.findById(session, appIdVal);
+    if (app == null || app.organizationId != user.organizationId) {
+      throw Exception('Unauthorized access to app');
+    }
+
+    final userId = user.id!;
 
     // Fetch buckets for user and app
     final buckets = await Bucket.db.find(
       session,
-      where: (t) => (t.userId.equals(userId)) & (t.appId.equals(appId)),
+      where: (t) => (t.userId.equals(userId)) & (t.appId.equals(appIdVal)),
     );
 
     if (buckets.isEmpty) {
       return GetPlannerDataResponse(buckets: []);
     }
 
-    // For each bucket, fetch tickets
     final bucketsWithTickets = <BucketModel>[];
 
     for (final bucket in buckets) {
-      // Get bucket-ticket mappings for this bucket
+      // Get bucket-ticket mappings with all ticket relations included
       final bucketTicketMaps = await BucketTicketMap.db.find(
         session,
         where: (t) => t.bucketId.equals(bucket.id!),
         orderBy: (t) => t.order,
-      );
-
-      final ticketIds = bucketTicketMaps.map((m) => m.ticketId).toSet();
-
-      if (ticketIds.isEmpty) {
-        bucketsWithTickets.add(
-          BucketModel(
-            bucketId: bucket.id!,
-            bucketName: bucket.bucketName,
-            tickets: [],
+        include: BucketTicketMap.include(
+          ticket: Ticket.include(
+            status: Status.include(),
+            priority: Priority.include(),
+            type: TicketType.include(color: SystemColor.include()),
           ),
-        );
-        continue;
-      }
-
-      // Fetch tickets
-      final tickets = await Ticket.db.find(
-        session,
-        where: (t) => t.id.inSet(ticketIds),
+        ),
       );
 
-      // Fetch related data for tickets
       final ticketModels = <PlannerTicket>[];
-      for (final ticket in tickets) {
-        // Fetch status
-        final status = await Status.db.findById(session, ticket.statusId);
-
-        // Fetch priority
-        final priority = await Priority.db.findById(session, ticket.priorityId);
-
-        // Fetch ticket type
-        final ticketType = await TicketType.db.findById(session, ticket.typeId);
-
-        // Fetch color for ticket type
-        String typeColor = '#000000';
-        if (ticketType != null) {
-          final color = await SystemColor.db.findById(
-            session,
-            ticketType.colorId,
-          );
-          if (color != null) {
-            typeColor = color.color;
-          }
-        }
+      for (final map in bucketTicketMaps) {
+        final ticket = map.ticket;
+        if (ticket == null) continue;
 
         // Fetch assignees for this ticket
         final assigneesList = <PlannerAssignee>[];
         final bucketMapsForTicket = await BucketTicketMap.db.find(
           session,
           where: (t) => t.ticketId.equals(ticket.id!),
+          include: BucketTicketMap.include(
+            bucket: Bucket.include(
+              user: User.include(color: SystemColor.include()),
+            ),
+          ),
         );
 
-        for (final map in bucketMapsForTicket) {
-          final assigneeBucket = await Bucket.db.findById(
-            session,
-            map.bucketId,
-          );
-          if (assigneeBucket != null) {
-            final user = await User.db.findById(session, assigneeBucket.userId);
-            if (user != null) {
-              final userColor = await SystemColor.db.findById(
-                session,
-                user.colorId,
-              );
-              assigneesList.add(
-                PlannerAssignee(
-                  userId: user.id!,
-                  userName: user.userName,
-                  color: userColor?.color ?? '#000000',
-                  selected: true,
-                ),
-              );
-            }
+        for (final ticketMap in bucketMapsForTicket) {
+          final user = ticketMap.bucket?.user;
+          if (user != null) {
+            assigneesList.add(
+              PlannerAssignee(
+                userId: user.id!,
+                userName: user.userName,
+                color: user.color?.color ?? '#000000',
+                selected: true,
+              ),
+            );
           }
         }
 
@@ -114,10 +85,10 @@ class PlannerEndpoint extends Endpoint {
             id: ticket.id!,
             ticketName: ticket.ticketName,
             ticketBody: ticket.ticketBody,
-            statusName: status?.statusName ?? 'Unknown',
-            priorityName: priority?.priorityName ?? '',
-            typeName: ticketType?.typeName ?? '',
-            typeColor: typeColor,
+            statusName: ticket.status?.statusName ?? 'Unknown',
+            priorityName: ticket.priority?.priorityName ?? '',
+            typeName: ticket.type?.typeName ?? '',
+            typeColor: ticket.type?.color?.color ?? '#000000',
             deadline: ticket.deadline?.toIso8601String(),
             assignees: assigneesList,
             holder: 'Unknown',
@@ -142,7 +113,11 @@ class PlannerEndpoint extends Endpoint {
   Future<GetAddTicketDataResponse> getAddTicketData(
     Session session,
   ) async {
-    final users = await User.db.find(session);
+    final userRec = await AuthHelper.getAuthenticatedUser(session);
+    final users = await User.db.find(
+      session,
+      where: (t) => t.organizationId.equals(userRec.organizationId),
+    );
     final userModels = <UserModel>[];
     for (final user in users) {
       final color = await SystemColor.db.findById(session, user.colorId);
@@ -185,10 +160,20 @@ class PlannerEndpoint extends Endpoint {
       );
     }
 
-    // Default flows
+    // Default flows - Placeholder data
     final flows = [
-      FlowModel(flowId: 1, flowName: 'Default Flow'),
-      FlowModel(flowId: 2, flowName: 'Bug Fix Flow'),
+      FlowModel(
+        appId: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        name: 'Default Flow',
+        flow: '{}',
+        lastUpdated: DateTime.now(),
+      )..id = UuidValue.fromString('00000000-0000-4000-8000-000000000001'),
+      FlowModel(
+        appId: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        name: 'Bug Fix Flow',
+        flow: '{}',
+        lastUpdated: DateTime.now(),
+      )..id = UuidValue.fromString('00000000-0000-4000-8000-000000000002'),
     ];
 
     return GetAddTicketDataResponse(
@@ -205,7 +190,15 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     AddTicketRequest request,
   ) async {
-    const userId = 1; // TODO: Fix
+    final user = await AuthHelper.getAuthenticatedUser(session);
+
+    // Validate app
+    final app = await PlannerApp.db.findById(session, request.appId);
+    if (app == null || app.organizationId != user.organizationId) {
+      throw Exception('Unauthorized');
+    }
+
+    final userId = user.id!;
 
     DateTime? deadline;
     if (request.ticket.deadline != null) {
@@ -222,7 +215,7 @@ class PlannerEndpoint extends Endpoint {
         statusId: request.ticket.status.statusId,
         priorityId: request.ticket.priority.priorityId,
         typeId: request.ticket.type.typeId,
-        checklist: '',
+        checklist: [],
         flows: request.ticket.flows ?? '',
         creds: request.ticket.creds.toInt(),
         deadline: deadline,
@@ -245,37 +238,37 @@ class PlannerEndpoint extends Endpoint {
   /// Search/list all tickets in project
   Future<GetAllTicketsResponse> getAllTickets(
     Session session,
-    int appId,
+    UuidValue appId,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+
+    // Check if app belongs to the same organization
+    final app = await PlannerApp.db.findById(session, appId);
+    if (app == null || app.organizationId != user.organizationId) {
+      throw Exception('Unauthorized access to app');
+    }
+
     final tickets = await Ticket.db.find(
       session,
       where: (t) => t.appId.equals(appId),
+      include: Ticket.include(
+        status: Status.include(),
+        priority: Priority.include(),
+        type: TicketType.include(color: SystemColor.include()),
+      ),
     );
 
     final ticketModels = <PlannerTicket>[];
     for (final ticket in tickets) {
-      final status = await Status.db.findById(session, ticket.statusId);
-      final priority = await Priority.db.findById(session, ticket.priorityId);
-      final ticketType = await TicketType.db.findById(session, ticket.typeId);
-
-      String typeColor = '#000000';
-      if (ticketType != null) {
-        final color = await SystemColor.db.findById(
-          session,
-          ticketType.colorId,
-        );
-        typeColor = color?.color ?? '#000000';
-      }
-
       ticketModels.add(
         PlannerTicket(
           id: ticket.id!,
           ticketName: ticket.ticketName,
           ticketBody: ticket.ticketBody,
-          statusName: status?.statusName ?? 'Unknown',
-          priorityName: priority?.priorityName ?? '',
-          typeName: ticketType?.typeName ?? '',
-          typeColor: typeColor,
+          statusName: ticket.status?.statusName ?? 'Unknown',
+          priorityName: ticket.priority?.priorityName ?? '',
+          typeName: ticket.type?.typeName ?? '',
+          typeColor: ticket.type?.color?.color ?? '#000000',
           deadline: ticket.deadline?.toIso8601String(),
           assignees:
               [], // Fetching assignees for all tickets might be heavy, skipping for now
@@ -291,21 +284,23 @@ class PlannerEndpoint extends Endpoint {
   /// Get detailed ticket data
   Future<GetTicketDataResponse> getTicketData(
     Session session,
-    int ticketId,
+    UuidValue ticketId,
   ) async {
-    final ticket = await Ticket.db.findById(session, ticketId);
-    if (ticket == null) {
-      throw Exception('Ticket not found');
-    }
+    final userRec = await AuthHelper.getAuthenticatedUser(session);
+    final ticket = await Ticket.db.findById(
+      session,
+      ticketId,
+      include: Ticket.include(
+        user: User.include(),
+        status: Status.include(),
+        priority: Priority.include(),
+        type: TicketType.include(color: SystemColor.include()),
+      ),
+    );
 
-    final status = await Status.db.findById(session, ticket.statusId);
-    final priority = await Priority.db.findById(session, ticket.priorityId);
-    final ticketType = await TicketType.db.findById(session, ticket.typeId);
-
-    String typeColor = '#000000';
-    if (ticketType != null) {
-      final color = await SystemColor.db.findById(session, ticketType.colorId);
-      typeColor = color?.color ?? '#000000';
+    if (ticket == null ||
+        ticket.user?.organizationId != userRec.organizationId) {
+      throw Exception('Ticket not found or unauthorized');
     }
 
     // Fetch assignees
@@ -313,26 +308,24 @@ class PlannerEndpoint extends Endpoint {
     final mapsForTicket = await BucketTicketMap.db.find(
       session,
       where: (t) => t.ticketId.equals(ticket.id!),
+      include: BucketTicketMap.include(
+        bucket: Bucket.include(
+          user: User.include(color: SystemColor.include()),
+        ),
+      ),
     );
 
     for (final map in mapsForTicket) {
-      final bucket = await Bucket.db.findById(session, map.bucketId);
-      if (bucket != null) {
-        final user = await User.db.findById(session, bucket.userId);
-        if (user != null) {
-          final userColor = await SystemColor.db.findById(
-            session,
-            user.colorId,
-          );
-          assigneesList.add(
-            UserModel(
-              userId: user.id!,
-              userName: user.userName,
-              color: userColor?.color ?? '#000000',
-              selected: false,
-            ),
-          );
-        }
+      final user = map.bucket?.user;
+      if (user != null) {
+        assigneesList.add(
+          UserModel(
+            userId: user.id!,
+            userName: user.userName,
+            color: user.color?.color ?? '#000000',
+            selected: false,
+          ),
+        );
       }
     }
 
@@ -360,20 +353,26 @@ class PlannerEndpoint extends Endpoint {
       ticketName: ticket.ticketName,
       ticketBody: ticket.ticketBody,
       status: StatusModel(
-        statusId: status?.id ?? 0,
-        statusName: status?.statusName ?? '',
+        statusId:
+            ticket.status?.id ??
+            UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        statusName: ticket.status?.statusName ?? '',
       ),
       priority: PriorityModel(
-        priorityId: priority?.id ?? 0,
-        priorityName: priority?.priorityName ?? '',
-        priority: priority?.priority ?? 0,
+        priorityId:
+            ticket.priority?.id ??
+            UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        priorityName: ticket.priority?.priorityName ?? '',
+        priority: ticket.priority?.priority ?? 0,
       ),
       type: TypeModel(
-        typeId: ticketType?.id ?? 0,
-        typeName: ticketType?.typeName ?? '',
-        color: typeColor,
+        typeId:
+            ticket.type?.id ??
+            UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        typeName: ticket.type?.typeName ?? '',
+        color: ticket.type?.color?.color ?? '#000000',
       ),
-      checklist: [], // TODO: Parse checklist
+      checklist: ticket.checklist ?? [],
       flows: ticket.flows,
       deadline: formattedDeadline,
       creds: ticket.creds.toDouble(),
@@ -387,7 +386,7 @@ class PlannerEndpoint extends Endpoint {
   /// Get comments for a ticket
   Future<GetTicketCommentsResponse> getTicketComments(
     Session session,
-    int ticketId,
+    UuidValue ticketId,
   ) async {
     final comments = await TicketComment.db.find(
       session,
@@ -405,6 +404,7 @@ class PlannerEndpoint extends Endpoint {
           userName: user?.userName ?? 'Unknown',
           message: comment.message,
           createdAt: comment.createdAt?.toIso8601String() ?? '',
+          userColor: user?.color?.color ?? '#000000',
         ),
       );
     }
@@ -417,7 +417,8 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     AddCommentRequest request,
   ) async {
-    const userId = 1; // TODO: Fix
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final userId = user.id!;
 
     await TicketComment.db.insertRow(
       session,
@@ -437,7 +438,15 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     AddBucketRequest request,
   ) async {
-    const userId = 1; // TODO: Fix
+    final user = await AuthHelper.getAuthenticatedUser(session);
+
+    // Validate app
+    final app = await PlannerApp.db.findById(session, request.appId);
+    if (app == null || app.organizationId != user.organizationId) {
+      throw Exception('Unauthorized');
+    }
+
+    final userId = user.id!;
 
     await Bucket.db.insertRow(
       session,

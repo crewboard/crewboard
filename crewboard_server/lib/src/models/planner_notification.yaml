@@ -1,0 +1,9 @@
+class: PlannerNotification
+table: planner_notifications
+fields:
+  id: UuidValue?, defaultPersist=random
+  notification: String
+  notificationType: String
+  ticket: Ticket?, relation
+  user: User?, relation
+  seenUserList: List<UuidValue>

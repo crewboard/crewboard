@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:crewboard_flutter/main.dart'; // For client
+import 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart';
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart';
+import 'package:serverpod_auth_client/serverpod_auth_client.dart';
+import 'package:crewboard_client/crewboard_client.dart';
+import 'package:serverpod_client/serverpod_client.dart';
+import 'package:get/get.dart';
+import 'package:crewboard_flutter/controllers/auth_controller.dart';
 import 'signup_page.dart';
 import 'widgets.dart';
 
@@ -33,6 +40,11 @@ class _SignInPageState extends State<SignInPage> {
   // ignore: unused_field
   bool _endpointVerified = false;
   String? _endpointError;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -76,7 +88,6 @@ class _SignInPageState extends State<SignInPage> {
         _endpointVerified = true;
         _isVerifyingEndpoint = false;
         _endpointError = null;
-        // _organizationId = ...;
       });
     } catch (e) {
       setState(() {
@@ -88,37 +99,67 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _signIn() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
     try {
-      final email = _usernameController.text.trim().contains('@')
-          ? _usernameController.text.trim()
-          : '${_usernameController.text.trim()}@local.local';
-
-      final authSuccess = await client.emailIdp.login(
-        email: email,
-        password: _passwordController.text,
-      );
-
-      // Register the session using modular auth
-      await sessionManager.updateSignedInUser(authSuccess);
-
-      widget.onSignIn?.call();
-    } catch (e) {
-      if (e is Exception) {
-        setState(() {
-          _errorMessage = 'Sign in failed: ${e.toString()}';
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Sign in failed: $e';
-        });
+      if (_formKey.currentState == null) {
+        return;
       }
+
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      final response = await client.auth
+          .simpleLogin(
+            _usernameController.text.trim(),
+            _passwordController.text,
+          )
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              throw Exception('Login timed out.');
+            },
+          );
+
+      if (!response.success) {
+        throw Exception(response.message);
+      }
+
+      if (response.authKeyId != null && response.authToken != null) {
+        final authUserId = response.userId != null
+            ? UuidValue.fromString(response.userId!)
+            : UuidValue.fromString(response.authKeyId!.toString());
+
+        final authSuccess = AuthSuccess(
+          authStrategy: 'session',
+          token: response.authToken!,
+          authUserId: authUserId,
+          scopeNames: <String>{},
+        );
+
+        await sessionManager.updateSignedInUser(authSuccess);
+
+        // Manually set authenticated state to trigger navigation
+        final authController = Get.find<AuthController>();
+        authController.forceAuthenticated();
+
+        widget.onSignIn?.call();
+      } else {
+        throw Exception('No auth key received from server');
+      }
+    } catch (e, stack) {
+      print('STACK: $stack');
+      setState(() {
+        _errorMessage = e.toString();
+      });
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -130,6 +171,7 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: const Color(0xFFf6f6f6),
       body: Stack(
         children: [
+          // 1. Main UI
           SizedBox(
             width: width,
             height: height,
@@ -149,7 +191,8 @@ class _SignInPageState extends State<SignInPage> {
               ],
             ),
           ),
-          // Window title bar with close, maximize, minimize buttons
+
+          // 2. Window controls (always on top)
           Positioned(
             top: 0,
             left: 0,

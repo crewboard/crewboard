@@ -19,13 +19,15 @@ abstract class Status implements _i1.SerializableModel {
   });
 
   factory Status({
-    int? id,
+    _i1.UuidValue? id,
     required String statusName,
   }) = _StatusImpl;
 
   factory Status.fromJson(Map<String, dynamic> jsonSerialization) {
     return Status(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       statusName: jsonSerialization['statusName'] as String,
     );
   }
@@ -33,7 +35,7 @@ abstract class Status implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String statusName;
 
@@ -41,14 +43,14 @@ abstract class Status implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Status copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? statusName,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Status',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
     };
   }
@@ -63,7 +65,7 @@ class _Undefined {}
 
 class _StatusImpl extends Status {
   _StatusImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String statusName,
   }) : super._(
          id: id,
@@ -79,7 +81,7 @@ class _StatusImpl extends Status {
     String? statusName,
   }) {
     return Status(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       statusName: statusName ?? this.statusName,
     );
   }

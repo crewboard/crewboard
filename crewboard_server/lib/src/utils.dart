@@ -1,42 +1,90 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
-import 'dart:math';
+import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_server/serverpod_auth_server.dart';
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart';
+import 'generated/protocol.dart';
+import 'dart:io';
 
-// Generate random salt
-String generateSalt([int length = 16]) {
-  final rand = Random.secure();
-  final codeUnits = List.generate(length, (index) {
-    return rand.nextInt(256);
-  });
-  return base64
-      .encode(codeUnits)
-      .substring(0, length); // Simple hex-like or base64
-  // Original used hex.
-}
+/// Helper class for authentication-related operations
+class AuthHelper {
+  /// Get the authenticated user from the session
+  ///
+  /// This method extracts the authenticated user information from the session
+  /// and returns the corresponding User record from the database.
+  ///
+  /// Throws an Exception if:
+  /// - The session is not authenticated
+  /// - The user cannot be found in the database
+  static Future<User> getAuthenticatedUser(Session session) async {
+    final authInfo = session.authenticated;
+    if (authInfo == null) {
+      throw Exception('Not authenticated');
+    }
 
-// Mimic original hex salt
-String generateHexSalt([int length = 16]) {
-  final rand = Random.secure();
-  final codeUnits = List.generate(length, (index) {
-    return rand.nextInt(256);
-  });
-  return codeUnits.map((e) => e.toRadixString(16).padLeft(2, '0')).join();
-}
+    final identifier = authInfo.userIdentifier;
+    User? user;
 
-String hashPassword(String password) {
-  final salt = generateHexSalt(16);
-  final bytes = utf8.encode(password + salt);
-  final hash = sha256.convert(bytes).toString();
-  return '$salt:$hash';
-}
+    try {
+      // 1. Try direct lookup in our User table if identifier is a UUID
+      // This handles cases where the identifier might already be our record ID
+      final uuid = UuidValue.fromString(identifier);
+      user = await User.db.findById(session, uuid);
+    } catch (e) {
+      // Not a UUID or not found by ID
+    }
 
-bool verifyPassword(String password, String hashedPassword) {
-  final parts = hashedPassword.split(':');
-  if (parts.length != 2) return false;
-  final salt = parts[0];
-  final hash = parts[1];
+    if (user != null) return user;
 
-  final bytes = utf8.encode(password + salt);
-  final computedHash = sha256.convert(bytes).toString();
-  return computedHash == hash;
+    // 2. Try looking up UserProfile via modern AuthServices (Serverpod 3.x)
+    try {
+      final authUserId = UuidValue.fromString(identifier);
+      final profile = await AuthServices.instance.userProfiles
+          .maybeFindUserProfileByUserId(
+            session,
+            authUserId,
+          );
+
+      if (profile != null && profile.email != null) {
+        user = await User.db.findFirstRow(
+          session,
+          where: (t) => t.email.equals(profile.email!),
+        );
+
+        if (user != null) {
+          stdout.writeln(
+            'DEBUG: Linked User to Auth system via email: ${profile.email}',
+          );
+          return user;
+        }
+      }
+    } catch (e) {
+      // Ignore lookup errors
+    }
+
+    // 3. Fallback to legacy UserInfo lookup
+    try {
+      UserInfo? userInfo;
+      final id = int.tryParse(identifier);
+      if (id != null) {
+        userInfo = await UserInfo.db.findById(session, id);
+      }
+
+      userInfo ??= await UserInfo.db.findFirstRow(
+        session,
+        where: (t) => t.userIdentifier.equals(identifier),
+      );
+
+      if (userInfo != null && userInfo.email != null) {
+        user = await User.db.findFirstRow(
+          session,
+          where: (t) => t.email.equals(userInfo!.email!),
+        );
+
+        if (user != null) return user;
+      }
+    } catch (e) {
+      // Ignore lookup errors
+    }
+
+    throw Exception('User record not found for auth identifier: $identifier');
+  }
 }

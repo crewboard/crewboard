@@ -26,20 +26,22 @@ abstract class TicketAssignee implements _i1.SerializableModel {
 
   factory TicketAssignee({
     int? id,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
   }) = _TicketAssigneeImpl;
 
   factory TicketAssignee.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketAssignee(
       id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
@@ -51,11 +53,11 @@ abstract class TicketAssignee implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
@@ -64,9 +66,9 @@ abstract class TicketAssignee implements _i1.SerializableModel {
   @_i1.useResult
   TicketAssignee copyWith({
     int? id,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
   });
   @override
@@ -74,9 +76,9 @@ abstract class TicketAssignee implements _i1.SerializableModel {
     return {
       '__className__': 'TicketAssignee',
       if (id != null) 'id': id,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
     };
   }
@@ -92,9 +94,9 @@ class _Undefined {}
 class _TicketAssigneeImpl extends TicketAssignee {
   _TicketAssigneeImpl({
     int? id,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
   }) : super._(
          id: id,
@@ -110,9 +112,9 @@ class _TicketAssigneeImpl extends TicketAssignee {
   @override
   TicketAssignee copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
   }) {
     return TicketAssignee(

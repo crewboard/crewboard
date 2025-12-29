@@ -1,0 +1,6 @@
+class: TicketType
+table: ticket_type
+fields:
+  id: UuidValue?, defaultPersist=random
+  typeName: String
+  color: SystemColor?, relation

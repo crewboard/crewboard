@@ -21,7 +21,7 @@ abstract class SystemColor implements _i1.SerializableModel {
   });
 
   factory SystemColor({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     required String color,
     required bool isDefault,
@@ -29,7 +29,9 @@ abstract class SystemColor implements _i1.SerializableModel {
 
   factory SystemColor.fromJson(Map<String, dynamic> jsonSerialization) {
     return SystemColor(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       colorName: jsonSerialization['colorName'] as String?,
       color: jsonSerialization['color'] as String,
       isDefault: jsonSerialization['isDefault'] as bool,
@@ -39,7 +41,7 @@ abstract class SystemColor implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String? colorName;
 
@@ -51,7 +53,7 @@ abstract class SystemColor implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   SystemColor copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     String? color,
     bool? isDefault,
@@ -60,7 +62,7 @@ abstract class SystemColor implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'SystemColor',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (colorName != null) 'colorName': colorName,
       'color': color,
       'isDefault': isDefault,
@@ -77,7 +79,7 @@ class _Undefined {}
 
 class _SystemColorImpl extends SystemColor {
   _SystemColorImpl({
-    int? id,
+    _i1.UuidValue? id,
     String? colorName,
     required String color,
     required bool isDefault,
@@ -99,7 +101,7 @@ class _SystemColorImpl extends SystemColor {
     bool? isDefault,
   }) {
     return SystemColor(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       colorName: colorName is String? ? colorName : this.colorName,
       color: color ?? this.color,
       isDefault: isDefault ?? this.isDefault,

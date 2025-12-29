@@ -23,14 +23,16 @@ abstract class BucketModel
   });
 
   factory BucketModel({
-    required int bucketId,
+    required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
   }) = _BucketModelImpl;
 
   factory BucketModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return BucketModel(
-      bucketId: jsonSerialization['bucketId'] as int,
+      bucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['bucketId'],
+      ),
       bucketName: jsonSerialization['bucketName'] as String,
       tickets: _i3.Protocol().deserialize<List<_i2.PlannerTicket>>(
         jsonSerialization['tickets'],
@@ -38,7 +40,7 @@ abstract class BucketModel
     );
   }
 
-  int bucketId;
+  _i1.UuidValue bucketId;
 
   String bucketName;
 
@@ -48,7 +50,7 @@ abstract class BucketModel
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   BucketModel copyWith({
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
   });
@@ -56,7 +58,7 @@ abstract class BucketModel
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'BucketModel',
-      'bucketId': bucketId,
+      'bucketId': bucketId.toJson(),
       'bucketName': bucketName,
       'tickets': tickets.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -66,7 +68,7 @@ abstract class BucketModel
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'BucketModel',
-      'bucketId': bucketId,
+      'bucketId': bucketId.toJson(),
       'bucketName': bucketName,
       'tickets': tickets.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
@@ -80,7 +82,7 @@ abstract class BucketModel
 
 class _BucketModelImpl extends BucketModel {
   _BucketModelImpl({
-    required int bucketId,
+    required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
   }) : super._(
@@ -94,7 +96,7 @@ class _BucketModelImpl extends BucketModel {
   @_i1.useResult
   @override
   BucketModel copyWith({
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
   }) {

@@ -11,52 +11,69 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'system_color.dart' as _i2;
+import 'package:crewboard_client/src/protocol/protocol.dart' as _i3;
 
 abstract class TicketType implements _i1.SerializableModel {
   TicketType._({
     this.id,
     required this.typeName,
     required this.colorId,
+    this.color,
   });
 
   factory TicketType({
-    int? id,
+    _i1.UuidValue? id,
     required String typeName,
-    required int colorId,
+    required _i1.UuidValue colorId,
+    _i2.SystemColor? color,
   }) = _TicketTypeImpl;
 
   factory TicketType.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketType(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       typeName: jsonSerialization['typeName'] as String,
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
+      color: jsonSerialization['color'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.SystemColor>(
+              jsonSerialization['color'],
+            ),
     );
   }
 
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String typeName;
 
-  int colorId;
+  _i1.UuidValue colorId;
+
+  _i2.SystemColor? color;
 
   /// Returns a shallow copy of this [TicketType]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketType copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? typeName,
-    int? colorId,
+    _i1.UuidValue? colorId,
+    _i2.SystemColor? color,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketType',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'typeName': typeName,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
+      if (color != null) 'color': color?.toJson(),
     };
   }
 
@@ -70,13 +87,15 @@ class _Undefined {}
 
 class _TicketTypeImpl extends TicketType {
   _TicketTypeImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String typeName,
-    required int colorId,
+    required _i1.UuidValue colorId,
+    _i2.SystemColor? color,
   }) : super._(
          id: id,
          typeName: typeName,
          colorId: colorId,
+         color: color,
        );
 
   /// Returns a shallow copy of this [TicketType]
@@ -86,12 +105,14 @@ class _TicketTypeImpl extends TicketType {
   TicketType copyWith({
     Object? id = _Undefined,
     String? typeName,
-    int? colorId,
+    _i1.UuidValue? colorId,
+    Object? color = _Undefined,
   }) {
     return TicketType(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       typeName: typeName ?? this.typeName,
       colorId: colorId ?? this.colorId,
+      color: color is _i2.SystemColor? ? color : this.color?.copyWith(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:crewboard_client/crewboard_client.dart';
 import 'package:get/get.dart';
 import '../../config/palette.dart';
 import '../../controllers/rooms_controller.dart';
@@ -17,7 +18,7 @@ class _RoomsState extends State<Rooms> {
   final RoomsController roomsController = Get.put(RoomsController());
   final MessagesController messagesController = Get.put(MessagesController());
   bool search = false;
-  int? userId;
+  UuidValue? userId;
 
   @override
   void initState() {
@@ -107,35 +108,103 @@ class _RoomsState extends State<Rooms> {
           Expanded(
             child: ListView(
               children: [
-                for (var room in rooms)
-                  InkWell(
-                    onTap: () {
-                      room = room.copyWith(messageCount: 0);
-                      roomsController.rooms.refresh();
-                      Window.subPage.value = "messages";
-                      roomsController.selectRoom(room);
-
-                      // Load messages for selected room
-                      messagesController.loadInitialMessages(
-                        roomId: room.id!,
-                      );
-                    },
-                    child: Container(
-                      color: (roomsController.selectedRoom.value?.id == room.id)
-                          ? Pallet.inside1
-                          : Colors.transparent,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RoomItem(
-                            name: room.roomName ?? "",
-                            color: Colors.red,
-                            message: const {},
-                            userId: userId,
-                            messageCount: room.messageCount,
-                          ),
-                        ],
+                if (roomsController.rooms.isNotEmpty) ...[
+                  if (search)
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "Rooms",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Pallet.font1,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                    ),
+                  for (var room in rooms)
+                    InkWell(
+                      onTap: () {
+                        room = room.copyWith(messageCount: 0);
+                        roomsController.rooms.refresh();
+                        Window.subPage.value = "messages";
+                        roomsController.selectRoom(room);
+
+                        // Load messages for selected room
+                        messagesController.loadInitialMessages(
+                          roomId: room.id!,
+                        );
+                      },
+                      child: Container(
+                        color:
+                            (roomsController.selectedRoom.value?.id == room.id)
+                            ? Pallet.inside1
+                            : Colors.transparent,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RoomItem(
+                              name: room.roomName ?? "",
+                              color: Colors.red,
+                              message: const {},
+                              userId: userId,
+                              messageCount: room.messageCount,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+                if (search && roomsController.users.isNotEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      "Users",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Pallet.font1,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  for (var user in roomsController.users)
+                    InkWell(
+                      onTap: () async {
+                        await roomsController.startDirectChat(user);
+                        Window.subPage.value = "messages";
+                        // room controller handles selecting the room and resetting search
+                        if (roomsController.selectedRoom.value != null) {
+                          messagesController.loadInitialMessages(
+                            roomId: roomsController.selectedRoom.value!.id!,
+                          );
+                        }
+                      },
+                      child: RoomItem(
+                        name: user.userName,
+                        color: Colors.blue,
+                        message: const {},
+                        userId: userId,
+                        messageCount: 0,
+                      ),
+                    ),
+                ],
+                if (search &&
+                    roomsController.rooms.isEmpty &&
+                    roomsController.users.isEmpty)
+                  if (!roomsController.isSearchingUsers.value)
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Center(
+                        child: Text(
+                          "No results found",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                if (roomsController.isSearchingUsers.value)
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ),
               ],
@@ -148,7 +217,7 @@ class _RoomsState extends State<Rooms> {
 
   void _loadUserId() async {
     // TODO: Load user ID from local storage or auth controller
-    userId = 1;
+    userId = UuidValue.fromString('00000000-0000-4000-8000-000000000000');
     setState(() {});
   }
 }
@@ -168,7 +237,7 @@ class RoomItem extends StatelessWidget {
   final int messageCount;
   final String? image;
   final Map message;
-  final int? userId;
+  final UuidValue? userId;
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,0 @@
-class: Organization
-table: organization
-fields:
-  name: String

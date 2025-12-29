@@ -12,20 +12,23 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Status implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Status
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   Status._({
     this.id,
     required this.statusName,
   });
 
   factory Status({
-    int? id,
+    _i1.UuidValue? id,
     required String statusName,
   }) = _StatusImpl;
 
   factory Status.fromJson(Map<String, dynamic> jsonSerialization) {
     return Status(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       statusName: jsonSerialization['statusName'] as String,
     );
   }
@@ -35,25 +38,25 @@ abstract class Status implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = StatusRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String statusName;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [Status]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Status copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? statusName,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Status',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
     };
   }
@@ -62,7 +65,7 @@ abstract class Status implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Status',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
     };
   }
@@ -101,7 +104,7 @@ class _Undefined {}
 
 class _StatusImpl extends Status {
   _StatusImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String statusName,
   }) : super._(
          id: id,
@@ -117,7 +120,7 @@ class _StatusImpl extends Status {
     String? statusName,
   }) {
     return Status(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       statusName: statusName ?? this.statusName,
     );
   }
@@ -132,7 +135,7 @@ class StatusUpdateTable extends _i1.UpdateTable<StatusTable> {
   );
 }
 
-class StatusTable extends _i1.Table<int?> {
+class StatusTable extends _i1.Table<_i1.UuidValue?> {
   StatusTable({super.tableRelation}) : super(tableName: 'status') {
     updateTable = StatusUpdateTable(this);
     statusName = _i1.ColumnString(
@@ -159,7 +162,7 @@ class StatusInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Status.t;
+  _i1.Table<_i1.UuidValue?> get table => Status.t;
 }
 
 class StatusIncludeList extends _i1.IncludeList {
@@ -179,7 +182,7 @@ class StatusIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Status.t;
+  _i1.Table<_i1.UuidValue?> get table => Status.t;
 }
 
 class StatusRepository {
@@ -267,7 +270,7 @@ class StatusRepository {
   /// Finds a single [Status] by its [id] or null if no such row exists.
   Future<Status?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Status>(
@@ -345,7 +348,7 @@ class StatusRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Status?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<StatusUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

@@ -19,13 +19,15 @@ abstract class Organization implements _i1.SerializableModel {
   });
 
   factory Organization({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
   }) = _OrganizationImpl;
 
   factory Organization.fromJson(Map<String, dynamic> jsonSerialization) {
     return Organization(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
     );
   }
@@ -33,7 +35,7 @@ abstract class Organization implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String name;
 
@@ -41,14 +43,14 @@ abstract class Organization implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Organization copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Organization',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'name': name,
     };
   }
@@ -63,7 +65,7 @@ class _Undefined {}
 
 class _OrganizationImpl extends Organization {
   _OrganizationImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
   }) : super._(
          id: id,
@@ -79,7 +81,7 @@ class _OrganizationImpl extends Organization {
     String? name,
   }) {
     return Organization(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       name: name ?? this.name,
     );
   }

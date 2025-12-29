@@ -20,18 +20,18 @@ abstract class AddBucketRequest
   });
 
   factory AddBucketRequest({
-    required int appId,
+    required _i1.UuidValue appId,
     required String bucketName,
   }) = _AddBucketRequestImpl;
 
   factory AddBucketRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return AddBucketRequest(
-      appId: jsonSerialization['appId'] as int,
+      appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
       bucketName: jsonSerialization['bucketName'] as String,
     );
   }
 
-  int appId;
+  _i1.UuidValue appId;
 
   String bucketName;
 
@@ -39,14 +39,14 @@ abstract class AddBucketRequest
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   AddBucketRequest copyWith({
-    int? appId,
+    _i1.UuidValue? appId,
     String? bucketName,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'AddBucketRequest',
-      'appId': appId,
+      'appId': appId.toJson(),
       'bucketName': bucketName,
     };
   }
@@ -55,7 +55,7 @@ abstract class AddBucketRequest
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'AddBucketRequest',
-      'appId': appId,
+      'appId': appId.toJson(),
       'bucketName': bucketName,
     };
   }
@@ -68,7 +68,7 @@ abstract class AddBucketRequest
 
 class _AddBucketRequestImpl extends AddBucketRequest {
   _AddBucketRequestImpl({
-    required int appId,
+    required _i1.UuidValue appId,
     required String bucketName,
   }) : super._(
          appId: appId,
@@ -80,7 +80,7 @@ class _AddBucketRequestImpl extends AddBucketRequest {
   @_i1.useResult
   @override
   AddBucketRequest copyWith({
-    int? appId,
+    _i1.UuidValue? appId,
     String? bucketName,
   }) {
     return AddBucketRequest(

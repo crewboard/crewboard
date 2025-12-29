@@ -37,7 +37,7 @@ abstract class TicketModel
   });
 
   factory TicketModel({
-    required int id,
+    required _i1.UuidValue id,
     required String ticketName,
     required String ticketBody,
     required _i2.StatusModel status,
@@ -53,7 +53,7 @@ abstract class TicketModel
 
   factory TicketModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketModel(
-      id: jsonSerialization['id'] as int,
+      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       ticketName: jsonSerialization['ticketName'] as String,
       ticketBody: jsonSerialization['ticketBody'] as String,
       status: _i8.Protocol().deserialize<_i2.StatusModel>(
@@ -80,7 +80,7 @@ abstract class TicketModel
     );
   }
 
-  int id;
+  _i1.UuidValue id;
 
   String ticketName;
 
@@ -108,7 +108,7 @@ abstract class TicketModel
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketModel copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? ticketName,
     String? ticketBody,
     _i2.StatusModel? status,
@@ -125,7 +125,7 @@ abstract class TicketModel
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketModel',
-      'id': id,
+      'id': id.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
       'status': status.toJson(),
@@ -144,7 +144,7 @@ abstract class TicketModel
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'TicketModel',
-      'id': id,
+      'id': id.toJson(),
       'ticketName': ticketName,
       'ticketBody': ticketBody,
       'status': status.toJsonForProtocol(),
@@ -171,7 +171,7 @@ class _Undefined {}
 
 class _TicketModelImpl extends TicketModel {
   _TicketModelImpl({
-    required int id,
+    required _i1.UuidValue id,
     required String ticketName,
     required String ticketBody,
     required _i2.StatusModel status,
@@ -203,7 +203,7 @@ class _TicketModelImpl extends TicketModel {
   @_i1.useResult
   @override
   TicketModel copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? ticketName,
     String? ticketBody,
     _i2.StatusModel? status,

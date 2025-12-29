@@ -13,7 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class ChatRoom
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   ChatRoom._({
     this.id,
     this.roomName,
@@ -23,19 +23,25 @@ abstract class ChatRoom
   });
 
   factory ChatRoom({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     required String roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     required int messageCount,
   }) = _ChatRoomImpl;
 
   factory ChatRoom.fromJson(Map<String, dynamic> jsonSerialization) {
     return ChatRoom(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       roomName: jsonSerialization['roomName'] as String?,
       roomType: jsonSerialization['roomType'] as String,
-      lastMessageId: jsonSerialization['lastMessageId'] as int?,
+      lastMessageId: jsonSerialization['lastMessageId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['lastMessageId'],
+            ),
       messageCount: jsonSerialization['messageCount'] as int,
     );
   }
@@ -45,37 +51,37 @@ abstract class ChatRoom
   static const db = ChatRoomRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String? roomName;
 
   String roomType;
 
-  int? lastMessageId;
+  _i1.UuidValue? lastMessageId;
 
   int messageCount;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [ChatRoom]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   ChatRoom copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     String? roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     int? messageCount,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'ChatRoom',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
-      if (lastMessageId != null) 'lastMessageId': lastMessageId,
+      if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
       'messageCount': messageCount,
     };
   }
@@ -84,10 +90,10 @@ abstract class ChatRoom
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'ChatRoom',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
-      if (lastMessageId != null) 'lastMessageId': lastMessageId,
+      if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
       'messageCount': messageCount,
     };
   }
@@ -126,10 +132,10 @@ class _Undefined {}
 
 class _ChatRoomImpl extends ChatRoom {
   _ChatRoomImpl({
-    int? id,
+    _i1.UuidValue? id,
     String? roomName,
     required String roomType,
-    int? lastMessageId,
+    _i1.UuidValue? lastMessageId,
     required int messageCount,
   }) : super._(
          id: id,
@@ -151,10 +157,12 @@ class _ChatRoomImpl extends ChatRoom {
     int? messageCount,
   }) {
     return ChatRoom(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       roomName: roomName is String? ? roomName : this.roomName,
       roomType: roomType ?? this.roomType,
-      lastMessageId: lastMessageId is int? ? lastMessageId : this.lastMessageId,
+      lastMessageId: lastMessageId is _i1.UuidValue?
+          ? lastMessageId
+          : this.lastMessageId,
       messageCount: messageCount ?? this.messageCount,
     );
   }
@@ -173,7 +181,9 @@ class ChatRoomUpdateTable extends _i1.UpdateTable<ChatRoomTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> lastMessageId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> lastMessageId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
     table.lastMessageId,
     value,
   );
@@ -184,7 +194,7 @@ class ChatRoomUpdateTable extends _i1.UpdateTable<ChatRoomTable> {
   );
 }
 
-class ChatRoomTable extends _i1.Table<int?> {
+class ChatRoomTable extends _i1.Table<_i1.UuidValue?> {
   ChatRoomTable({super.tableRelation}) : super(tableName: 'chat_room') {
     updateTable = ChatRoomUpdateTable(this);
     roomName = _i1.ColumnString(
@@ -195,7 +205,7 @@ class ChatRoomTable extends _i1.Table<int?> {
       'roomType',
       this,
     );
-    lastMessageId = _i1.ColumnInt(
+    lastMessageId = _i1.ColumnUuid(
       'lastMessageId',
       this,
     );
@@ -211,7 +221,7 @@ class ChatRoomTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString roomType;
 
-  late final _i1.ColumnInt lastMessageId;
+  late final _i1.ColumnUuid lastMessageId;
 
   late final _i1.ColumnInt messageCount;
 
@@ -232,7 +242,7 @@ class ChatRoomInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => ChatRoom.t;
+  _i1.Table<_i1.UuidValue?> get table => ChatRoom.t;
 }
 
 class ChatRoomIncludeList extends _i1.IncludeList {
@@ -252,7 +262,7 @@ class ChatRoomIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => ChatRoom.t;
+  _i1.Table<_i1.UuidValue?> get table => ChatRoom.t;
 }
 
 class ChatRoomRepository {
@@ -340,7 +350,7 @@ class ChatRoomRepository {
   /// Finds a single [ChatRoom] by its [id] or null if no such row exists.
   Future<ChatRoom?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<ChatRoom>(
@@ -418,7 +428,7 @@ class ChatRoomRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<ChatRoom?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<ChatRoomUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

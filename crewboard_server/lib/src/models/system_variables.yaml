@@ -1,0 +1,12 @@
+class: SystemVariables
+table: system_variables
+fields:
+  punchingMode: String
+  lineHeight: double?
+  processWidth: double?
+  conditionWidth: double?
+  terminalWidth: double?
+  allowEdit: bool?
+  showEdit: bool?
+  allowDelete: bool?
+  showDelete: bool?

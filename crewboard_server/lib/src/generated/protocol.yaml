@@ -10,14 +10,40 @@ jwtRefresh:
   - refreshAccessToken:
 admin:
   - getApps:
+  - getSystemVariables:
   - addApp:
+  - getUsers:
+  - getUserTypes:
+  - addUserType:
+  - getAttendance:
+  - punch:
+  - getLeaveConfigs:
+  - getColors:
+  - addColor:
+  - createUser:
+  - getAttendanceData:
+  - saveLeaveConfig:
+  - saveLeaveRequest:
 auth:
+  - checkUsername:
   - checkOrganization:
   - registerAdmin:
+  - simpleLogin:
 chat:
   - getRooms:
+  - searchUsers:
+  - createDirectRoom:
   - getMessages:
   - sendMessage:
+docs:
+  - createFlow:
+  - updateFlow:
+  - getFlows:
+  - getFlow:
+  - deleteFlow:
+  - getDocs:
+  - addDoc:
+  - saveDoc:
 planner:
   - getPlannerData:
   - getAddTicketData:

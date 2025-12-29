@@ -26,22 +26,28 @@ abstract class BucketTicketMap implements _i1.SerializableModel {
   });
 
   factory BucketTicketMap({
-    int? id,
-    required int bucketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue bucketId,
     _i2.Bucket? bucket,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i3.Ticket? ticket,
     required int order,
   }) = _BucketTicketMapImpl;
 
   factory BucketTicketMap.fromJson(Map<String, dynamic> jsonSerialization) {
     return BucketTicketMap(
-      id: jsonSerialization['id'] as int?,
-      bucketId: jsonSerialization['bucketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      bucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['bucketId'],
+      ),
       bucket: jsonSerialization['bucket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Bucket>(jsonSerialization['bucket']),
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.Ticket>(jsonSerialization['ticket']),
@@ -52,13 +58,13 @@ abstract class BucketTicketMap implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int bucketId;
+  _i1.UuidValue bucketId;
 
   _i2.Bucket? bucket;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i3.Ticket? ticket;
 
@@ -68,10 +74,10 @@ abstract class BucketTicketMap implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   BucketTicketMap copyWith({
-    int? id,
-    int? bucketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? bucketId,
     _i2.Bucket? bucket,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i3.Ticket? ticket,
     int? order,
   });
@@ -79,10 +85,10 @@ abstract class BucketTicketMap implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'BucketTicketMap',
-      if (id != null) 'id': id,
-      'bucketId': bucketId,
+      if (id != null) 'id': id?.toJson(),
+      'bucketId': bucketId.toJson(),
       if (bucket != null) 'bucket': bucket?.toJson(),
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
       'order': order,
     };
@@ -98,10 +104,10 @@ class _Undefined {}
 
 class _BucketTicketMapImpl extends BucketTicketMap {
   _BucketTicketMapImpl({
-    int? id,
-    required int bucketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue bucketId,
     _i2.Bucket? bucket,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i3.Ticket? ticket,
     required int order,
   }) : super._(
@@ -119,14 +125,14 @@ class _BucketTicketMapImpl extends BucketTicketMap {
   @override
   BucketTicketMap copyWith({
     Object? id = _Undefined,
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     Object? bucket = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
     int? order,
   }) {
     return BucketTicketMap(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       bucketId: bucketId ?? this.bucketId,
       bucket: bucket is _i2.Bucket? ? bucket : this.bucket?.copyWith(),
       ticketId: ticketId ?? this.ticketId,

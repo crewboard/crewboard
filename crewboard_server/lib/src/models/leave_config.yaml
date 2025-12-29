@@ -1,0 +1,8 @@
+class: LeaveConfig
+table: leave_config
+fields:
+  id: UuidValue?, defaultPersist=random
+  configName: String
+  fullDay: int
+  halfDay: int
+  config: String?

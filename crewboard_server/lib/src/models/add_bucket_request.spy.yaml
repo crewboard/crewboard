@@ -1,4 +1,0 @@
-class: AddBucketRequest
-fields:
-  appId: int
-  bucketName: String

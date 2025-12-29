@@ -1,0 +1,9 @@
+class: SignInResponse
+fields:
+  success: bool
+  message: String
+  userId: String?
+  organizationId: String?
+  authKeyId: int?
+  authToken: String?
+  authUserId: String?

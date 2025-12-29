@@ -26,8 +26,8 @@ abstract class TicketAttachment implements _i1.SerializableModel {
   });
 
   factory TicketAttachment({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
     required String attachmentName,
     required double attachmentSize,
@@ -37,8 +37,12 @@ abstract class TicketAttachment implements _i1.SerializableModel {
 
   factory TicketAttachment.fromJson(Map<String, dynamic> jsonSerialization) {
     return TicketAttachment(
-      id: jsonSerialization['id'] as int?,
-      ticketId: jsonSerialization['ticketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
@@ -52,9 +56,9 @@ abstract class TicketAttachment implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
@@ -70,8 +74,8 @@ abstract class TicketAttachment implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   TicketAttachment copyWith({
-    int? id,
-    int? ticketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
     String? attachmentName,
     double? attachmentSize,
@@ -82,8 +86,8 @@ abstract class TicketAttachment implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'TicketAttachment',
-      if (id != null) 'id': id,
-      'ticketId': ticketId,
+      if (id != null) 'id': id?.toJson(),
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
       'attachmentName': attachmentName,
       'attachmentSize': attachmentSize,
@@ -102,8 +106,8 @@ class _Undefined {}
 
 class _TicketAttachmentImpl extends TicketAttachment {
   _TicketAttachmentImpl({
-    int? id,
-    required int ticketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
     required String attachmentName,
     required double attachmentSize,
@@ -125,7 +129,7 @@ class _TicketAttachmentImpl extends TicketAttachment {
   @override
   TicketAttachment copyWith({
     Object? id = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
     String? attachmentName,
     double? attachmentSize,
@@ -133,7 +137,7 @@ class _TicketAttachmentImpl extends TicketAttachment {
     String? attachmentType,
   }) {
     return TicketAttachment(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       ticketId: ticketId ?? this.ticketId,
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       attachmentName: attachmentName ?? this.attachmentName,

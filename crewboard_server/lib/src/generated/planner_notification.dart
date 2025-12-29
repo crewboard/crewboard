@@ -18,7 +18,7 @@ import 'user.dart' as _i3;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i4;
 
 abstract class PlannerNotification
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   PlannerNotification._({
     this.id,
     required this.notification,
@@ -31,30 +31,34 @@ abstract class PlannerNotification
   });
 
   factory PlannerNotification({
-    int? id,
+    _i1.UuidValue? id,
     required String notification,
     required String notificationType,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
   }) = _PlannerNotificationImpl;
 
   factory PlannerNotification.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerNotification(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       notification: jsonSerialization['notification'] as String,
       notificationType: jsonSerialization['notificationType'] as String,
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Ticket>(jsonSerialization['ticket']),
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      seenUserList: _i4.Protocol().deserialize<List<int>>(
+      seenUserList: _i4.Protocol().deserialize<List<_i1.UuidValue>>(
         jsonSerialization['seenUserList'],
       ),
     );
@@ -65,50 +69,50 @@ abstract class PlannerNotification
   static const db = PlannerNotificationRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String notification;
 
   String notificationType;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i2.Ticket? ticket;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i3.User? user;
 
-  List<int> seenUserList;
+  List<_i1.UuidValue> seenUserList;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [PlannerNotification]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerNotification copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? notification,
     String? notificationType,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i2.Ticket? ticket,
-    int? userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerNotification',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'notification': notification,
       'notificationType': notificationType,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -116,14 +120,14 @@ abstract class PlannerNotification
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'PlannerNotification',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'notification': notification,
       'notificationType': notificationType,
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
-      'seenUserList': seenUserList.toJson(),
+      'seenUserList': seenUserList.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -167,14 +171,14 @@ class _Undefined {}
 
 class _PlannerNotificationImpl extends PlannerNotification {
   _PlannerNotificationImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String notification,
     required String notificationType,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i2.Ticket? ticket,
-    required int userId,
+    required _i1.UuidValue userId,
     _i3.User? user,
-    required List<int> seenUserList,
+    required List<_i1.UuidValue> seenUserList,
   }) : super._(
          id: id,
          notification: notification,
@@ -194,14 +198,14 @@ class _PlannerNotificationImpl extends PlannerNotification {
     Object? id = _Undefined,
     String? notification,
     String? notificationType,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
-    List<int>? seenUserList,
+    List<_i1.UuidValue>? seenUserList,
   }) {
     return PlannerNotification(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       notification: notification ?? this.notification,
       notificationType: notificationType ?? this.notificationType,
       ticketId: ticketId ?? this.ticketId,
@@ -228,24 +232,27 @@ class PlannerNotificationUpdateTable
         value,
       );
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
-
-  _i1.ColumnValue<List<int>, List<int>> seenUserList(List<int> value) =>
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
       _i1.ColumnValue(
-        table.seenUserList,
+        table.ticketId,
         value,
       );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<List<_i1.UuidValue>, List<_i1.UuidValue>> seenUserList(
+    List<_i1.UuidValue> value,
+  ) => _i1.ColumnValue(
+    table.seenUserList,
+    value,
+  );
 }
 
-class PlannerNotificationTable extends _i1.Table<int?> {
+class PlannerNotificationTable extends _i1.Table<_i1.UuidValue?> {
   PlannerNotificationTable({super.tableRelation})
     : super(tableName: 'planner_notifications') {
     updateTable = PlannerNotificationUpdateTable(this);
@@ -257,15 +264,15 @@ class PlannerNotificationTable extends _i1.Table<int?> {
       'notificationType',
       this,
     );
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
-    seenUserList = _i1.ColumnSerializable<List<int>>(
+    seenUserList = _i1.ColumnSerializable<List<_i1.UuidValue>>(
       'seenUserList',
       this,
     );
@@ -277,15 +284,15 @@ class PlannerNotificationTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString notificationType;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i2.TicketTable? _ticket;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i3.UserTable? _user;
 
-  late final _i1.ColumnSerializable<List<int>> seenUserList;
+  late final _i1.ColumnSerializable<List<_i1.UuidValue>> seenUserList;
 
   _i2.TicketTable get ticket {
     if (_ticket != null) return _ticket!;
@@ -355,7 +362,7 @@ class PlannerNotificationInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => PlannerNotification.t;
+  _i1.Table<_i1.UuidValue?> get table => PlannerNotification.t;
 }
 
 class PlannerNotificationIncludeList extends _i1.IncludeList {
@@ -375,7 +382,7 @@ class PlannerNotificationIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => PlannerNotification.t;
+  _i1.Table<_i1.UuidValue?> get table => PlannerNotification.t;
 }
 
 class PlannerNotificationRepository {
@@ -469,7 +476,7 @@ class PlannerNotificationRepository {
   /// Finds a single [PlannerNotification] by its [id] or null if no such row exists.
   Future<PlannerNotification?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     PlannerNotificationInclude? include,
   }) async {
@@ -549,7 +556,7 @@ class PlannerNotificationRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<PlannerNotification?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<PlannerNotificationUpdateTable>
     columnValues,
     _i1.Transaction? transaction,

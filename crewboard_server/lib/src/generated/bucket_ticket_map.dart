@@ -18,7 +18,7 @@ import 'ticket.dart' as _i3;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i4;
 
 abstract class BucketTicketMap
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   BucketTicketMap._({
     this.id,
     required this.bucketId,
@@ -29,22 +29,28 @@ abstract class BucketTicketMap
   });
 
   factory BucketTicketMap({
-    int? id,
-    required int bucketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue bucketId,
     _i2.Bucket? bucket,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i3.Ticket? ticket,
     required int order,
   }) = _BucketTicketMapImpl;
 
   factory BucketTicketMap.fromJson(Map<String, dynamic> jsonSerialization) {
     return BucketTicketMap(
-      id: jsonSerialization['id'] as int?,
-      bucketId: jsonSerialization['bucketId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      bucketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['bucketId'],
+      ),
       bucket: jsonSerialization['bucket'] == null
           ? null
           : _i4.Protocol().deserialize<_i2.Bucket>(jsonSerialization['bucket']),
-      ticketId: jsonSerialization['ticketId'] as int,
+      ticketId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ticketId'],
+      ),
       ticket: jsonSerialization['ticket'] == null
           ? null
           : _i4.Protocol().deserialize<_i3.Ticket>(jsonSerialization['ticket']),
@@ -57,29 +63,29 @@ abstract class BucketTicketMap
   static const db = BucketTicketMapRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int bucketId;
+  _i1.UuidValue bucketId;
 
   _i2.Bucket? bucket;
 
-  int ticketId;
+  _i1.UuidValue ticketId;
 
   _i3.Ticket? ticket;
 
   int order;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [BucketTicketMap]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   BucketTicketMap copyWith({
-    int? id,
-    int? bucketId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? bucketId,
     _i2.Bucket? bucket,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     _i3.Ticket? ticket,
     int? order,
   });
@@ -87,10 +93,10 @@ abstract class BucketTicketMap
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'BucketTicketMap',
-      if (id != null) 'id': id,
-      'bucketId': bucketId,
+      if (id != null) 'id': id?.toJson(),
+      'bucketId': bucketId.toJson(),
       if (bucket != null) 'bucket': bucket?.toJson(),
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJson(),
       'order': order,
     };
@@ -100,10 +106,10 @@ abstract class BucketTicketMap
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'BucketTicketMap',
-      if (id != null) 'id': id,
-      'bucketId': bucketId,
+      if (id != null) 'id': id?.toJson(),
+      'bucketId': bucketId.toJson(),
       if (bucket != null) 'bucket': bucket?.toJsonForProtocol(),
-      'ticketId': ticketId,
+      'ticketId': ticketId.toJson(),
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
       'order': order,
     };
@@ -149,10 +155,10 @@ class _Undefined {}
 
 class _BucketTicketMapImpl extends BucketTicketMap {
   _BucketTicketMapImpl({
-    int? id,
-    required int bucketId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue bucketId,
     _i2.Bucket? bucket,
-    required int ticketId,
+    required _i1.UuidValue ticketId,
     _i3.Ticket? ticket,
     required int order,
   }) : super._(
@@ -170,14 +176,14 @@ class _BucketTicketMapImpl extends BucketTicketMap {
   @override
   BucketTicketMap copyWith({
     Object? id = _Undefined,
-    int? bucketId,
+    _i1.UuidValue? bucketId,
     Object? bucket = _Undefined,
-    int? ticketId,
+    _i1.UuidValue? ticketId,
     Object? ticket = _Undefined,
     int? order,
   }) {
     return BucketTicketMap(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       bucketId: bucketId ?? this.bucketId,
       bucket: bucket is _i2.Bucket? ? bucket : this.bucket?.copyWith(),
       ticketId: ticketId ?? this.ticketId,
@@ -190,15 +196,17 @@ class _BucketTicketMapImpl extends BucketTicketMap {
 class BucketTicketMapUpdateTable extends _i1.UpdateTable<BucketTicketMapTable> {
   BucketTicketMapUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> bucketId(int value) => _i1.ColumnValue(
-    table.bucketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> bucketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.bucketId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> ticketId(int value) => _i1.ColumnValue(
-    table.ticketId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ticketId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.ticketId,
+        value,
+      );
 
   _i1.ColumnValue<int, int> order(int value) => _i1.ColumnValue(
     table.order,
@@ -206,15 +214,15 @@ class BucketTicketMapUpdateTable extends _i1.UpdateTable<BucketTicketMapTable> {
   );
 }
 
-class BucketTicketMapTable extends _i1.Table<int?> {
+class BucketTicketMapTable extends _i1.Table<_i1.UuidValue?> {
   BucketTicketMapTable({super.tableRelation})
     : super(tableName: 'bucket_ticket_map') {
     updateTable = BucketTicketMapUpdateTable(this);
-    bucketId = _i1.ColumnInt(
+    bucketId = _i1.ColumnUuid(
       'bucketId',
       this,
     );
-    ticketId = _i1.ColumnInt(
+    ticketId = _i1.ColumnUuid(
       'ticketId',
       this,
     );
@@ -226,11 +234,11 @@ class BucketTicketMapTable extends _i1.Table<int?> {
 
   late final BucketTicketMapUpdateTable updateTable;
 
-  late final _i1.ColumnInt bucketId;
+  late final _i1.ColumnUuid bucketId;
 
   _i2.BucketTable? _bucket;
 
-  late final _i1.ColumnInt ticketId;
+  late final _i1.ColumnUuid ticketId;
 
   _i3.TicketTable? _ticket;
 
@@ -302,7 +310,7 @@ class BucketTicketMapInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => BucketTicketMap.t;
+  _i1.Table<_i1.UuidValue?> get table => BucketTicketMap.t;
 }
 
 class BucketTicketMapIncludeList extends _i1.IncludeList {
@@ -322,7 +330,7 @@ class BucketTicketMapIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => BucketTicketMap.t;
+  _i1.Table<_i1.UuidValue?> get table => BucketTicketMap.t;
 }
 
 class BucketTicketMapRepository {
@@ -416,7 +424,7 @@ class BucketTicketMapRepository {
   /// Finds a single [BucketTicketMap] by its [id] or null if no such row exists.
   Future<BucketTicketMap?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     BucketTicketMapInclude? include,
   }) async {
@@ -496,7 +504,7 @@ class BucketTicketMapRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<BucketTicketMap?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<BucketTicketMapUpdateTable>
     columnValues,
     _i1.Transaction? transaction,

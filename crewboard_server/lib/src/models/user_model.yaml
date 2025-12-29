@@ -1,0 +1,6 @@
+class: UserModel
+fields:
+  userId: UuidValue
+  userName: String
+  color: String
+  selected: bool

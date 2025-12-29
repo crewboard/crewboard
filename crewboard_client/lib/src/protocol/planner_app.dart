@@ -21,49 +21,57 @@ abstract class PlannerApp implements _i1.SerializableModel {
   });
 
   factory PlannerApp({
-    int? id,
+    _i1.UuidValue? id,
     required String appName,
-    required int colorId,
-    int? organizationId,
+    required _i1.UuidValue colorId,
+    _i1.UuidValue? organizationId,
   }) = _PlannerAppImpl;
 
   factory PlannerApp.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlannerApp(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       appName: jsonSerialization['appName'] as String,
-      colorId: jsonSerialization['colorId'] as int,
-      organizationId: jsonSerialization['organizationId'] as int?,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
+      organizationId: jsonSerialization['organizationId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['organizationId'],
+            ),
     );
   }
 
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
   String appName;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
-  int? organizationId;
+  _i1.UuidValue? organizationId;
 
   /// Returns a shallow copy of this [PlannerApp]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PlannerApp copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? appName,
-    int? colorId,
-    int? organizationId,
+    _i1.UuidValue? colorId,
+    _i1.UuidValue? organizationId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PlannerApp',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'appName': appName,
-      'colorId': colorId,
-      if (organizationId != null) 'organizationId': organizationId,
+      'colorId': colorId.toJson(),
+      if (organizationId != null) 'organizationId': organizationId?.toJson(),
     };
   }
 
@@ -77,10 +85,10 @@ class _Undefined {}
 
 class _PlannerAppImpl extends PlannerApp {
   _PlannerAppImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String appName,
-    required int colorId,
-    int? organizationId,
+    required _i1.UuidValue colorId,
+    _i1.UuidValue? organizationId,
   }) : super._(
          id: id,
          appName: appName,
@@ -95,14 +103,14 @@ class _PlannerAppImpl extends PlannerApp {
   PlannerApp copyWith({
     Object? id = _Undefined,
     String? appName,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? organizationId = _Undefined,
   }) {
     return PlannerApp(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       appName: appName ?? this.appName,
       colorId: colorId ?? this.colorId,
-      organizationId: organizationId is int?
+      organizationId: organizationId is _i1.UuidValue?
           ? organizationId
           : this.organizationId,
     );

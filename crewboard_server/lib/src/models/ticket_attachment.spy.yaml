@@ -1,8 +1,0 @@
-class: TicketAttachment
-table: ticket_attachments
-fields:
-  ticket: Ticket?, relation
-  attachmentName: String
-  attachmentSize: double
-  attachmentUrl: String
-  attachmentType: String

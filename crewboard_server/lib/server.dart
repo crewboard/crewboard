@@ -16,15 +16,15 @@ void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   // Initialize authentication services for the server.
-  // Token managers will be used to validate and issue authentication keys,
-  // and the identity providers will be the authentication options available for users.
+  // We use ServerSideSessionsConfig for database-backed sessions (standard Serverpod behavior).
   pod.initializeAuthServices(
     tokenManagerBuilders: [
-      // Use JWT for authentication keys towards the server.
-      JwtConfigFromPasswords(),
+      ServerSideSessionsConfig(
+        sessionKeyHashPepper: 'crewboard_dev_session_pepper',
+      ),
     ],
+    // Configures the email identity provider for email/password authentication.
     identityProviderBuilders: [
-      // Configure the email identity provider for email/password authentication.
       EmailIdpConfigFromPasswords(
         sendRegistrationVerificationCode: _sendRegistrationCode,
         sendPasswordResetVerificationCode: _sendPasswordResetCode,

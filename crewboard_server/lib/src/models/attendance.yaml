@@ -1,0 +1,12 @@
+class: Attendance
+table: attendance
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  inTime: String?
+  outTime: String?
+  inTimeStatus: String?
+  outTimeStatus: String?
+  overTime: String?
+  earlyTime: String?
+  date: DateTime

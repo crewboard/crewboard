@@ -19,11 +19,11 @@ import 'user_types.dart' as _i4;
 import 'leave_config.dart' as _i5;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i6;
 
-abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class User
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   User._({
     this.id,
     required this.userName,
-    required this.password,
     this.image,
     required this.organizationId,
     this.organization,
@@ -50,20 +50,19 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.online,
     required this.onsite,
     required this.deleted,
-  });
+  }) : _password = null;
 
   factory User({
-    int? id,
+    _i1.UuidValue? id,
     required String userName,
-    required String password,
     String? image,
-    required int organizationId,
+    required _i1.UuidValue organizationId,
     _i2.Organization? organization,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i3.SystemColor? color,
-    required int userTypeId,
+    required _i1.UuidValue userTypeId,
     _i4.UserTypes? userType,
-    required int leaveConfigId,
+    required _i1.UuidValue leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     required String firstName,
@@ -85,30 +84,39 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
-    return User(
-      id: jsonSerialization['id'] as int?,
+    return UserImplicit._(
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userName: jsonSerialization['userName'] as String,
-      password: jsonSerialization['password'] as String,
       image: jsonSerialization['image'] as String?,
-      organizationId: jsonSerialization['organizationId'] as int,
+      organizationId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['organizationId'],
+      ),
       organization: jsonSerialization['organization'] == null
           ? null
           : _i6.Protocol().deserialize<_i2.Organization>(
               jsonSerialization['organization'],
             ),
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
       color: jsonSerialization['color'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.SystemColor>(
               jsonSerialization['color'],
             ),
-      userTypeId: jsonSerialization['userTypeId'] as int,
+      userTypeId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['userTypeId'],
+      ),
       userType: jsonSerialization['userType'] == null
           ? null
           : _i6.Protocol().deserialize<_i4.UserTypes>(
               jsonSerialization['userType'],
             ),
-      leaveConfigId: jsonSerialization['leaveConfigId'] as int,
+      leaveConfigId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['leaveConfigId'],
+      ),
       leaveConfig: jsonSerialization['leaveConfig'] == null
           ? null
           : _i6.Protocol().deserialize<_i5.LeaveConfig>(
@@ -135,6 +143,7 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       online: jsonSerialization['online'] as bool,
       onsite: jsonSerialization['onsite'] as bool,
       deleted: jsonSerialization['deleted'] as bool,
+      $password: jsonSerialization['password'] as String?,
     );
   }
 
@@ -143,27 +152,27 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = UserRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String userName;
 
-  String password;
+  final String? _password;
 
   String? image;
 
-  int organizationId;
+  _i1.UuidValue organizationId;
 
   _i2.Organization? organization;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
   _i3.SystemColor? color;
 
-  int userTypeId;
+  _i1.UuidValue userTypeId;
 
   _i4.UserTypes? userType;
 
-  int leaveConfigId;
+  _i1.UuidValue leaveConfigId;
 
   _i5.LeaveConfig? leaveConfig;
 
@@ -202,23 +211,22 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   bool deleted;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   User copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? userName,
-    String? password,
     String? image,
-    int? organizationId,
+    _i1.UuidValue? organizationId,
     _i2.Organization? organization,
-    int? colorId,
+    _i1.UuidValue? colorId,
     _i3.SystemColor? color,
-    int? userTypeId,
+    _i1.UuidValue? userTypeId,
     _i4.UserTypes? userType,
-    int? leaveConfigId,
+    _i1.UuidValue? leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     String? firstName,
@@ -242,17 +250,17 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'User',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userName': userName,
-      'password': password,
+      if (_password != null) 'password': _password,
       if (image != null) 'image': image,
-      'organizationId': organizationId,
+      'organizationId': organizationId.toJson(),
       if (organization != null) 'organization': organization?.toJson(),
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJson(),
-      'userTypeId': userTypeId,
+      'userTypeId': userTypeId.toJson(),
       if (userType != null) 'userType': userType?.toJson(),
-      'leaveConfigId': leaveConfigId,
+      'leaveConfigId': leaveConfigId.toJson(),
       if (leaveConfig != null) 'leaveConfig': leaveConfig?.toJson(),
       if (performanceConfigId != null)
         'performanceConfigId': performanceConfigId,
@@ -279,18 +287,17 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'User',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userName': userName,
-      'password': password,
       if (image != null) 'image': image,
-      'organizationId': organizationId,
+      'organizationId': organizationId.toJson(),
       if (organization != null)
         'organization': organization?.toJsonForProtocol(),
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJsonForProtocol(),
-      'userTypeId': userTypeId,
+      'userTypeId': userTypeId.toJson(),
       if (userType != null) 'userType': userType?.toJsonForProtocol(),
-      'leaveConfigId': leaveConfigId,
+      'leaveConfigId': leaveConfigId.toJson(),
       if (leaveConfig != null) 'leaveConfig': leaveConfig?.toJsonForProtocol(),
       if (performanceConfigId != null)
         'performanceConfigId': performanceConfigId,
@@ -357,17 +364,16 @@ class _Undefined {}
 
 class _UserImpl extends User {
   _UserImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String userName,
-    required String password,
     String? image,
-    required int organizationId,
+    required _i1.UuidValue organizationId,
     _i2.Organization? organization,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i3.SystemColor? color,
-    required int userTypeId,
+    required _i1.UuidValue userTypeId,
     _i4.UserTypes? userType,
-    required int leaveConfigId,
+    required _i1.UuidValue leaveConfigId,
     _i5.LeaveConfig? leaveConfig,
     int? performanceConfigId,
     required String firstName,
@@ -389,7 +395,6 @@ class _UserImpl extends User {
   }) : super._(
          id: id,
          userName: userName,
-         password: password,
          image: image,
          organizationId: organizationId,
          organization: organization,
@@ -425,15 +430,14 @@ class _UserImpl extends User {
   User copyWith({
     Object? id = _Undefined,
     String? userName,
-    String? password,
     Object? image = _Undefined,
-    int? organizationId,
+    _i1.UuidValue? organizationId,
     Object? organization = _Undefined,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? color = _Undefined,
-    int? userTypeId,
+    _i1.UuidValue? userTypeId,
     Object? userType = _Undefined,
-    int? leaveConfigId,
+    _i1.UuidValue? leaveConfigId,
     Object? leaveConfig = _Undefined,
     Object? performanceConfigId = _Undefined,
     String? firstName,
@@ -453,10 +457,9 @@ class _UserImpl extends User {
     bool? onsite,
     bool? deleted,
   }) {
-    return User(
-      id: id is int? ? id : this.id,
+    return UserImplicit._(
+      id: id is _i1.UuidValue? ? id : this.id,
       userName: userName ?? this.userName,
-      password: password ?? this.password,
       image: image is String? ? image : this.image,
       organizationId: organizationId ?? this.organizationId,
       organization: organization is _i2.Organization?
@@ -493,8 +496,113 @@ class _UserImpl extends User {
       online: online ?? this.online,
       onsite: onsite ?? this.onsite,
       deleted: deleted ?? this.deleted,
+      $password: this._password,
     );
   }
+}
+
+class UserImplicit extends _UserImpl {
+  UserImplicit._({
+    _i1.UuidValue? id,
+    required String userName,
+    String? image,
+    required _i1.UuidValue organizationId,
+    _i2.Organization? organization,
+    required _i1.UuidValue colorId,
+    _i3.SystemColor? color,
+    required _i1.UuidValue userTypeId,
+    _i4.UserTypes? userType,
+    required _i1.UuidValue leaveConfigId,
+    _i5.LeaveConfig? leaveConfig,
+    int? performanceConfigId,
+    required String firstName,
+    required String lastName,
+    required String gender,
+    DateTime? dateOfBirth,
+    required String phone,
+    required String email,
+    String? bloodGroup,
+    String? salary,
+    String? experience,
+    String? punchId,
+    String? attachments,
+    required int performance,
+    String? plannerVariables,
+    required bool online,
+    required bool onsite,
+    required bool deleted,
+    String? $password,
+  }) : _password = $password,
+       super(
+         id: id,
+         userName: userName,
+         image: image,
+         organizationId: organizationId,
+         organization: organization,
+         colorId: colorId,
+         color: color,
+         userTypeId: userTypeId,
+         userType: userType,
+         leaveConfigId: leaveConfigId,
+         leaveConfig: leaveConfig,
+         performanceConfigId: performanceConfigId,
+         firstName: firstName,
+         lastName: lastName,
+         gender: gender,
+         dateOfBirth: dateOfBirth,
+         phone: phone,
+         email: email,
+         bloodGroup: bloodGroup,
+         salary: salary,
+         experience: experience,
+         punchId: punchId,
+         attachments: attachments,
+         performance: performance,
+         plannerVariables: plannerVariables,
+         online: online,
+         onsite: onsite,
+         deleted: deleted,
+       );
+
+  factory UserImplicit(
+    User user, {
+    String? $password,
+  }) {
+    return UserImplicit._(
+      id: user.id,
+      userName: user.userName,
+      image: user.image,
+      organizationId: user.organizationId,
+      organization: user.organization,
+      colorId: user.colorId,
+      color: user.color,
+      userTypeId: user.userTypeId,
+      userType: user.userType,
+      leaveConfigId: user.leaveConfigId,
+      leaveConfig: user.leaveConfig,
+      performanceConfigId: user.performanceConfigId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      phone: user.phone,
+      email: user.email,
+      bloodGroup: user.bloodGroup,
+      salary: user.salary,
+      experience: user.experience,
+      punchId: user.punchId,
+      attachments: user.attachments,
+      performance: user.performance,
+      plannerVariables: user.plannerVariables,
+      online: user.online,
+      onsite: user.onsite,
+      deleted: user.deleted,
+      $password: $password,
+    );
+  }
+
+  @override
+  final String? _password;
 }
 
 class UserUpdateTable extends _i1.UpdateTable<UserTable> {
@@ -505,8 +613,8 @@ class UserUpdateTable extends _i1.UpdateTable<UserTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> password(String value) => _i1.ColumnValue(
-    table.password,
+  _i1.ColumnValue<String, String> $password(String? value) => _i1.ColumnValue(
+    table.$password,
     value,
   );
 
@@ -515,22 +623,29 @@ class UserUpdateTable extends _i1.UpdateTable<UserTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> organizationId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> organizationId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.organizationId,
     value,
   );
 
-  _i1.ColumnValue<int, int> colorId(int value) => _i1.ColumnValue(
-    table.colorId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> colorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.colorId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> userTypeId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userTypeId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.userTypeId,
     value,
   );
 
-  _i1.ColumnValue<int, int> leaveConfigId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> leaveConfigId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.leaveConfigId,
     value,
   );
@@ -623,14 +738,14 @@ class UserUpdateTable extends _i1.UpdateTable<UserTable> {
   );
 }
 
-class UserTable extends _i1.Table<int?> {
+class UserTable extends _i1.Table<_i1.UuidValue?> {
   UserTable({super.tableRelation}) : super(tableName: 'users') {
     updateTable = UserUpdateTable(this);
     userName = _i1.ColumnString(
       'userName',
       this,
     );
-    password = _i1.ColumnString(
+    $password = _i1.ColumnString(
       'password',
       this,
     );
@@ -638,19 +753,19 @@ class UserTable extends _i1.Table<int?> {
       'image',
       this,
     );
-    organizationId = _i1.ColumnInt(
+    organizationId = _i1.ColumnUuid(
       'organizationId',
       this,
     );
-    colorId = _i1.ColumnInt(
+    colorId = _i1.ColumnUuid(
       'colorId',
       this,
     );
-    userTypeId = _i1.ColumnInt(
+    userTypeId = _i1.ColumnUuid(
       'userTypeId',
       this,
     );
-    leaveConfigId = _i1.ColumnInt(
+    leaveConfigId = _i1.ColumnUuid(
       'leaveConfigId',
       this,
     );
@@ -728,23 +843,23 @@ class UserTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString userName;
 
-  late final _i1.ColumnString password;
+  late final _i1.ColumnString $password;
 
   late final _i1.ColumnString image;
 
-  late final _i1.ColumnInt organizationId;
+  late final _i1.ColumnUuid organizationId;
 
   _i2.OrganizationTable? _organization;
 
-  late final _i1.ColumnInt colorId;
+  late final _i1.ColumnUuid colorId;
 
   _i3.SystemColorTable? _color;
 
-  late final _i1.ColumnInt userTypeId;
+  late final _i1.ColumnUuid userTypeId;
 
   _i4.UserTypesTable? _userType;
 
-  late final _i1.ColumnInt leaveConfigId;
+  late final _i1.ColumnUuid leaveConfigId;
 
   _i5.LeaveConfigTable? _leaveConfig;
 
@@ -838,7 +953,35 @@ class UserTable extends _i1.Table<int?> {
   List<_i1.Column> get columns => [
     id,
     userName,
-    password,
+    $password,
+    image,
+    organizationId,
+    colorId,
+    userTypeId,
+    leaveConfigId,
+    performanceConfigId,
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    phone,
+    email,
+    bloodGroup,
+    salary,
+    experience,
+    punchId,
+    attachments,
+    performance,
+    plannerVariables,
+    online,
+    onsite,
+    deleted,
+  ];
+
+  @override
+  List<_i1.Column> get managedColumns => [
+    id,
+    userName,
     image,
     organizationId,
     colorId,
@@ -911,7 +1054,7 @@ class UserInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => User.t;
+  _i1.Table<_i1.UuidValue?> get table => User.t;
 }
 
 class UserIncludeList extends _i1.IncludeList {
@@ -931,7 +1074,7 @@ class UserIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => User.t;
+  _i1.Table<_i1.UuidValue?> get table => User.t;
 }
 
 class UserRepository {
@@ -1025,7 +1168,7 @@ class UserRepository {
   /// Finds a single [User] by its [id] or null if no such row exists.
   Future<User?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserInclude? include,
   }) async {
@@ -1105,7 +1248,7 @@ class UserRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<User?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

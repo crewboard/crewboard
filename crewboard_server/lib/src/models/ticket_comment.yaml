@@ -1,0 +1,8 @@
+class: TicketComment
+table: ticket_comments
+fields:
+  id: UuidValue?, defaultPersist=random
+  ticket: Ticket?, relation
+  user: User?, relation
+  message: String
+  createdAt: DateTime?

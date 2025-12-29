@@ -1,0 +1,9 @@
+class: TicketAttachment
+table: ticket_attachments
+fields:
+  id: UuidValue?, defaultPersist=random
+  ticket: Ticket?, relation
+  attachmentName: String
+  attachmentSize: double
+  attachmentUrl: String
+  attachmentType: String

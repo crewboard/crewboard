@@ -1,4 +1,0 @@
-class: FlowModel
-fields:
-  flowId: int
-  flowName: String

@@ -1,4 +1,0 @@
-class: Status
-table: status
-fields:
-  statusName: String

@@ -17,7 +17,7 @@ import 'user.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class UserBreak
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   UserBreak._({
     this.id,
     required this.userId,
@@ -29,8 +29,8 @@ abstract class UserBreak
   });
 
   factory UserBreak({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -40,8 +40,10 @@ abstract class UserBreak
 
   factory UserBreak.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserBreak(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -57,9 +59,9 @@ abstract class UserBreak
   static const db = UserBreakRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -72,14 +74,14 @@ abstract class UserBreak
   DateTime date;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [UserBreak]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserBreak copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -90,8 +92,8 @@ abstract class UserBreak
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserBreak',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       if (breakStart != null) 'breakStart': breakStart,
       if (breakEnd != null) 'breakEnd': breakEnd,
@@ -104,8 +106,8 @@ abstract class UserBreak
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'UserBreak',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       if (breakStart != null) 'breakStart': breakStart,
       if (breakEnd != null) 'breakEnd': breakEnd,
@@ -148,8 +150,8 @@ class _Undefined {}
 
 class _UserBreakImpl extends UserBreak {
   _UserBreakImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -171,7 +173,7 @@ class _UserBreakImpl extends UserBreak {
   @override
   UserBreak copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     Object? breakStart = _Undefined,
     Object? breakEnd = _Undefined,
@@ -179,7 +181,7 @@ class _UserBreakImpl extends UserBreak {
     DateTime? date,
   }) {
     return UserBreak(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       breakStart: breakStart is String? ? breakStart : this.breakStart,
@@ -193,10 +195,11 @@ class _UserBreakImpl extends UserBreak {
 class UserBreakUpdateTable extends _i1.UpdateTable<UserBreakTable> {
   UserBreakUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> breakStart(String? value) => _i1.ColumnValue(
     table.breakStart,
@@ -219,10 +222,10 @@ class UserBreakUpdateTable extends _i1.UpdateTable<UserBreakTable> {
   );
 }
 
-class UserBreakTable extends _i1.Table<int?> {
+class UserBreakTable extends _i1.Table<_i1.UuidValue?> {
   UserBreakTable({super.tableRelation}) : super(tableName: 'breaks') {
     updateTable = UserBreakUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -246,7 +249,7 @@ class UserBreakTable extends _i1.Table<int?> {
 
   late final UserBreakUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
 
@@ -301,7 +304,7 @@ class UserBreakInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'user': _user};
 
   @override
-  _i1.Table<int?> get table => UserBreak.t;
+  _i1.Table<_i1.UuidValue?> get table => UserBreak.t;
 }
 
 class UserBreakIncludeList extends _i1.IncludeList {
@@ -321,7 +324,7 @@ class UserBreakIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => UserBreak.t;
+  _i1.Table<_i1.UuidValue?> get table => UserBreak.t;
 }
 
 class UserBreakRepository {
@@ -415,7 +418,7 @@ class UserBreakRepository {
   /// Finds a single [UserBreak] by its [id] or null if no such row exists.
   Future<UserBreak?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserBreakInclude? include,
   }) async {
@@ -495,7 +498,7 @@ class UserBreakRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserBreak?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserBreakUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

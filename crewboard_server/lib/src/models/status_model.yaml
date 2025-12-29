@@ -1,0 +1,4 @@
+class: StatusModel
+fields:
+  statusId: UuidValue
+  statusName: String

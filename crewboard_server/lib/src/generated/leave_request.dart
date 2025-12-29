@@ -17,7 +17,7 @@ import 'user.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class LeaveRequest
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   LeaveRequest._({
     this.id,
     required this.userId,
@@ -28,8 +28,8 @@ abstract class LeaveRequest
   });
 
   factory LeaveRequest({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required String request,
     bool? accepted,
@@ -38,8 +38,10 @@ abstract class LeaveRequest
 
   factory LeaveRequest.fromJson(Map<String, dynamic> jsonSerialization) {
     return LeaveRequest(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -56,9 +58,9 @@ abstract class LeaveRequest
   static const db = LeaveRequestRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -69,14 +71,14 @@ abstract class LeaveRequest
   DateTime? date;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [LeaveRequest]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   LeaveRequest copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? request,
     bool? accepted,
@@ -86,8 +88,8 @@ abstract class LeaveRequest
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'LeaveRequest',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'request': request,
       if (accepted != null) 'accepted': accepted,
@@ -99,8 +101,8 @@ abstract class LeaveRequest
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'LeaveRequest',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       'request': request,
       if (accepted != null) 'accepted': accepted,
@@ -142,8 +144,8 @@ class _Undefined {}
 
 class _LeaveRequestImpl extends LeaveRequest {
   _LeaveRequestImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     required String request,
     bool? accepted,
@@ -163,14 +165,14 @@ class _LeaveRequestImpl extends LeaveRequest {
   @override
   LeaveRequest copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? request,
     Object? accepted = _Undefined,
     Object? date = _Undefined,
   }) {
     return LeaveRequest(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       request: request ?? this.request,
@@ -183,10 +185,11 @@ class _LeaveRequestImpl extends LeaveRequest {
 class LeaveRequestUpdateTable extends _i1.UpdateTable<LeaveRequestTable> {
   LeaveRequestUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> request(String value) => _i1.ColumnValue(
     table.request,
@@ -204,10 +207,10 @@ class LeaveRequestUpdateTable extends _i1.UpdateTable<LeaveRequestTable> {
   );
 }
 
-class LeaveRequestTable extends _i1.Table<int?> {
+class LeaveRequestTable extends _i1.Table<_i1.UuidValue?> {
   LeaveRequestTable({super.tableRelation}) : super(tableName: 'leave_request') {
     updateTable = LeaveRequestUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
@@ -227,7 +230,7 @@ class LeaveRequestTable extends _i1.Table<int?> {
 
   late final LeaveRequestUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
 
@@ -279,7 +282,7 @@ class LeaveRequestInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'user': _user};
 
   @override
-  _i1.Table<int?> get table => LeaveRequest.t;
+  _i1.Table<_i1.UuidValue?> get table => LeaveRequest.t;
 }
 
 class LeaveRequestIncludeList extends _i1.IncludeList {
@@ -299,7 +302,7 @@ class LeaveRequestIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => LeaveRequest.t;
+  _i1.Table<_i1.UuidValue?> get table => LeaveRequest.t;
 }
 
 class LeaveRequestRepository {
@@ -393,7 +396,7 @@ class LeaveRequestRepository {
   /// Finds a single [LeaveRequest] by its [id] or null if no such row exists.
   Future<LeaveRequest?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     LeaveRequestInclude? include,
   }) async {
@@ -473,7 +476,7 @@ class LeaveRequestRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<LeaveRequest?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<LeaveRequestUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

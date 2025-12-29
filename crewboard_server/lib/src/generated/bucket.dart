@@ -9,29 +9,41 @@
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
 
+// ignore_for_file: unnecessary_null_comparison
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'user.dart' as _i2;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
-abstract class Bucket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Bucket
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   Bucket._({
     this.id,
     required this.userId,
+    this.user,
     required this.appId,
     required this.bucketName,
   });
 
   factory Bucket({
-    int? id,
-    required int userId,
-    required int appId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
+    _i2.User? user,
+    required _i1.UuidValue appId,
     required String bucketName,
   }) = _BucketImpl;
 
   factory Bucket.fromJson(Map<String, dynamic> jsonSerialization) {
     return Bucket(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
-      appId: jsonSerialization['appId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      user: jsonSerialization['user'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
       bucketName: jsonSerialization['bucketName'] as String,
     );
   }
@@ -41,33 +53,37 @@ abstract class Bucket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = BucketRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
-  int appId;
+  _i2.User? user;
+
+  _i1.UuidValue appId;
 
   String bucketName;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [Bucket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Bucket copyWith({
-    int? id,
-    int? userId,
-    int? appId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
+    _i2.User? user,
+    _i1.UuidValue? appId,
     String? bucketName,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Bucket',
-      if (id != null) 'id': id,
-      'userId': userId,
-      'appId': appId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJson(),
+      'appId': appId.toJson(),
       'bucketName': bucketName,
     };
   }
@@ -76,15 +92,16 @@ abstract class Bucket implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Bucket',
-      if (id != null) 'id': id,
-      'userId': userId,
-      'appId': appId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJsonForProtocol(),
+      'appId': appId.toJson(),
       'bucketName': bucketName,
     };
   }
 
-  static BucketInclude include() {
-    return BucketInclude._();
+  static BucketInclude include({_i2.UserInclude? user}) {
+    return BucketInclude._(user: user);
   }
 
   static BucketIncludeList includeList({
@@ -117,13 +134,15 @@ class _Undefined {}
 
 class _BucketImpl extends Bucket {
   _BucketImpl({
-    int? id,
-    required int userId,
-    required int appId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
+    _i2.User? user,
+    required _i1.UuidValue appId,
     required String bucketName,
   }) : super._(
          id: id,
          userId: userId,
+         user: user,
          appId: appId,
          bucketName: bucketName,
        );
@@ -134,13 +153,15 @@ class _BucketImpl extends Bucket {
   @override
   Bucket copyWith({
     Object? id = _Undefined,
-    int? userId,
-    int? appId,
+    _i1.UuidValue? userId,
+    Object? user = _Undefined,
+    _i1.UuidValue? appId,
     String? bucketName,
   }) {
     return Bucket(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
+      user: user is _i2.User? ? user : this.user?.copyWith(),
       appId: appId ?? this.appId,
       bucketName: bucketName ?? this.bucketName,
     );
@@ -150,15 +171,17 @@ class _BucketImpl extends Bucket {
 class BucketUpdateTable extends _i1.UpdateTable<BucketTable> {
   BucketUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
-  _i1.ColumnValue<int, int> appId(int value) => _i1.ColumnValue(
-    table.appId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> appId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.appId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> bucketName(String value) => _i1.ColumnValue(
     table.bucketName,
@@ -166,14 +189,14 @@ class BucketUpdateTable extends _i1.UpdateTable<BucketTable> {
   );
 }
 
-class BucketTable extends _i1.Table<int?> {
+class BucketTable extends _i1.Table<_i1.UuidValue?> {
   BucketTable({super.tableRelation}) : super(tableName: 'buckets') {
     updateTable = BucketUpdateTable(this);
-    userId = _i1.ColumnInt(
+    userId = _i1.ColumnUuid(
       'userId',
       this,
     );
-    appId = _i1.ColumnInt(
+    appId = _i1.ColumnUuid(
       'appId',
       this,
     );
@@ -185,11 +208,26 @@ class BucketTable extends _i1.Table<int?> {
 
   late final BucketUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
+  late final _i1.ColumnUuid userId;
 
-  late final _i1.ColumnInt appId;
+  _i2.UserTable? _user;
+
+  late final _i1.ColumnUuid appId;
 
   late final _i1.ColumnString bucketName;
+
+  _i2.UserTable get user {
+    if (_user != null) return _user!;
+    _user = _i1.createRelationTable(
+      relationFieldName: 'user',
+      field: Bucket.t.userId,
+      foreignField: _i2.User.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.UserTable(tableRelation: foreignTableRelation),
+    );
+    return _user!;
+  }
 
   @override
   List<_i1.Column> get columns => [
@@ -198,16 +236,28 @@ class BucketTable extends _i1.Table<int?> {
     appId,
     bucketName,
   ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'user') {
+      return user;
+    }
+    return null;
+  }
 }
 
 class BucketInclude extends _i1.IncludeObject {
-  BucketInclude._();
+  BucketInclude._({_i2.UserInclude? user}) {
+    _user = user;
+  }
+
+  _i2.UserInclude? _user;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'user': _user};
 
   @override
-  _i1.Table<int?> get table => Bucket.t;
+  _i1.Table<_i1.UuidValue?> get table => Bucket.t;
 }
 
 class BucketIncludeList extends _i1.IncludeList {
@@ -227,11 +277,13 @@ class BucketIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Bucket.t;
+  _i1.Table<_i1.UuidValue?> get table => Bucket.t;
 }
 
 class BucketRepository {
   const BucketRepository._();
+
+  final attachRow = const BucketAttachRowRepository._();
 
   /// Returns a list of [Bucket]s matching the given query parameters.
   ///
@@ -264,6 +316,7 @@ class BucketRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<BucketTable>? orderByList,
     _i1.Transaction? transaction,
+    BucketInclude? include,
   }) async {
     return session.db.find<Bucket>(
       where: where?.call(Bucket.t),
@@ -273,6 +326,7 @@ class BucketRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -301,6 +355,7 @@ class BucketRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<BucketTable>? orderByList,
     _i1.Transaction? transaction,
+    BucketInclude? include,
   }) async {
     return session.db.findFirstRow<Bucket>(
       where: where?.call(Bucket.t),
@@ -309,18 +364,21 @@ class BucketRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
   /// Finds a single [Bucket] by its [id] or null if no such row exists.
   Future<Bucket?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    BucketInclude? include,
   }) async {
     return session.db.findById<Bucket>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -393,7 +451,7 @@ class BucketRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Bucket?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<BucketUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {
@@ -478,6 +536,33 @@ class BucketRepository {
     return session.db.count<Bucket>(
       where: where?.call(Bucket.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+}
+
+class BucketAttachRowRepository {
+  const BucketAttachRowRepository._();
+
+  /// Creates a relation between the given [Bucket] and [User]
+  /// by setting the [Bucket]'s foreign key `userId` to refer to the [User].
+  Future<void> user(
+    _i1.Session session,
+    Bucket bucket,
+    _i2.User user, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (bucket.id == null) {
+      throw ArgumentError.notNull('bucket.id');
+    }
+    if (user.id == null) {
+      throw ArgumentError.notNull('user.id');
+    }
+
+    var $bucket = bucket.copyWith(userId: user.id);
+    await session.db.updateRow<Bucket>(
+      $bucket,
+      columns: [Bucket.t.userId],
       transaction: transaction,
     );
   }

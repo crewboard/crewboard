@@ -4,8 +4,6 @@ import '../../controllers/rooms_controller.dart';
 import '../../controllers/messages_controller.dart';
 import '../../config/palette.dart';
 import 'chat_widgets.dart';
-import 'rooms_widget.dart';
-import '../sidebar.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -20,12 +18,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SideBar(
-          children: [
-            SizedBox(height: 10),
-            Expanded(child: Rooms()),
-          ],
-        ),
         Expanded(
           child: Column(
             children: [
@@ -47,8 +39,8 @@ class Messages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final messagesController = Get.find<MessagesController>();
-    final roomsController = Get.find<RoomsController>();
+    final roomsController = Get.put(RoomsController());
+    final messagesController = Get.put(MessagesController());
 
     return Obx(() {
       final selectedRoom = roomsController.selectedRoom.value;
@@ -83,12 +75,11 @@ class Keyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final hasController = Get.isRegistered<RoomsController>();
-      if (!hasController) return const SizedBox.shrink();
-      final selected = Get.find<RoomsController>().selectedRoom.value;
+      final roomsController = Get.put(RoomsController());
+      final selected = roomsController.selectedRoom.value;
       if (selected == null) return const SizedBox.shrink();
 
-      final messagesController = Get.find<MessagesController>();
+      final messagesController = Get.put(MessagesController());
 
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 15),

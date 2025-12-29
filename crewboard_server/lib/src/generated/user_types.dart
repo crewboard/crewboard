@@ -17,7 +17,7 @@ import 'system_color.dart' as _i2;
 import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class UserTypes
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   UserTypes._({
     this.id,
     required this.userType,
@@ -28,9 +28,9 @@ abstract class UserTypes
   });
 
   factory UserTypes({
-    int? id,
+    _i1.UuidValue? id,
     required String userType,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i2.SystemColor? color,
     required String permissions,
     required bool isAdmin,
@@ -38,9 +38,13 @@ abstract class UserTypes
 
   factory UserTypes.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserTypes(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userType: jsonSerialization['userType'] as String,
-      colorId: jsonSerialization['colorId'] as int,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
       color: jsonSerialization['color'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.SystemColor>(
@@ -56,11 +60,11 @@ abstract class UserTypes
   static const db = UserTypesRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue? id;
 
   String userType;
 
-  int colorId;
+  _i1.UuidValue colorId;
 
   _i2.SystemColor? color;
 
@@ -69,15 +73,15 @@ abstract class UserTypes
   bool isAdmin;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue?> get table => t;
 
   /// Returns a shallow copy of this [UserTypes]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserTypes copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? userType,
-    int? colorId,
+    _i1.UuidValue? colorId,
     _i2.SystemColor? color,
     String? permissions,
     bool? isAdmin,
@@ -86,9 +90,9 @@ abstract class UserTypes
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserTypes',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userType': userType,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJson(),
       'permissions': permissions,
       'isAdmin': isAdmin,
@@ -99,9 +103,9 @@ abstract class UserTypes
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'UserTypes',
-      if (id != null) 'id': id,
+      if (id != null) 'id': id?.toJson(),
       'userType': userType,
-      'colorId': colorId,
+      'colorId': colorId.toJson(),
       if (color != null) 'color': color?.toJsonForProtocol(),
       'permissions': permissions,
       'isAdmin': isAdmin,
@@ -142,9 +146,9 @@ class _Undefined {}
 
 class _UserTypesImpl extends UserTypes {
   _UserTypesImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String userType,
-    required int colorId,
+    required _i1.UuidValue colorId,
     _i2.SystemColor? color,
     required String permissions,
     required bool isAdmin,
@@ -164,13 +168,13 @@ class _UserTypesImpl extends UserTypes {
   UserTypes copyWith({
     Object? id = _Undefined,
     String? userType,
-    int? colorId,
+    _i1.UuidValue? colorId,
     Object? color = _Undefined,
     String? permissions,
     bool? isAdmin,
   }) {
     return UserTypes(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userType: userType ?? this.userType,
       colorId: colorId ?? this.colorId,
       color: color is _i2.SystemColor? ? color : this.color?.copyWith(),
@@ -188,10 +192,11 @@ class UserTypesUpdateTable extends _i1.UpdateTable<UserTypesTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> colorId(int value) => _i1.ColumnValue(
-    table.colorId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> colorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.colorId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> permissions(String value) => _i1.ColumnValue(
     table.permissions,
@@ -204,14 +209,14 @@ class UserTypesUpdateTable extends _i1.UpdateTable<UserTypesTable> {
   );
 }
 
-class UserTypesTable extends _i1.Table<int?> {
+class UserTypesTable extends _i1.Table<_i1.UuidValue?> {
   UserTypesTable({super.tableRelation}) : super(tableName: 'user_types') {
     updateTable = UserTypesUpdateTable(this);
     userType = _i1.ColumnString(
       'userType',
       this,
     );
-    colorId = _i1.ColumnInt(
+    colorId = _i1.ColumnUuid(
       'colorId',
       this,
     );
@@ -229,7 +234,7 @@ class UserTypesTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString userType;
 
-  late final _i1.ColumnInt colorId;
+  late final _i1.ColumnUuid colorId;
 
   _i2.SystemColorTable? _color;
 
@@ -279,7 +284,7 @@ class UserTypesInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'color': _color};
 
   @override
-  _i1.Table<int?> get table => UserTypes.t;
+  _i1.Table<_i1.UuidValue?> get table => UserTypes.t;
 }
 
 class UserTypesIncludeList extends _i1.IncludeList {
@@ -299,7 +304,7 @@ class UserTypesIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => UserTypes.t;
+  _i1.Table<_i1.UuidValue?> get table => UserTypes.t;
 }
 
 class UserTypesRepository {
@@ -393,7 +398,7 @@ class UserTypesRepository {
   /// Finds a single [UserTypes] by its [id] or null if no such row exists.
   Future<UserTypes?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserTypesInclude? include,
   }) async {
@@ -473,7 +478,7 @@ class UserTypesRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserTypes?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserTypesUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

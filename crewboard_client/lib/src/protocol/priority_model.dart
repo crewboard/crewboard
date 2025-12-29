@@ -20,20 +20,22 @@ abstract class PriorityModel implements _i1.SerializableModel {
   });
 
   factory PriorityModel({
-    required int priorityId,
+    required _i1.UuidValue priorityId,
     required String priorityName,
     required int priority,
   }) = _PriorityModelImpl;
 
   factory PriorityModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return PriorityModel(
-      priorityId: jsonSerialization['priorityId'] as int,
+      priorityId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['priorityId'],
+      ),
       priorityName: jsonSerialization['priorityName'] as String,
       priority: jsonSerialization['priority'] as int,
     );
   }
 
-  int priorityId;
+  _i1.UuidValue priorityId;
 
   String priorityName;
 
@@ -43,7 +45,7 @@ abstract class PriorityModel implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   PriorityModel copyWith({
-    int? priorityId,
+    _i1.UuidValue? priorityId,
     String? priorityName,
     int? priority,
   });
@@ -51,7 +53,7 @@ abstract class PriorityModel implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PriorityModel',
-      'priorityId': priorityId,
+      'priorityId': priorityId.toJson(),
       'priorityName': priorityName,
       'priority': priority,
     };
@@ -65,7 +67,7 @@ abstract class PriorityModel implements _i1.SerializableModel {
 
 class _PriorityModelImpl extends PriorityModel {
   _PriorityModelImpl({
-    required int priorityId,
+    required _i1.UuidValue priorityId,
     required String priorityName,
     required int priority,
   }) : super._(
@@ -79,7 +81,7 @@ class _PriorityModelImpl extends PriorityModel {
   @_i1.useResult
   @override
   PriorityModel copyWith({
-    int? priorityId,
+    _i1.UuidValue? priorityId,
     String? priorityName,
     int? priority,
   }) {

@@ -19,6 +19,9 @@ abstract class SignInResponse
     required this.message,
     this.userId,
     this.organizationId,
+    this.authKeyId,
+    this.authToken,
+    this.authUserId,
   });
 
   factory SignInResponse({
@@ -26,6 +29,9 @@ abstract class SignInResponse
     required String message,
     String? userId,
     String? organizationId,
+    int? authKeyId,
+    String? authToken,
+    String? authUserId,
   }) = _SignInResponseImpl;
 
   factory SignInResponse.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -34,6 +40,9 @@ abstract class SignInResponse
       message: jsonSerialization['message'] as String,
       userId: jsonSerialization['userId'] as String?,
       organizationId: jsonSerialization['organizationId'] as String?,
+      authKeyId: jsonSerialization['authKeyId'] as int?,
+      authToken: jsonSerialization['authToken'] as String?,
+      authUserId: jsonSerialization['authUserId'] as String?,
     );
   }
 
@@ -45,6 +54,12 @@ abstract class SignInResponse
 
   String? organizationId;
 
+  int? authKeyId;
+
+  String? authToken;
+
+  String? authUserId;
+
   /// Returns a shallow copy of this [SignInResponse]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -53,6 +68,9 @@ abstract class SignInResponse
     String? message,
     String? userId,
     String? organizationId,
+    int? authKeyId,
+    String? authToken,
+    String? authUserId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -62,6 +80,9 @@ abstract class SignInResponse
       'message': message,
       if (userId != null) 'userId': userId,
       if (organizationId != null) 'organizationId': organizationId,
+      if (authKeyId != null) 'authKeyId': authKeyId,
+      if (authToken != null) 'authToken': authToken,
+      if (authUserId != null) 'authUserId': authUserId,
     };
   }
 
@@ -73,6 +94,9 @@ abstract class SignInResponse
       'message': message,
       if (userId != null) 'userId': userId,
       if (organizationId != null) 'organizationId': organizationId,
+      if (authKeyId != null) 'authKeyId': authKeyId,
+      if (authToken != null) 'authToken': authToken,
+      if (authUserId != null) 'authUserId': authUserId,
     };
   }
 
@@ -90,11 +114,17 @@ class _SignInResponseImpl extends SignInResponse {
     required String message,
     String? userId,
     String? organizationId,
+    int? authKeyId,
+    String? authToken,
+    String? authUserId,
   }) : super._(
          success: success,
          message: message,
          userId: userId,
          organizationId: organizationId,
+         authKeyId: authKeyId,
+         authToken: authToken,
+         authUserId: authUserId,
        );
 
   /// Returns a shallow copy of this [SignInResponse]
@@ -106,6 +136,9 @@ class _SignInResponseImpl extends SignInResponse {
     String? message,
     Object? userId = _Undefined,
     Object? organizationId = _Undefined,
+    Object? authKeyId = _Undefined,
+    Object? authToken = _Undefined,
+    Object? authUserId = _Undefined,
   }) {
     return SignInResponse(
       success: success ?? this.success,
@@ -114,6 +147,9 @@ class _SignInResponseImpl extends SignInResponse {
       organizationId: organizationId is String?
           ? organizationId
           : this.organizationId,
+      authKeyId: authKeyId is int? ? authKeyId : this.authKeyId,
+      authToken: authToken is String? ? authToken : this.authToken,
+      authUserId: authUserId is String? ? authUserId : this.authUserId,
     );
   }
 }

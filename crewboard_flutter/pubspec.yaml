@@ -30,9 +30,11 @@ dependencies:
   crewboard_client:
     path: ../crewboard_client
   serverpod_flutter: 3.1.1
+  serverpod_auth_client: 3.1.1
   serverpod_auth_idp_flutter: 3.1.1
   serverpod_auth_shared_flutter: 3.1.1
   serverpod_auth_core_flutter: 3.1.1
+  serverpod_auth_core_client: 3.1.1
 
   # UI Dependencies
   get: ^4.6.6
@@ -50,8 +52,6 @@ dependencies:
   
   # Rich Text
   flutter_quill: ^11.5.0
-
-  flutter_lints: ^3.0.0
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'

@@ -1,6 +1,0 @@
-class: UserModel
-fields:
-  userId: int
-  userName: String
-  color: String
-  selected: bool

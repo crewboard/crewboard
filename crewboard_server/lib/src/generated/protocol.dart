@@ -34,47 +34,57 @@ import 'check_organization_response.dart' as _i19;
 import 'check_username_response.dart' as _i20;
 import 'comment_model.dart' as _i21;
 import 'device_type.dart' as _i22;
-import 'flow_model.dart' as _i23;
-import 'get_add_ticket_data_response.dart' as _i24;
-import 'get_all_tickets_response.dart' as _i25;
-import 'get_planner_data_response.dart' as _i26;
-import 'get_ticket_comments_response.dart' as _i27;
-import 'get_ticket_data_response.dart' as _i28;
-import 'greetings/greeting.dart' as _i29;
-import 'leave_config.dart' as _i30;
-import 'leave_request.dart' as _i31;
-import 'message_type.dart' as _i32;
-import 'organization.dart' as _i33;
-import 'planner_app.dart' as _i34;
-import 'planner_assignee.dart' as _i35;
-import 'planner_bucket.dart' as _i36;
-import 'planner_notification.dart' as _i37;
-import 'planner_ticket.dart' as _i38;
-import 'priority.dart' as _i39;
-import 'priority_model.dart' as _i40;
-import 'register_admin_response.dart' as _i41;
-import 'sign_in_response.dart' as _i42;
-import 'status.dart' as _i43;
-import 'status_model.dart' as _i44;
-import 'system_color.dart' as _i45;
-import 'ticket.dart' as _i46;
-import 'ticket_assignee.dart' as _i47;
-import 'ticket_attachment.dart' as _i48;
-import 'ticket_attachment_dto.dart' as _i49;
-import 'ticket_comment.dart' as _i50;
-import 'ticket_model.dart' as _i51;
-import 'ticket_status_change.dart' as _i52;
-import 'ticket_type.dart' as _i53;
-import 'type_model.dart' as _i54;
-import 'user.dart' as _i55;
-import 'user_break.dart' as _i56;
-import 'user_device.dart' as _i57;
-import 'user_model.dart' as _i58;
-import 'user_room_map.dart' as _i59;
-import 'user_types.dart' as _i60;
-import 'package:crewboard_server/src/generated/planner_app.dart' as _i61;
-import 'package:crewboard_server/src/generated/chat_room.dart' as _i62;
-import 'package:crewboard_server/src/generated/chat_message.dart' as _i63;
+import 'doc.dart' as _i23;
+import 'flow_model.dart' as _i24;
+import 'get_add_ticket_data_response.dart' as _i25;
+import 'get_all_tickets_response.dart' as _i26;
+import 'get_attendance_data_response.dart' as _i27;
+import 'get_planner_data_response.dart' as _i28;
+import 'get_ticket_comments_response.dart' as _i29;
+import 'get_ticket_data_response.dart' as _i30;
+import 'greetings/greeting.dart' as _i31;
+import 'leave_config.dart' as _i32;
+import 'leave_request.dart' as _i33;
+import 'message_type.dart' as _i34;
+import 'organization.dart' as _i35;
+import 'planner_app.dart' as _i36;
+import 'planner_assignee.dart' as _i37;
+import 'planner_bucket.dart' as _i38;
+import 'planner_notification.dart' as _i39;
+import 'planner_ticket.dart' as _i40;
+import 'priority.dart' as _i41;
+import 'priority_model.dart' as _i42;
+import 'register_admin_response.dart' as _i43;
+import 'sign_in_response.dart' as _i44;
+import 'status.dart' as _i45;
+import 'status_model.dart' as _i46;
+import 'system_color.dart' as _i47;
+import 'system_variables.dart' as _i48;
+import 'ticket.dart' as _i49;
+import 'ticket_assignee.dart' as _i50;
+import 'ticket_attachment.dart' as _i51;
+import 'ticket_attachment_dto.dart' as _i52;
+import 'ticket_comment.dart' as _i53;
+import 'ticket_model.dart' as _i54;
+import 'ticket_status_change.dart' as _i55;
+import 'ticket_type.dart' as _i56;
+import 'type_model.dart' as _i57;
+import 'user.dart' as _i58;
+import 'user_break.dart' as _i59;
+import 'user_device.dart' as _i60;
+import 'user_model.dart' as _i61;
+import 'user_room_map.dart' as _i62;
+import 'user_types.dart' as _i63;
+import 'package:crewboard_server/src/generated/planner_app.dart' as _i64;
+import 'package:crewboard_server/src/generated/user.dart' as _i65;
+import 'package:crewboard_server/src/generated/user_types.dart' as _i66;
+import 'package:crewboard_server/src/generated/attendance.dart' as _i67;
+import 'package:crewboard_server/src/generated/leave_config.dart' as _i68;
+import 'package:crewboard_server/src/generated/system_color.dart' as _i69;
+import 'package:crewboard_server/src/generated/chat_room.dart' as _i70;
+import 'package:crewboard_server/src/generated/chat_message.dart' as _i71;
+import 'package:crewboard_server/src/generated/flow_model.dart' as _i72;
+import 'package:crewboard_server/src/generated/doc.dart' as _i73;
 export 'add_bucket_request.dart';
 export 'add_comment_request.dart';
 export 'add_ticket_dto.dart';
@@ -92,9 +102,11 @@ export 'check_organization_response.dart';
 export 'check_username_response.dart';
 export 'comment_model.dart';
 export 'device_type.dart';
+export 'doc.dart';
 export 'flow_model.dart';
 export 'get_add_ticket_data_response.dart';
 export 'get_all_tickets_response.dart';
+export 'get_attendance_data_response.dart';
 export 'get_planner_data_response.dart';
 export 'get_ticket_comments_response.dart';
 export 'get_ticket_data_response.dart';
@@ -115,6 +127,7 @@ export 'sign_in_response.dart';
 export 'status.dart';
 export 'status_model.dart';
 export 'system_color.dart';
+export 'system_variables.dart';
 export 'ticket.dart';
 export 'ticket_assignee.dart';
 export 'ticket_attachment.dart';
@@ -147,16 +160,16 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'attendance_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'inTime',
@@ -238,16 +251,16 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'breaks_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'breakStart',
@@ -311,22 +324,22 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'bucket_ticket_map_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'bucketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'order',
@@ -382,22 +395,22 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'buckets_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'appId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'bucketName',
@@ -406,7 +419,18 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String',
         ),
       ],
-      foreignKeys: [],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'buckets_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
       indexes: [
         _i2.IndexDefinition(
           indexName: 'buckets_pkey',
@@ -432,28 +456,28 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'chat_message_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'parentMessageId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'message',
@@ -471,7 +495,7 @@ class Protocol extends _i1.SerializationManagerServer {
           name: 'seenUserList',
           columnType: _i2.ColumnType.json,
           isNullable: false,
-          dartType: 'List<int>',
+          dartType: 'List<UuidValue>',
         ),
         _i2.ColumnDefinition(
           name: 'sameUser',
@@ -518,10 +542,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'chat_room_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'roomName',
@@ -537,9 +561,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'lastMessageId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
         _i2.ColumnDefinition(
           name: 'messageCount',
@@ -567,6 +591,124 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'doc',
+      dartName: 'Doc',
+      schema: 'public',
+      module: 'crewboard',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'doc',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'outline',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastUpdated',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'doc_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'flow',
+      dartName: 'FlowModel',
+      schema: 'public',
+      module: 'crewboard',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'flow',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastUpdated',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'flow_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'leave_config',
       dartName: 'LeaveConfig',
       schema: 'public',
@@ -574,10 +716,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'leave_config_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'configName',
@@ -630,16 +772,16 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'leave_request_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'request',
@@ -697,10 +839,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'organization_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'name',
@@ -735,10 +877,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'planner_apps_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'appName',
@@ -748,15 +890,15 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'colorId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'organizationId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
       ],
       foreignKeys: [],
@@ -785,10 +927,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'planner_notifications_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'notification',
@@ -804,21 +946,21 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'seenUserList',
           columnType: _i2.ColumnType.json,
           isNullable: false,
-          dartType: 'List<int>',
+          dartType: 'List<UuidValue>',
         ),
       ],
       foreignKeys: [
@@ -868,10 +1010,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'priority_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'priorityName',
@@ -912,10 +1054,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'status_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'statusName',
@@ -950,10 +1092,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'system_color_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'colorName',
@@ -993,6 +1135,92 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'system_variables',
+      dartName: 'SystemVariables',
+      schema: 'public',
+      module: 'crewboard',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'system_variables_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'punchingMode',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lineHeight',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processWidth',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conditionWidth',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'terminalWidth',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowEdit',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'showEdit',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowDelete',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'showDelete',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'system_variables_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'ticket_assignee',
       dartName: 'TicketAssignee',
       schema: 'public',
@@ -1007,15 +1235,15 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
       ],
       foreignKeys: [
@@ -1065,16 +1293,16 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'ticket_attachments_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'attachmentName',
@@ -1138,22 +1366,22 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'ticket_comments_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'message',
@@ -1215,34 +1443,34 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'ticket_status_change_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'ticketId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'oldStatusId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'newStatusId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'changedAt',
@@ -1318,10 +1546,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'ticket_type_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'typeName',
@@ -1331,12 +1559,23 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'colorId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
       ],
-      foreignKeys: [],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'ticket_type_fk_0',
+          columns: ['colorId'],
+          referenceTable: 'system_color',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
       indexes: [
         _i2.IndexDefinition(
           indexName: 'ticket_type_pkey',
@@ -1362,22 +1601,22 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'tickets_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'appId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'ticketName',
@@ -1393,27 +1632,27 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'statusId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'priorityId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'typeId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'checklist',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
+          columnType: _i2.ColumnType.json,
+          isNullable: true,
+          dartType: 'List<protocol:CheckModel>?',
         ),
         _i2.ColumnDefinition(
           name: 'flows',
@@ -1434,7 +1673,48 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'DateTime?',
         ),
       ],
-      foreignKeys: [],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'tickets_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'tickets_fk_1',
+          columns: ['statusId'],
+          referenceTable: 'status',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'tickets_fk_2',
+          columns: ['priorityId'],
+          referenceTable: 'priority',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'tickets_fk_3',
+          columns: ['typeId'],
+          referenceTable: 'ticket_type',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
       indexes: [
         _i2.IndexDefinition(
           indexName: 'tickets_pkey',
@@ -1460,16 +1740,16 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'user_devices_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'deviceType',
@@ -1527,28 +1807,28 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'user_room_map_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'lastSeenMessageId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
       ],
       foreignKeys: [],
@@ -1577,10 +1857,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'user_types_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userType',
@@ -1590,9 +1870,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'colorId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'permissions',
@@ -1644,10 +1924,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'users_id_seq\'::regclass)',
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'userName',
@@ -1658,8 +1938,8 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'password',
           columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
+          isNullable: true,
+          dartType: 'String?',
         ),
         _i2.ColumnDefinition(
           name: 'image',
@@ -1669,27 +1949,27 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'organizationId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'colorId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'userTypeId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'leaveConfigId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'performanceConfigId',
@@ -1937,119 +2217,128 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i22.DeviceType) {
       return _i22.DeviceType.fromJson(data) as T;
     }
-    if (t == _i23.FlowModel) {
-      return _i23.FlowModel.fromJson(data) as T;
+    if (t == _i23.Doc) {
+      return _i23.Doc.fromJson(data) as T;
     }
-    if (t == _i24.GetAddTicketDataResponse) {
-      return _i24.GetAddTicketDataResponse.fromJson(data) as T;
+    if (t == _i24.FlowModel) {
+      return _i24.FlowModel.fromJson(data) as T;
     }
-    if (t == _i25.GetAllTicketsResponse) {
-      return _i25.GetAllTicketsResponse.fromJson(data) as T;
+    if (t == _i25.GetAddTicketDataResponse) {
+      return _i25.GetAddTicketDataResponse.fromJson(data) as T;
     }
-    if (t == _i26.GetPlannerDataResponse) {
-      return _i26.GetPlannerDataResponse.fromJson(data) as T;
+    if (t == _i26.GetAllTicketsResponse) {
+      return _i26.GetAllTicketsResponse.fromJson(data) as T;
     }
-    if (t == _i27.GetTicketCommentsResponse) {
-      return _i27.GetTicketCommentsResponse.fromJson(data) as T;
+    if (t == _i27.GetAttendanceDataResponse) {
+      return _i27.GetAttendanceDataResponse.fromJson(data) as T;
     }
-    if (t == _i28.GetTicketDataResponse) {
-      return _i28.GetTicketDataResponse.fromJson(data) as T;
+    if (t == _i28.GetPlannerDataResponse) {
+      return _i28.GetPlannerDataResponse.fromJson(data) as T;
     }
-    if (t == _i29.Greeting) {
-      return _i29.Greeting.fromJson(data) as T;
+    if (t == _i29.GetTicketCommentsResponse) {
+      return _i29.GetTicketCommentsResponse.fromJson(data) as T;
     }
-    if (t == _i30.LeaveConfig) {
-      return _i30.LeaveConfig.fromJson(data) as T;
+    if (t == _i30.GetTicketDataResponse) {
+      return _i30.GetTicketDataResponse.fromJson(data) as T;
     }
-    if (t == _i31.LeaveRequest) {
-      return _i31.LeaveRequest.fromJson(data) as T;
+    if (t == _i31.Greeting) {
+      return _i31.Greeting.fromJson(data) as T;
     }
-    if (t == _i32.MessageType) {
-      return _i32.MessageType.fromJson(data) as T;
+    if (t == _i32.LeaveConfig) {
+      return _i32.LeaveConfig.fromJson(data) as T;
     }
-    if (t == _i33.Organization) {
-      return _i33.Organization.fromJson(data) as T;
+    if (t == _i33.LeaveRequest) {
+      return _i33.LeaveRequest.fromJson(data) as T;
     }
-    if (t == _i34.PlannerApp) {
-      return _i34.PlannerApp.fromJson(data) as T;
+    if (t == _i34.MessageType) {
+      return _i34.MessageType.fromJson(data) as T;
     }
-    if (t == _i35.PlannerAssignee) {
-      return _i35.PlannerAssignee.fromJson(data) as T;
+    if (t == _i35.Organization) {
+      return _i35.Organization.fromJson(data) as T;
     }
-    if (t == _i36.PlannerBucket) {
-      return _i36.PlannerBucket.fromJson(data) as T;
+    if (t == _i36.PlannerApp) {
+      return _i36.PlannerApp.fromJson(data) as T;
     }
-    if (t == _i37.PlannerNotification) {
-      return _i37.PlannerNotification.fromJson(data) as T;
+    if (t == _i37.PlannerAssignee) {
+      return _i37.PlannerAssignee.fromJson(data) as T;
     }
-    if (t == _i38.PlannerTicket) {
-      return _i38.PlannerTicket.fromJson(data) as T;
+    if (t == _i38.PlannerBucket) {
+      return _i38.PlannerBucket.fromJson(data) as T;
     }
-    if (t == _i39.Priority) {
-      return _i39.Priority.fromJson(data) as T;
+    if (t == _i39.PlannerNotification) {
+      return _i39.PlannerNotification.fromJson(data) as T;
     }
-    if (t == _i40.PriorityModel) {
-      return _i40.PriorityModel.fromJson(data) as T;
+    if (t == _i40.PlannerTicket) {
+      return _i40.PlannerTicket.fromJson(data) as T;
     }
-    if (t == _i41.RegisterAdminResponse) {
-      return _i41.RegisterAdminResponse.fromJson(data) as T;
+    if (t == _i41.Priority) {
+      return _i41.Priority.fromJson(data) as T;
     }
-    if (t == _i42.SignInResponse) {
-      return _i42.SignInResponse.fromJson(data) as T;
+    if (t == _i42.PriorityModel) {
+      return _i42.PriorityModel.fromJson(data) as T;
     }
-    if (t == _i43.Status) {
-      return _i43.Status.fromJson(data) as T;
+    if (t == _i43.RegisterAdminResponse) {
+      return _i43.RegisterAdminResponse.fromJson(data) as T;
     }
-    if (t == _i44.StatusModel) {
-      return _i44.StatusModel.fromJson(data) as T;
+    if (t == _i44.SignInResponse) {
+      return _i44.SignInResponse.fromJson(data) as T;
     }
-    if (t == _i45.SystemColor) {
-      return _i45.SystemColor.fromJson(data) as T;
+    if (t == _i45.Status) {
+      return _i45.Status.fromJson(data) as T;
     }
-    if (t == _i46.Ticket) {
-      return _i46.Ticket.fromJson(data) as T;
+    if (t == _i46.StatusModel) {
+      return _i46.StatusModel.fromJson(data) as T;
     }
-    if (t == _i47.TicketAssignee) {
-      return _i47.TicketAssignee.fromJson(data) as T;
+    if (t == _i47.SystemColor) {
+      return _i47.SystemColor.fromJson(data) as T;
     }
-    if (t == _i48.TicketAttachment) {
-      return _i48.TicketAttachment.fromJson(data) as T;
+    if (t == _i48.SystemVariables) {
+      return _i48.SystemVariables.fromJson(data) as T;
     }
-    if (t == _i49.TicketAttachmentDTO) {
-      return _i49.TicketAttachmentDTO.fromJson(data) as T;
+    if (t == _i49.Ticket) {
+      return _i49.Ticket.fromJson(data) as T;
     }
-    if (t == _i50.TicketComment) {
-      return _i50.TicketComment.fromJson(data) as T;
+    if (t == _i50.TicketAssignee) {
+      return _i50.TicketAssignee.fromJson(data) as T;
     }
-    if (t == _i51.TicketModel) {
-      return _i51.TicketModel.fromJson(data) as T;
+    if (t == _i51.TicketAttachment) {
+      return _i51.TicketAttachment.fromJson(data) as T;
     }
-    if (t == _i52.TicketStatusChange) {
-      return _i52.TicketStatusChange.fromJson(data) as T;
+    if (t == _i52.TicketAttachmentDTO) {
+      return _i52.TicketAttachmentDTO.fromJson(data) as T;
     }
-    if (t == _i53.TicketType) {
-      return _i53.TicketType.fromJson(data) as T;
+    if (t == _i53.TicketComment) {
+      return _i53.TicketComment.fromJson(data) as T;
     }
-    if (t == _i54.TypeModel) {
-      return _i54.TypeModel.fromJson(data) as T;
+    if (t == _i54.TicketModel) {
+      return _i54.TicketModel.fromJson(data) as T;
     }
-    if (t == _i55.User) {
-      return _i55.User.fromJson(data) as T;
+    if (t == _i55.TicketStatusChange) {
+      return _i55.TicketStatusChange.fromJson(data) as T;
     }
-    if (t == _i56.UserBreak) {
-      return _i56.UserBreak.fromJson(data) as T;
+    if (t == _i56.TicketType) {
+      return _i56.TicketType.fromJson(data) as T;
     }
-    if (t == _i57.UserDevice) {
-      return _i57.UserDevice.fromJson(data) as T;
+    if (t == _i57.TypeModel) {
+      return _i57.TypeModel.fromJson(data) as T;
     }
-    if (t == _i58.UserModel) {
-      return _i58.UserModel.fromJson(data) as T;
+    if (t == _i58.User) {
+      return _i58.User.fromJson(data) as T;
     }
-    if (t == _i59.UserRoomMap) {
-      return _i59.UserRoomMap.fromJson(data) as T;
+    if (t == _i59.UserBreak) {
+      return _i59.UserBreak.fromJson(data) as T;
     }
-    if (t == _i60.UserTypes) {
-      return _i60.UserTypes.fromJson(data) as T;
+    if (t == _i60.UserDevice) {
+      return _i60.UserDevice.fromJson(data) as T;
+    }
+    if (t == _i61.UserModel) {
+      return _i61.UserModel.fromJson(data) as T;
+    }
+    if (t == _i62.UserRoomMap) {
+      return _i62.UserRoomMap.fromJson(data) as T;
+    }
+    if (t == _i63.UserTypes) {
+      return _i63.UserTypes.fromJson(data) as T;
     }
     if (t == _i1.getType<_i6.AddBucketRequest?>()) {
       return (data != null ? _i6.AddBucketRequest.fromJson(data) : null) as T;
@@ -2107,176 +2396,208 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i22.DeviceType?>()) {
       return (data != null ? _i22.DeviceType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i23.FlowModel?>()) {
-      return (data != null ? _i23.FlowModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.Doc?>()) {
+      return (data != null ? _i23.Doc.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.GetAddTicketDataResponse?>()) {
+    if (t == _i1.getType<_i24.FlowModel?>()) {
+      return (data != null ? _i24.FlowModel.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.GetAddTicketDataResponse?>()) {
       return (data != null
-              ? _i24.GetAddTicketDataResponse.fromJson(data)
+              ? _i25.GetAddTicketDataResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i25.GetAllTicketsResponse?>()) {
-      return (data != null ? _i25.GetAllTicketsResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i26.GetAllTicketsResponse?>()) {
+      return (data != null ? _i26.GetAllTicketsResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i26.GetPlannerDataResponse?>()) {
-      return (data != null ? _i26.GetPlannerDataResponse.fromJson(data) : null)
-          as T;
-    }
-    if (t == _i1.getType<_i27.GetTicketCommentsResponse?>()) {
+    if (t == _i1.getType<_i27.GetAttendanceDataResponse?>()) {
       return (data != null
-              ? _i27.GetTicketCommentsResponse.fromJson(data)
+              ? _i27.GetAttendanceDataResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i28.GetTicketDataResponse?>()) {
-      return (data != null ? _i28.GetTicketDataResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i28.GetPlannerDataResponse?>()) {
+      return (data != null ? _i28.GetPlannerDataResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i29.Greeting?>()) {
-      return (data != null ? _i29.Greeting.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i30.LeaveConfig?>()) {
-      return (data != null ? _i30.LeaveConfig.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i31.LeaveRequest?>()) {
-      return (data != null ? _i31.LeaveRequest.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i32.MessageType?>()) {
-      return (data != null ? _i32.MessageType.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i33.Organization?>()) {
-      return (data != null ? _i33.Organization.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i34.PlannerApp?>()) {
-      return (data != null ? _i34.PlannerApp.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i35.PlannerAssignee?>()) {
-      return (data != null ? _i35.PlannerAssignee.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i36.PlannerBucket?>()) {
-      return (data != null ? _i36.PlannerBucket.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i37.PlannerNotification?>()) {
-      return (data != null ? _i37.PlannerNotification.fromJson(data) : null)
+    if (t == _i1.getType<_i29.GetTicketCommentsResponse?>()) {
+      return (data != null
+              ? _i29.GetTicketCommentsResponse.fromJson(data)
+              : null)
           as T;
     }
-    if (t == _i1.getType<_i38.PlannerTicket?>()) {
-      return (data != null ? _i38.PlannerTicket.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i39.Priority?>()) {
-      return (data != null ? _i39.Priority.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i40.PriorityModel?>()) {
-      return (data != null ? _i40.PriorityModel.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i41.RegisterAdminResponse?>()) {
-      return (data != null ? _i41.RegisterAdminResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i30.GetTicketDataResponse?>()) {
+      return (data != null ? _i30.GetTicketDataResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i42.SignInResponse?>()) {
-      return (data != null ? _i42.SignInResponse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i31.Greeting?>()) {
+      return (data != null ? _i31.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i43.Status?>()) {
-      return (data != null ? _i43.Status.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i32.LeaveConfig?>()) {
+      return (data != null ? _i32.LeaveConfig.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i44.StatusModel?>()) {
-      return (data != null ? _i44.StatusModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.LeaveRequest?>()) {
+      return (data != null ? _i33.LeaveRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i45.SystemColor?>()) {
-      return (data != null ? _i45.SystemColor.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i34.MessageType?>()) {
+      return (data != null ? _i34.MessageType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i46.Ticket?>()) {
-      return (data != null ? _i46.Ticket.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i35.Organization?>()) {
+      return (data != null ? _i35.Organization.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i47.TicketAssignee?>()) {
-      return (data != null ? _i47.TicketAssignee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.PlannerApp?>()) {
+      return (data != null ? _i36.PlannerApp.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i48.TicketAttachment?>()) {
-      return (data != null ? _i48.TicketAttachment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.PlannerAssignee?>()) {
+      return (data != null ? _i37.PlannerAssignee.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i49.TicketAttachmentDTO?>()) {
-      return (data != null ? _i49.TicketAttachmentDTO.fromJson(data) : null)
+    if (t == _i1.getType<_i38.PlannerBucket?>()) {
+      return (data != null ? _i38.PlannerBucket.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i39.PlannerNotification?>()) {
+      return (data != null ? _i39.PlannerNotification.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i50.TicketComment?>()) {
-      return (data != null ? _i50.TicketComment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i40.PlannerTicket?>()) {
+      return (data != null ? _i40.PlannerTicket.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i51.TicketModel?>()) {
-      return (data != null ? _i51.TicketModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i41.Priority?>()) {
+      return (data != null ? _i41.Priority.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i52.TicketStatusChange?>()) {
-      return (data != null ? _i52.TicketStatusChange.fromJson(data) : null)
+    if (t == _i1.getType<_i42.PriorityModel?>()) {
+      return (data != null ? _i42.PriorityModel.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i43.RegisterAdminResponse?>()) {
+      return (data != null ? _i43.RegisterAdminResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i53.TicketType?>()) {
-      return (data != null ? _i53.TicketType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i44.SignInResponse?>()) {
+      return (data != null ? _i44.SignInResponse.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i54.TypeModel?>()) {
-      return (data != null ? _i54.TypeModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i45.Status?>()) {
+      return (data != null ? _i45.Status.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i55.User?>()) {
-      return (data != null ? _i55.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i46.StatusModel?>()) {
+      return (data != null ? _i46.StatusModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i56.UserBreak?>()) {
-      return (data != null ? _i56.UserBreak.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i47.SystemColor?>()) {
+      return (data != null ? _i47.SystemColor.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i57.UserDevice?>()) {
-      return (data != null ? _i57.UserDevice.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i48.SystemVariables?>()) {
+      return (data != null ? _i48.SystemVariables.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i58.UserModel?>()) {
-      return (data != null ? _i58.UserModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i49.Ticket?>()) {
+      return (data != null ? _i49.Ticket.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.UserRoomMap?>()) {
-      return (data != null ? _i59.UserRoomMap.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i50.TicketAssignee?>()) {
+      return (data != null ? _i50.TicketAssignee.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i60.UserTypes?>()) {
-      return (data != null ? _i60.UserTypes.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i51.TicketAttachment?>()) {
+      return (data != null ? _i51.TicketAttachment.fromJson(data) : null) as T;
     }
-    if (t == List<_i49.TicketAttachmentDTO>) {
+    if (t == _i1.getType<_i52.TicketAttachmentDTO?>()) {
+      return (data != null ? _i52.TicketAttachmentDTO.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i53.TicketComment?>()) {
+      return (data != null ? _i53.TicketComment.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i54.TicketModel?>()) {
+      return (data != null ? _i54.TicketModel.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i55.TicketStatusChange?>()) {
+      return (data != null ? _i55.TicketStatusChange.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i56.TicketType?>()) {
+      return (data != null ? _i56.TicketType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i57.TypeModel?>()) {
+      return (data != null ? _i57.TypeModel.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i58.User?>()) {
+      return (data != null ? _i58.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i59.UserBreak?>()) {
+      return (data != null ? _i59.UserBreak.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i60.UserDevice?>()) {
+      return (data != null ? _i60.UserDevice.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i61.UserModel?>()) {
+      return (data != null ? _i61.UserModel.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i62.UserRoomMap?>()) {
+      return (data != null ? _i62.UserRoomMap.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i63.UserTypes?>()) {
+      return (data != null ? _i63.UserTypes.fromJson(data) : null) as T;
+    }
+    if (t == List<_i52.TicketAttachmentDTO>) {
       return (data as List)
-              .map((e) => deserialize<_i49.TicketAttachmentDTO>(e))
+              .map((e) => deserialize<_i52.TicketAttachmentDTO>(e))
               .toList()
           as T;
     }
-    if (t == List<_i35.PlannerAssignee>) {
+    if (t == List<_i37.PlannerAssignee>) {
       return (data as List)
-              .map((e) => deserialize<_i35.PlannerAssignee>(e))
+              .map((e) => deserialize<_i37.PlannerAssignee>(e))
               .toList()
           as T;
     }
-    if (t == List<_i38.PlannerTicket>) {
+    if (t == List<_i40.PlannerTicket>) {
       return (data as List)
-              .map((e) => deserialize<_i38.PlannerTicket>(e))
+              .map((e) => deserialize<_i40.PlannerTicket>(e))
               .toList()
           as T;
     }
-    if (t == List<int>) {
-      return (data as List).map((e) => deserialize<int>(e)).toList() as T;
-    }
-    if (t == List<_i58.UserModel>) {
-      return (data as List).map((e) => deserialize<_i58.UserModel>(e)).toList()
+    if (t == List<_i1.UuidValue>) {
+      return (data as List).map((e) => deserialize<_i1.UuidValue>(e)).toList()
           as T;
     }
-    if (t == List<_i44.StatusModel>) {
+    if (t == List<_i61.UserModel>) {
+      return (data as List).map((e) => deserialize<_i61.UserModel>(e)).toList()
+          as T;
+    }
+    if (t == List<_i46.StatusModel>) {
       return (data as List)
-              .map((e) => deserialize<_i44.StatusModel>(e))
+              .map((e) => deserialize<_i46.StatusModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i40.PriorityModel>) {
+    if (t == List<_i42.PriorityModel>) {
       return (data as List)
-              .map((e) => deserialize<_i40.PriorityModel>(e))
+              .map((e) => deserialize<_i42.PriorityModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i54.TypeModel>) {
-      return (data as List).map((e) => deserialize<_i54.TypeModel>(e)).toList()
+    if (t == List<_i57.TypeModel>) {
+      return (data as List).map((e) => deserialize<_i57.TypeModel>(e)).toList()
           as T;
     }
-    if (t == List<_i23.FlowModel>) {
-      return (data as List).map((e) => deserialize<_i23.FlowModel>(e)).toList()
+    if (t == List<_i24.FlowModel>) {
+      return (data as List).map((e) => deserialize<_i24.FlowModel>(e)).toList()
+          as T;
+    }
+    if (t == List<_i58.User>) {
+      return (data as List).map((e) => deserialize<_i58.User>(e)).toList() as T;
+    }
+    if (t == List<_i11.Attendance>) {
+      return (data as List).map((e) => deserialize<_i11.Attendance>(e)).toList()
+          as T;
+    }
+    if (t == List<_i32.LeaveConfig>) {
+      return (data as List)
+              .map((e) => deserialize<_i32.LeaveConfig>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i33.LeaveRequest>) {
+      return (data as List)
+              .map((e) => deserialize<_i33.LeaveRequest>(e))
+              .toList()
           as T;
     }
     if (t == List<_i13.BucketModel>) {
@@ -2295,25 +2616,63 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i18.CheckModel>(e)).toList()
           as T;
     }
+    if (t == _i1.getType<List<_i18.CheckModel>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i18.CheckModel>(e))
+                    .toList()
+              : null)
+          as T;
+    }
     if (t == List<_i10.AttachmentModel>) {
       return (data as List)
               .map((e) => deserialize<_i10.AttachmentModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i61.PlannerApp>) {
-      return (data as List).map((e) => deserialize<_i61.PlannerApp>(e)).toList()
+    if (t == List<_i64.PlannerApp>) {
+      return (data as List).map((e) => deserialize<_i64.PlannerApp>(e)).toList()
           as T;
     }
-    if (t == List<_i62.ChatRoom>) {
-      return (data as List).map((e) => deserialize<_i62.ChatRoom>(e)).toList()
+    if (t == List<_i65.User>) {
+      return (data as List).map((e) => deserialize<_i65.User>(e)).toList() as T;
+    }
+    if (t == List<_i66.UserTypes>) {
+      return (data as List).map((e) => deserialize<_i66.UserTypes>(e)).toList()
           as T;
     }
-    if (t == List<_i63.ChatMessage>) {
+    if (t == List<_i67.Attendance>) {
+      return (data as List).map((e) => deserialize<_i67.Attendance>(e)).toList()
+          as T;
+    }
+    if (t == List<_i68.LeaveConfig>) {
       return (data as List)
-              .map((e) => deserialize<_i63.ChatMessage>(e))
+              .map((e) => deserialize<_i68.LeaveConfig>(e))
               .toList()
           as T;
+    }
+    if (t == List<_i69.SystemColor>) {
+      return (data as List)
+              .map((e) => deserialize<_i69.SystemColor>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i70.ChatRoom>) {
+      return (data as List).map((e) => deserialize<_i70.ChatRoom>(e)).toList()
+          as T;
+    }
+    if (t == List<_i71.ChatMessage>) {
+      return (data as List)
+              .map((e) => deserialize<_i71.ChatMessage>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i72.FlowModel>) {
+      return (data as List).map((e) => deserialize<_i72.FlowModel>(e)).toList()
+          as T;
+    }
+    if (t == List<_i73.Doc>) {
+      return (data as List).map((e) => deserialize<_i73.Doc>(e)).toList() as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -2349,44 +2708,47 @@ class Protocol extends _i1.SerializationManagerServer {
       _i20.CheckUsernameResponse => 'CheckUsernameResponse',
       _i21.CommentModel => 'CommentModel',
       _i22.DeviceType => 'DeviceType',
-      _i23.FlowModel => 'FlowModel',
-      _i24.GetAddTicketDataResponse => 'GetAddTicketDataResponse',
-      _i25.GetAllTicketsResponse => 'GetAllTicketsResponse',
-      _i26.GetPlannerDataResponse => 'GetPlannerDataResponse',
-      _i27.GetTicketCommentsResponse => 'GetTicketCommentsResponse',
-      _i28.GetTicketDataResponse => 'GetTicketDataResponse',
-      _i29.Greeting => 'Greeting',
-      _i30.LeaveConfig => 'LeaveConfig',
-      _i31.LeaveRequest => 'LeaveRequest',
-      _i32.MessageType => 'MessageType',
-      _i33.Organization => 'Organization',
-      _i34.PlannerApp => 'PlannerApp',
-      _i35.PlannerAssignee => 'PlannerAssignee',
-      _i36.PlannerBucket => 'PlannerBucket',
-      _i37.PlannerNotification => 'PlannerNotification',
-      _i38.PlannerTicket => 'PlannerTicket',
-      _i39.Priority => 'Priority',
-      _i40.PriorityModel => 'PriorityModel',
-      _i41.RegisterAdminResponse => 'RegisterAdminResponse',
-      _i42.SignInResponse => 'SignInResponse',
-      _i43.Status => 'Status',
-      _i44.StatusModel => 'StatusModel',
-      _i45.SystemColor => 'SystemColor',
-      _i46.Ticket => 'Ticket',
-      _i47.TicketAssignee => 'TicketAssignee',
-      _i48.TicketAttachment => 'TicketAttachment',
-      _i49.TicketAttachmentDTO => 'TicketAttachmentDTO',
-      _i50.TicketComment => 'TicketComment',
-      _i51.TicketModel => 'TicketModel',
-      _i52.TicketStatusChange => 'TicketStatusChange',
-      _i53.TicketType => 'TicketType',
-      _i54.TypeModel => 'TypeModel',
-      _i55.User => 'User',
-      _i56.UserBreak => 'UserBreak',
-      _i57.UserDevice => 'UserDevice',
-      _i58.UserModel => 'UserModel',
-      _i59.UserRoomMap => 'UserRoomMap',
-      _i60.UserTypes => 'UserTypes',
+      _i23.Doc => 'Doc',
+      _i24.FlowModel => 'FlowModel',
+      _i25.GetAddTicketDataResponse => 'GetAddTicketDataResponse',
+      _i26.GetAllTicketsResponse => 'GetAllTicketsResponse',
+      _i27.GetAttendanceDataResponse => 'GetAttendanceDataResponse',
+      _i28.GetPlannerDataResponse => 'GetPlannerDataResponse',
+      _i29.GetTicketCommentsResponse => 'GetTicketCommentsResponse',
+      _i30.GetTicketDataResponse => 'GetTicketDataResponse',
+      _i31.Greeting => 'Greeting',
+      _i32.LeaveConfig => 'LeaveConfig',
+      _i33.LeaveRequest => 'LeaveRequest',
+      _i34.MessageType => 'MessageType',
+      _i35.Organization => 'Organization',
+      _i36.PlannerApp => 'PlannerApp',
+      _i37.PlannerAssignee => 'PlannerAssignee',
+      _i38.PlannerBucket => 'PlannerBucket',
+      _i39.PlannerNotification => 'PlannerNotification',
+      _i40.PlannerTicket => 'PlannerTicket',
+      _i41.Priority => 'Priority',
+      _i42.PriorityModel => 'PriorityModel',
+      _i43.RegisterAdminResponse => 'RegisterAdminResponse',
+      _i44.SignInResponse => 'SignInResponse',
+      _i45.Status => 'Status',
+      _i46.StatusModel => 'StatusModel',
+      _i47.SystemColor => 'SystemColor',
+      _i48.SystemVariables => 'SystemVariables',
+      _i49.Ticket => 'Ticket',
+      _i50.TicketAssignee => 'TicketAssignee',
+      _i51.TicketAttachment => 'TicketAttachment',
+      _i52.TicketAttachmentDTO => 'TicketAttachmentDTO',
+      _i53.TicketComment => 'TicketComment',
+      _i54.TicketModel => 'TicketModel',
+      _i55.TicketStatusChange => 'TicketStatusChange',
+      _i56.TicketType => 'TicketType',
+      _i57.TypeModel => 'TypeModel',
+      _i58.User => 'User',
+      _i59.UserBreak => 'UserBreak',
+      _i60.UserDevice => 'UserDevice',
+      _i61.UserModel => 'UserModel',
+      _i62.UserRoomMap => 'UserRoomMap',
+      _i63.UserTypes => 'UserTypes',
       _ => null,
     };
   }
@@ -2435,81 +2797,87 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'CommentModel';
       case _i22.DeviceType():
         return 'DeviceType';
-      case _i23.FlowModel():
+      case _i23.Doc():
+        return 'Doc';
+      case _i24.FlowModel():
         return 'FlowModel';
-      case _i24.GetAddTicketDataResponse():
+      case _i25.GetAddTicketDataResponse():
         return 'GetAddTicketDataResponse';
-      case _i25.GetAllTicketsResponse():
+      case _i26.GetAllTicketsResponse():
         return 'GetAllTicketsResponse';
-      case _i26.GetPlannerDataResponse():
+      case _i27.GetAttendanceDataResponse():
+        return 'GetAttendanceDataResponse';
+      case _i28.GetPlannerDataResponse():
         return 'GetPlannerDataResponse';
-      case _i27.GetTicketCommentsResponse():
+      case _i29.GetTicketCommentsResponse():
         return 'GetTicketCommentsResponse';
-      case _i28.GetTicketDataResponse():
+      case _i30.GetTicketDataResponse():
         return 'GetTicketDataResponse';
-      case _i29.Greeting():
+      case _i31.Greeting():
         return 'Greeting';
-      case _i30.LeaveConfig():
+      case _i32.LeaveConfig():
         return 'LeaveConfig';
-      case _i31.LeaveRequest():
+      case _i33.LeaveRequest():
         return 'LeaveRequest';
-      case _i32.MessageType():
+      case _i34.MessageType():
         return 'MessageType';
-      case _i33.Organization():
+      case _i35.Organization():
         return 'Organization';
-      case _i34.PlannerApp():
+      case _i36.PlannerApp():
         return 'PlannerApp';
-      case _i35.PlannerAssignee():
+      case _i37.PlannerAssignee():
         return 'PlannerAssignee';
-      case _i36.PlannerBucket():
+      case _i38.PlannerBucket():
         return 'PlannerBucket';
-      case _i37.PlannerNotification():
+      case _i39.PlannerNotification():
         return 'PlannerNotification';
-      case _i38.PlannerTicket():
+      case _i40.PlannerTicket():
         return 'PlannerTicket';
-      case _i39.Priority():
+      case _i41.Priority():
         return 'Priority';
-      case _i40.PriorityModel():
+      case _i42.PriorityModel():
         return 'PriorityModel';
-      case _i41.RegisterAdminResponse():
+      case _i43.RegisterAdminResponse():
         return 'RegisterAdminResponse';
-      case _i42.SignInResponse():
+      case _i44.SignInResponse():
         return 'SignInResponse';
-      case _i43.Status():
+      case _i45.Status():
         return 'Status';
-      case _i44.StatusModel():
+      case _i46.StatusModel():
         return 'StatusModel';
-      case _i45.SystemColor():
+      case _i47.SystemColor():
         return 'SystemColor';
-      case _i46.Ticket():
+      case _i48.SystemVariables():
+        return 'SystemVariables';
+      case _i49.Ticket():
         return 'Ticket';
-      case _i47.TicketAssignee():
+      case _i50.TicketAssignee():
         return 'TicketAssignee';
-      case _i48.TicketAttachment():
+      case _i51.TicketAttachment():
         return 'TicketAttachment';
-      case _i49.TicketAttachmentDTO():
+      case _i52.TicketAttachmentDTO():
         return 'TicketAttachmentDTO';
-      case _i50.TicketComment():
+      case _i53.TicketComment():
         return 'TicketComment';
-      case _i51.TicketModel():
+      case _i54.TicketModel():
         return 'TicketModel';
-      case _i52.TicketStatusChange():
+      case _i55.TicketStatusChange():
         return 'TicketStatusChange';
-      case _i53.TicketType():
+      case _i56.TicketType():
         return 'TicketType';
-      case _i54.TypeModel():
+      case _i57.TypeModel():
         return 'TypeModel';
-      case _i55.User():
+      case _i58.User():
         return 'User';
-      case _i56.UserBreak():
+      case _i59.UserBreak():
         return 'UserBreak';
-      case _i57.UserDevice():
+      case _i60.UserDevice():
         return 'UserDevice';
-      case _i58.UserModel():
+      case _i61.UserModel():
         return 'UserModel';
-      case _i59.UserRoomMap():
+      case _i62.UserRoomMap():
         return 'UserRoomMap';
-      case _i60.UserTypes():
+      case _i63.UserTypes():
         return 'UserTypes';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -2588,119 +2956,128 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'DeviceType') {
       return deserialize<_i22.DeviceType>(data['data']);
     }
+    if (dataClassName == 'Doc') {
+      return deserialize<_i23.Doc>(data['data']);
+    }
     if (dataClassName == 'FlowModel') {
-      return deserialize<_i23.FlowModel>(data['data']);
+      return deserialize<_i24.FlowModel>(data['data']);
     }
     if (dataClassName == 'GetAddTicketDataResponse') {
-      return deserialize<_i24.GetAddTicketDataResponse>(data['data']);
+      return deserialize<_i25.GetAddTicketDataResponse>(data['data']);
     }
     if (dataClassName == 'GetAllTicketsResponse') {
-      return deserialize<_i25.GetAllTicketsResponse>(data['data']);
+      return deserialize<_i26.GetAllTicketsResponse>(data['data']);
+    }
+    if (dataClassName == 'GetAttendanceDataResponse') {
+      return deserialize<_i27.GetAttendanceDataResponse>(data['data']);
     }
     if (dataClassName == 'GetPlannerDataResponse') {
-      return deserialize<_i26.GetPlannerDataResponse>(data['data']);
+      return deserialize<_i28.GetPlannerDataResponse>(data['data']);
     }
     if (dataClassName == 'GetTicketCommentsResponse') {
-      return deserialize<_i27.GetTicketCommentsResponse>(data['data']);
+      return deserialize<_i29.GetTicketCommentsResponse>(data['data']);
     }
     if (dataClassName == 'GetTicketDataResponse') {
-      return deserialize<_i28.GetTicketDataResponse>(data['data']);
+      return deserialize<_i30.GetTicketDataResponse>(data['data']);
     }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i29.Greeting>(data['data']);
+      return deserialize<_i31.Greeting>(data['data']);
     }
     if (dataClassName == 'LeaveConfig') {
-      return deserialize<_i30.LeaveConfig>(data['data']);
+      return deserialize<_i32.LeaveConfig>(data['data']);
     }
     if (dataClassName == 'LeaveRequest') {
-      return deserialize<_i31.LeaveRequest>(data['data']);
+      return deserialize<_i33.LeaveRequest>(data['data']);
     }
     if (dataClassName == 'MessageType') {
-      return deserialize<_i32.MessageType>(data['data']);
+      return deserialize<_i34.MessageType>(data['data']);
     }
     if (dataClassName == 'Organization') {
-      return deserialize<_i33.Organization>(data['data']);
+      return deserialize<_i35.Organization>(data['data']);
     }
     if (dataClassName == 'PlannerApp') {
-      return deserialize<_i34.PlannerApp>(data['data']);
+      return deserialize<_i36.PlannerApp>(data['data']);
     }
     if (dataClassName == 'PlannerAssignee') {
-      return deserialize<_i35.PlannerAssignee>(data['data']);
+      return deserialize<_i37.PlannerAssignee>(data['data']);
     }
     if (dataClassName == 'PlannerBucket') {
-      return deserialize<_i36.PlannerBucket>(data['data']);
+      return deserialize<_i38.PlannerBucket>(data['data']);
     }
     if (dataClassName == 'PlannerNotification') {
-      return deserialize<_i37.PlannerNotification>(data['data']);
+      return deserialize<_i39.PlannerNotification>(data['data']);
     }
     if (dataClassName == 'PlannerTicket') {
-      return deserialize<_i38.PlannerTicket>(data['data']);
+      return deserialize<_i40.PlannerTicket>(data['data']);
     }
     if (dataClassName == 'Priority') {
-      return deserialize<_i39.Priority>(data['data']);
+      return deserialize<_i41.Priority>(data['data']);
     }
     if (dataClassName == 'PriorityModel') {
-      return deserialize<_i40.PriorityModel>(data['data']);
+      return deserialize<_i42.PriorityModel>(data['data']);
     }
     if (dataClassName == 'RegisterAdminResponse') {
-      return deserialize<_i41.RegisterAdminResponse>(data['data']);
+      return deserialize<_i43.RegisterAdminResponse>(data['data']);
     }
     if (dataClassName == 'SignInResponse') {
-      return deserialize<_i42.SignInResponse>(data['data']);
+      return deserialize<_i44.SignInResponse>(data['data']);
     }
     if (dataClassName == 'Status') {
-      return deserialize<_i43.Status>(data['data']);
+      return deserialize<_i45.Status>(data['data']);
     }
     if (dataClassName == 'StatusModel') {
-      return deserialize<_i44.StatusModel>(data['data']);
+      return deserialize<_i46.StatusModel>(data['data']);
     }
     if (dataClassName == 'SystemColor') {
-      return deserialize<_i45.SystemColor>(data['data']);
+      return deserialize<_i47.SystemColor>(data['data']);
+    }
+    if (dataClassName == 'SystemVariables') {
+      return deserialize<_i48.SystemVariables>(data['data']);
     }
     if (dataClassName == 'Ticket') {
-      return deserialize<_i46.Ticket>(data['data']);
+      return deserialize<_i49.Ticket>(data['data']);
     }
     if (dataClassName == 'TicketAssignee') {
-      return deserialize<_i47.TicketAssignee>(data['data']);
+      return deserialize<_i50.TicketAssignee>(data['data']);
     }
     if (dataClassName == 'TicketAttachment') {
-      return deserialize<_i48.TicketAttachment>(data['data']);
+      return deserialize<_i51.TicketAttachment>(data['data']);
     }
     if (dataClassName == 'TicketAttachmentDTO') {
-      return deserialize<_i49.TicketAttachmentDTO>(data['data']);
+      return deserialize<_i52.TicketAttachmentDTO>(data['data']);
     }
     if (dataClassName == 'TicketComment') {
-      return deserialize<_i50.TicketComment>(data['data']);
+      return deserialize<_i53.TicketComment>(data['data']);
     }
     if (dataClassName == 'TicketModel') {
-      return deserialize<_i51.TicketModel>(data['data']);
+      return deserialize<_i54.TicketModel>(data['data']);
     }
     if (dataClassName == 'TicketStatusChange') {
-      return deserialize<_i52.TicketStatusChange>(data['data']);
+      return deserialize<_i55.TicketStatusChange>(data['data']);
     }
     if (dataClassName == 'TicketType') {
-      return deserialize<_i53.TicketType>(data['data']);
+      return deserialize<_i56.TicketType>(data['data']);
     }
     if (dataClassName == 'TypeModel') {
-      return deserialize<_i54.TypeModel>(data['data']);
+      return deserialize<_i57.TypeModel>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i55.User>(data['data']);
+      return deserialize<_i58.User>(data['data']);
     }
     if (dataClassName == 'UserBreak') {
-      return deserialize<_i56.UserBreak>(data['data']);
+      return deserialize<_i59.UserBreak>(data['data']);
     }
     if (dataClassName == 'UserDevice') {
-      return deserialize<_i57.UserDevice>(data['data']);
+      return deserialize<_i60.UserDevice>(data['data']);
     }
     if (dataClassName == 'UserModel') {
-      return deserialize<_i58.UserModel>(data['data']);
+      return deserialize<_i61.UserModel>(data['data']);
     }
     if (dataClassName == 'UserRoomMap') {
-      return deserialize<_i59.UserRoomMap>(data['data']);
+      return deserialize<_i62.UserRoomMap>(data['data']);
     }
     if (dataClassName == 'UserTypes') {
-      return deserialize<_i60.UserTypes>(data['data']);
+      return deserialize<_i63.UserTypes>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -2758,44 +3135,50 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i16.ChatMessage.t;
       case _i17.ChatRoom:
         return _i17.ChatRoom.t;
-      case _i30.LeaveConfig:
-        return _i30.LeaveConfig.t;
-      case _i31.LeaveRequest:
-        return _i31.LeaveRequest.t;
-      case _i33.Organization:
-        return _i33.Organization.t;
-      case _i34.PlannerApp:
-        return _i34.PlannerApp.t;
-      case _i37.PlannerNotification:
-        return _i37.PlannerNotification.t;
-      case _i39.Priority:
-        return _i39.Priority.t;
-      case _i43.Status:
-        return _i43.Status.t;
-      case _i45.SystemColor:
-        return _i45.SystemColor.t;
-      case _i46.Ticket:
-        return _i46.Ticket.t;
-      case _i47.TicketAssignee:
-        return _i47.TicketAssignee.t;
-      case _i48.TicketAttachment:
-        return _i48.TicketAttachment.t;
-      case _i50.TicketComment:
-        return _i50.TicketComment.t;
-      case _i52.TicketStatusChange:
-        return _i52.TicketStatusChange.t;
-      case _i53.TicketType:
-        return _i53.TicketType.t;
-      case _i55.User:
-        return _i55.User.t;
-      case _i56.UserBreak:
-        return _i56.UserBreak.t;
-      case _i57.UserDevice:
-        return _i57.UserDevice.t;
-      case _i59.UserRoomMap:
-        return _i59.UserRoomMap.t;
-      case _i60.UserTypes:
-        return _i60.UserTypes.t;
+      case _i23.Doc:
+        return _i23.Doc.t;
+      case _i24.FlowModel:
+        return _i24.FlowModel.t;
+      case _i32.LeaveConfig:
+        return _i32.LeaveConfig.t;
+      case _i33.LeaveRequest:
+        return _i33.LeaveRequest.t;
+      case _i35.Organization:
+        return _i35.Organization.t;
+      case _i36.PlannerApp:
+        return _i36.PlannerApp.t;
+      case _i39.PlannerNotification:
+        return _i39.PlannerNotification.t;
+      case _i41.Priority:
+        return _i41.Priority.t;
+      case _i45.Status:
+        return _i45.Status.t;
+      case _i47.SystemColor:
+        return _i47.SystemColor.t;
+      case _i48.SystemVariables:
+        return _i48.SystemVariables.t;
+      case _i49.Ticket:
+        return _i49.Ticket.t;
+      case _i50.TicketAssignee:
+        return _i50.TicketAssignee.t;
+      case _i51.TicketAttachment:
+        return _i51.TicketAttachment.t;
+      case _i53.TicketComment:
+        return _i53.TicketComment.t;
+      case _i55.TicketStatusChange:
+        return _i55.TicketStatusChange.t;
+      case _i56.TicketType:
+        return _i56.TicketType.t;
+      case _i58.User:
+        return _i58.User.t;
+      case _i59.UserBreak:
+        return _i59.UserBreak.t;
+      case _i60.UserDevice:
+        return _i60.UserDevice.t;
+      case _i62.UserRoomMap:
+        return _i62.UserRoomMap.t;
+      case _i63.UserTypes:
+        return _i63.UserTypes.t;
     }
     return null;
   }

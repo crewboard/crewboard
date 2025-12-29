@@ -19,29 +19,34 @@ abstract class CommentModel implements _i1.SerializableModel {
     required this.userName,
     required this.message,
     required this.createdAt,
+    this.userColor,
   });
 
   factory CommentModel({
-    required int commentId,
-    required int userId,
+    required _i1.UuidValue commentId,
+    required _i1.UuidValue userId,
     required String userName,
     required String message,
     required String createdAt,
+    String? userColor,
   }) = _CommentModelImpl;
 
   factory CommentModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return CommentModel(
-      commentId: jsonSerialization['commentId'] as int,
-      userId: jsonSerialization['userId'] as int,
+      commentId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['commentId'],
+      ),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userName: jsonSerialization['userName'] as String,
       message: jsonSerialization['message'] as String,
       createdAt: jsonSerialization['createdAt'] as String,
+      userColor: jsonSerialization['userColor'] as String?,
     );
   }
 
-  int commentId;
+  _i1.UuidValue commentId;
 
-  int userId;
+  _i1.UuidValue userId;
 
   String userName;
 
@@ -49,25 +54,29 @@ abstract class CommentModel implements _i1.SerializableModel {
 
   String createdAt;
 
+  String? userColor;
+
   /// Returns a shallow copy of this [CommentModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   CommentModel copyWith({
-    int? commentId,
-    int? userId,
+    _i1.UuidValue? commentId,
+    _i1.UuidValue? userId,
     String? userName,
     String? message,
     String? createdAt,
+    String? userColor,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'CommentModel',
-      'commentId': commentId,
-      'userId': userId,
+      'commentId': commentId.toJson(),
+      'userId': userId.toJson(),
       'userName': userName,
       'message': message,
       'createdAt': createdAt,
+      if (userColor != null) 'userColor': userColor,
     };
   }
 
@@ -77,19 +86,23 @@ abstract class CommentModel implements _i1.SerializableModel {
   }
 }
 
+class _Undefined {}
+
 class _CommentModelImpl extends CommentModel {
   _CommentModelImpl({
-    required int commentId,
-    required int userId,
+    required _i1.UuidValue commentId,
+    required _i1.UuidValue userId,
     required String userName,
     required String message,
     required String createdAt,
+    String? userColor,
   }) : super._(
          commentId: commentId,
          userId: userId,
          userName: userName,
          message: message,
          createdAt: createdAt,
+         userColor: userColor,
        );
 
   /// Returns a shallow copy of this [CommentModel]
@@ -97,11 +110,12 @@ class _CommentModelImpl extends CommentModel {
   @_i1.useResult
   @override
   CommentModel copyWith({
-    int? commentId,
-    int? userId,
+    _i1.UuidValue? commentId,
+    _i1.UuidValue? userId,
     String? userName,
     String? message,
     String? createdAt,
+    Object? userColor = _Undefined,
   }) {
     return CommentModel(
       commentId: commentId ?? this.commentId,
@@ -109,6 +123,7 @@ class _CommentModelImpl extends CommentModel {
       userName: userName ?? this.userName,
       message: message ?? this.message,
       createdAt: createdAt ?? this.createdAt,
+      userColor: userColor is String? ? userColor : this.userColor,
     );
   }
 }

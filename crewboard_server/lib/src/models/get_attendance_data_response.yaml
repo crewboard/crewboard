@@ -1,0 +1,6 @@
+class: GetAttendanceDataResponse
+fields:
+  users: List<User>
+  attendance: List<Attendance>
+  configs: List<LeaveConfig>
+  requests: List<LeaveRequest>

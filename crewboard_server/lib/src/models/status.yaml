@@ -1,0 +1,5 @@
+class: Status
+table: status
+fields:
+  id: UuidValue?, defaultPersist=random
+  statusName: String

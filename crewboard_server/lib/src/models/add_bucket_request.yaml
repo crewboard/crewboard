@@ -1,0 +1,4 @@
+class: AddBucketRequest
+fields:
+  appId: UuidValue
+  bucketName: String

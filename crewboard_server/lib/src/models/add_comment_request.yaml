@@ -1,0 +1,4 @@
+class: AddCommentRequest
+fields:
+  ticketId: UuidValue
+  message: String

@@ -1,0 +1,15 @@
+class: Ticket
+table: tickets
+fields:
+  id: UuidValue?, defaultPersist=random
+  user: User?, relation
+  appId: UuidValue
+  ticketName: String
+  ticketBody: String
+  status: Status?, relation
+  priority: Priority?, relation
+  type: TicketType?, relation
+  checklist: List<CheckModel>?
+  flows: String
+  creds: int
+  deadline: DateTime?

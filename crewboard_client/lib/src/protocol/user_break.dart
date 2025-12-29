@@ -26,8 +26,8 @@ abstract class UserBreak implements _i1.SerializableModel {
   });
 
   factory UserBreak({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -37,8 +37,10 @@ abstract class UserBreak implements _i1.SerializableModel {
 
   factory UserBreak.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserBreak(
-      id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
@@ -52,9 +54,9 @@ abstract class UserBreak implements _i1.SerializableModel {
   /// The database id, set if the object has been inserted into the
   /// database or if it has been fetched from the database. Otherwise,
   /// the id will be null.
-  int? id;
+  _i1.UuidValue? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
   _i2.User? user;
 
@@ -70,8 +72,8 @@ abstract class UserBreak implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserBreak copyWith({
-    int? id,
-    int? userId,
+    _i1.UuidValue? id,
+    _i1.UuidValue? userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -82,8 +84,8 @@ abstract class UserBreak implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserBreak',
-      if (id != null) 'id': id,
-      'userId': userId,
+      if (id != null) 'id': id?.toJson(),
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       if (breakStart != null) 'breakStart': breakStart,
       if (breakEnd != null) 'breakEnd': breakEnd,
@@ -102,8 +104,8 @@ class _Undefined {}
 
 class _UserBreakImpl extends UserBreak {
   _UserBreakImpl({
-    int? id,
-    required int userId,
+    _i1.UuidValue? id,
+    required _i1.UuidValue userId,
     _i2.User? user,
     String? breakStart,
     String? breakEnd,
@@ -125,7 +127,7 @@ class _UserBreakImpl extends UserBreak {
   @override
   UserBreak copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     Object? breakStart = _Undefined,
     Object? breakEnd = _Undefined,
@@ -133,7 +135,7 @@ class _UserBreakImpl extends UserBreak {
     DateTime? date,
   }) {
     return UserBreak(
-      id: id is int? ? id : this.id,
+      id: id is _i1.UuidValue? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       breakStart: breakStart is String? ? breakStart : this.breakStart,

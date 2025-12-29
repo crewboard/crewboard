@@ -21,7 +21,7 @@ abstract class UserModel implements _i1.SerializableModel {
   });
 
   factory UserModel({
-    required int userId,
+    required _i1.UuidValue userId,
     required String userName,
     required String color,
     required bool selected,
@@ -29,14 +29,14 @@ abstract class UserModel implements _i1.SerializableModel {
 
   factory UserModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserModel(
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userName: jsonSerialization['userName'] as String,
       color: jsonSerialization['color'] as String,
       selected: jsonSerialization['selected'] as bool,
     );
   }
 
-  int userId;
+  _i1.UuidValue userId;
 
   String userName;
 
@@ -48,7 +48,7 @@ abstract class UserModel implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   UserModel copyWith({
-    int? userId,
+    _i1.UuidValue? userId,
     String? userName,
     String? color,
     bool? selected,
@@ -57,7 +57,7 @@ abstract class UserModel implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'UserModel',
-      'userId': userId,
+      'userId': userId.toJson(),
       'userName': userName,
       'color': color,
       'selected': selected,
@@ -72,7 +72,7 @@ abstract class UserModel implements _i1.SerializableModel {
 
 class _UserModelImpl extends UserModel {
   _UserModelImpl({
-    required int userId,
+    required _i1.UuidValue userId,
     required String userName,
     required String color,
     required bool selected,
@@ -88,7 +88,7 @@ class _UserModelImpl extends UserModel {
   @_i1.useResult
   @override
   UserModel copyWith({
-    int? userId,
+    _i1.UuidValue? userId,
     String? userName,
     String? color,
     bool? selected,

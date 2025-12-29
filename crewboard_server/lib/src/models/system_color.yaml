@@ -1,0 +1,7 @@
+class: SystemColor
+table: system_color
+fields:
+  id: UuidValue?, defaultPersist=random
+  colorName: String?
+  color: String
+  isDefault: bool

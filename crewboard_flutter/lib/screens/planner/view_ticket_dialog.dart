@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,7 @@ import '../../widgets/glass_morph.dart';
 
 class ViewTicketDialog extends StatefulWidget {
   const ViewTicketDialog({super.key, required this.ticketId});
-  final int ticketId;
+  final UuidValue ticketId;
 
   @override
   State<ViewTicketDialog> createState() => _ViewTicketDialogState();
