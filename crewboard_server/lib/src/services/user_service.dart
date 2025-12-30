@@ -77,6 +77,11 @@ class UserService {
 
       stdout.writeln('Auth sync completed for: ${user.userName}');
 
+      // 7. Create default resources (Planner App & Bucket)
+      await _createDefaultResources(session, insertedUser);
+
+      stdout.writeln('Default resources created for: ${user.userName}');
+
       return insertedUser;
     } catch (e) {
       stdout.writeln('Error creating user: $e');
@@ -139,5 +144,80 @@ class UserService {
     }
     // Add more validation rules as needed
     return null;
+  }
+
+  /// Creates default resources (PlannerApp, Bucket) for a new user.
+  static Future<void> _createDefaultResources(
+    Session session,
+    User user,
+  ) async {
+    try {
+      // 1. Find or Create default PlannerApp
+      var app = await PlannerApp.db.findFirstRow(
+        session,
+        where: (t) =>
+            t.organizationId.equals(user.organizationId) &
+            t.appName.equals('Planner'),
+      );
+
+      if (app == null) {
+        // Get default color for new app
+        final defaultColor = await SystemColor.db.findFirstRow(
+          session,
+          where: (t) => t.isDefault.equals(true),
+        );
+
+        if (defaultColor != null) {
+          app = await PlannerApp.db.insertRow(
+            session,
+            PlannerApp(
+              appName: 'Planner',
+              colorId: defaultColor.id!,
+              organizationId: user.organizationId,
+            ),
+          );
+          stdout.writeln(
+            'Created default Planner app for org: ${user.organizationId}',
+          );
+        } else {
+          stdout.writeln(
+            'Warning: No default color found, checking for any color.',
+          );
+          final anyColor = await SystemColor.db.findFirstRow(session);
+          if (anyColor != null) {
+            app = await PlannerApp.db.insertRow(
+              session,
+              PlannerApp(
+                appName: 'Planner',
+                colorId: anyColor.id!,
+                organizationId: user.organizationId,
+              ),
+            );
+          }
+        }
+      }
+
+      if (app != null) {
+        // 2. Create Default Bucket
+        await Bucket.db.insertRow(
+          session,
+          Bucket(
+            userId: user.id!,
+            appId: app.id!,
+            bucketName: 'New',
+            isDefault: true,
+          ),
+        );
+        stdout.writeln('Default bucket "To Do" created for: ${user.userName}');
+      } else {
+        stdout.writeln(
+          'Warning: Could not create default bucket because PlannerApp could not be created.',
+        );
+      }
+    } catch (e) {
+      stdout.writeln('Error creating default resources: $e');
+      // We don't rethrow here to avoid failing the whole user creation
+      // just because the bucket failed.
+    }
   }
 }

@@ -3,3 +3,4 @@ fields:
   bucketId: UuidValue
   bucketName: String
   tickets: List<PlannerTicket>
+  isDefault: bool?

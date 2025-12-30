@@ -24,36 +24,41 @@ class Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        for (var tab in tabs)
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: InkWell(
+    return Container(
+      decoration: BoxDecoration(
+        color: Pallet.inside1,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      padding: const EdgeInsets.all(2),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var tab in tabs)
+            InkWell(
               onTap: () => onTabChanged(tab.value),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
-                  vertical: 6,
+                  vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: tab.isSelected ? Pallet.inside1 : Colors.transparent,
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: tab.isSelected ? Pallet.font3 : Colors.transparent,
-                  ),
+                  color: tab.isSelected ? Pallet.inside2 : Colors.transparent,
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
                   tab.label,
                   style: TextStyle(
                     color: tab.isSelected ? Pallet.font1 : Pallet.font3,
                     fontSize: 12,
+                    fontWeight: tab.isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

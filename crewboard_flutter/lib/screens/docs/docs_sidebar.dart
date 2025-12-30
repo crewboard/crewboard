@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'flows/flows_controller.dart';
 import '../../../config/palette.dart';
 import 'document_editor_provider.dart';
-import 'package:crewboard_client/crewboard_client.dart';
-import 'package:serverpod_client/serverpod_client.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/tabs.dart';
+import '../planner/widgets/app_list_item.dart';
 
 enum SidebarMode { apps, flows }
 
@@ -50,7 +50,7 @@ class DocsSidebar extends StatelessWidget {
                   ),
                 ),
               ),
-              AddController(
+              CreateItemOverlayButton(
                 showColor: true,
                 onSave: (name, colorId) async {
                   if (colorId != null) {
@@ -79,35 +79,10 @@ class DocsSidebar extends StatelessWidget {
               itemCount: controller.apps.length,
               itemBuilder: (context, index) {
                 final app = controller.apps[index];
-                final isSelected = app.id == controller.selectedAppId.value;
-                return InkWell(
+                return AppListItem(
+                  app: app,
+                  isSelected: app.id == controller.selectedAppId.value,
                   onTap: () => controller.selectApp(app.id!),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected ? Pallet.inside2 : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected ? Pallet.inside3 : Colors.transparent,
-                        width: 1,
-                      ),
-                    ),
-                    child: Text(
-                      app.appName,
-                      style: TextStyle(
-                        color: Pallet.font2,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
                 );
               },
             );
@@ -153,11 +128,25 @@ class DocsSidebar extends StatelessWidget {
             }),
             const SizedBox(width: 10),
             // Add button
-            IconButton(
-              onPressed: () => _showAddDialog(controller),
-              icon: Icon(Icons.add, color: Pallet.font3),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+            CreateItemOverlayButton(
+              onSave: (name, _) {
+                if (name.isNotEmpty) {
+                  if (controller.currentSubPage.value == FlowSubPage.flows) {
+                    controller.createNewFlow(name);
+                  } else {
+                    if (!Get.isRegistered<DocumentEditorProvider>()) {
+                      Get.put(DocumentEditorProvider());
+                    }
+                    final docProvider = Get.find<DocumentEditorProvider>();
+                    if (controller.selectedAppId.value != null) {
+                      docProvider.addDoc(
+                        controller.selectedAppId.value!,
+                        name,
+                      );
+                    }
+                  }
+                }
+              },
             ),
           ],
         ),
@@ -177,52 +166,20 @@ class DocsSidebar extends StatelessWidget {
   }
 
   Widget _buildTabs(FlowsController controller) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Pallet.inside1,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTab(
-            label: "Docs",
-            isSelected: controller.currentSubPage.value == FlowSubPage.docs,
-            onTap: () => controller.changeSubPage("docs"),
-          ),
-          _buildTab(
-            label: "Flows",
-            isSelected: controller.currentSubPage.value == FlowSubPage.flows,
-            onTap: () => controller.changeSubPage("flows"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTab({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: isSelected ? Pallet.inside2 : Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
+    return Tabs(
+      tabs: [
+        TabItem(
+          label: "Docs",
+          value: "docs",
+          isSelected: controller.currentSubPage.value == FlowSubPage.docs,
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Pallet.font1 : Pallet.font3,
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
+        TabItem(
+          label: "Flows",
+          value: "flows",
+          isSelected: controller.currentSubPage.value == FlowSubPage.flows,
         ),
-      ),
+      ],
+      onTabChanged: (value) => controller.changeSubPage(value),
     );
   }
 
@@ -368,77 +325,5 @@ class DocsSidebar extends StatelessWidget {
         },
       );
     });
-  }
-
-  void _showAddDialog(FlowsController controller) {
-    final TextEditingController textController = TextEditingController();
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          width: 300,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                controller.currentSubPage.value == FlowSubPage.flows
-                    ? "Create New Flow"
-                    : "Create New Doc",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 15),
-              TextField(
-                controller: textController,
-                decoration: const InputDecoration(
-                  labelText: "Name",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child: const Text("Cancel"),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (textController.text.isNotEmpty) {
-                        if (controller.currentSubPage.value ==
-                            FlowSubPage.flows) {
-                          controller.createNewFlow(textController.text);
-                        } else {
-                          // Create doc
-                          if (!Get.isRegistered<DocumentEditorProvider>()) {
-                            Get.put(DocumentEditorProvider());
-                          }
-                          final docProvider =
-                              Get.find<DocumentEditorProvider>();
-                          docProvider.addDoc(
-                            controller.selectedAppId.value!,
-                            textController.text,
-                          );
-                        }
-                        Get.back();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text(
-                      "Create",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

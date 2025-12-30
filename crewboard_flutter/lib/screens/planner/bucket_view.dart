@@ -57,11 +57,14 @@ class BucketView extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              AddButton(
-                onPress: () {
-                  Get.dialog(AddTicketDialog(initialBucketId: bucket.bucketId));
-                },
-              ),
+              if (bucket.isDefault == true)
+                AddButton(
+                  onPress: () {
+                    Get.dialog(
+                      AddTicketDialog(initialBucketId: bucket.bucketId),
+                    );
+                  },
+                ),
             ],
           ),
           const SizedBox(height: 15),
@@ -104,7 +107,8 @@ class BucketView extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          AddController(
+          CreateItemInlineButton(
+            label: "Add Bucket",
             onSave: (name, color) async {
               await controller.addBucket(name);
             },

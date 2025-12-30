@@ -20,12 +20,14 @@ abstract class BucketModel
     required this.bucketId,
     required this.bucketName,
     required this.tickets,
+    this.isDefault,
   });
 
   factory BucketModel({
     required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
+    bool? isDefault,
   }) = _BucketModelImpl;
 
   factory BucketModel.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -37,6 +39,7 @@ abstract class BucketModel
       tickets: _i3.Protocol().deserialize<List<_i2.PlannerTicket>>(
         jsonSerialization['tickets'],
       ),
+      isDefault: jsonSerialization['isDefault'] as bool?,
     );
   }
 
@@ -46,6 +49,8 @@ abstract class BucketModel
 
   List<_i2.PlannerTicket> tickets;
 
+  bool? isDefault;
+
   /// Returns a shallow copy of this [BucketModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -53,6 +58,7 @@ abstract class BucketModel
     _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
+    bool? isDefault,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -61,6 +67,7 @@ abstract class BucketModel
       'bucketId': bucketId.toJson(),
       'bucketName': bucketName,
       'tickets': tickets.toJson(valueToJson: (v) => v.toJson()),
+      if (isDefault != null) 'isDefault': isDefault,
     };
   }
 
@@ -71,6 +78,7 @@ abstract class BucketModel
       'bucketId': bucketId.toJson(),
       'bucketName': bucketName,
       'tickets': tickets.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (isDefault != null) 'isDefault': isDefault,
     };
   }
 
@@ -80,15 +88,19 @@ abstract class BucketModel
   }
 }
 
+class _Undefined {}
+
 class _BucketModelImpl extends BucketModel {
   _BucketModelImpl({
     required _i1.UuidValue bucketId,
     required String bucketName,
     required List<_i2.PlannerTicket> tickets,
+    bool? isDefault,
   }) : super._(
          bucketId: bucketId,
          bucketName: bucketName,
          tickets: tickets,
+         isDefault: isDefault,
        );
 
   /// Returns a shallow copy of this [BucketModel]
@@ -99,11 +111,13 @@ class _BucketModelImpl extends BucketModel {
     _i1.UuidValue? bucketId,
     String? bucketName,
     List<_i2.PlannerTicket>? tickets,
+    Object? isDefault = _Undefined,
   }) {
     return BucketModel(
       bucketId: bucketId ?? this.bucketId,
       bucketName: bucketName ?? this.bucketName,
       tickets: tickets ?? this.tickets.map((e0) => e0.copyWith()).toList(),
+      isDefault: isDefault is bool? ? isDefault : this.isDefault,
     );
   }
 }

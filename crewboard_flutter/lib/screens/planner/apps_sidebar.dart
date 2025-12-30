@@ -4,6 +4,7 @@ import '../../config/palette.dart';
 import '../../controllers/planner_controller.dart';
 import '../../widgets/widgets.dart';
 import '../../widgets/tabs.dart';
+import 'widgets/app_list_item.dart';
 
 class AppsSidebar extends StatelessWidget {
   const AppsSidebar({super.key});
@@ -53,7 +54,7 @@ class AppsSidebar extends StatelessWidget {
                   );
                 }),
                 const SizedBox(width: 5),
-                AddController(
+                CreateItemOverlayButton(
                   showColor: true,
                   onSave: (name, colorId) async {
                     if (colorId != null) {

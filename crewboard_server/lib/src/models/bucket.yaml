@@ -5,3 +5,4 @@ fields:
   user: User?, relation
   appId: UuidValue
   bucketName: String
+  isDefault: bool, default=false

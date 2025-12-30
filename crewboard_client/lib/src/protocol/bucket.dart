@@ -21,7 +21,8 @@ abstract class Bucket implements _i1.SerializableModel {
     this.user,
     required this.appId,
     required this.bucketName,
-  });
+    bool? isDefault,
+  }) : isDefault = isDefault ?? false;
 
   factory Bucket({
     _i1.UuidValue? id,
@@ -29,6 +30,7 @@ abstract class Bucket implements _i1.SerializableModel {
     _i2.User? user,
     required _i1.UuidValue appId,
     required String bucketName,
+    bool? isDefault,
   }) = _BucketImpl;
 
   factory Bucket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -42,6 +44,7 @@ abstract class Bucket implements _i1.SerializableModel {
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
       bucketName: jsonSerialization['bucketName'] as String,
+      isDefault: jsonSerialization['isDefault'] as bool,
     );
   }
 
@@ -58,6 +61,8 @@ abstract class Bucket implements _i1.SerializableModel {
 
   String bucketName;
 
+  bool isDefault;
+
   /// Returns a shallow copy of this [Bucket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -67,6 +72,7 @@ abstract class Bucket implements _i1.SerializableModel {
     _i2.User? user,
     _i1.UuidValue? appId,
     String? bucketName,
+    bool? isDefault,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -77,6 +83,7 @@ abstract class Bucket implements _i1.SerializableModel {
       if (user != null) 'user': user?.toJson(),
       'appId': appId.toJson(),
       'bucketName': bucketName,
+      'isDefault': isDefault,
     };
   }
 
@@ -95,12 +102,14 @@ class _BucketImpl extends Bucket {
     _i2.User? user,
     required _i1.UuidValue appId,
     required String bucketName,
+    bool? isDefault,
   }) : super._(
          id: id,
          userId: userId,
          user: user,
          appId: appId,
          bucketName: bucketName,
+         isDefault: isDefault,
        );
 
   /// Returns a shallow copy of this [Bucket]
@@ -113,6 +122,7 @@ class _BucketImpl extends Bucket {
     Object? user = _Undefined,
     _i1.UuidValue? appId,
     String? bucketName,
+    bool? isDefault,
   }) {
     return Bucket(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -120,6 +130,7 @@ class _BucketImpl extends Bucket {
       user: user is _i2.User? ? user : this.user?.copyWith(),
       appId: appId ?? this.appId,
       bucketName: bucketName ?? this.bucketName,
+      isDefault: isDefault ?? this.isDefault,
     );
   }
 }

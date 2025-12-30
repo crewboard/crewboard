@@ -102,6 +102,7 @@ class PlannerEndpoint extends Endpoint {
           bucketId: bucket.id!,
           bucketName: bucket.bucketName,
           tickets: ticketModels,
+          isDefault: bucket.isDefault,
         ),
       );
     }

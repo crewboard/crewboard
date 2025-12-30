@@ -58,9 +58,11 @@ class PlannerController extends GetxController {
   // Load apps (projects) from server
   Future<void> loadApps() async {
     try {
+      debugPrint("Loading apps in PlannerController...");
       isLoadingApps.value = true;
       final response = await client.admin.getApps();
-      apps.assignAll(response);
+      debugPrint("Apps loaded in PlannerController: ${response.length}");
+      apps.value = response;
 
       if (apps.isNotEmpty && selectedAppId.value == null) {
         selectApp(apps.first.id!);

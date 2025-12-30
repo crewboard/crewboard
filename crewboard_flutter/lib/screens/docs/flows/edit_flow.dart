@@ -4,34 +4,7 @@ import 'package:get/get.dart';
 import '../../../../config/palette.dart';
 
 import 'flows_controller.dart';
-import '../../../widgets/glass_morph.dart';
-
-// Minimal TextBox
-class SmallTextBox extends StatelessWidget {
-  final TextEditingController controller;
-  final Function(String) onType;
-  final int maxLines;
-  const SmallTextBox({
-    super.key,
-    required this.controller,
-    required this.onType,
-    this.maxLines = 1,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: onType,
-      maxLines: maxLines,
-      style: TextStyle(fontSize: 12, color: Pallet.font1),
-      decoration: InputDecoration(
-        isDense: true,
-        contentPadding: EdgeInsets.all(8),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
-      ),
-    );
-  }
-}
+import '../../../widgets/widgets.dart';
 
 // Minimal Button
 class SmallButton extends StatelessWidget {

@@ -82,6 +82,7 @@ flutter:
   assets:
     - assets/config.json
     - assets/vector.png
+    - assets/icons/
 dependency_overrides:
   flutter_secure_storage: ^10.0.0
 
