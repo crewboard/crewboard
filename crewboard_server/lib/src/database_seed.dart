@@ -120,43 +120,31 @@ Future<void> seedDatabase(Session session) async {
   if (existingAdmin == null) {
     stdout.writeln('Seeding default Admin user...');
 
-    // Check dependencies
-    if (defaultOrg != null &&
-        defaultColor != null &&
-        adminType != null &&
-        leaveConfig != null) {
-      // Create default admin user using unified service
-      final newUser = User(
-        userName: 'admin',
-        email: 'admin@crewboard.com',
-        organizationId: defaultOrg.id!,
-        colorId: defaultColor.id!,
-        userTypeId: adminType.id!,
-        leaveConfigId: leaveConfig.id!,
-        firstName: 'Admin',
-        lastName: 'User',
-        gender: 'unspecified',
-        phone: '',
-        performance: 0,
-        online: false,
-        onsite: false,
-        deleted: false,
-      );
+    // Create default admin user using unified service
+    final newUser = User(
+      userName: 'admin',
+      email: 'admin@crewboard.com',
+      organizationId: defaultOrg.id!,
+      colorId: defaultColor.id!,
+      userTypeId: adminType.id!,
+      leaveConfigId: leaveConfig.id!,
+      firstName: 'Admin',
+      lastName: 'User',
+      gender: 'unspecified',
+      phone: '',
+      performance: 0,
+      online: false,
+      onsite: false,
+      deleted: false,
+    );
 
-      await UserService.createUserWithAuth(
-        session,
-        newUser,
-        'password',
-      );
+    await UserService.createUserWithAuth(
+      session,
+      newUser,
+      'password',
+    );
 
-      stdout.writeln('Default Admin created: admin@crewboard.com / password');
-    } else {
-      stdout.writeln(
-        'Skipping default admin seed: Missing dependencies. '
-        'Org: ${defaultOrg != null}, Color: ${defaultColor != null}, '
-        'Type: ${adminType != null}, Leave: ${leaveConfig != null}',
-      );
-    }
+    stdout.writeln('Default Admin created: admin@crewboard.com / password');
   }
 
   // 4. Seed SystemVariables
