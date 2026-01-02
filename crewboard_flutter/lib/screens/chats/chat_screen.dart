@@ -82,13 +82,19 @@ class Messages extends StatelessWidget {
                   SvgPicture.asset(
                     "assets/icons/video_call.svg",
                     width: 25,
-                    colorFilter: ColorFilter.mode(Pallet.font3, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                      Pallet.font3,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   const SizedBox(width: 15),
                   SvgPicture.asset(
                     "assets/icons/phone.svg",
                     width: 25,
-                    colorFilter: ColorFilter.mode(Pallet.font3, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                      Pallet.font3,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   const SizedBox(width: 15),
                   InkWell(

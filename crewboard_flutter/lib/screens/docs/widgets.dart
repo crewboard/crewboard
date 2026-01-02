@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'document_editor_provider.dart';
 
-void showCustomFontDialog(BuildContext context, DocumentEditorProvider provider) {
+void showCustomFontDialog(
+  BuildContext context,
+  DocumentEditorProvider provider,
+) {
   String selectedFontFamily = provider.fontSettings.value.fontFamily;
   String selectedFontSize = provider.fontSettings.value.fontSize;
 
@@ -39,24 +42,25 @@ void showCustomFontDialog(BuildContext context, DocumentEditorProvider provider)
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: selectedFontSize,
-              items: [
-                '8',
-                '10',
-                '12',
-                '14',
-                '16',
-                '18',
-                '20',
-                '24',
-                '28',
-                '30',
-                '32',
-              ]
-                  .map(
-                    (size) =>
-                        DropdownMenuItem(value: size, child: Text(size)),
-                  )
-                  .toList(),
+              items:
+                  [
+                        '8',
+                        '10',
+                        '12',
+                        '14',
+                        '16',
+                        '18',
+                        '20',
+                        '24',
+                        '28',
+                        '30',
+                        '32',
+                      ]
+                      .map(
+                        (size) =>
+                            DropdownMenuItem(value: size, child: Text(size)),
+                      )
+                      .toList(),
               onChanged: (value) {
                 if (value != null) setState(() => selectedFontSize = value);
               },
