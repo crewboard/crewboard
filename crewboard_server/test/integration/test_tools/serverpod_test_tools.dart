@@ -17,42 +17,52 @@ import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
-import 'package:crewboard_server/src/generated/planner_app.dart' as _i5;
-import 'package:crewboard_server/src/generated/system_variables.dart' as _i6;
-import 'package:crewboard_server/src/generated/user.dart' as _i7;
-import 'package:crewboard_server/src/generated/user_types.dart' as _i8;
-import 'package:crewboard_server/src/generated/attendance.dart' as _i9;
-import 'package:crewboard_server/src/generated/leave_config.dart' as _i10;
-import 'package:crewboard_server/src/generated/system_color.dart' as _i11;
-import 'package:crewboard_server/src/generated/register_admin_response.dart'
+import 'package:crewboard_server/src/generated/entities/planner_app.dart'
+    as _i5;
+import 'package:crewboard_server/src/generated/entities/system_variables.dart'
+    as _i6;
+import 'package:crewboard_server/src/generated/entities/user.dart' as _i7;
+import 'package:crewboard_server/src/generated/entities/user_types.dart' as _i8;
+import 'package:crewboard_server/src/generated/entities/attendance.dart' as _i9;
+import 'package:crewboard_server/src/generated/entities/leave_config.dart'
+    as _i10;
+import 'package:crewboard_server/src/generated/entities/system_color.dart'
+    as _i11;
+import 'package:crewboard_server/src/generated/protocols/register_admin_response.dart'
     as _i12;
-import 'package:crewboard_server/src/generated/get_attendance_data_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_attendance_data_response.dart'
     as _i13;
-import 'package:crewboard_server/src/generated/leave_request.dart' as _i14;
-import 'package:crewboard_server/src/generated/check_username_response.dart'
+import 'package:crewboard_server/src/generated/entities/leave_request.dart'
+    as _i14;
+import 'package:crewboard_server/src/generated/protocols/check_username_response.dart'
     as _i15;
-import 'package:crewboard_server/src/generated/check_organization_response.dart'
+import 'package:crewboard_server/src/generated/protocols/check_organization_response.dart'
     as _i16;
-import 'package:crewboard_server/src/generated/sign_in_response.dart' as _i17;
-import 'package:crewboard_server/src/generated/chat_room.dart' as _i18;
-import 'package:crewboard_server/src/generated/chat_message.dart' as _i19;
-import 'package:crewboard_server/src/generated/flow_model.dart' as _i20;
-import 'package:crewboard_server/src/generated/doc.dart' as _i21;
-import 'package:crewboard_server/src/generated/get_planner_data_response.dart'
+import 'package:crewboard_server/src/generated/protocols/sign_in_response.dart'
+    as _i17;
+import 'package:crewboard_server/src/generated/entities/chat_room.dart' as _i18;
+import 'package:crewboard_server/src/generated/entities/chat_message.dart'
+    as _i19;
+import 'package:crewboard_server/src/generated/entities/flow_model.dart'
+    as _i20;
+import 'package:crewboard_server/src/generated/entities/doc.dart' as _i21;
+import 'package:crewboard_server/src/generated/protocols/get_planner_data_response.dart'
     as _i22;
-import 'package:crewboard_server/src/generated/get_add_ticket_data_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_add_ticket_data_response.dart'
     as _i23;
-import 'package:crewboard_server/src/generated/add_ticket_request.dart' as _i24;
-import 'package:crewboard_server/src/generated/get_all_tickets_response.dart'
+import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
+    as _i24;
+import 'package:crewboard_server/src/generated/protocols/get_all_tickets_response.dart'
     as _i25;
-import 'package:crewboard_server/src/generated/get_ticket_data_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_ticket_data_response.dart'
     as _i26;
-import 'package:crewboard_server/src/generated/get_ticket_comments_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_ticket_comments_response.dart'
     as _i27;
-import 'package:crewboard_server/src/generated/add_comment_request.dart'
+import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
     as _i28;
-import 'package:crewboard_server/src/generated/add_bucket_request.dart' as _i29;
-import 'package:crewboard_server/src/generated/change_bucket_request.dart'
+import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+    as _i29;
+import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
     as _i30;
 import 'package:crewboard_server/src/generated/greetings/greeting.dart' as _i31;
 import 'package:crewboard_server/src/generated/protocol.dart';

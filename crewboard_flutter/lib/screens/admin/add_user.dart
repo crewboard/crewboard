@@ -306,42 +306,71 @@ Future<void> addUser(context, Map? data) async {
                                           const SizedBox(height: 10),
                                           InkWell(
                                             onTap: () async {
-                                              final date = await showDatePicker(
+                                              showDialog(
                                                 context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(1900),
-                                                lastDate: DateTime.now(),
+                                                builder: (context) =>
+                                                    WheelDatePicker(
+                                                      initialDate:
+                                                          controller
+                                                              .dateOfBirth
+                                                              .value
+                                                              .isEmpty
+                                                          ? DateTime.now()
+                                                          : DateTime.parse(
+                                                              controller
+                                                                  .dateOfBirth
+                                                                  .value,
+                                                            ),
+                                                      onDateSelected: (date) {
+                                                        controller
+                                                            .dateOfBirth
+                                                            .value = date
+                                                            .toString()
+                                                            .split(' ')[0];
+                                                        controller
+                                                                .dateOfBirthError
+                                                                .value =
+                                                            '';
+                                                      },
+                                                    ),
                                               );
-                                              if (date != null) {
-                                                controller.dateOfBirth.value =
-                                                    date.toString().split(
-                                                      ' ',
-                                                    )[0];
-                                                controller
-                                                        .dateOfBirthError
-                                                        .value =
-                                                    '';
-                                              }
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 12,
+                                                  ),
                                               decoration: BoxDecoration(
                                                 color: Pallet.inside1,
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
-                                              child: Text(
-                                                controller
-                                                        .dateOfBirth
-                                                        .value
-                                                        .isEmpty
-                                                    ? "Select"
-                                                    : controller
-                                                          .dateOfBirth
-                                                          .value,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      controller
+                                                              .dateOfBirth
+                                                              .value
+                                                              .isEmpty
+                                                          ? "Select"
+                                                          : controller
+                                                                .dateOfBirth
+                                                                .value,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            controller
+                                                                .dateOfBirth
+                                                                .value
+                                                                .isEmpty
+                                                            ? Pallet.font3
+                                                            : Pallet.font1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),

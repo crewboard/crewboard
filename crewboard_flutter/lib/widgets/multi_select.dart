@@ -163,7 +163,7 @@ class _MultiSelectState extends State<MultiSelect> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Pallet.inside1,
           borderRadius: BorderRadius.circular(5),

@@ -19,17 +19,24 @@ import '../endpoints/chat_endpoint.dart' as _i6;
 import '../endpoints/docs_endpoint.dart' as _i7;
 import '../endpoints/planner_endpoint.dart' as _i8;
 import '../greetings/greeting_endpoint.dart' as _i9;
-import 'package:crewboard_server/src/generated/user_types.dart' as _i10;
-import 'package:crewboard_server/src/generated/user.dart' as _i11;
-import 'package:crewboard_server/src/generated/leave_config.dart' as _i12;
-import 'package:crewboard_server/src/generated/leave_request.dart' as _i13;
-import 'package:crewboard_server/src/generated/chat_message.dart' as _i14;
-import 'package:crewboard_server/src/generated/flow_model.dart' as _i15;
-import 'package:crewboard_server/src/generated/add_ticket_request.dart' as _i16;
-import 'package:crewboard_server/src/generated/add_comment_request.dart'
+import 'package:crewboard_server/src/generated/entities/user_types.dart'
+    as _i10;
+import 'package:crewboard_server/src/generated/entities/user.dart' as _i11;
+import 'package:crewboard_server/src/generated/entities/leave_config.dart'
+    as _i12;
+import 'package:crewboard_server/src/generated/entities/leave_request.dart'
+    as _i13;
+import 'package:crewboard_server/src/generated/entities/chat_message.dart'
+    as _i14;
+import 'package:crewboard_server/src/generated/entities/flow_model.dart'
+    as _i15;
+import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
+    as _i16;
+import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
     as _i17;
-import 'package:crewboard_server/src/generated/add_bucket_request.dart' as _i18;
-import 'package:crewboard_server/src/generated/change_bucket_request.dart'
+import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+    as _i18;
+import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
     as _i19;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i20;

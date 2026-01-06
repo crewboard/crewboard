@@ -1,0 +1,133 @@
+/* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
+/*   To generate run: "serverpod generate"    */
+
+// ignore_for_file: implementation_imports
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
+// ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:serverpod/serverpod.dart' as _i1;
+import '../entities/user.dart' as _i2;
+import '../entities/attendance.dart' as _i3;
+import '../entities/leave_config.dart' as _i4;
+import '../entities/leave_request.dart' as _i5;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i6;
+
+abstract class GetAttendanceDataResponse
+    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+  GetAttendanceDataResponse._({
+    required this.users,
+    required this.attendance,
+    required this.configs,
+    required this.requests,
+  });
+
+  factory GetAttendanceDataResponse({
+    required List<_i2.User> users,
+    required List<_i3.Attendance> attendance,
+    required List<_i4.LeaveConfig> configs,
+    required List<_i5.LeaveRequest> requests,
+  }) = _GetAttendanceDataResponseImpl;
+
+  factory GetAttendanceDataResponse.fromJson(
+    Map<String, dynamic> jsonSerialization,
+  ) {
+    return GetAttendanceDataResponse(
+      users: _i6.Protocol().deserialize<List<_i2.User>>(
+        jsonSerialization['users'],
+      ),
+      attendance: _i6.Protocol().deserialize<List<_i3.Attendance>>(
+        jsonSerialization['attendance'],
+      ),
+      configs: _i6.Protocol().deserialize<List<_i4.LeaveConfig>>(
+        jsonSerialization['configs'],
+      ),
+      requests: _i6.Protocol().deserialize<List<_i5.LeaveRequest>>(
+        jsonSerialization['requests'],
+      ),
+    );
+  }
+
+  List<_i2.User> users;
+
+  List<_i3.Attendance> attendance;
+
+  List<_i4.LeaveConfig> configs;
+
+  List<_i5.LeaveRequest> requests;
+
+  /// Returns a shallow copy of this [GetAttendanceDataResponse]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  GetAttendanceDataResponse copyWith({
+    List<_i2.User>? users,
+    List<_i3.Attendance>? attendance,
+    List<_i4.LeaveConfig>? configs,
+    List<_i5.LeaveRequest>? requests,
+  });
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      '__className__': 'GetAttendanceDataResponse',
+      'users': users.toJson(valueToJson: (v) => v.toJson()),
+      'attendance': attendance.toJson(valueToJson: (v) => v.toJson()),
+      'configs': configs.toJson(valueToJson: (v) => v.toJson()),
+      'requests': requests.toJson(valueToJson: (v) => v.toJson()),
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJsonForProtocol() {
+    return {
+      '__className__': 'GetAttendanceDataResponse',
+      'users': users.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'attendance': attendance.toJson(
+        valueToJson: (v) => v.toJsonForProtocol(),
+      ),
+      'configs': configs.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'requests': requests.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+    };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
+  }
+}
+
+class _GetAttendanceDataResponseImpl extends GetAttendanceDataResponse {
+  _GetAttendanceDataResponseImpl({
+    required List<_i2.User> users,
+    required List<_i3.Attendance> attendance,
+    required List<_i4.LeaveConfig> configs,
+    required List<_i5.LeaveRequest> requests,
+  }) : super._(
+         users: users,
+         attendance: attendance,
+         configs: configs,
+         requests: requests,
+       );
+
+  /// Returns a shallow copy of this [GetAttendanceDataResponse]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  @override
+  GetAttendanceDataResponse copyWith({
+    List<_i2.User>? users,
+    List<_i3.Attendance>? attendance,
+    List<_i4.LeaveConfig>? configs,
+    List<_i5.LeaveRequest>? requests,
+  }) {
+    return GetAttendanceDataResponse(
+      users: users ?? this.users.map((e0) => e0.copyWith()).toList(),
+      attendance:
+          attendance ?? this.attendance.map((e0) => e0.copyWith()).toList(),
+      configs: configs ?? this.configs.map((e0) => e0.copyWith()).toList(),
+      requests: requests ?? this.requests.map((e0) => e0.copyWith()).toList(),
+    );
+  }
+}

@@ -38,25 +38,27 @@ class SmallTextBox extends StatelessWidget {
           decoration: InputDecoration(
             isDense: true,
             hintText: hintText,
+            filled: true,
+            fillColor: Pallet.inside1,
             hintStyle: TextStyle(color: Pallet.font3, fontSize: 12),
-            contentPadding: EdgeInsets.all(8),
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(5),
               borderSide: errorText != null
                   ? BorderSide(color: Colors.red)
-                  : const BorderSide(),
+                  : BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(5),
               borderSide: errorText != null
                   ? BorderSide(color: Colors.red)
-                  : BorderSide(color: Pallet.font3.withOpacity(0.3)),
+                  : BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(5),
               borderSide: errorText != null
                   ? BorderSide(color: Colors.red)
-                  : BorderSide(color: Colors.blue),
+                  : BorderSide(color: Pallet.font1),
             ),
           ),
         ),

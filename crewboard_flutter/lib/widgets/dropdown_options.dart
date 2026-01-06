@@ -142,7 +142,7 @@ class _OptionsState extends State<Options> {
       },
       child: Container(
         width: widget.width,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Pallet.inside1,
           borderRadius: BorderRadius.circular(5),

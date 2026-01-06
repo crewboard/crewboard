@@ -122,34 +122,42 @@ class _RoomsState extends State<Rooms> {
                       ),
                     ),
                   for (var room in rooms)
-                    InkWell(
-                      onTap: () {
-                        room = room.copyWith(messageCount: 0);
-                        roomsController.rooms.refresh();
-                        Window.subPage.value = "messages";
-                        roomsController.selectRoom(room);
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: InkWell(
+                        onTap: () {
+                          room = room.copyWith(messageCount: 0);
+                          roomsController.rooms.refresh();
+                          Window.subPage.value = "messages";
+                          roomsController.selectRoom(room);
 
-                        // Load messages for selected room
-                        messagesController.loadInitialMessages(
-                          roomId: room.id!,
-                        );
-                      },
-                      child: Container(
-                        color:
-                            (roomsController.selectedRoom.value?.id == room.id)
-                            ? Pallet.inside1
-                            : Colors.transparent,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            RoomItem(
-                              name: room.roomName ?? "",
-                              color: Colors.red,
-                              message: const {},
-                              userId: userId,
-                              messageCount: room.messageCount,
-                            ),
-                          ],
+                          // Load messages for selected room
+                          messagesController.loadInitialMessages(
+                            roomId: room.id!,
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                (roomsController.selectedRoom.value?.id ==
+                                    room.id)
+                                ? Pallet.inside1
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              RoomItem(
+                                name: room.roomName ?? "",
+                                color: Colors.red,
+                                message: const {},
+                                userId: userId,
+                                messageCount: room.messageCount,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -167,23 +175,37 @@ class _RoomsState extends State<Rooms> {
                     ),
                   ),
                   for (var user in roomsController.users)
-                    InkWell(
-                      onTap: () async {
-                        await roomsController.startDirectChat(user);
-                        Window.subPage.value = "messages";
-                        // room controller handles selecting the room and resetting search
-                        if (roomsController.selectedRoom.value != null) {
-                          messagesController.loadInitialMessages(
-                            roomId: roomsController.selectedRoom.value!.id!,
-                          );
-                        }
-                      },
-                      child: RoomItem(
-                        name: user.userName,
-                        color: Colors.blue,
-                        message: const {},
-                        userId: userId,
-                        messageCount: 0,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: InkWell(
+                        onTap: () async {
+                          await roomsController.startDirectChat(user);
+                          Window.subPage.value = "messages";
+                          // room controller handles selecting the room and resetting search
+                          if (roomsController.selectedRoom.value != null) {
+                            messagesController.loadInitialMessages(
+                              roomId: roomsController.selectedRoom.value!.id!,
+                            );
+                          }
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                (roomsController.selectedRoom.value?.id ==
+                                    roomsController.selectedRoom.value?.id)
+                                ? Pallet.inside1
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: RoomItem(
+                            name: user.userName,
+                            color: Colors.blue,
+                            message: const {},
+                            userId: userId,
+                            messageCount: 0,
+                          ),
+                        ),
                       ),
                     ),
                 ],

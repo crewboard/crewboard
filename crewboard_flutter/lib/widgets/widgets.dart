@@ -1,4 +1,6 @@
 export 'buttons.dart';
+export 'date_picker.dart';
+
 export 'color_picker.dart';
 export 'create_item_button.dart';
 export 'custom_badge.dart';

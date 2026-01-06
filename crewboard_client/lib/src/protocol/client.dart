@@ -16,41 +16,50 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:crewboard_client/src/protocol/planner_app.dart' as _i5;
-import 'package:crewboard_client/src/protocol/system_variables.dart' as _i6;
-import 'package:crewboard_client/src/protocol/user.dart' as _i7;
-import 'package:crewboard_client/src/protocol/user_types.dart' as _i8;
-import 'package:crewboard_client/src/protocol/attendance.dart' as _i9;
-import 'package:crewboard_client/src/protocol/leave_config.dart' as _i10;
-import 'package:crewboard_client/src/protocol/system_color.dart' as _i11;
-import 'package:crewboard_client/src/protocol/register_admin_response.dart'
+import 'package:crewboard_client/src/protocol/entities/planner_app.dart' as _i5;
+import 'package:crewboard_client/src/protocol/entities/system_variables.dart'
+    as _i6;
+import 'package:crewboard_client/src/protocol/entities/user.dart' as _i7;
+import 'package:crewboard_client/src/protocol/entities/user_types.dart' as _i8;
+import 'package:crewboard_client/src/protocol/entities/attendance.dart' as _i9;
+import 'package:crewboard_client/src/protocol/entities/leave_config.dart'
+    as _i10;
+import 'package:crewboard_client/src/protocol/entities/system_color.dart'
+    as _i11;
+import 'package:crewboard_client/src/protocol/protocols/register_admin_response.dart'
     as _i12;
-import 'package:crewboard_client/src/protocol/get_attendance_data_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_attendance_data_response.dart'
     as _i13;
-import 'package:crewboard_client/src/protocol/leave_request.dart' as _i14;
-import 'package:crewboard_client/src/protocol/check_username_response.dart'
+import 'package:crewboard_client/src/protocol/entities/leave_request.dart'
+    as _i14;
+import 'package:crewboard_client/src/protocol/protocols/check_username_response.dart'
     as _i15;
-import 'package:crewboard_client/src/protocol/check_organization_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/check_organization_response.dart'
     as _i16;
-import 'package:crewboard_client/src/protocol/sign_in_response.dart' as _i17;
-import 'package:crewboard_client/src/protocol/chat_room.dart' as _i18;
-import 'package:crewboard_client/src/protocol/chat_message.dart' as _i19;
-import 'package:crewboard_client/src/protocol/flow_model.dart' as _i20;
-import 'package:crewboard_client/src/protocol/doc.dart' as _i21;
-import 'package:crewboard_client/src/protocol/get_planner_data_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/sign_in_response.dart'
+    as _i17;
+import 'package:crewboard_client/src/protocol/entities/chat_room.dart' as _i18;
+import 'package:crewboard_client/src/protocol/entities/chat_message.dart'
+    as _i19;
+import 'package:crewboard_client/src/protocol/entities/flow_model.dart' as _i20;
+import 'package:crewboard_client/src/protocol/entities/doc.dart' as _i21;
+import 'package:crewboard_client/src/protocol/protocols/get_planner_data_response.dart'
     as _i22;
-import 'package:crewboard_client/src/protocol/get_add_ticket_data_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_add_ticket_data_response.dart'
     as _i23;
-import 'package:crewboard_client/src/protocol/add_ticket_request.dart' as _i24;
-import 'package:crewboard_client/src/protocol/get_all_tickets_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_ticket_request.dart'
+    as _i24;
+import 'package:crewboard_client/src/protocol/protocols/get_all_tickets_response.dart'
     as _i25;
-import 'package:crewboard_client/src/protocol/get_ticket_data_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_data_response.dart'
     as _i26;
-import 'package:crewboard_client/src/protocol/get_ticket_comments_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_comments_response.dart'
     as _i27;
-import 'package:crewboard_client/src/protocol/add_comment_request.dart' as _i28;
-import 'package:crewboard_client/src/protocol/add_bucket_request.dart' as _i29;
-import 'package:crewboard_client/src/protocol/change_bucket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_comment_request.dart'
+    as _i28;
+import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
+    as _i29;
+import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
     as _i30;
 import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i31;
 import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i32;

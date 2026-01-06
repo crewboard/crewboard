@@ -72,6 +72,13 @@ class AuthFormContainer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       width: 460,
       height: height * 0.8,
@@ -338,15 +345,11 @@ class AuthInputField extends StatelessWidget {
         errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: errorText != null ? Colors.red : const Color(0xFFE0E0E0),
-          ),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: errorText != null ? Colors.red : const Color(0xFFE0E0E0),
-          ),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -356,7 +359,7 @@ class AuthInputField extends StatelessWidget {
           ),
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: const Color(0xFFF1F4F8),
       ),
     );
   }
