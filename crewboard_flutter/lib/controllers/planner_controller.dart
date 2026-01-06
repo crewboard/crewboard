@@ -2,6 +2,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:collection/collection.dart';
 
 enum PlannerSubPage { bucket, search }
 
@@ -47,6 +48,8 @@ class PlannerController extends GetxController {
   final Rxn<PriorityModel> priority = Rxn<PriorityModel>();
   final Rx<TextEditingController> controller = TextEditingController().obs;
   final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
+  // Drag and Drop state
+  final Rxn<PlannerTicket> draggingTicket = Rxn<PlannerTicket>();
 
   @override
   void onInit() {
@@ -249,7 +252,6 @@ class PlannerController extends GetxController {
       );
 
       if (success) {
-        loadPlannerData();
         error.value = "";
       } else {
         error.value = "Failed to save ticket";
@@ -383,5 +385,64 @@ class PlannerController extends GetxController {
       debugPrint('Error adding comment: $e');
       return false;
     }
+  }
+
+  // Drag and Drop Logic
+  void onDragStarted(PlannerTicket ticket) {
+    draggingTicket.value = ticket;
+  }
+
+  void onDragUpdated(UuidValue bucketId, int index) {
+    if (draggingTicket.value == null) return;
+
+    // Find target bucket
+    final targetBucket = buckets.firstWhereOrNull(
+      (b) => b.bucketId == bucketId,
+    );
+    if (targetBucket == null) return;
+
+    bool needsUpdate = false;
+
+    // Remove existing holders
+    for (var b in buckets) {
+      for (var i = 0; i < b.tickets.length; i++) {
+        if (b.tickets[i].holder == 'true') {
+          b.tickets.removeAt(i);
+          needsUpdate = true;
+          i--;
+        }
+      }
+    }
+
+    // Insert placeholder
+    final placeholder = draggingTicket.value!.copyWith(holder: 'true');
+    final safeIndex = index.clamp(0, targetBucket.tickets.length);
+    targetBucket.tickets.insert(safeIndex, placeholder);
+    needsUpdate = true;
+
+    if (needsUpdate) {
+      buckets.refresh();
+    }
+  }
+
+  void onDrop(UuidValue bucketId, int index) {
+    if (draggingTicket.value == null) return;
+
+    final ticketId = draggingTicket.value!.id;
+
+    changeBucket(
+      ChangeBucketRequest(
+        ticketId: ticketId,
+        newBucketId: bucketId,
+        newOrder: index,
+        oldBucketId: UuidValue.fromString(
+          '00000000-0000-0000-0000-000000000000',
+        ),
+      ),
+    );
+
+    // Cleanup drag state
+    draggingTicket.value = null;
+    loadPlannerData();
   }
 }

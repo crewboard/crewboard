@@ -69,31 +69,79 @@ class BucketView extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           Expanded(
-            child: DragTarget<Map<String, dynamic>>(
-              onAcceptWithDetails: (details) {
-                final data = details.data;
-                if (data['bucketId'] != bucket.bucketId) {
-                  controller.changeBucket(
-                    ChangeBucketRequest(
-                      ticketId: data['ticketId'],
-                      oldBucketId: data['bucketId'],
-                      newBucketId: bucket.bucketId,
-                      newOrder: 1, // Defaulting to top for now
+            child: ListView(
+              children: [
+                // Render tickets with drag logic
+                for (var i = 0; i < bucket.tickets.length; i++)
+                  if (bucket.tickets[i].holder == 'true')
+                    DragTarget<PlannerTicket>(
+                      builder: (context, candidateData, rejectedData) {
+                        return Container(
+                          height: 100, // Placeholder height
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.2),
+                            border: Border.all(color: Colors.blue),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        );
+                      },
+                      onAcceptWithDetails: (details) {
+                        controller.onDrop(bucket.bucketId, i);
+                      },
+                    )
+                  else
+                    DragTarget<PlannerTicket>(
+                      builder: (context, candidateData, rejectedData) {
+                        return DraggableCard(
+                          ticket: bucket.tickets[i],
+                          bucketId: bucket.bucketId,
+                          onDragStart: () {
+                            controller.onDragStarted(bucket.tickets[i]);
+                          },
+                        );
+                      },
+                      onWillAccept: (data) {
+                        if (data != null && data.id != bucket.tickets[i].id) {
+                          controller.onDragUpdated(bucket.bucketId, i);
+                          return true;
+                        }
+                        return false;
+                      },
+                      onAcceptWithDetails: (details) {
+                        // Acceptance logic mainly handled by placeholder drop
+                        // but if dropped here directly (helper logic sometimes needed)
+                      },
                     ),
-                  );
-                }
-              },
-              builder: (context, candidateData, rejectedData) {
-                return ListView(
-                  children: [
-                    for (var ticket in bucket.tickets)
-                      DraggableCard(
-                        ticket: ticket,
-                        bucketId: bucket.bucketId,
-                      ),
-                  ],
-                );
-              },
+
+                // Drag target at the bottom to add to end of list
+                DragTarget<PlannerTicket>(
+                  builder: (context, candidateData, rejectedData) {
+                    return Container(
+                      height: 50,
+                      color: Colors.transparent, // Invisible target area
+                    );
+                  },
+                  onWillAccept: (data) {
+                    // Start adding a placeholder at the end if hovering over bottom
+                    if (data != null) {
+                      // Only add if not already there or specific condition
+                      controller.onDragUpdated(
+                        bucket.bucketId,
+                        bucket.tickets.length,
+                      );
+                      return true;
+                    }
+                    return false;
+                  },
+                  onAcceptWithDetails: (details) {
+                    controller.onDrop(bucket.bucketId, bucket.tickets.length);
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -124,14 +172,16 @@ class DraggableCard extends StatelessWidget {
     super.key,
     required this.ticket,
     required this.bucketId,
+    required this.onDragStart,
   });
   final PlannerTicket ticket;
   final UuidValue bucketId;
+  final VoidCallback onDragStart;
 
   @override
   Widget build(BuildContext context) {
-    return Draggable<Map<String, dynamic>>(
-      data: {'ticketId': ticket.id, 'bucketId': bucketId},
+    return Draggable<PlannerTicket>(
+      data: ticket,
       feedback: Material(
         color: Colors.transparent,
         child: SizedBox(
@@ -143,6 +193,7 @@ class DraggableCard extends StatelessWidget {
         opacity: 0.5,
         child: TicketWidget(ticket: ticket, bucketId: bucketId),
       ),
+      onDragStarted: onDragStart,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: TicketWidget(ticket: ticket, bucketId: bucketId),
@@ -162,12 +213,27 @@ class TicketWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if it's a holder/placeholder ticket
+    if (ticket.holder == 'true') {
+      return Container(
+        height: 100, // Approximate height or dynamic
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.2),
+          border: Border.all(color: Colors.blue),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      );
+    }
+
     return InkWell(
       onTap: () {
         Get.dialog(ViewTicketDialog(ticketId: ticket.id));
       },
       child: Container(
-        padding: const EdgeInsets.all(15),
+        width: 300,
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
           color: Pallet.inside2,
           borderRadius: BorderRadius.circular(10),
@@ -183,61 +249,61 @@ class TicketWidget extends StatelessWidget {
                     int.parse(ticket.typeColor.replaceAll("#", "0xFF")),
                   ),
                 ),
-                const Spacer(),
-                if (ticket.priorityName.isNotEmpty)
-                  Icon(
-                    Icons.keyboard_arrow_up,
-                    size: 14,
-                    color: _getPriorityColor(ticket.priorityName),
-                  ),
+                const Expanded(child: SizedBox()),
+                const Icon(Icons.upload_outlined, color: Pallet.font3),
+                const Icon(Icons.download_outlined, color: Pallet.font3),
               ],
             ),
             const SizedBox(height: 10),
             Text(
               ticket.ticketName,
-              style: TextStyle(
-                color: Pallet.font1,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
+              style: const TextStyle(fontSize: 16, color: Pallet.font1),
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                ticket.ticketBody,
+                maxLines: 12,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 13, color: Pallet.font3),
               ),
             ),
             const SizedBox(height: 5),
-            Text(
-              ticket.ticketBody,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Pallet.font3, fontSize: 11.8),
-            ),
-            const SizedBox(height: 15),
             Row(
               children: [
-                if (ticket.deadline != null)
-                  Row(
+                const Icon(Icons.alarm, color: Pallet.font3),
+                const SizedBox(width: 5),
+                Text(
+                  (ticket.deadline == null)
+                      ? "None"
+                      : ticket.deadline.toString(),
+                  style: const TextStyle(color: Pallet.font3),
+                ),
+                Expanded(child: Container()),
+                SizedBox(
+                  height: 30, // constrain height for stack
+                  width: 30.0 * ticket.assignees.length + 10, // give width
+                  child: Stack(
                     children: [
-                      Icon(Icons.timer_outlined, color: Pallet.font3, size: 12),
-                      const SizedBox(width: 5),
-                      Text(
-                        ticket.deadline!,
-                        style: TextStyle(color: Pallet.font3, fontSize: 11.5),
-                      ),
+                      for (var i = 0; i < ticket.assignees.length; i++)
+                        Positioned(
+                          left: i * 20.0, // Overlap effect
+                          child: ProfileIcon(
+                            size: 30,
+                            name: ticket.assignees[i].userName,
+                            color: Color(
+                              int.parse(
+                                ticket.assignees[i].color.replaceAll(
+                                  "#",
+                                  "0xFF",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                const Spacer(),
-                Row(
-                  children: [
-                    for (var user in ticket.assignees)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: ProfileIcon(
-                          name: user.userName,
-                          color: Color(
-                            int.parse(user.color.replaceAll("#", "0xFF")),
-                          ),
-                          size: 20,
-                          fontSize: 10,
-                        ),
-                      ),
-                  ],
                 ),
               ],
             ),
@@ -245,18 +311,5 @@ class TicketWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-Color _getPriorityColor(String priority) {
-  switch (priority.toLowerCase()) {
-    case 'high':
-      return Colors.red;
-    case 'medium':
-      return Colors.orange;
-    case 'low':
-      return Colors.green;
-    default:
-      return Colors.blue;
   }
 }

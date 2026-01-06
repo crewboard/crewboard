@@ -14,12 +14,13 @@ class CustomBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: color),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontSize: 12,
+          ),
         ),
       ),
     );

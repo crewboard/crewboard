@@ -1,5 +1,18 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+StreamController<String> refresh = StreamController<String>.broadcast();
+StreamSink<String> get refreshSink => refresh.sink;
+Stream<String> get refreshStream => refresh.stream;
+
+StreamController<String> request = StreamController<String>.broadcast();
+StreamSink<String> get requestSink => request.sink;
+Stream<String> get requestStream => request.stream;
+
+StreamController<String> message = StreamController<String>.broadcast();
+StreamSink<String> get messageSink => message.sink;
+Stream<String> get messageStream => message.stream;
 
 enum CurrentPage { chat, flowie, planner, settings }
 
