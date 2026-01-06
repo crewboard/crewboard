@@ -164,6 +164,26 @@ class FlowCanvas extends StatelessWidget {
                           mouseCursor: SystemMouseCursors.click,
                         ),
                       ),
+                    )
+                  else if (flow.type == FlowType.user)
+                    Positioned(
+                      left: flow.x,
+                      top: flow.y,
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.selectFlow(
+                            flow.id,
+                            flow.direction ?? Direction.down,
+                            flow.type,
+                          );
+                        },
+                        child: flow_widgets.UserNode(
+                          width: flow.width,
+                          height: flow.height,
+                          label: flow.value,
+                          mouseCursor: SystemMouseCursors.click,
+                        ),
+                      ),
                     ),
               ],
             ),

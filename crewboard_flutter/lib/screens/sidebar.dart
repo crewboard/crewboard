@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../config/palette.dart';
 import '../controllers/sidebar_controller.dart';
-import '../controllers/auth_controller.dart';
 import '../widgets/glass_morph.dart';
 import '../screens/planner/apps_sidebar.dart';
 import '../screens/chats/rooms_widget.dart';
@@ -189,27 +188,6 @@ class SideBar extends StatelessWidget {
                                 const SizedBox(width: 5),
                                 Text(
                                   "settings",
-                                  style: TextStyle(color: Pallet.font3),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          InkWell(
-                            onTap: () {
-                              Get.find<AuthController>().logout();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.logout,
-                                  color: Pallet.font3,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  "logout",
                                   style: TextStyle(color: Pallet.font3),
                                 ),
                               ],

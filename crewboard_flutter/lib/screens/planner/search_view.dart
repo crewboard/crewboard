@@ -153,14 +153,10 @@ class _SearchViewState extends State<SearchView> {
   }
 
   Widget _buildFilterSidebar() {
-    return Container(
+    return GlassMorph(
       width: 250,
-      decoration: BoxDecoration(
-        color: Pallet.inside1,
-        border: Border(
-          left: BorderSide(color: Pallet.font3.withValues(alpha: 0.1)),
-        ),
-      ),
+      borderRadius: 24,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       padding: const EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

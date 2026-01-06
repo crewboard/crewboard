@@ -8,6 +8,7 @@ enum FlowType {
   terminal,
   process,
   condition,
+  user,
 }
 
 class Defaults {

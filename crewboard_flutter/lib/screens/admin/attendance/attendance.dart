@@ -5,6 +5,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import '../../../config/palette.dart';
 import '../../../widgets/widgets.dart';
 import '../../../controllers/attendance_controller.dart';
+import '../../../widgets/glass_morph.dart';
 import './attendance_popup.dart';
 
 class AttendanceScreen extends StatelessWidget {
@@ -76,13 +77,10 @@ class AttendanceScreen extends StatelessWidget {
 
   Widget _buildPunchingModePanel(AttendanceController controller) {
     return Expanded(
-      child: Container(
+      child: GlassMorph(
         height: 150,
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Pallet.inside1,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        borderRadius: 10,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -119,13 +117,10 @@ class AttendanceScreen extends StatelessWidget {
 
   Widget _buildBiometricApiPanel() {
     return Expanded(
-      child: Container(
+      child: GlassMorph(
         height: 150,
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Pallet.inside1,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        borderRadius: 10,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -156,13 +151,10 @@ class AttendanceScreen extends StatelessWidget {
 
   Widget _buildLeaveRequestsPanel(AttendanceController controller) {
     return Expanded(
-      child: Container(
+      child: GlassMorph(
         height: 150,
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Pallet.inside1,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        borderRadius: 10,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

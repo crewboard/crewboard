@@ -226,3 +226,59 @@ class Process extends StatelessWidget {
     );
   }
 }
+
+class UserNode extends StatelessWidget {
+  const UserNode({
+    super.key,
+    required this.label,
+    required this.width,
+    required this.height,
+    this.highlight = false,
+    this.onPanStart,
+    this.onPanUpdate,
+    this.onPanEnd,
+    this.mouseCursor,
+  });
+  final String label;
+  final double width;
+  final double height;
+  final bool highlight;
+  final Function(DragStartDetails)? onPanStart;
+  final Function(DragUpdateDetails)? onPanUpdate;
+  final Function(DragEndDetails)? onPanEnd;
+  final MouseCursor? mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: mouseCursor ?? SystemMouseCursors.basic,
+      child: GestureDetector(
+        onPanStart: onPanStart,
+        onPanUpdate: onPanUpdate,
+        onPanEnd: onPanEnd,
+        child: Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.orange,
+              width: highlight ? 3 : 1,
+            ),
+            color: Pallet.inside2,
+          ),
+          child: Center(
+            child: Text(
+              label.isNotEmpty ? label[0].toUpperCase() : "U",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Pallet.font1,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

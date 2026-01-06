@@ -347,7 +347,9 @@ class FlowsController extends GetxController {
     FlowClass flow = FlowClass(
       id: flows.length,
       width: Defaults.flowWidth,
-      height: (type == FlowType.condition) ? Defaults.flowWidth : 40,
+      height: (type == FlowType.condition || type == FlowType.user)
+          ? Defaults.flowWidth
+          : 40,
       x: stageWidth.value / 2 - Defaults.flowWidth / 2,
       y: y,
       type: type,

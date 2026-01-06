@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'flows/flows_controller.dart';
@@ -79,10 +80,12 @@ class DocsSidebar extends StatelessWidget {
               itemCount: controller.apps.length,
               itemBuilder: (context, index) {
                 final app = controller.apps[index];
-                return AppListItem(
-                  app: app,
-                  isSelected: app.id == controller.selectedAppId.value,
-                  onTap: () => controller.selectApp(app.id!),
+                return Obx(
+                  () => AppListItem(
+                    app: app,
+                    isSelected: app.id == controller.selectedAppId.value,
+                    onTap: () => controller.selectApp(app.id!),
+                  ),
                 );
               },
             );
@@ -100,13 +103,14 @@ class DocsSidebar extends StatelessWidget {
         // Header with back button and tabs
         Row(
           children: [
+            SizedBox(width: 5),
             IconButton(
               onPressed: controller.backToApps,
-              icon: Icon(Icons.arrow_back, color: Pallet.font3),
+              icon: Icon(CupertinoIcons.back, color: Pallet.font3, size: 20),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 6),
             Expanded(
               child: Obx(() {
                 final heading =
@@ -203,50 +207,52 @@ class DocsSidebar extends StatelessWidget {
         itemCount: controller.savedFlows.length,
         itemBuilder: (context, index) {
           final flow = controller.savedFlows[index];
-          final isSelected = controller.currentFlowId.value == flow.id;
-          return InkWell(
-            onTap: () => controller.loadFlow(flow.id!),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: isSelected ? Pallet.inside2 : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isSelected ? Pallet.inside3 : Colors.transparent,
-                  width: 1,
+          return Obx(() {
+            final isSelected = controller.currentFlowId.value == flow.id;
+            return InkWell(
+              onTap: () => controller.loadFlow(flow.id!),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? Pallet.inside2 : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected ? Pallet.inside3 : Colors.transparent,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        flow.name,
+                        style: TextStyle(
+                          color: Pallet.font2,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Pallet.font3,
+                      size: 12,
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      flow.name,
-                      style: TextStyle(
-                        color: Pallet.font2,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Pallet.font3,
-                    size: 12,
-                  ),
-                ],
-              ),
-            ),
-          );
+            );
+          });
         },
       );
     });
@@ -278,50 +284,52 @@ class DocsSidebar extends StatelessWidget {
         itemCount: docProvider.savedDocs.length,
         itemBuilder: (context, index) {
           final doc = docProvider.savedDocs[index];
-          final isSelected = docProvider.selectedDocId.value == doc.id;
-          return InkWell(
-            onTap: () => docProvider.loadDoc(doc),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: isSelected ? Pallet.inside2 : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isSelected ? Pallet.inside3 : Colors.transparent,
-                  width: 1,
+          return Obx(() {
+            final isSelected = docProvider.selectedDocId.value == doc.id;
+            return InkWell(
+              onTap: () => docProvider.loadDoc(doc),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? Pallet.inside2 : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected ? Pallet.inside3 : Colors.transparent,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        doc.name,
+                        style: TextStyle(
+                          color: Pallet.font2,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Pallet.font3,
+                      size: 12,
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      doc.name,
-                      style: TextStyle(
-                        color: Pallet.font2,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Pallet.font3,
-                    size: 12,
-                  ),
-                ],
-              ),
-            ),
-          );
+            );
+          });
         },
       );
     });

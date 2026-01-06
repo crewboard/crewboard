@@ -5,20 +5,7 @@ import 'types.dart';
 import 'flows_controller.dart';
 import '../../../widgets/glass_morph.dart'; // Ensure this exists or use Container
 
-// Minimal button replacement if Button widget is missing
-class Button extends StatelessWidget {
-  final String label;
-  final VoidCallback onPress;
-  const Button({super.key, required this.label, required this.onPress});
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-      onPressed: onPress,
-      child: Text(label, style: const TextStyle(color: Colors.white)),
-    );
-  }
-}
+import '../../../widgets/widgets.dart';
 
 class AddFlow extends StatelessWidget {
   const AddFlow({super.key});
@@ -41,7 +28,7 @@ class AddFlow extends StatelessWidget {
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              child: Button(
+              child: SmallButton(
                 label: "Terminal",
                 onPress: () {
                   controller.addFlow(FlowType.terminal);
@@ -51,7 +38,7 @@ class AddFlow extends StatelessWidget {
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              child: Button(
+              child: SmallButton(
                 label: "Process",
                 onPress: () {
                   controller.addFlow(FlowType.process);
@@ -61,10 +48,20 @@ class AddFlow extends StatelessWidget {
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              child: Button(
+              child: SmallButton(
                 label: "Condition",
                 onPress: () {
                   controller.addFlow(FlowType.condition);
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: SmallButton(
+                label: "User",
+                onPress: () {
+                  controller.addFlow(FlowType.user);
                 },
               ),
             ),
