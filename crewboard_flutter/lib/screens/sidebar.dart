@@ -9,6 +9,7 @@ import '../screens/chats/rooms_widget.dart';
 
 import '../screens/admin/settings_sidebar.dart';
 import '../screens/docs/docs_sidebar.dart';
+import '../widgets/widgets.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key, required this.children});
@@ -205,9 +206,25 @@ class SideBar extends StatelessWidget {
                           if (controller.currentPage.value ==
                               CurrentPage.planner) {
                             return const AppsSidebar();
-                          } else if (controller.currentPage.value ==
-                              CurrentPage.chat) {
-                            return const Rooms();
+                            return Column(
+                              children: [
+                                 BotItem(
+                                  name: "planner",
+                                  image: "assets/bot.jpg",
+                                  page: "planner",
+                                  count: 0,
+                                ),
+                                const SizedBox(height: 5),
+                                 BotItem(
+                                  name: "memory bank",
+                                  image: "assets/bot.jpg",
+                                  page: "memory",
+                                  count: 0,
+                                ),
+                                const SizedBox(height: 10),
+                                const Expanded(child: Rooms()),
+                              ],
+                            );
                           } else if (controller.currentPage.value ==
                               CurrentPage.settings) {
                             return const SettingsSidebar();

@@ -48,6 +48,8 @@ class PlannerController extends GetxController {
   final Rxn<PriorityModel> priority = Rxn<PriorityModel>();
   final Rx<TextEditingController> controller = TextEditingController().obs;
   final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
+  final RxList<AttachmentModel> attachments = <AttachmentModel>[].obs;
+  final RxList<FlowModel> flows = <FlowModel>[].obs;
   // Drag and Drop state
   final Rxn<PlannerTicket> draggingTicket = Rxn<PlannerTicket>();
 

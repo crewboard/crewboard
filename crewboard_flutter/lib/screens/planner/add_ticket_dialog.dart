@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:crewboard_client/crewboard_client.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
-import '../../widgets/glass_morph.dart';
 
 class AddTicketDialog extends StatelessWidget {
   const AddTicketDialog({super.key, required this.initialBucketId});
@@ -15,7 +15,6 @@ class AddTicketDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PlannerController controller = Get.find<PlannerController>();
-    controller.getAddTicketDataForNew();
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -25,8 +24,8 @@ class AddTicketDialog extends StatelessWidget {
         content: Obx(() {
           return GlassMorph(
             borderRadius: 15,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-            width: 700,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            width: 500,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -43,20 +42,20 @@ class AddTicketDialog extends StatelessWidget {
                             Text(
                               "title",
                               style: TextStyle(
+                                fontSize: 14,
                                 color: Pallet.font3,
-                                fontSize: 13,
                               ),
                             ),
                             const SizedBox(height: 5),
                             SmallTextBox(
                               controller: controller.title.value,
                             ),
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 10),
                             Text(
                               "body",
                               style: TextStyle(
+                                fontSize: 14,
                                 color: Pallet.font3,
-                                fontSize: 13,
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -69,8 +68,27 @@ class AddTicketDialog extends StatelessWidget {
                               children: [
                                 ChipButton(
                                   name: "add attachments",
-                                  onPress: () {
-                                    // File implementation later if needed
+                                  onPress: () async {
+                                    FilePickerResult? result = await FilePicker
+                                        .platform
+                                        .pickFiles(
+                                          allowMultiple: true,
+                                        );
+                                    if (result != null) {
+                                      for (var file in result.files) {
+                                        controller.attachments.add(
+                                          AttachmentModel(
+                                            id: UuidValue.fromString(
+                                              '00000000-0000-4000-8000-000000000000',
+                                            ),
+                                            name: file.name,
+                                            size: file.size.toDouble(),
+                                            url: "",
+                                            type: file.extension ?? "",
+                                          ),
+                                        );
+                                      }
+                                    }
                                   },
                                 ),
                                 const SizedBox(width: 10),
@@ -78,6 +96,7 @@ class AddTicketDialog extends StatelessWidget {
                                   name: "add checklist",
                                   onPress: () {
                                     controller.mode.value = "checklist";
+                                    controller.controller.value.clear();
                                   },
                                 ),
                                 const SizedBox(width: 10),
@@ -85,6 +104,7 @@ class AddTicketDialog extends StatelessWidget {
                                   name: "add flow",
                                   onPress: () {
                                     controller.mode.value = "flow";
+                                    controller.controller.value.clear();
                                   },
                                 ),
                               ],
@@ -93,12 +113,12 @@ class AddTicketDialog extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(height: 15),
+                                  const SizedBox(height: 10),
                                   Text(
                                     "to do",
                                     style: TextStyle(
+                                      fontSize: 14,
                                       color: Pallet.font3,
-                                      fontSize: 13,
                                     ),
                                   ),
                                   const SizedBox(height: 5),
@@ -129,36 +149,172 @@ class AddTicketDialog extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            if (controller.checklist.isNotEmpty)
+                            if (controller.mode.value == "flow")
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "flow name",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Pallet.font3,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: DropDown(
+                                          label: "",
+                                          itemKey: "name",
+                                          items: controller.allFlows,
+                                          menuDecoration: BoxDecoration(
+                                            color: Pallet.inside3,
+                                            borderRadius: BorderRadius.circular(
+                                              5,
+                                            ),
+                                          ),
+                                          onPress: (val) {
+                                            controller.flows.add(val);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      AddButton(
+                                        onPress: () {
+                                          controller.controller.value.clear();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
+                            // Display selected FLOWS
+                            if (controller.flows.isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "flows",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Pallet.font3,
+                                    ),
+                                  ),
+                                  for (
+                                    var i = 0;
+                                    i < controller.flows.length;
+                                    i++
+                                  )
+                                    InkWell(
+                                      onTap: () {
+                                        controller.flows.removeAt(i);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 5,
+                                        ),
+                                        color: Pallet.inside1,
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.link, size: 18),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                controller.flows[i].name,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Pallet.font2,
+                                                ),
+                                              ),
+                                            ),
+                                            const Icon(Icons.close, size: 18),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+
+                            // ATTACHMENTS display
+                            if (controller.attachments.isNotEmpty)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 20),
+                                  for (
+                                    var i = 0;
+                                    i < controller.attachments.length;
+                                    i++
+                                  )
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          FilePreview(
+                                            name:
+                                                controller.attachments[i].name,
+                                            size: controller.attachments[i].size
+                                                .toInt(),
+                                          ),
+                                          Positioned(
+                                            right: 5,
+                                            top: 5,
+                                            child: InkWell(
+                                              onTap: () => controller
+                                                  .attachments
+                                                  .removeAt(i),
+                                              child: const Icon(
+                                                Icons.close,
+                                                size: 16,
+                                                color: Colors.white54,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+
+                            // CHECKLIST display
+                            if (controller.checklist.isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
                                   Text(
                                     "check list",
                                     style: TextStyle(
+                                      fontSize: 14,
                                       color: Pallet.font3,
-                                      fontSize: 13,
                                     ),
                                   ),
-                                  for (var item in controller.checklist)
+                                  for (var point in controller.checklist)
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Row(
                                         children: [
                                           RadialCheckBox(
-                                            selected: item.selected,
+                                            selected: point.selected,
                                             onSelect: () {
-                                              item.selected = !item.selected;
+                                              point.selected = !point.selected;
                                               controller.checklist.refresh();
                                             },
                                           ),
-                                          const SizedBox(width: 10),
+                                          const SizedBox(width: 8),
                                           Text(
-                                            item.label,
+                                            point.label,
                                             style: TextStyle(
+                                              fontSize: 12,
                                               color: Pallet.font1,
-                                              fontSize: 13,
                                             ),
                                           ),
                                         ],
@@ -169,14 +325,13 @@ class AddTicketDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 25),
-                      // Right Sidebar
+                      const SizedBox(width: 15),
+                      // Right Column
                       Expanded(
                         flex: 2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Assignees Icons
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -189,9 +344,12 @@ class AddTicketDialog extends StatelessWidget {
                                         i < controller.selectedUsers.length;
                                         i++
                                       )
-                                        Positioned(
-                                          left: i * 20.0,
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: i * 15,
+                                          ),
                                           child: ProfileIcon(
+                                            size: 30,
                                             name: controller
                                                 .selectedUsers[i]
                                                 .userName,
@@ -203,8 +361,7 @@ class AddTicketDialog extends StatelessWidget {
                                                     .replaceAll("#", "0xFF"),
                                               ),
                                             ),
-                                            size: 30,
-                                            fontSize: 12,
+                                            fontSize: 10,
                                           ),
                                         ),
                                     ],
@@ -218,27 +375,36 @@ class AddTicketDialog extends StatelessWidget {
                               selected: controller.selectedUsers,
                             ),
                             const SizedBox(height: 10),
-                            Options(
-                              selected: controller.status.value,
+                            DropDown(
+                              label: (controller.status.value == null)
+                                  ? "Status"
+                                  : controller.status.value!.statusName,
+                              itemKey: "statusName",
                               items: controller.statuses,
-                              onSelect: (val) {
-                                controller.status.value = val;
+                              onPress: (data) {
+                                controller.status.value = data;
                               },
                             ),
                             const SizedBox(height: 10),
-                            Options(
-                              selected: controller.type.value,
+                            DropDown(
+                              label: (controller.type.value == null)
+                                  ? "Type"
+                                  : controller.type.value!.typeName,
+                              itemKey: "typeName",
                               items: controller.types,
-                              onSelect: (val) {
-                                controller.type.value = val;
+                              onPress: (data) {
+                                controller.type.value = data;
                               },
                             ),
                             const SizedBox(height: 10),
-                            Options(
-                              selected: controller.priority.value,
+                            DropDown(
+                              label: (controller.priority.value == null)
+                                  ? "Priority"
+                                  : controller.priority.value!.priorityName,
+                              itemKey: "priorityName",
                               items: controller.priorities,
-                              onSelect: (val) {
-                                controller.priority.value = val;
+                              onPress: (data) {
+                                controller.priority.value = data;
                               },
                             ),
                             const SizedBox(height: 10),
@@ -248,7 +414,7 @@ class AddTicketDialog extends StatelessWidget {
                                   context: context,
                                   initialDate: DateTime.now(),
                                   firstDate: DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 5),
+                                  lastDate: DateTime(DateTime.now().year + 2),
                                 );
                                 if (date != null) {
                                   controller.deadline.value = DateFormat(
@@ -271,13 +437,13 @@ class AddTicketDialog extends StatelessWidget {
                                       child: Text(
                                         controller.deadline.value ?? "Deadline",
                                         style: TextStyle(
-                                          color: Pallet.font1,
                                           fontSize: 12,
+                                          color: Pallet.font1,
                                         ),
                                       ),
                                     ),
                                     if (controller.deadline.value != null)
-                                      Icon(
+                                      const Icon(
                                         Icons.check_circle,
                                         color: Colors.green,
                                         size: 16,
@@ -297,15 +463,15 @@ class AddTicketDialog extends StatelessWidget {
                                       Text(
                                         "creds",
                                         style: TextStyle(
-                                          color: Pallet.font1,
                                           fontSize: 12,
+                                          color: Pallet.font1,
                                         ),
                                       ),
                                       Text(
                                         "(performance)",
                                         style: TextStyle(
-                                          color: Pallet.font3,
                                           fontSize: 10,
+                                          color: Pallet.font3,
                                         ),
                                       ),
                                     ],
@@ -319,6 +485,26 @@ class AddTicketDialog extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            if (controller.error.value.isNotEmpty)
+                              Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.red),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "error: ${controller.error.value}",
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),

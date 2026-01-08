@@ -1,0 +1,37 @@
+﻿Analyzing add_ticket_dialog.dart...                             
+
+   info - The import of '../../widgets/glass_morph.dart' is unnecessary because all of the used elements are also provided by the import of '../../widgets/widgets.dart' - lib\screens\planner\add_ticket_dialog.dart:10:8 - unnecessary_import
+  error - The named parameter 'name' is required, but there's no corresponding argument - lib\screens\planner\add_ticket_dialog.dart:81:43 - missing_required_argument
+  error - The named parameter 'size' is required, but there's no corresponding argument - lib\screens\planner\add_ticket_dialog.dart:81:43 - missing_required_argument
+  error - The named parameter 'type' is required, but there's no corresponding argument - lib\screens\planner\add_ticket_dialog.dart:81:43 - missing_required_argument
+  error - The named parameter 'url' is required, but there's no corresponding argument - lib\screens\planner\add_ticket_dialog.dart:81:43 - missing_required_argument
+  error - The named parameter 'attachmentName' isn't defined - lib\screens\planner\add_ticket_dialog.dart:85:45 - undefined_named_parameter
+  error - The named parameter 'attachmentSize' isn't defined - lib\screens\planner\add_ticket_dialog.dart:86:45 - undefined_named_parameter
+  error - The named parameter 'attachmentUrl' isn't defined - lib\screens\planner\add_ticket_dialog.dart:88:45 - undefined_named_parameter
+  error - The named parameter 'attachmentType' isn't defined - lib\screens\planner\add_ticket_dialog.dart:89:45 - undefined_named_parameter
+  error - The getter 'flowName' isn't defined for the type 'FlowModel' - lib\screens\planner\add_ticket_dialog.dart:232:69 - undefined_getter
+  error - The getter 'attachmentName' isn't defined for the type 'AttachmentModel' - lib\screens\planner\add_ticket_dialog.dart:267:50 - undefined_getter
+  error - The getter 'attachmentSize' isn't defined for the type 'AttachmentModel' - lib\screens\planner\add_ticket_dialog.dart:270:50 - undefined_getter
+
+flutter : 12 issues 
+found. (ran in 3.2s)
+At line:1 char:1
++ flutter analyze lib
+/screens/planner/add_
+ticket_dialog.dart 
+--no-pub > ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (12 issu   
+ es found. (ran i    
+n 3.2s):String)     
+[], RemoteExcept    
+ion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 

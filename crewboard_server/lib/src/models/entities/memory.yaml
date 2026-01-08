@@ -1,0 +1,7 @@
+class: Memory
+table: user_memory_map
+fields:
+  userId: UuidValue
+  title: String
+  body: String
+  createdAt: DateTime

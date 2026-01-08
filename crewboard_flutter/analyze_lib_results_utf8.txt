@@ -1,0 +1,115 @@
+﻿Analyzing lib...                                                
+
+   info - Don't invoke 'print' in production code - lib\controllers\add_user_controller.dart:135:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\add_user_controller.dart:147:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\add_user_controller.dart:163:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\add_user_controller.dart:177:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\controllers\add_user_controller.dart:337:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\controllers\add_user_controller.dart:345:39 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\controllers\add_user_controller.dart:350:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\controllers\add_user_controller.dart:355:37 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\controllers\attendance_controller.dart:35:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\attendance_controller.dart:54:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\attendance_controller.dart:63:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\auth_controller.dart:18:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\auth_controller.dart:19:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\auth_controller.dart:24:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\controllers\auth_controller.dart:32:5 - avoid_print
+warning - Unused import: 'package:collection/collection.dart' - lib\controllers\planner_controller.dart:5:8 - unused_import
+   info - Don't invoke 'print' in production code - lib\main.dart:46:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:51:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:53:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:60:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:63:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:71:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:135:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\main.dart:143:13 - avoid_print
+   info - Missing type annotation - lib\screens\admin\add_user.dart:9:22 - strict_top_level_inference
+   info - The import of '../../../widgets/glass_morph.dart' is unnecessary because all of the used elements are also provided by the import of '../../../widgets/widgets.dart' - lib\screens\admin\attendance\attendance.dart:8:8 - unnecessary_import
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\screens\admin\attendance\attendance.dart:107:11 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\screens\admin\attendance\attendance.dart:108:11 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\screens\admin\attendance\attendance_popup.dart:169:45 - use_build_context_synchronously
+warning - Unused import: 'package:crewboard_client/crewboard_client.dart' - lib\screens\admin\general_settings.dart:1:8 - unused_import
+warning - Unused import: 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart' - lib\screens\admin\general_settings.dart:4:8 - unused_import
+   info - The import of '../../widgets/glass_morph.dart' is unnecessary because all of the used elements are also provided by the import of '../../widgets/widgets.dart' - lib\screens\admin\users_settings.dart:6:8 - unnecessary_import
+   info - Don't invoke 'print' in production code - lib\screens\admin\users_settings.dart:25:7 - avoid_print
+warning - The left operand can't be null, so the right operand is never executed - lib\screens\admin\users_settings.dart:174:74 - dead_null_aware_expression
+   info - The import of 'package:serverpod_auth_client/serverpod_auth_client.dart' is unnecessary because all of the used elements are also provided by the import of 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart' - lib\screens\auth\signin_page.dart:8:8 - unnecessary_import
+   info - The import of 'package:crewboard_client/crewboard_client.dart' is unnecessary because all of the used elements are also provided by the import of 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart' - lib\screens\auth\signin_page.dart:9:8 - unnecessary_import
+   info - The import of 'package:serverpod_client/serverpod_client.dart' is unnecessary because all of the used elements are also provided by the import of 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart' - lib\screens\auth\signin_page.dart:10:8 - unnecessary_import
+   info - The imported package 'serverpod_client' isn't a dependency of the importing package - lib\screens\auth\signin_page.dart:10:8 - depend_on_referenced_packages
+   info - Don't invoke 'print' in production code - lib\screens\auth\signin_page.dart:155:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\widgets.dart:25:17 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\widgets.dart:27:19 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\widgets.dart:29:19 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth\widgets.dart:77:33 - deprecated_member_use
+   info - The import of '../../widgets/tabs.dart' is unnecessary because all of the used elements are also provided by the import of '../../widgets/widgets.dart' - lib\screens\docs\docs_sidebar.dart:8:8 - unnecessary_import
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor.dart:162:11 - avoid_print
+warning - The operand can't be 'null', so the condition is always 'true' - lib\screens\docs\document_editor.dart:206:41 - unnecessary_null_comparison
+warning - Unused import: 'package:flutter_quill_extensions/flutter_quill_extensions.dart' - lib\screens\docs\document_editor_provider.dart:7:8 - unused_import
+   info - The imported package 'path' isn't a dependency of the importing package - lib\screens\docs\document_editor_provider.dart:10:8 - depend_on_referenced_packages
+   info - 'onKey' is deprecated and shouldn't be used. Use onKeyEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\screens\docs\document_editor_provider.dart:247:21 - deprecated_member_use
+   info - 'RawKeyEvent' is deprecated and shouldn't be used. Use KeyEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\screens\docs\document_editor_provider.dart:286:45 - deprecated_member_use
+   info - 'RawKeyDownEvent' is deprecated and shouldn't be used. Use KeyDownEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\screens\docs\document_editor_provider.dart:287:18 - deprecated_member_use
+   info - 'RawKeyDownEvent' is deprecated and shouldn't be used. Use KeyDownEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\screens\docs\document_editor_provider.dart:294:18 - deprecated_member_use
+   info - 'RawKeyDownEvent' is deprecated and shouldn't be used. Use KeyDownEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\screens\docs\document_editor_provider.dart:301:20 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:573:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:581:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:600:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:614:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:741:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\document_editor_provider.dart:765:7 - avoid_print
+   info - The import of '../../../widgets/glass_morph.dart' is unnecessary because all of the used elements are also provided by the import of '../../../widgets/widgets.dart' - lib\screens\docs\flows\add_flow.dart:6:8 - unnecessary_import
+warning - Unused import: '../../../../config/palette.dart' - lib\screens\docs\flows\edit_flow.dart:4:8 - unused_import
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:124:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:135:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:176:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:198:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:225:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:250:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:252:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\docs\flows\flows_controller.dart:268:7 - avoid_print
+   info - Statements in an if should be enclosed in a block - lib\screens\docs\flows\flows_controller.dart:289:13 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\screens\docs\flows\flows_controller.dart:291:13 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\screens\docs\flows\flows_controller.dart:293:13 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\screens\docs\flows\flows_controller.dart:321:11 - curly_braces_in_flow_control_structures
+warning - Unused import: 'package:get/get.dart' - lib\screens\docs\widgets.dart:3:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\docs\widgets.dart:23:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\docs\widgets.dart:44:15 - deprecated_member_use
+   info - The import of '../../widgets/tabs.dart' is unnecessary because all of the used elements are also provided by the import of '../../widgets/widgets.dart' - lib\screens\planner\apps_sidebar.dart:6:8 - unnecessary_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\planner\bucket_view.dart:86:48 - deprecated_member_use
+   info - 'onWillAccept' is deprecated and shouldn't be used. Use onWillAcceptWithDetails instead. This callback is similar to onWillAcceptWithDetails but does not provide drag details. This feature was deprecated after v3.14.0-0.2.pre - lib\screens\planner\bucket_view.dart:107:23 - deprecated_member_use
+   info - 'onWillAccept' is deprecated and shouldn't be used. Use onWillAcceptWithDetails instead. This callback is similar to onWillAcceptWithDetails but does not provide drag details. This feature was deprecated after v3.14.0-0.2.pre - lib\screens\planner\bucket_view.dart:128:19 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\planner\bucket_view.dart:222:30 - deprecated_member_use
+   info - The import of '../../widgets/glass_morph.dart' is unnecessary because all of the used elements are also provided by the import of '../../widgets/widgets.dart' - lib\screens\planner\view_ticket_dialog.dart:9:8 - unnecessary_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\date_picker.dart:39:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\date_picker.dart:51:45 - deprecated_member_use
+   info - The local variable '_hoveredIdx' starts with an underscore - lib\widgets\document_dropdown.dart:77:36 - no_leading_underscores_for_local_identifiers
+   info - Don't invoke 'print' in production code - lib\widgets\document_dropdown.dart:161:13 - avoid_print
+   info - Missing type annotation - lib\widgets\dropdown.dart:44:3 - strict_top_level_inference
+   info - The local variable '_hoveredIdx' starts with an underscore - lib\widgets\dropdown.dart:81:36 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable 'suffixes' isn't used - lib\widgets\file_preview.dart:92:11 - unused_local_variable
+warning - The value of the local variable 'res' isn't used - lib\widgets\file_preview.dart:94:9 - unused_local_variable
+   info - Statements in an if should be enclosed in a block - lib\widgets\file_preview.dart:101:7 - curly_braces_in_flow_control_structures
+
+flutter : 91 issues 
+found. (ran in 8.9s)
+At line:1 char:1
++ flutter analyze 
+lib --no-pub > analyz
+e_lib_results.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (91 issu   
+ es found. (ran i    
+n 8.9s):String)     
+[], RemoteExcept    
+ion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 

@@ -8,6 +8,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/glass_morph.dart';
+import '../memory_bank/memory_bank_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -19,18 +20,24 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              const Expanded(child: Messages()),
-            ],
+    return Obx(() {
+      final subPage = Window.subPage.value;
+      return Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                if (subPage == 'memory')
+                  const Expanded(child: MemoryBankScreen())
+                else
+                  const Expanded(child: Messages()),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-      ],
-    );
+          const SizedBox(width: 10),
+        ],
+      );
+    });
   }
 }
 
