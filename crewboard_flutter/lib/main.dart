@@ -10,6 +10,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'config/app_config.dart';
 import 'config/palette.dart';
 import 'controllers/auth_controller.dart';
+import 'controllers/theme_controller.dart';
 import 'screens/home.dart';
 import 'screens/auth/signin_page.dart';
 
@@ -72,6 +73,9 @@ void main() async {
     await sessionManager.signOutDevice();
     await sessionManager.initialize();
   }
+
+  // Initialize Theme Controller
+  Get.put(ThemeController());
 
   runApp(const MyApp());
 

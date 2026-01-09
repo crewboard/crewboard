@@ -13,3 +13,4 @@ fields:
   flows: String
   creds: int
   deadline: DateTime?
+  createdAt: DateTime?

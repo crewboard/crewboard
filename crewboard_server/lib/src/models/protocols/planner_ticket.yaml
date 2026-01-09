@@ -11,3 +11,4 @@ fields:
   assignees: List<PlannerAssignee>
   holder: String
   creds: double?
+  createdAt: DateTime?

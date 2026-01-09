@@ -53,17 +53,19 @@ import 'package:crewboard_client/src/protocol/protocols/get_all_tickets_response
     as _i25;
 import 'package:crewboard_client/src/protocol/protocols/get_ticket_data_response.dart'
     as _i26;
-import 'package:crewboard_client/src/protocol/protocols/get_ticket_comments_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_thread_response.dart'
     as _i27;
-import 'package:crewboard_client/src/protocol/protocols/add_comment_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_comments_response.dart'
     as _i28;
-import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_comment_request.dart'
     as _i29;
-import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
     as _i30;
-import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i31;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i32;
-import 'protocol.dart' as _i33;
+import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
+    as _i31;
+import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i32;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i33;
+import 'protocol.dart' as _i34;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -629,17 +631,26 @@ class EndpointPlanner extends _i2.EndpointRef {
     {'ticketId': ticketId},
   );
 
-  /// Get comments for a ticket
-  _i3.Future<_i27.GetTicketCommentsResponse> getTicketComments(
+  /// Get thread (comments + status changes) for a ticket
+  _i3.Future<_i27.GetTicketThreadResponse> getTicketThread(
     _i2.UuidValue ticketId,
-  ) => caller.callServerEndpoint<_i27.GetTicketCommentsResponse>(
+  ) => caller.callServerEndpoint<_i27.GetTicketThreadResponse>(
+    'planner',
+    'getTicketThread',
+    {'ticketId': ticketId},
+  );
+
+  /// Get comments for a ticket
+  _i3.Future<_i28.GetTicketCommentsResponse> getTicketComments(
+    _i2.UuidValue ticketId,
+  ) => caller.callServerEndpoint<_i28.GetTicketCommentsResponse>(
     'planner',
     'getTicketComments',
     {'ticketId': ticketId},
   );
 
   /// Add a comment to a ticket
-  _i3.Future<bool> addComment(_i28.AddCommentRequest request) =>
+  _i3.Future<bool> addComment(_i29.AddCommentRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'addComment',
@@ -647,7 +658,7 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Add a new bucket
-  _i3.Future<bool> addBucket(_i29.AddBucketRequest request) =>
+  _i3.Future<bool> addBucket(_i30.AddBucketRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'addBucket',
@@ -655,12 +666,25 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Move ticket between buckets
-  _i3.Future<bool> changeBucket(_i30.ChangeBucketRequest request) =>
+  _i3.Future<bool> changeBucket(_i31.ChangeBucketRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'changeBucket',
         {'request': request},
       );
+
+  /// Update ticket fields
+  _i3.Future<bool> updateTicket(
+    _i2.UuidValue ticketId,
+    List<Map<String, dynamic>> updates,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'updateTicket',
+    {
+      'ticketId': ticketId,
+      'updates': updates,
+    },
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through
@@ -673,8 +697,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i31.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i31.Greeting>(
+  _i3.Future<_i32.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i32.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -684,13 +708,13 @@ class EndpointGreeting extends _i2.EndpointRef {
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
-    auth = _i32.Caller(client);
+    auth = _i33.Caller(client);
     serverpod_auth_core = _i4.Caller(client);
   }
 
   late final _i1.Caller serverpod_auth_idp;
 
-  late final _i32.Caller auth;
+  late final _i33.Caller auth;
 
   late final _i4.Caller serverpod_auth_core;
 }
@@ -715,7 +739,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i33.Protocol(),
+         _i34.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

@@ -206,16 +206,18 @@ class SideBar extends StatelessWidget {
                           if (controller.currentPage.value ==
                               CurrentPage.planner) {
                             return const AppsSidebar();
+                          } else if (controller.currentPage.value ==
+                              CurrentPage.chat) {
                             return Column(
                               children: [
-                                 BotItem(
-                                  name: "planner",
+                                const BotItem(
+                                  name: "threads",
                                   image: "assets/bot.jpg",
                                   page: "planner",
                                   count: 0,
                                 ),
                                 const SizedBox(height: 5),
-                                 BotItem(
+                                const BotItem(
                                   name: "memory bank",
                                   image: "assets/bot.jpg",
                                   page: "memory",

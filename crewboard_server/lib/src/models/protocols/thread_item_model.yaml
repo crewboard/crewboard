@@ -1,0 +1,11 @@
+class: ThreadItemModel
+fields:
+  id: UuidValue
+  userId: UuidValue
+  userName: String
+  userColor: String?
+  message: String?
+  oldStatus: String?
+  newStatus: String?
+  createdAt: String
+  type: String # 'comment' or 'status_change'

@@ -26,7 +26,7 @@ abstract class TicketStatusChange
     this.ticket,
     required this.userId,
     this.user,
-    required this.oldStatusId,
+    this.oldStatusId,
     this.oldStatus,
     required this.newStatusId,
     this.newStatus,
@@ -39,7 +39,7 @@ abstract class TicketStatusChange
     _i2.Ticket? ticket,
     required _i1.UuidValue userId,
     _i3.User? user,
-    required _i1.UuidValue oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
     required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
@@ -61,9 +61,11 @@ abstract class TicketStatusChange
       user: jsonSerialization['user'] == null
           ? null
           : _i5.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      oldStatusId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['oldStatusId'],
-      ),
+      oldStatusId: jsonSerialization['oldStatusId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['oldStatusId'],
+            ),
       oldStatus: jsonSerialization['oldStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
@@ -98,7 +100,7 @@ abstract class TicketStatusChange
 
   _i3.User? user;
 
-  _i1.UuidValue oldStatusId;
+  _i1.UuidValue? oldStatusId;
 
   _i4.Status? oldStatus;
 
@@ -135,7 +137,7 @@ abstract class TicketStatusChange
       if (ticket != null) 'ticket': ticket?.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'oldStatusId': oldStatusId.toJson(),
+      if (oldStatusId != null) 'oldStatusId': oldStatusId?.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJson(),
       'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJson(),
@@ -152,7 +154,7 @@ abstract class TicketStatusChange
       if (ticket != null) 'ticket': ticket?.toJsonForProtocol(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
-      'oldStatusId': oldStatusId.toJson(),
+      if (oldStatusId != null) 'oldStatusId': oldStatusId?.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJsonForProtocol(),
       'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJsonForProtocol(),
@@ -209,7 +211,7 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
     _i2.Ticket? ticket,
     required _i1.UuidValue userId,
     _i3.User? user,
-    required _i1.UuidValue oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
     required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
@@ -237,7 +239,7 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
     Object? ticket = _Undefined,
     _i1.UuidValue? userId,
     Object? user = _Undefined,
-    _i1.UuidValue? oldStatusId,
+    Object? oldStatusId = _Undefined,
     Object? oldStatus = _Undefined,
     _i1.UuidValue? newStatusId,
     Object? newStatus = _Undefined,
@@ -249,7 +251,9 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       userId: userId ?? this.userId,
       user: user is _i3.User? ? user : this.user?.copyWith(),
-      oldStatusId: oldStatusId ?? this.oldStatusId,
+      oldStatusId: oldStatusId is _i1.UuidValue?
+          ? oldStatusId
+          : this.oldStatusId,
       oldStatus: oldStatus is _i4.Status?
           ? oldStatus
           : this.oldStatus?.copyWith(),
@@ -279,7 +283,7 @@ class TicketStatusChangeUpdateTable
       );
 
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> oldStatusId(
-    _i1.UuidValue value,
+    _i1.UuidValue? value,
   ) => _i1.ColumnValue(
     table.oldStatusId,
     value,
@@ -482,6 +486,8 @@ class TicketStatusChangeRepository {
   const TicketStatusChangeRepository._();
 
   final attachRow = const TicketStatusChangeAttachRowRepository._();
+
+  final detachRow = const TicketStatusChangeDetachRowRepository._();
 
   /// Returns a list of [TicketStatusChange]s matching the given query parameters.
   ///
@@ -836,6 +842,32 @@ class TicketStatusChangeAttachRowRepository {
     await session.db.updateRow<TicketStatusChange>(
       $ticketStatusChange,
       columns: [TicketStatusChange.t.newStatusId],
+      transaction: transaction,
+    );
+  }
+}
+
+class TicketStatusChangeDetachRowRepository {
+  const TicketStatusChangeDetachRowRepository._();
+
+  /// Detaches the relation between this [TicketStatusChange] and the [Status] set in `oldStatus`
+  /// by setting the [TicketStatusChange]'s foreign key `oldStatusId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> oldStatus(
+    _i1.Session session,
+    TicketStatusChange ticketStatusChange, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (ticketStatusChange.id == null) {
+      throw ArgumentError.notNull('ticketStatusChange.id');
+    }
+
+    var $ticketStatusChange = ticketStatusChange.copyWith(oldStatusId: null);
+    await session.db.updateRow<TicketStatusChange>(
+      $ticketStatusChange,
+      columns: [TicketStatusChange.t.oldStatusId],
       transaction: transaction,
     );
   }

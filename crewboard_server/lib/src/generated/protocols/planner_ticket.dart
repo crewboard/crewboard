@@ -28,6 +28,7 @@ abstract class PlannerTicket
     required this.assignees,
     required this.holder,
     this.creds,
+    this.createdAt,
   });
 
   factory PlannerTicket({
@@ -42,6 +43,7 @@ abstract class PlannerTicket
     required List<_i2.PlannerAssignee> assignees,
     required String holder,
     double? creds,
+    DateTime? createdAt,
   }) = _PlannerTicketImpl;
 
   factory PlannerTicket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -59,6 +61,9 @@ abstract class PlannerTicket
       ),
       holder: jsonSerialization['holder'] as String,
       creds: (jsonSerialization['creds'] as num?)?.toDouble(),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -84,6 +89,8 @@ abstract class PlannerTicket
 
   double? creds;
 
+  DateTime? createdAt;
+
   /// Returns a shallow copy of this [PlannerTicket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -99,6 +106,7 @@ abstract class PlannerTicket
     List<_i2.PlannerAssignee>? assignees,
     String? holder,
     double? creds,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -115,6 +123,7 @@ abstract class PlannerTicket
       'assignees': assignees.toJson(valueToJson: (v) => v.toJson()),
       'holder': holder,
       if (creds != null) 'creds': creds,
+      if (createdAt != null) 'createdAt': createdAt?.toJson(),
     };
   }
 
@@ -133,6 +142,7 @@ abstract class PlannerTicket
       'assignees': assignees.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       'holder': holder,
       if (creds != null) 'creds': creds,
+      if (createdAt != null) 'createdAt': createdAt?.toJson(),
     };
   }
 
@@ -157,6 +167,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     required List<_i2.PlannerAssignee> assignees,
     required String holder,
     double? creds,
+    DateTime? createdAt,
   }) : super._(
          id: id,
          ticketName: ticketName,
@@ -169,6 +180,7 @@ class _PlannerTicketImpl extends PlannerTicket {
          assignees: assignees,
          holder: holder,
          creds: creds,
+         createdAt: createdAt,
        );
 
   /// Returns a shallow copy of this [PlannerTicket]
@@ -187,6 +199,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     List<_i2.PlannerAssignee>? assignees,
     String? holder,
     Object? creds = _Undefined,
+    Object? createdAt = _Undefined,
   }) {
     return PlannerTicket(
       id: id ?? this.id,
@@ -201,6 +214,7 @@ class _PlannerTicketImpl extends PlannerTicket {
           assignees ?? this.assignees.map((e0) => e0.copyWith()).toList(),
       holder: holder ?? this.holder,
       creds: creds is double? ? creds : this.creds,
+      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
     );
   }
 }

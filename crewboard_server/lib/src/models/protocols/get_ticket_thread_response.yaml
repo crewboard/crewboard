@@ -1,0 +1,3 @@
+class: GetTicketThreadResponse
+fields:
+  items: List<ThreadItemModel>

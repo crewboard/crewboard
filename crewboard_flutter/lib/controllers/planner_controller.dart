@@ -50,6 +50,9 @@ class PlannerController extends GetxController {
   final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
   final RxList<AttachmentModel> attachments = <AttachmentModel>[].obs;
   final RxList<FlowModel> flows = <FlowModel>[].obs;
+  final RxList<ThreadItemModel> ticketThread = <ThreadItemModel>[].obs;
+  final Rxn<ThreadItemModel> lastActivity = Rxn<ThreadItemModel>();
+  final Rxn<UuidValue> selectedTicketId = Rxn<UuidValue>();
   // Drag and Drop state
   final Rxn<PlannerTicket> draggingTicket = Rxn<PlannerTicket>();
 
@@ -94,9 +97,7 @@ class PlannerController extends GetxController {
     selectedAppId.value = appId;
     loadPlannerData();
     getAddTicketData(); // Pre-load metadata for the project context
-    if (currentSubPage.value == PlannerSubPage.search) {
-      loadAllTickets();
-    }
+    loadAllTickets();
   }
 
   // Change subpage (Kanban/Search)
@@ -208,6 +209,18 @@ class PlannerController extends GetxController {
     }
   }
 
+  Future<void> getTicketThread(UuidValue ticketId) async {
+    try {
+      final response = await client.planner.getTicketThread(ticketId);
+      ticketThread.assignAll(response.items);
+      if (ticketThread.isNotEmpty) {
+        lastActivity.value = ticketThread.last;
+      }
+    } catch (e) {
+      debugPrint('Error getting ticket thread: $e');
+    }
+  }
+
   Future<void> save(UuidValue bucketId) async {
     error.value = "";
     if (title.value.text.isEmpty) {
@@ -255,6 +268,8 @@ class PlannerController extends GetxController {
 
       if (success) {
         error.value = "";
+        loadPlannerData();
+        loadAllTickets();
       } else {
         error.value = "Failed to save ticket";
       }
@@ -278,7 +293,16 @@ class PlannerController extends GetxController {
 
   Future<void> saveEditStack(UuidValue ticketId) async {
     debugPrint('Saving edit stack for ticket $ticketId: $editStack');
-    // Implement field updates if needed
+    try {
+      final success = await client.planner.updateTicket(ticketId, editStack);
+      if (success) {
+        editStack.clear();
+        loadPlannerData();
+        getTicketThread(ticketId);
+      }
+    } catch (e) {
+      debugPrint('Error saving edit stack: $e');
+    }
   }
 
   // Move ticket between buckets

@@ -39,6 +39,7 @@ abstract class Ticket
     required this.flows,
     required this.creds,
     this.deadline,
+    this.createdAt,
   });
 
   factory Ticket({
@@ -58,6 +59,7 @@ abstract class Ticket
     required String flows,
     required int creds,
     DateTime? deadline,
+    DateTime? createdAt,
   }) = _TicketImpl;
 
   factory Ticket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -102,6 +104,9 @@ abstract class Ticket
       deadline: jsonSerialization['deadline'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['deadline']),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -142,6 +147,8 @@ abstract class Ticket
 
   DateTime? deadline;
 
+  DateTime? createdAt;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -165,6 +172,7 @@ abstract class Ticket
     String? flows,
     int? creds,
     DateTime? deadline,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -187,6 +195,7 @@ abstract class Ticket
       'flows': flows,
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
+      if (createdAt != null) 'createdAt': createdAt?.toJson(),
     };
   }
 
@@ -213,6 +222,7 @@ abstract class Ticket
       'flows': flows,
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
+      if (createdAt != null) 'createdAt': createdAt?.toJson(),
     };
   }
 
@@ -276,6 +286,7 @@ class _TicketImpl extends Ticket {
     required String flows,
     required int creds,
     DateTime? deadline,
+    DateTime? createdAt,
   }) : super._(
          id: id,
          userId: userId,
@@ -293,6 +304,7 @@ class _TicketImpl extends Ticket {
          flows: flows,
          creds: creds,
          deadline: deadline,
+         createdAt: createdAt,
        );
 
   /// Returns a shallow copy of this [Ticket]
@@ -316,6 +328,7 @@ class _TicketImpl extends Ticket {
     String? flows,
     int? creds,
     Object? deadline = _Undefined,
+    Object? createdAt = _Undefined,
   }) {
     return Ticket(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -338,6 +351,7 @@ class _TicketImpl extends Ticket {
       flows: flows ?? this.flows,
       creds: creds ?? this.creds,
       deadline: deadline is DateTime? ? deadline : this.deadline,
+      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
     );
   }
 }
@@ -408,6 +422,12 @@ class TicketUpdateTable extends _i1.UpdateTable<TicketTable> {
         table.deadline,
         value,
       );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
 }
 
 class TicketTable extends _i1.Table<_i1.UuidValue?> {
@@ -457,6 +477,10 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
       'deadline',
       this,
     );
+    createdAt = _i1.ColumnDateTime(
+      'createdAt',
+      this,
+    );
   }
 
   late final TicketUpdateTable updateTable;
@@ -490,6 +514,8 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
   late final _i1.ColumnInt creds;
 
   late final _i1.ColumnDateTime deadline;
+
+  late final _i1.ColumnDateTime createdAt;
 
   _i2.UserTable get user {
     if (_user != null) return _user!;
@@ -557,6 +583,7 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
     flows,
     creds,
     deadline,
+    createdAt,
   ];
 
   @override

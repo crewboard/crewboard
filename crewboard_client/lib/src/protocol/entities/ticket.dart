@@ -36,6 +36,7 @@ abstract class Ticket implements _i1.SerializableModel {
     required this.flows,
     required this.creds,
     this.deadline,
+    this.createdAt,
   });
 
   factory Ticket({
@@ -55,6 +56,7 @@ abstract class Ticket implements _i1.SerializableModel {
     required String flows,
     required int creds,
     DateTime? deadline,
+    DateTime? createdAt,
   }) = _TicketImpl;
 
   factory Ticket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -99,6 +101,9 @@ abstract class Ticket implements _i1.SerializableModel {
       deadline: jsonSerialization['deadline'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['deadline']),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -137,6 +142,8 @@ abstract class Ticket implements _i1.SerializableModel {
 
   DateTime? deadline;
 
+  DateTime? createdAt;
+
   /// Returns a shallow copy of this [Ticket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -157,6 +164,7 @@ abstract class Ticket implements _i1.SerializableModel {
     String? flows,
     int? creds,
     DateTime? deadline,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -179,6 +187,7 @@ abstract class Ticket implements _i1.SerializableModel {
       'flows': flows,
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
+      if (createdAt != null) 'createdAt': createdAt?.toJson(),
     };
   }
 
@@ -208,6 +217,7 @@ class _TicketImpl extends Ticket {
     required String flows,
     required int creds,
     DateTime? deadline,
+    DateTime? createdAt,
   }) : super._(
          id: id,
          userId: userId,
@@ -225,6 +235,7 @@ class _TicketImpl extends Ticket {
          flows: flows,
          creds: creds,
          deadline: deadline,
+         createdAt: createdAt,
        );
 
   /// Returns a shallow copy of this [Ticket]
@@ -248,6 +259,7 @@ class _TicketImpl extends Ticket {
     String? flows,
     int? creds,
     Object? deadline = _Undefined,
+    Object? createdAt = _Undefined,
   }) {
     return Ticket(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -270,6 +282,7 @@ class _TicketImpl extends Ticket {
       flows: flows ?? this.flows,
       creds: creds ?? this.creds,
       deadline: deadline is DateTime? ? deadline : this.deadline,
+      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
     );
   }
 }

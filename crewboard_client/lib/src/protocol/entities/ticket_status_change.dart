@@ -23,7 +23,7 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
     this.ticket,
     required this.userId,
     this.user,
-    required this.oldStatusId,
+    this.oldStatusId,
     this.oldStatus,
     required this.newStatusId,
     this.newStatus,
@@ -36,7 +36,7 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
     _i2.Ticket? ticket,
     required _i1.UuidValue userId,
     _i3.User? user,
-    required _i1.UuidValue oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
     required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
@@ -58,9 +58,11 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
       user: jsonSerialization['user'] == null
           ? null
           : _i5.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
-      oldStatusId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['oldStatusId'],
-      ),
+      oldStatusId: jsonSerialization['oldStatusId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['oldStatusId'],
+            ),
       oldStatus: jsonSerialization['oldStatus'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Status>(
@@ -93,7 +95,7 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
 
   _i3.User? user;
 
-  _i1.UuidValue oldStatusId;
+  _i1.UuidValue? oldStatusId;
 
   _i4.Status? oldStatus;
 
@@ -127,7 +129,7 @@ abstract class TicketStatusChange implements _i1.SerializableModel {
       if (ticket != null) 'ticket': ticket?.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
-      'oldStatusId': oldStatusId.toJson(),
+      if (oldStatusId != null) 'oldStatusId': oldStatusId?.toJson(),
       if (oldStatus != null) 'oldStatus': oldStatus?.toJson(),
       'newStatusId': newStatusId.toJson(),
       if (newStatus != null) 'newStatus': newStatus?.toJson(),
@@ -150,7 +152,7 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
     _i2.Ticket? ticket,
     required _i1.UuidValue userId,
     _i3.User? user,
-    required _i1.UuidValue oldStatusId,
+    _i1.UuidValue? oldStatusId,
     _i4.Status? oldStatus,
     required _i1.UuidValue newStatusId,
     _i4.Status? newStatus,
@@ -178,7 +180,7 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
     Object? ticket = _Undefined,
     _i1.UuidValue? userId,
     Object? user = _Undefined,
-    _i1.UuidValue? oldStatusId,
+    Object? oldStatusId = _Undefined,
     Object? oldStatus = _Undefined,
     _i1.UuidValue? newStatusId,
     Object? newStatus = _Undefined,
@@ -190,7 +192,9 @@ class _TicketStatusChangeImpl extends TicketStatusChange {
       ticket: ticket is _i2.Ticket? ? ticket : this.ticket?.copyWith(),
       userId: userId ?? this.userId,
       user: user is _i3.User? ? user : this.user?.copyWith(),
-      oldStatusId: oldStatusId ?? this.oldStatusId,
+      oldStatusId: oldStatusId is _i1.UuidValue?
+          ? oldStatusId
+          : this.oldStatusId,
       oldStatus: oldStatus is _i4.Status?
           ? oldStatus
           : this.oldStatus?.copyWith(),

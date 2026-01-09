@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,22 +15,16 @@ Future<void> addUser(context, Map? data) async {
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        backgroundColor: Pallet.inside1,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 15,
-        ),
-        content: Obx(() {
-          return SizedBox(
-            width: 415,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
-              ),
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: AlertDialog(
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          content: Obx(() {
+            return GlassMorph(
+              borderRadius: 15,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              width: 500,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -44,9 +39,12 @@ Future<void> addUser(context, Map? data) async {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text(
+                                Text(
                                   "user name",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
@@ -63,9 +61,12 @@ Future<void> addUser(context, Map? data) async {
                                   },
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "password",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
@@ -90,9 +91,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "user type",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           Options(
@@ -134,9 +138,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "leave config",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           Options(
@@ -177,9 +184,12 @@ Future<void> addUser(context, Map? data) async {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "punch id",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
@@ -207,9 +217,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "first name",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           SmallTextBox(
@@ -234,9 +247,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "last name",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           SmallTextBox(
@@ -263,9 +279,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "gender",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           Options(
@@ -299,9 +318,12 @@ Future<void> addUser(context, Map? data) async {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "date of birth",
-                                            style: TextStyle(fontSize: 14),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Pallet.font3,
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           InkWell(
@@ -391,9 +413,12 @@ Future<void> addUser(context, Map? data) async {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "phone",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
@@ -404,9 +429,12 @@ Future<void> addUser(context, Map? data) async {
                                       : null,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "email",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
@@ -417,9 +445,12 @@ Future<void> addUser(context, Map? data) async {
                                       : null,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "blood group",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 Options(
@@ -441,27 +472,36 @@ Future<void> addUser(context, Map? data) async {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text(
+                                Text(
                                   "salary (per month)",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
                                   controller: controller.salaryController,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "experience (years)",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 SmallTextBox(
                                   controller: controller.experienceController,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
+                                Text(
                                   "identity verification files",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Pallet.font3,
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 Wrap(
@@ -491,34 +531,9 @@ Future<void> addUser(context, Map? data) async {
                                       ),
                                     ),
                                     for (var file in controller.attachments)
-                                      Container(
-                                        width: 90,
-                                        height: 70,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          border: Border.all(
-                                            color: Pallet.font3,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Icon(
-                                              Icons.file_present,
-                                              size: 20,
-                                            ),
-                                            Text(
-                                              file["name"],
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
+                                      FilePreview(
+                                        name: file["name"],
+                                        size: file["size"],
                                       ),
                                   ],
                                 ),
@@ -594,9 +609,12 @@ Future<void> addUser(context, Map? data) async {
                                       ),
                               ),
                               const SizedBox(height: 10),
-                              const Text(
+                              Text(
                                 "color",
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Pallet.font3,
+                                ),
                               ),
                               const SizedBox(height: 10),
                               Wrap(
@@ -642,7 +660,7 @@ Future<void> addUser(context, Map? data) async {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     // Footer Buttons (Next/Back/Submit)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -676,9 +694,9 @@ Future<void> addUser(context, Map? data) async {
                   ],
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       );
     },
   );

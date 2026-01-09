@@ -50,9 +50,11 @@ planner:
   - addTicket:
   - getAllTickets:
   - getTicketData:
+  - getTicketThread:
   - getTicketComments:
   - addComment:
   - addBucket:
   - changeBucket:
+  - updateTicket:
 greeting:
   - hello:

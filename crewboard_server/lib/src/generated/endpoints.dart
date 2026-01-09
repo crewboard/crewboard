@@ -1010,6 +1010,25 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['ticketId'],
                   ),
         ),
+        'getTicketThread': _i1.MethodConnector(
+          name: 'getTicketThread',
+          params: {
+            'ticketId': _i1.ParameterDescription(
+              name: 'ticketId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['planner'] as _i8.PlannerEndpoint).getTicketThread(
+                    session,
+                    params['ticketId'],
+                  ),
+        ),
         'getTicketComments': _i1.MethodConnector(
           name: 'getTicketComments',
           params: {
@@ -1084,6 +1103,31 @@ class Endpoints extends _i1.EndpointDispatch {
                   (endpoints['planner'] as _i8.PlannerEndpoint).changeBucket(
                     session,
                     params['request'],
+                  ),
+        ),
+        'updateTicket': _i1.MethodConnector(
+          name: 'updateTicket',
+          params: {
+            'ticketId': _i1.ParameterDescription(
+              name: 'ticketId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'updates': _i1.ParameterDescription(
+              name: 'updates',
+              type: _i1.getType<List<Map<String, dynamic>>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['planner'] as _i8.PlannerEndpoint).updateTicket(
+                    session,
+                    params['ticketId'],
+                    params['updates'],
                   ),
         ),
       },

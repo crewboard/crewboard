@@ -2,8 +2,12 @@ class: TicketStatusChange
 table: ticket_status_change
 fields:
   id: UuidValue?, defaultPersist=random
-  ticket: Ticket?, relation
-  user: User?, relation
-  oldStatus: Status?, relation
-  newStatus: Status?, relation
+  ticketId: UuidValue
+  ticket: Ticket?, relation(field=ticketId)
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  oldStatusId: UuidValue?
+  oldStatus: Status?, relation(field=oldStatusId)
+  newStatusId: UuidValue
+  newStatus: Status?, relation(field=newStatusId)
   changedAt: DateTime?

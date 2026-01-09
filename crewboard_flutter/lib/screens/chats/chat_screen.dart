@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/glass_morph.dart';
 import '../memory_bank/memory_bank_screen.dart';
+import 'ticket_threads_full_view.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -29,6 +30,8 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 if (subPage == 'memory')
                   const Expanded(child: MemoryBankScreen())
+                else if (subPage == 'planner')
+                  const Expanded(child: TicketThreadsFullView())
                 else
                   const Expanded(child: Messages()),
               ],

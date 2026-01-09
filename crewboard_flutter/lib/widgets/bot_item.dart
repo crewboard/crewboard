@@ -21,7 +21,7 @@ class BotItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final isSelected = Window.subPage.value == page;
-      
+
       return InkWell(
         onTap: () {
           // Clear selected room via controller
@@ -35,13 +35,18 @@ class BotItem extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: isSelected ? Pallet.inside1.withValues(alpha: 0.2) : Colors.transparent,
+            color: isSelected
+                ? Pallet.inside1.withValues(alpha: 0.2)
+                : Colors.transparent,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
               Icon(
-                name.toLowerCase() == "planner" ? Icons.notifications : Icons.memory,
+                name.toLowerCase() == "threads" ||
+                        name.toLowerCase() == "planner"
+                    ? Icons.alternate_email
+                    : Icons.memory,
                 color: isSelected ? Colors.white : Pallet.font3,
                 size: 20,
               ),
@@ -52,7 +57,9 @@ class BotItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     color: isSelected ? Colors.white : Pallet.font1,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ),

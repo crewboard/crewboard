@@ -220,6 +220,7 @@ class PlannerEndpoint extends Endpoint {
         flows: request.ticket.flows ?? '',
         creds: request.ticket.creds.toInt(),
         deadline: deadline,
+        createdAt: DateTime.now(),
       ),
     );
 
@@ -230,6 +231,18 @@ class PlannerEndpoint extends Endpoint {
         bucketId: request.bucketId,
         ticketId: ticket.id!,
         order: 1, // Default to first
+      ),
+    );
+
+    // LOG INITIAL THREAD ACTIVITY
+    await TicketStatusChange.db.insertRow(
+      session,
+      TicketStatusChange(
+        ticketId: ticket.id!,
+        userId: userId,
+        oldStatusId: null,
+        newStatusId: ticket.statusId,
+        changedAt: DateTime.now(),
       ),
     );
 
@@ -252,6 +265,8 @@ class PlannerEndpoint extends Endpoint {
     final tickets = await Ticket.db.find(
       session,
       where: (t) => t.appId.equals(appId),
+      orderBy: (t) => t.createdAt,
+      orderDescending: true,
       include: Ticket.include(
         status: Status.include(),
         priority: Priority.include(),
@@ -271,6 +286,7 @@ class PlannerEndpoint extends Endpoint {
           typeName: ticket.type?.typeName ?? '',
           typeColor: ticket.type?.color?.color ?? '#000000',
           deadline: ticket.deadline?.toIso8601String(),
+          createdAt: ticket.createdAt,
           assignees:
               [], // Fetching assignees for all tickets might be heavy, skipping for now
           holder: 'Unknown',
@@ -382,6 +398,69 @@ class PlannerEndpoint extends Endpoint {
     );
 
     return GetTicketDataResponse(ticket: ticketModel);
+  }
+
+  /// Get thread (comments + status changes) for a ticket
+  Future<GetTicketThreadResponse> getTicketThread(
+    Session session,
+    UuidValue ticketId,
+  ) async {
+    final comments = await TicketComment.db.find(
+      session,
+      where: (t) => t.ticketId.equals(ticketId),
+    );
+
+    final statusChanges = await TicketStatusChange.db.find(
+      session,
+      where: (t) => t.ticketId.equals(ticketId),
+      include: TicketStatusChange.include(
+        user: User.include(color: SystemColor.include()),
+        oldStatus: Status.include(),
+        newStatus: Status.include(),
+      ),
+    );
+
+    final List<ThreadItemModel> items = [];
+
+    for (final comment in comments) {
+      final user = await User.db.findById(
+        session,
+        comment.userId,
+        include: User.include(color: SystemColor.include()),
+      );
+      items.add(
+        ThreadItemModel(
+          id: comment.id!,
+          userId: comment.userId,
+          userName: user?.userName ?? 'Unknown',
+          userColor: user?.color?.color ?? '#000000',
+          message: comment.message,
+          createdAt: comment.createdAt?.toIso8601String() ?? '',
+          type: 'comment',
+        ),
+      );
+    }
+
+    for (final change in statusChanges) {
+      items.add(
+        ThreadItemModel(
+          id: change.id!,
+          userId:
+              change.user?.id ??
+              UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
+          userName: change.user?.userName ?? 'Unknown',
+          userColor: change.user?.color?.color ?? '#000000',
+          oldStatus: change.oldStatus?.statusName,
+          newStatus: change.newStatus?.statusName ?? 'Unknown',
+          createdAt: change.changedAt?.toIso8601String() ?? '',
+          type: 'status_change',
+        ),
+      );
+    }
+
+    items.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    return GetTicketThreadResponse(items: items);
   }
 
   /// Get comments for a ticket
@@ -516,6 +595,86 @@ class PlannerEndpoint extends Endpoint {
       ),
     );
 
+    // LOG STATUS CHANGE (Optional/Heuristic: if bucket name matches status name)
+    // For now, let's just log it if we can find a status with same name as bucket
+    try {
+      final bucket = await Bucket.db.findById(session, newBucketId);
+      final ticket = await Ticket.db.findById(session, ticketId);
+      if (bucket != null && ticket != null) {
+        final newStatus = await Status.db.findFirstRow(
+          session,
+          where: (t) => t.statusName.equals(bucket.bucketName),
+        );
+        if (newStatus != null && newStatus.id != ticket.statusId) {
+          final oldStatusId = ticket.statusId;
+          ticket.statusId = newStatus.id!;
+          await Ticket.db.updateRow(session, ticket);
+
+          final user = await AuthHelper.getAuthenticatedUser(session);
+          await TicketStatusChange.db.insertRow(
+            session,
+            TicketStatusChange(
+              ticketId: ticket.id!,
+              userId: user.id!,
+              oldStatusId: oldStatusId,
+              newStatusId: newStatus.id!,
+              changedAt: DateTime.now(),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Ignore heuristic failures
+      session.log('Status change logging failed: $e');
+    }
+
+    return true;
+  }
+
+  /// Update ticket fields
+  Future<bool> updateTicket(
+    Session session,
+    UuidValue ticketId,
+    List<Map<String, dynamic>> updates,
+  ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final ticket = await Ticket.db.findById(session, ticketId);
+    if (ticket == null) return false;
+
+    // TODO: Verify authorization
+
+    for (final update in updates) {
+      final name = update['name'] as String;
+      final value = update['value'];
+
+      if (name == 'statusId') {
+        final newStatusId = UuidValue.fromString(value as String);
+        if (ticket.statusId != newStatusId) {
+          final oldStatusId = ticket.statusId;
+          ticket.statusId = newStatusId;
+          await TicketStatusChange.db.insertRow(
+            session,
+            TicketStatusChange(
+              ticketId: ticket.id!,
+              userId: user.id!,
+              oldStatusId: oldStatusId,
+              newStatusId: newStatusId,
+              changedAt: DateTime.now(),
+            ),
+          );
+        }
+      } else if (name == 'ticketName') {
+        ticket.ticketName = value as String;
+      } else if (name == 'ticketBody') {
+        ticket.ticketBody = value as String;
+      } else if (name == 'creds') {
+        ticket.creds = int.tryParse(value.toString()) ?? 0;
+      } else if (name == 'deadline') {
+        ticket.deadline = DateTime.tryParse(value.toString());
+      }
+    }
+
+    await Ticket.db.updateRow(session, ticket);
     return true;
   }
 }

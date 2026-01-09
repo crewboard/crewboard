@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/theme_controller.dart';
 
 class GlassMorph extends StatelessWidget {
   final Widget child;
@@ -27,19 +29,59 @@ class GlassMorph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Padding(
-        padding: margin,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
-            child: Container(padding: padding, color: color, child: child),
+    final themeController = Get.find<ThemeController>();
+
+    return Obx(() {
+      final currentTheme = themeController.currentTheme;
+
+      if (currentTheme == AppTheme.glass) {
+        return SizedBox(
+          width: width,
+          height: height,
+          child: Padding(
+            padding: margin,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
+                child: Container(padding: padding, color: color, child: child),
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
+      } else {
+        // Light or Dark Mode (Solid Design)
+        final isDark = currentTheme == AppTheme.dark;
+        final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+        final borderColor = isDark
+            ? Colors.white10
+            : Colors.black.withValues(alpha: 0.1);
+
+        return SizedBox(
+          width: width,
+          height: height,
+          child: Padding(
+            padding: margin,
+            child: Container(
+              padding: padding,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(borderRadius),
+                border: Border.all(color: borderColor),
+                boxShadow: [
+                  if (!isDark)
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                ],
+              ),
+              child: child,
+            ),
+          ),
+        );
+      }
+    });
   }
 }
