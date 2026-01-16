@@ -6,24 +6,6 @@ import '../../../../config/palette.dart';
 import 'flows_controller.dart';
 import '../../../widgets/widgets.dart';
 
-// Minimal Button
-class SmallButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPress;
-  const SmallButton({super.key, required this.label, required this.onPress});
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        minimumSize: Size(0, 30),
-      ),
-      onPressed: onPress,
-      child: Text(label, style: TextStyle(fontSize: 12)),
-    );
-  }
-}
-
 class EditFlow extends StatefulWidget {
   const EditFlow({super.key});
 

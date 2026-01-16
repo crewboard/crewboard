@@ -18,13 +18,15 @@ abstract class UserRoomMap implements _i1.SerializableModel {
     required this.roomId,
     required this.userId,
     this.lastSeenMessageId,
-  });
+    int? unreadCount,
+  }) : unreadCount = unreadCount ?? 0;
 
   factory UserRoomMap({
     _i1.UuidValue? id,
     required _i1.UuidValue roomId,
     required _i1.UuidValue userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   }) = _UserRoomMapImpl;
 
   factory UserRoomMap.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,6 +41,7 @@ abstract class UserRoomMap implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastSeenMessageId'],
             ),
+      unreadCount: jsonSerialization['unreadCount'] as int,
     );
   }
 
@@ -53,6 +56,8 @@ abstract class UserRoomMap implements _i1.SerializableModel {
 
   _i1.UuidValue? lastSeenMessageId;
 
+  int unreadCount;
+
   /// Returns a shallow copy of this [UserRoomMap]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -61,6 +66,7 @@ abstract class UserRoomMap implements _i1.SerializableModel {
     _i1.UuidValue? roomId,
     _i1.UuidValue? userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -71,6 +77,7 @@ abstract class UserRoomMap implements _i1.SerializableModel {
       'userId': userId.toJson(),
       if (lastSeenMessageId != null)
         'lastSeenMessageId': lastSeenMessageId?.toJson(),
+      'unreadCount': unreadCount,
     };
   }
 
@@ -88,11 +95,13 @@ class _UserRoomMapImpl extends UserRoomMap {
     required _i1.UuidValue roomId,
     required _i1.UuidValue userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   }) : super._(
          id: id,
          roomId: roomId,
          userId: userId,
          lastSeenMessageId: lastSeenMessageId,
+         unreadCount: unreadCount,
        );
 
   /// Returns a shallow copy of this [UserRoomMap]
@@ -104,6 +113,7 @@ class _UserRoomMapImpl extends UserRoomMap {
     _i1.UuidValue? roomId,
     _i1.UuidValue? userId,
     Object? lastSeenMessageId = _Undefined,
+    int? unreadCount,
   }) {
     return UserRoomMap(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -112,6 +122,7 @@ class _UserRoomMapImpl extends UserRoomMap {
       lastSeenMessageId: lastSeenMessageId is _i1.UuidValue?
           ? lastSeenMessageId
           : this.lastSeenMessageId,
+      unreadCount: unreadCount ?? this.unreadCount,
     );
   }
 }

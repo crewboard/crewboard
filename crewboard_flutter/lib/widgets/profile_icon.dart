@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum ProfileIconStyle { solid, outlined }
+
 class ProfileIcon extends StatelessWidget {
   const ProfileIcon({
     super.key,
@@ -8,12 +10,16 @@ class ProfileIcon extends StatelessWidget {
     this.size = 35,
     this.fontSize = 14,
     this.image,
+    this.style = ProfileIconStyle.solid,
+    this.useOpacity = true,
   });
   final String name;
   final Color color;
   final double size;
   final double fontSize;
   final String? image;
+  final ProfileIconStyle style;
+  final bool useOpacity;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +27,18 @@ class ProfileIcon extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color,
+        color: style == ProfileIconStyle.outlined && useOpacity
+            ? color.withValues(alpha: 0.2)
+            : color,
         borderRadius: BorderRadius.circular(size),
+        border: style == ProfileIconStyle.outlined
+            ? Border.all(color: color, width: 1)
+            : null,
         image: image != null
-            ? DecorationImage(image: NetworkImage(image!), fit: BoxFit.cover)
+            ? DecorationImage(
+                image: NetworkImage(image!),
+                fit: BoxFit.cover,
+              )
             : null,
       ),
       child: image == null
@@ -32,7 +46,9 @@ class ProfileIcon extends StatelessWidget {
               child: Text(
                 name.isNotEmpty ? name[0].toUpperCase() : "?",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: style == ProfileIconStyle.outlined && useOpacity
+                      ? color
+                      : Colors.white,
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
                 ),

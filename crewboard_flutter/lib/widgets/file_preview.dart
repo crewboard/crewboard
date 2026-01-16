@@ -57,12 +57,12 @@ class FilePreview extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(fontSize: 12, color: Pallet.font1),
+                  style: TextStyle(fontSize: 12, color: Pallet.font1),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   formatBytes(size),
-                  style: const TextStyle(fontSize: 10, color: Pallet.font3),
+                  style: TextStyle(fontSize: 10, color: Pallet.font3),
                 ),
               ],
             ),

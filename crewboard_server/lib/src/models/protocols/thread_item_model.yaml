@@ -8,4 +8,6 @@ fields:
   oldStatus: String?
   newStatus: String?
   createdAt: String
-  type: String # 'comment' or 'status_change'
+  action: String?
+  details: String?
+  type: String # 'comment' or 'status_change', or 'activity'

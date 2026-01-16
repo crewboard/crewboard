@@ -5,3 +5,4 @@ fields:
   roomId: UuidValue
   userId: UuidValue
   lastSeenMessageId: UuidValue?
+  unreadCount: int, default=0

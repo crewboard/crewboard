@@ -96,4 +96,18 @@ class RoomsController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> markAsRead(ChatRoom room) async {
+    try {
+      await client.chat.markAsRead(room.id!);
+      // Update local state to immediately hide the badge
+      int index = rooms.indexWhere((r) => r.id == room.id);
+      if (index != -1) {
+        rooms[index] = rooms[index].copyWith(messageCount: 0);
+        rooms.refresh();
+      }
+    } catch (e) {
+      debugPrint('Error marking room as read: $e');
+    }
+  }
 }

@@ -377,7 +377,7 @@ class _DocumentEditorState extends State<DocumentEditor> {
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Obx(() {
         if (provider.selectedDocId.value == null) {
-          return const SizedBox(
+          return SizedBox(
             height: 400,
             child: Center(
               child: Text(
@@ -651,3 +651,4 @@ class _DocumentEditorState extends State<DocumentEditor> {
     );
   }
 }
+

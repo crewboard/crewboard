@@ -750,6 +750,24 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['message'],
               ),
         ),
+        'markAsRead': _i1.MethodConnector(
+          name: 'markAsRead',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['chat'] as _i6.ChatEndpoint).markAsRead(
+                session,
+                params['roomId'],
+              ),
+        ),
       },
     );
     connectors['docs'] = _i1.EndpointConnector(
@@ -1128,6 +1146,25 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['ticketId'],
                     params['updates'],
+                  ),
+        ),
+        'getPlannerActivities': _i1.MethodConnector(
+          name: 'getPlannerActivities',
+          params: {
+            'appId': _i1.ParameterDescription(
+              name: 'appId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
+                  .getPlannerActivities(
+                    session,
+                    params['appId'],
                   ),
         ),
       },

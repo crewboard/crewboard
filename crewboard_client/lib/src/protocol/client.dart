@@ -63,9 +63,11 @@ import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
     as _i30;
 import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
     as _i31;
-import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i32;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i33;
-import 'protocol.dart' as _i34;
+import 'package:crewboard_client/src/protocol/protocols/get_planner_activities_response.dart'
+    as _i32;
+import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i33;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i34;
+import 'protocol.dart' as _i35;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -505,6 +507,13 @@ class EndpointChat extends _i2.EndpointRef {
         'sendMessage',
         {'message': message},
       );
+
+  _i3.Future<void> markAsRead(_i2.UuidValue roomId) =>
+      caller.callServerEndpoint<void>(
+        'chat',
+        'markAsRead',
+        {'roomId': roomId},
+      );
 }
 
 /// {@category Endpoint}
@@ -685,6 +694,15 @@ class EndpointPlanner extends _i2.EndpointRef {
       'updates': updates,
     },
   );
+
+  /// Get all planner activities for an app
+  _i3.Future<_i32.GetPlannerActivitiesResponse> getPlannerActivities(
+    _i2.UuidValue appId,
+  ) => caller.callServerEndpoint<_i32.GetPlannerActivitiesResponse>(
+    'planner',
+    'getPlannerActivities',
+    {'appId': appId},
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through
@@ -697,8 +715,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i32.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i32.Greeting>(
+  _i3.Future<_i33.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i33.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -708,13 +726,13 @@ class EndpointGreeting extends _i2.EndpointRef {
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
-    auth = _i33.Caller(client);
+    auth = _i34.Caller(client);
     serverpod_auth_core = _i4.Caller(client);
   }
 
   late final _i1.Caller serverpod_auth_idp;
 
-  late final _i33.Caller auth;
+  late final _i34.Caller auth;
 
   late final _i4.Caller serverpod_auth_core;
 }
@@ -739,7 +757,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i34.Protocol(),
+         _i35.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

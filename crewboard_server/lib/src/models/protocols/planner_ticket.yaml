@@ -12,3 +12,4 @@ fields:
   holder: String
   creds: double?
   createdAt: DateTime?
+  hasNewActivity: bool, default=false

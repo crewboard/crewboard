@@ -5,5 +5,6 @@ fields:
   roomName: String?
   roomType: String # 'direct' or 'group'
   lastMessageId: UuidValue? # Reference to last message ID
+  lastMessage: ChatMessage?, relation(field=lastMessageId)
   messageCount: int
   # lastSeenMessage: int? # This should probably be in a separate map table

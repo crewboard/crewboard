@@ -124,7 +124,7 @@ class _DropDownState extends State<DropDown> {
                                                       widget.items[i],
                                                       widget.itemKey,
                                                     ),
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                       fontSize: 12,
                                                       color: Pallet.font1,
                                                     ),
@@ -212,7 +212,7 @@ class _DropDownState extends State<DropDown> {
             Expanded(
               child: Text(
                 widget.label,
-                style: const TextStyle(fontSize: 12, color: Pallet.font1),
+                style: TextStyle(fontSize: 12, color: Pallet.font1),
               ),
             ),
             Container(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { glass, light, dark }
+enum AppTheme { glassDark, glassLight, classicLight, classicDark }
 
 class ThemeController extends GetxController {
-  final _currentTheme = AppTheme.glass.obs;
+  final _currentTheme = AppTheme.glassDark.obs;
   AppTheme get currentTheme => _currentTheme.value;
 
   static const String _themeKey = 'app_theme';
@@ -22,7 +22,7 @@ class ThemeController extends GetxController {
     if (themeString != null) {
       _currentTheme.value = AppTheme.values.firstWhere(
         (e) => e.toString() == themeString,
-        orElse: () => AppTheme.glass,
+        orElse: () => AppTheme.glassDark,
       );
     }
   }
@@ -38,17 +38,31 @@ class ThemeController extends GetxController {
 
   void _updateGlobalTheme() {
     switch (_currentTheme.value) {
-      case AppTheme.light:
+      case AppTheme.classicLight:
         Get.changeTheme(ThemeData.light());
         break;
-      case AppTheme.dark:
+      case AppTheme.classicDark:
         Get.changeTheme(ThemeData.dark());
         break;
-      case AppTheme.glass:
-        // Glass uses a custom look, we can keep the base dark or light
-        // For now, let's stick to a dark base for glass
+      case AppTheme.glassDark:
         Get.changeTheme(ThemeData.dark());
         break;
+      case AppTheme.glassLight:
+        Get.changeTheme(ThemeData.light());
+        break;
+    }
+  }
+  
+  String getThemeName(AppTheme theme) {
+    switch (theme) {
+      case AppTheme.glassDark:
+        return 'Glass Dark';
+      case AppTheme.glassLight:
+        return 'Glass Light';
+      case AppTheme.classicLight:
+        return 'Classic Light';
+      case AppTheme.classicDark:
+        return 'Classic Dark';
     }
   }
 }

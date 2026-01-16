@@ -1,54 +1,5 @@
 import 'package:flutter/material.dart';
 
-class ProfileIcon extends StatelessWidget {
-  final String name;
-  final double size;
-  final double fontSize;
-  final Color color;
-  final String? image;
-
-  const ProfileIcon({
-    super.key,
-    required this.name,
-    this.size = 40,
-    this.fontSize = 14,
-    this.color = Colors.blue,
-    this.image,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-        border: Border.all(color: color, width: 1),
-      ),
-      child: Center(
-        child: image != null
-            ? ClipOval(
-                child: Image.network(
-                  image!,
-                  width: size,
-                  height: size,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Text(
-                name.isNotEmpty ? name[0].toUpperCase() : '?',
-                style: TextStyle(
-                  color: color,
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-      ),
-    );
-  }
-}
-
 class MessageBubble extends StatelessWidget {
   final String message;
   final bool isMe;

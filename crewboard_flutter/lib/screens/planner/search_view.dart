@@ -191,11 +191,11 @@ class _SearchViewState extends State<SearchView> {
                                 searchText = value;
                               });
                             },
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               color: Pallet.font1,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: "search",
                               hintStyle: TextStyle(
                                 fontSize: 14,
@@ -206,7 +206,7 @@ class _SearchViewState extends State<SearchView> {
                             ),
                           ),
                         ),
-                        const Icon(Icons.search, size: 18, color: Pallet.font1),
+                        Icon(Icons.search, size: 18, color: Pallet.font1),
                       ],
                     ),
                   ),
@@ -242,7 +242,7 @@ class _SearchViewState extends State<SearchView> {
                                         children: [
                                           Text(
                                             ticket.ticketName,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Pallet.font1,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -266,7 +266,7 @@ class _SearchViewState extends State<SearchView> {
                                         ticket.ticketBody,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 13,
                                           color: Pallet.font3,
                                         ),
@@ -282,7 +282,7 @@ class _SearchViewState extends State<SearchView> {
                                   children: [
                                     Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.alarm,
                                           color: Pallet.font3,
                                           size: 16,
@@ -290,7 +290,7 @@ class _SearchViewState extends State<SearchView> {
                                         const SizedBox(width: 5),
                                         Text(
                                           ticket.deadline ?? "None",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Pallet.font3,
                                             fontSize: 12,
                                           ),
@@ -356,7 +356,7 @@ class _SearchViewState extends State<SearchView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             "filters",
                             style: TextStyle(color: Pallet.font1),
@@ -402,9 +402,7 @@ class _SearchViewState extends State<SearchView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
-                                      "property",
-                                      style: TextStyle(
+                                    Text("property", style: TextStyle(
                                         fontSize: 12,
                                         color: Pallet.font1,
                                       ),
@@ -416,7 +414,7 @@ class _SearchViewState extends State<SearchView> {
                                         });
                                         refreshSink.add("");
                                       },
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.close,
                                         size: 14,
                                         color: Pallet.font1,
@@ -447,9 +445,7 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "value",
-                                        style: TextStyle(
+                                      Text("value", style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -477,9 +473,7 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "value",
-                                        style: TextStyle(
+                                      Text("value", style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -507,9 +501,7 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "type",
-                                        style: TextStyle(
+                                      Text("type", style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -553,9 +545,7 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "value",
-                                        style: TextStyle(
+                                      Text("value", style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -584,9 +574,7 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "type",
-                                        style: TextStyle(
+                                      Text("type", style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -626,3 +614,5 @@ class _SearchViewState extends State<SearchView> {
     });
   }
 }
+
+

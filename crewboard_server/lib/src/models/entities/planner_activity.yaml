@@ -1,0 +1,11 @@
+class: PlannerActivity
+table: planner_activities
+fields:
+  id: UuidValue?, defaultPersist=random
+  ticketId: UuidValue
+  ticketName: String
+  userName: String
+  userColor: String?
+  action: String # 'commented', 'changed status'
+  details: String?
+  createdAt: DateTime

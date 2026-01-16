@@ -35,9 +35,7 @@ class BotItem extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: isSelected
-                ? Pallet.inside1.withValues(alpha: 0.2)
-                : Colors.transparent,
+            color: isSelected ? Pallet.inside1 : Colors.transparent,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(

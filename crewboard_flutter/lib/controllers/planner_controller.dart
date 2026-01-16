@@ -55,6 +55,9 @@ class PlannerController extends GetxController {
   final Rxn<UuidValue> selectedTicketId = Rxn<UuidValue>();
   // Drag and Drop state
   final Rxn<PlannerTicket> draggingTicket = Rxn<PlannerTicket>();
+  final Rxn<UuidValue> draggingSourceBucketId = Rxn<UuidValue>();
+  UuidValue? _lastHolderBucketId;
+  int? _lastHolderIndex;
 
   @override
   void onInit() {
@@ -414,12 +417,19 @@ class PlannerController extends GetxController {
   }
 
   // Drag and Drop Logic
-  void onDragStarted(PlannerTicket ticket) {
+  void onDragStarted(PlannerTicket ticket, UuidValue bucketId) {
     draggingTicket.value = ticket;
+    draggingSourceBucketId.value = bucketId;
+    _lastHolderBucketId = null;
+    _lastHolderIndex = null;
   }
 
   void onDragUpdated(UuidValue bucketId, int index) {
     if (draggingTicket.value == null) return;
+    if (_lastHolderBucketId == bucketId && _lastHolderIndex == index) return;
+
+    _lastHolderBucketId = bucketId;
+    _lastHolderIndex = index;
 
     // Find target bucket
     final targetBucket = buckets.firstWhereOrNull(
@@ -431,12 +441,9 @@ class PlannerController extends GetxController {
 
     // Remove existing holders
     for (var b in buckets) {
-      for (var i = 0; i < b.tickets.length; i++) {
-        if (b.tickets[i].holder == 'true') {
-          b.tickets.removeAt(i);
-          needsUpdate = true;
-          i--;
-        }
+      if (b.tickets.any((t) => t.holder == 'true')) {
+        b.tickets.removeWhere((t) => t.holder == 'true');
+        needsUpdate = true;
       }
     }
 
@@ -461,14 +468,30 @@ class PlannerController extends GetxController {
         ticketId: ticketId,
         newBucketId: bucketId,
         newOrder: index,
-        oldBucketId: UuidValue.fromString(
-          '00000000-0000-0000-0000-000000000000',
-        ),
+        oldBucketId:
+            draggingSourceBucketId.value ??
+            UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       ),
     );
 
     // Cleanup drag state
     draggingTicket.value = null;
+    draggingSourceBucketId.value = null;
     loadPlannerData();
+  }
+
+  void onDragCancelled() {
+    draggingTicket.value = null;
+    draggingSourceBucketId.value = null;
+    _lastHolderBucketId = null;
+    _lastHolderIndex = null;
+
+    // Remove holders
+    for (var b in buckets) {
+      if (b.tickets.any((t) => t.holder == 'true')) {
+        b.tickets.removeWhere((t) => t.holder == 'true');
+      }
+    }
+    buckets.refresh();
   }
 }

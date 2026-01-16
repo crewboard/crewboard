@@ -1,0 +1,9 @@
+class: TicketView
+table: ticket_views
+fields:
+  id: UuidValue?, defaultPersist=random
+  ticketId: UuidValue
+  ticket: Ticket?, relation(field=ticketId)
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  lastRead: DateTime

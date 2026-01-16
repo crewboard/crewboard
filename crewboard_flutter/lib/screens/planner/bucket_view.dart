@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:crewboard_client/crewboard_client.dart';
@@ -69,79 +70,84 @@ class BucketView extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           Expanded(
-            child: ListView(
-              children: [
-                // Render tickets with drag logic
-                for (var i = 0; i < bucket.tickets.length; i++)
-                  if (bucket.tickets[i].holder == 'true')
-                    DragTarget<PlannerTicket>(
-                      builder: (context, candidateData, rejectedData) {
-                        return Container(
-                          height: 100, // Placeholder height
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
-                            border: Border.all(color: Colors.blue),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        );
-                      },
-                      onAcceptWithDetails: (details) {
-                        controller.onDrop(bucket.bucketId, i);
-                      },
-                    )
-                  else
-                    DragTarget<PlannerTicket>(
-                      builder: (context, candidateData, rejectedData) {
-                        return DraggableCard(
-                          ticket: bucket.tickets[i],
-                          bucketId: bucket.bucketId,
-                          onDragStart: () {
-                            controller.onDragStarted(bucket.tickets[i]);
+            child: DragTarget<PlannerTicket>(
+              onWillAccept: (data) {
+                if (data != null) {
+                  controller.onDragUpdated(
+                    bucket.bucketId,
+                    bucket.tickets.length,
+                  );
+                  return true;
+                }
+                return false;
+              },
+              onAcceptWithDetails: (details) {
+                controller.onDrop(bucket.bucketId, bucket.tickets.length);
+              },
+              builder: (context, candidateData, rejectedData) {
+                return ListView(
+                  children: [
+                    // Render tickets with drag logic
+                    for (var i = 0; i < bucket.tickets.length; i++)
+                      if (bucket.tickets[i].holder == 'true')
+                        DragTarget<PlannerTicket>(
+                          builder: (context, candidateData, rejectedData) {
+                            return Container(
+                              height: 100, // Placeholder height
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.2),
+                                border: Border.all(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            );
                           },
-                        );
-                      },
-                      onWillAccept: (data) {
-                        if (data != null && data.id != bucket.tickets[i].id) {
-                          controller.onDragUpdated(bucket.bucketId, i);
-                          return true;
-                        }
-                        return false;
-                      },
-                      onAcceptWithDetails: (details) {
-                        // Acceptance logic mainly handled by placeholder drop
-                        // but if dropped here directly (helper logic sometimes needed)
-                      },
-                    ),
+                          onWillAccept: (data) {
+                            if (data != null) {
+                              controller.onDragUpdated(bucket.bucketId, i);
+                              return true;
+                            }
+                            return false;
+                          },
+                          onAcceptWithDetails: (details) {
+                            controller.onDrop(bucket.bucketId, i);
+                          },
+                        )
+                      else
+                        DragTarget<PlannerTicket>(
+                          builder: (context, candidateData, rejectedData) {
+                            return DraggableCard(
+                              ticket: bucket.tickets[i],
+                              bucketId: bucket.bucketId,
+                              onDragStart: () {
+                                controller.onDragStarted(
+                                  bucket.tickets[i],
+                                  bucket.bucketId,
+                                );
+                              },
+                            );
+                          },
+                          onWillAccept: (data) {
+                            if (data != null &&
+                                data.id != bucket.tickets[i].id) {
+                              controller.onDragUpdated(bucket.bucketId, i);
+                              return true;
+                            }
+                            return false;
+                          },
+                          onAcceptWithDetails: (details) {
+                            // Acceptance logic mainly handled by placeholder drop
+                          },
+                        ),
 
-                // Drag target at the bottom to add to end of list
-                DragTarget<PlannerTicket>(
-                  builder: (context, candidateData, rejectedData) {
-                    return Container(
-                      height: 50,
-                      color: Colors.transparent, // Invisible target area
-                    );
-                  },
-                  onWillAccept: (data) {
-                    // Start adding a placeholder at the end if hovering over bottom
-                    if (data != null) {
-                      // Only add if not already there or specific condition
-                      controller.onDragUpdated(
-                        bucket.bucketId,
-                        bucket.tickets.length,
-                      );
-                      return true;
-                    }
-                    return false;
-                  },
-                  onAcceptWithDetails: (details) {
-                    controller.onDrop(bucket.bucketId, bucket.tickets.length);
-                  },
-                ),
-              ],
+                    // Extra space at bottom to ensure scrollability and visibility
+                    const SizedBox(height: 100),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -194,6 +200,10 @@ class DraggableCard extends StatelessWidget {
         child: TicketWidget(ticket: ticket, bucketId: bucketId),
       ),
       onDragStarted: onDragStart,
+      onDraggableCanceled: (velocity, offset) {
+        final PlannerController controller = Get.find<PlannerController>();
+        controller.onDragCancelled();
+      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: TicketWidget(ticket: ticket, bucketId: bucketId),
@@ -249,15 +259,25 @@ class TicketWidget extends StatelessWidget {
                     int.parse(ticket.typeColor.replaceAll("#", "0xFF")),
                   ),
                 ),
+                if (ticket.hasNewActivity)
+                  Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 const Expanded(child: SizedBox()),
-                const Icon(Icons.upload_outlined, color: Pallet.font3),
-                const Icon(Icons.download_outlined, color: Pallet.font3),
+                Icon(Icons.upload_outlined, color: Pallet.font3),
+                Icon(Icons.download_outlined, color: Pallet.font3),
               ],
             ),
             const SizedBox(height: 10),
             Text(
               ticket.ticketName,
-              style: const TextStyle(fontSize: 16, color: Pallet.font1),
+              style: TextStyle(fontSize: 16, color: Pallet.font1),
             ),
             const SizedBox(height: 5),
             Padding(
@@ -266,19 +286,17 @@ class TicketWidget extends StatelessWidget {
                 ticket.ticketBody,
                 maxLines: 12,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: Pallet.font3),
+                style: TextStyle(fontSize: 13, color: Pallet.font3),
               ),
             ),
             const SizedBox(height: 5),
             Row(
               children: [
-                const Icon(Icons.alarm, color: Pallet.font3),
+                Icon(Icons.alarm, color: Pallet.font3),
                 const SizedBox(width: 5),
                 Text(
-                  (ticket.deadline == null)
-                      ? "None"
-                      : ticket.deadline.toString(),
-                  style: const TextStyle(color: Pallet.font3),
+                  _formatDeadline(ticket.deadline),
+                  style: TextStyle(color: Pallet.font3, fontSize: 12),
                 ),
                 Expanded(child: Container()),
                 SizedBox(
@@ -311,5 +329,15 @@ class TicketWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDeadline(String? deadline) {
+    if (deadline == null || deadline.isEmpty) return "No deadline";
+    try {
+      DateTime dt = DateTime.parse(deadline);
+      return DateFormat('MMM d').format(dt);
+    } catch (e) {
+      return deadline;
+    }
   }
 }

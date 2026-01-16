@@ -34,7 +34,7 @@ class GlassMorph extends StatelessWidget {
     return Obx(() {
       final currentTheme = themeController.currentTheme;
 
-      if (currentTheme == AppTheme.glass) {
+      if (currentTheme == AppTheme.glassDark || currentTheme == AppTheme.glassLight) {
         return SizedBox(
           width: width,
           height: height,
@@ -50,8 +50,8 @@ class GlassMorph extends StatelessWidget {
           ),
         );
       } else {
-        // Light or Dark Mode (Solid Design)
-        final isDark = currentTheme == AppTheme.dark;
+        // Classic Light or Dark Mode (Solid Design)
+        final isDark = currentTheme == AppTheme.classicDark;
         final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
         final borderColor = isDark
             ? Colors.white10

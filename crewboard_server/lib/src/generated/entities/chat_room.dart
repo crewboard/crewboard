@@ -9,8 +9,12 @@
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
 
+// ignore_for_file: unnecessary_null_comparison
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import '../entities/chat_message.dart' as _i2;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
 
 abstract class ChatRoom
     implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
@@ -19,6 +23,7 @@ abstract class ChatRoom
     this.roomName,
     required this.roomType,
     this.lastMessageId,
+    this.lastMessage,
     required this.messageCount,
   });
 
@@ -27,6 +32,7 @@ abstract class ChatRoom
     String? roomName,
     required String roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     required int messageCount,
   }) = _ChatRoomImpl;
 
@@ -41,6 +47,11 @@ abstract class ChatRoom
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastMessageId'],
+            ),
+      lastMessage: jsonSerialization['lastMessage'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.ChatMessage>(
+              jsonSerialization['lastMessage'],
             ),
       messageCount: jsonSerialization['messageCount'] as int,
     );
@@ -59,6 +70,8 @@ abstract class ChatRoom
 
   _i1.UuidValue? lastMessageId;
 
+  _i2.ChatMessage? lastMessage;
+
   int messageCount;
 
   @override
@@ -72,6 +85,7 @@ abstract class ChatRoom
     String? roomName,
     String? roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     int? messageCount,
   });
   @override
@@ -82,6 +96,7 @@ abstract class ChatRoom
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
       if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
+      if (lastMessage != null) 'lastMessage': lastMessage?.toJson(),
       'messageCount': messageCount,
     };
   }
@@ -94,12 +109,13 @@ abstract class ChatRoom
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
       if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
+      if (lastMessage != null) 'lastMessage': lastMessage?.toJsonForProtocol(),
       'messageCount': messageCount,
     };
   }
 
-  static ChatRoomInclude include() {
-    return ChatRoomInclude._();
+  static ChatRoomInclude include({_i2.ChatMessageInclude? lastMessage}) {
+    return ChatRoomInclude._(lastMessage: lastMessage);
   }
 
   static ChatRoomIncludeList includeList({
@@ -136,12 +152,14 @@ class _ChatRoomImpl extends ChatRoom {
     String? roomName,
     required String roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     required int messageCount,
   }) : super._(
          id: id,
          roomName: roomName,
          roomType: roomType,
          lastMessageId: lastMessageId,
+         lastMessage: lastMessage,
          messageCount: messageCount,
        );
 
@@ -154,6 +172,7 @@ class _ChatRoomImpl extends ChatRoom {
     Object? roomName = _Undefined,
     String? roomType,
     Object? lastMessageId = _Undefined,
+    Object? lastMessage = _Undefined,
     int? messageCount,
   }) {
     return ChatRoom(
@@ -163,6 +182,9 @@ class _ChatRoomImpl extends ChatRoom {
       lastMessageId: lastMessageId is _i1.UuidValue?
           ? lastMessageId
           : this.lastMessageId,
+      lastMessage: lastMessage is _i2.ChatMessage?
+          ? lastMessage
+          : this.lastMessage?.copyWith(),
       messageCount: messageCount ?? this.messageCount,
     );
   }
@@ -223,7 +245,22 @@ class ChatRoomTable extends _i1.Table<_i1.UuidValue?> {
 
   late final _i1.ColumnUuid lastMessageId;
 
+  _i2.ChatMessageTable? _lastMessage;
+
   late final _i1.ColumnInt messageCount;
+
+  _i2.ChatMessageTable get lastMessage {
+    if (_lastMessage != null) return _lastMessage!;
+    _lastMessage = _i1.createRelationTable(
+      relationFieldName: 'lastMessage',
+      field: ChatRoom.t.lastMessageId,
+      foreignField: _i2.ChatMessage.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.ChatMessageTable(tableRelation: foreignTableRelation),
+    );
+    return _lastMessage!;
+  }
 
   @override
   List<_i1.Column> get columns => [
@@ -233,13 +270,25 @@ class ChatRoomTable extends _i1.Table<_i1.UuidValue?> {
     lastMessageId,
     messageCount,
   ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'lastMessage') {
+      return lastMessage;
+    }
+    return null;
+  }
 }
 
 class ChatRoomInclude extends _i1.IncludeObject {
-  ChatRoomInclude._();
+  ChatRoomInclude._({_i2.ChatMessageInclude? lastMessage}) {
+    _lastMessage = lastMessage;
+  }
+
+  _i2.ChatMessageInclude? _lastMessage;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'lastMessage': _lastMessage};
 
   @override
   _i1.Table<_i1.UuidValue?> get table => ChatRoom.t;
@@ -267,6 +316,10 @@ class ChatRoomIncludeList extends _i1.IncludeList {
 
 class ChatRoomRepository {
   const ChatRoomRepository._();
+
+  final attachRow = const ChatRoomAttachRowRepository._();
+
+  final detachRow = const ChatRoomDetachRowRepository._();
 
   /// Returns a list of [ChatRoom]s matching the given query parameters.
   ///
@@ -299,6 +352,7 @@ class ChatRoomRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<ChatRoomTable>? orderByList,
     _i1.Transaction? transaction,
+    ChatRoomInclude? include,
   }) async {
     return session.db.find<ChatRoom>(
       where: where?.call(ChatRoom.t),
@@ -308,6 +362,7 @@ class ChatRoomRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -336,6 +391,7 @@ class ChatRoomRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<ChatRoomTable>? orderByList,
     _i1.Transaction? transaction,
+    ChatRoomInclude? include,
   }) async {
     return session.db.findFirstRow<ChatRoom>(
       where: where?.call(ChatRoom.t),
@@ -344,6 +400,7 @@ class ChatRoomRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -352,10 +409,12 @@ class ChatRoomRepository {
     _i1.Session session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    ChatRoomInclude? include,
   }) async {
     return session.db.findById<ChatRoom>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -513,6 +572,59 @@ class ChatRoomRepository {
     return session.db.count<ChatRoom>(
       where: where?.call(ChatRoom.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+}
+
+class ChatRoomAttachRowRepository {
+  const ChatRoomAttachRowRepository._();
+
+  /// Creates a relation between the given [ChatRoom] and [ChatMessage]
+  /// by setting the [ChatRoom]'s foreign key `lastMessageId` to refer to the [ChatMessage].
+  Future<void> lastMessage(
+    _i1.Session session,
+    ChatRoom chatRoom,
+    _i2.ChatMessage lastMessage, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (chatRoom.id == null) {
+      throw ArgumentError.notNull('chatRoom.id');
+    }
+    if (lastMessage.id == null) {
+      throw ArgumentError.notNull('lastMessage.id');
+    }
+
+    var $chatRoom = chatRoom.copyWith(lastMessageId: lastMessage.id);
+    await session.db.updateRow<ChatRoom>(
+      $chatRoom,
+      columns: [ChatRoom.t.lastMessageId],
+      transaction: transaction,
+    );
+  }
+}
+
+class ChatRoomDetachRowRepository {
+  const ChatRoomDetachRowRepository._();
+
+  /// Detaches the relation between this [ChatRoom] and the [ChatMessage] set in `lastMessage`
+  /// by setting the [ChatRoom]'s foreign key `lastMessageId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> lastMessage(
+    _i1.Session session,
+    ChatRoom chatRoom, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (chatRoom.id == null) {
+      throw ArgumentError.notNull('chatRoom.id');
+    }
+
+    var $chatRoom = chatRoom.copyWith(lastMessageId: null);
+    await session.db.updateRow<ChatRoom>(
+      $chatRoom,
+      columns: [ChatRoom.t.lastMessageId],
       transaction: transaction,
     );
   }

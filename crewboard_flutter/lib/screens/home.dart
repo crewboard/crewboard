@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import '../config/palette.dart';
 import '../controllers/router_controller.dart';
 import '../controllers/sidebar_controller.dart';
+import '../widgets/moving_background.dart';
 import 'sidebar.dart';
 
 final buttonColors = WindowButtonColors(
@@ -48,35 +48,37 @@ class Home extends StatelessWidget {
       body: WindowBorder(
         color: const Color(0xFF805306),
         width: 1,
-        child: DecoratedBox(
-          decoration: BoxDecoration(gradient: Pallet.backgroundGradient),
-          child: Column(
-            children: [
-              WindowTitleBarBox(
-                child: Row(
-                  children: [
-                    Expanded(child: MoveWindow()),
-                    const WindowButtons(),
-                  ],
+        child: Stack(
+          children: [
+            const Positioned.fill(child: MovingBackground()),
+            Column(
+              children: [
+                WindowTitleBarBox(
+                  child: Row(
+                    children: [
+                      Expanded(child: MoveWindow()),
+                      const WindowButtons(),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const SideBar(children: []),
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Obx(
-                          () => routerController.currentPageWidget.value,
+                Expanded(
+                  child: Row(
+                    children: [
+                      const SideBar(children: []),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Obx(
+                            () => routerController.currentPageWidget.value,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

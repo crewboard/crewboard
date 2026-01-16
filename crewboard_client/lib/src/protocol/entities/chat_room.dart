@@ -11,6 +11,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../entities/chat_message.dart' as _i2;
+import 'package:crewboard_client/src/protocol/protocol.dart' as _i3;
 
 abstract class ChatRoom implements _i1.SerializableModel {
   ChatRoom._({
@@ -18,6 +20,7 @@ abstract class ChatRoom implements _i1.SerializableModel {
     this.roomName,
     required this.roomType,
     this.lastMessageId,
+    this.lastMessage,
     required this.messageCount,
   });
 
@@ -26,6 +29,7 @@ abstract class ChatRoom implements _i1.SerializableModel {
     String? roomName,
     required String roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     required int messageCount,
   }) = _ChatRoomImpl;
 
@@ -40,6 +44,11 @@ abstract class ChatRoom implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastMessageId'],
+            ),
+      lastMessage: jsonSerialization['lastMessage'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.ChatMessage>(
+              jsonSerialization['lastMessage'],
             ),
       messageCount: jsonSerialization['messageCount'] as int,
     );
@@ -56,6 +65,8 @@ abstract class ChatRoom implements _i1.SerializableModel {
 
   _i1.UuidValue? lastMessageId;
 
+  _i2.ChatMessage? lastMessage;
+
   int messageCount;
 
   /// Returns a shallow copy of this [ChatRoom]
@@ -66,6 +77,7 @@ abstract class ChatRoom implements _i1.SerializableModel {
     String? roomName,
     String? roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     int? messageCount,
   });
   @override
@@ -76,6 +88,7 @@ abstract class ChatRoom implements _i1.SerializableModel {
       if (roomName != null) 'roomName': roomName,
       'roomType': roomType,
       if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
+      if (lastMessage != null) 'lastMessage': lastMessage?.toJson(),
       'messageCount': messageCount,
     };
   }
@@ -94,12 +107,14 @@ class _ChatRoomImpl extends ChatRoom {
     String? roomName,
     required String roomType,
     _i1.UuidValue? lastMessageId,
+    _i2.ChatMessage? lastMessage,
     required int messageCount,
   }) : super._(
          id: id,
          roomName: roomName,
          roomType: roomType,
          lastMessageId: lastMessageId,
+         lastMessage: lastMessage,
          messageCount: messageCount,
        );
 
@@ -112,6 +127,7 @@ class _ChatRoomImpl extends ChatRoom {
     Object? roomName = _Undefined,
     String? roomType,
     Object? lastMessageId = _Undefined,
+    Object? lastMessage = _Undefined,
     int? messageCount,
   }) {
     return ChatRoom(
@@ -121,6 +137,9 @@ class _ChatRoomImpl extends ChatRoom {
       lastMessageId: lastMessageId is _i1.UuidValue?
           ? lastMessageId
           : this.lastMessageId,
+      lastMessage: lastMessage is _i2.ChatMessage?
+          ? lastMessage
+          : this.lastMessage?.copyWith(),
       messageCount: messageCount ?? this.messageCount,
     );
   }

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../config/palette.dart';
 import '../../controllers/rooms_controller.dart';
 import '../../controllers/messages_controller.dart';
-import 'chat_widgets.dart';
+import '../../widgets/widgets.dart';
 
 class Rooms extends StatefulWidget {
   const Rooms({super.key});
@@ -99,7 +99,7 @@ class _RoomsState extends State<Rooms> {
                         roomsController.resetSearch();
                         setState(() {});
                       },
-                      child: Icon(Icons.close, color: Pallet.font1, size: 18),
+                      child: Icon(Icons.close, color: Pallet.font3, size: 18),
                     ),
                   ],
                 ),
@@ -109,25 +109,12 @@ class _RoomsState extends State<Rooms> {
             child: ListView(
               children: [
                 if (roomsController.rooms.isNotEmpty) ...[
-                  if (search)
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "Rooms",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Pallet.font1,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   for (var room in rooms)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: InkWell(
                         onTap: () {
-                          room = room.copyWith(messageCount: 0);
-                          roomsController.rooms.refresh();
+                          roomsController.markAsRead(room);
                           Window.subPage.value = "messages";
                           roomsController.selectRoom(room);
 
@@ -152,7 +139,7 @@ class _RoomsState extends State<Rooms> {
                               RoomItem(
                                 name: room.roomName ?? "",
                                 color: Colors.red,
-                                message: const {},
+                                message: room.lastMessage?.toJson() ?? {},
                                 userId: userId,
                                 messageCount: room.messageCount,
                               ),
@@ -273,6 +260,7 @@ class RoomItem extends StatelessWidget {
             name: name,
             color: color,
             image: image,
+            style: ProfileIconStyle.outlined,
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -282,35 +270,48 @@ class RoomItem extends StatelessWidget {
                 Text(name, style: const TextStyle(fontSize: 14)),
                 const SizedBox(height: 6),
                 if (message["messageType"] == "text")
-                  Text.rich(
-                    TextSpan(
-                      text: '',
-                      children: [
-                        for (var text in jsonDecode(message["message"]))
-                          if (text["type"] == "text")
-                            TextSpan(
-                              text: text["value"],
-                              style: TextStyle(
-                                color: Pallet.font3,
-                                fontSize: 13,
-                              ),
-                            )
-                          else
-                            TextSpan(
-                              text: text["value"]["emoji"],
-                              style: TextStyle(
-                                color: Pallet.font3,
-                                fontSize: 13,
-                              ),
-                            ),
-                      ],
-                    ),
-                  )
+                  () {
+                    try {
+                      final decoded = jsonDecode(message["message"]);
+                      if (decoded is List) {
+                        return Text.rich(
+                          TextSpan(
+                            text: '',
+                            children: [
+                              for (var text in decoded)
+                                if (text["type"] == "text")
+                                  TextSpan(
+                                    text: text["value"],
+                                    style: TextStyle(
+                                      color: Pallet.font3,
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                else
+                                  TextSpan(
+                                    text: text["value"]["emoji"],
+                                    style: TextStyle(
+                                      color: Pallet.font3,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                            ],
+                          ),
+                        );
+                      }
+                    } catch (_) {}
+                    return Text(
+                      message["message"] ?? "",
+                      style: TextStyle(color: Pallet.font3, fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  }()
                 else if (message["messageType"] != null)
                   Text(
-                    (message["messageType"] == userId)
-                        ? "you send a "
-                        : "send you a ${message["messageType"]}",
+                    (UuidValue.fromString(message["userId"]) == userId)
+                        ? "you sent a ${message["messageType"]}"
+                        : "sent you a ${message["messageType"]}",
                     style: TextStyle(color: Pallet.font3, fontSize: 13),
                   )
                 else

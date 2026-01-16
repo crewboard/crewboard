@@ -23,6 +23,8 @@ abstract class ThreadItemModel
     this.oldStatus,
     this.newStatus,
     required this.createdAt,
+    this.action,
+    this.details,
     required this.type,
   });
 
@@ -35,6 +37,8 @@ abstract class ThreadItemModel
     String? oldStatus,
     String? newStatus,
     required String createdAt,
+    String? action,
+    String? details,
     required String type,
   }) = _ThreadItemModelImpl;
 
@@ -48,6 +52,8 @@ abstract class ThreadItemModel
       oldStatus: jsonSerialization['oldStatus'] as String?,
       newStatus: jsonSerialization['newStatus'] as String?,
       createdAt: jsonSerialization['createdAt'] as String,
+      action: jsonSerialization['action'] as String?,
+      details: jsonSerialization['details'] as String?,
       type: jsonSerialization['type'] as String,
     );
   }
@@ -68,6 +74,10 @@ abstract class ThreadItemModel
 
   String createdAt;
 
+  String? action;
+
+  String? details;
+
   String type;
 
   /// Returns a shallow copy of this [ThreadItemModel]
@@ -82,6 +92,8 @@ abstract class ThreadItemModel
     String? oldStatus,
     String? newStatus,
     String? createdAt,
+    String? action,
+    String? details,
     String? type,
   });
   @override
@@ -96,6 +108,8 @@ abstract class ThreadItemModel
       if (oldStatus != null) 'oldStatus': oldStatus,
       if (newStatus != null) 'newStatus': newStatus,
       'createdAt': createdAt,
+      if (action != null) 'action': action,
+      if (details != null) 'details': details,
       'type': type,
     };
   }
@@ -112,6 +126,8 @@ abstract class ThreadItemModel
       if (oldStatus != null) 'oldStatus': oldStatus,
       if (newStatus != null) 'newStatus': newStatus,
       'createdAt': createdAt,
+      if (action != null) 'action': action,
+      if (details != null) 'details': details,
       'type': type,
     };
   }
@@ -134,6 +150,8 @@ class _ThreadItemModelImpl extends ThreadItemModel {
     String? oldStatus,
     String? newStatus,
     required String createdAt,
+    String? action,
+    String? details,
     required String type,
   }) : super._(
          id: id,
@@ -144,6 +162,8 @@ class _ThreadItemModelImpl extends ThreadItemModel {
          oldStatus: oldStatus,
          newStatus: newStatus,
          createdAt: createdAt,
+         action: action,
+         details: details,
          type: type,
        );
 
@@ -160,6 +180,8 @@ class _ThreadItemModelImpl extends ThreadItemModel {
     Object? oldStatus = _Undefined,
     Object? newStatus = _Undefined,
     String? createdAt,
+    Object? action = _Undefined,
+    Object? details = _Undefined,
     String? type,
   }) {
     return ThreadItemModel(
@@ -171,6 +193,8 @@ class _ThreadItemModelImpl extends ThreadItemModel {
       oldStatus: oldStatus is String? ? oldStatus : this.oldStatus,
       newStatus: newStatus is String? ? newStatus : this.newStatus,
       createdAt: createdAt ?? this.createdAt,
+      action: action is String? ? action : this.action,
+      details: details is String? ? details : this.details,
       type: type ?? this.type,
     );
   }

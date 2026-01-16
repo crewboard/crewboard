@@ -55,30 +55,7 @@ class PlannerEndpoint extends Endpoint {
         if (ticket == null) continue;
 
         // Fetch assignees for this ticket
-        final assigneesList = <PlannerAssignee>[];
-        final bucketMapsForTicket = await BucketTicketMap.db.find(
-          session,
-          where: (t) => t.ticketId.equals(ticket.id!),
-          include: BucketTicketMap.include(
-            bucket: Bucket.include(
-              user: User.include(color: SystemColor.include()),
-            ),
-          ),
-        );
-
-        for (final ticketMap in bucketMapsForTicket) {
-          final user = ticketMap.bucket?.user;
-          if (user != null) {
-            assigneesList.add(
-              PlannerAssignee(
-                userId: user.id!,
-                userName: user.userName,
-                color: user.color?.color ?? '#000000',
-                selected: true,
-              ),
-            );
-          }
-        }
+        final assigneesList = await _getAssigneesForTicket(session, ticket.id!);
 
         ticketModels.add(
           PlannerTicket(
@@ -93,6 +70,7 @@ class PlannerEndpoint extends Endpoint {
             assignees: assigneesList,
             holder: 'Unknown',
             creds: ticket.creds.toDouble(),
+            hasNewActivity: await _hasNewActivity(session, ticket.id!, userId),
           ),
         );
       }
@@ -246,6 +224,21 @@ class PlannerEndpoint extends Endpoint {
       ),
     );
 
+    await PlannerActivity.db.insertRow(
+      session,
+      PlannerActivity(
+        ticketId: ticket.id!,
+        ticketName: ticket.ticketName,
+        userName: user.userName,
+        userColor:
+            (await SystemColor.db.findById(session, user.colorId))?.color ??
+            '#000000',
+        action: 'created ticket',
+        details: 'Initial status: ${request.ticket.status.statusName}',
+        createdAt: DateTime.now(),
+      ),
+    );
+
     return true;
   }
 
@@ -287,10 +280,10 @@ class PlannerEndpoint extends Endpoint {
           typeColor: ticket.type?.color?.color ?? '#000000',
           deadline: ticket.deadline?.toIso8601String(),
           createdAt: ticket.createdAt,
-          assignees:
-              [], // Fetching assignees for all tickets might be heavy, skipping for now
+          assignees: await _getAssigneesForTicket(session, ticket.id!),
           holder: 'Unknown',
           creds: ticket.creds.toDouble(),
+          hasNewActivity: await _hasNewActivity(session, ticket.id!, user.id!),
         ),
       );
     }
@@ -405,60 +398,53 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     UuidValue ticketId,
   ) async {
-    final comments = await TicketComment.db.find(
+    final activities = await PlannerActivity.db.find(
       session,
       where: (t) => t.ticketId.equals(ticketId),
-    );
-
-    final statusChanges = await TicketStatusChange.db.find(
-      session,
-      where: (t) => t.ticketId.equals(ticketId),
-      include: TicketStatusChange.include(
-        user: User.include(color: SystemColor.include()),
-        oldStatus: Status.include(),
-        newStatus: Status.include(),
-      ),
+      orderBy: (t) => t.createdAt,
     );
 
     final List<ThreadItemModel> items = [];
 
-    for (final comment in comments) {
-      final user = await User.db.findById(
+    for (final activity in activities) {
+      items.add(
+        ThreadItemModel(
+          id: activity.id!,
+          userId: UuidValue.fromString(
+            '00000000-0000-0000-0000-000000000000',
+          ), // Placeholder since PlannerActivity doesn't have userId currently (oops)
+          userName: activity.userName,
+          userColor: activity.userColor,
+          message: activity.action == 'commented' ? activity.details : null,
+          action: activity.action,
+          details: activity.action != 'commented' ? activity.details : null,
+          createdAt: activity.createdAt.toIso8601String(),
+          type: activity.action == 'commented' ? 'comment' : 'activity',
+        ),
+      );
+    }
+
+    // Record view
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final userId = user.id!;
+    final existingView = await TicketView.db.findFirstRow(
+      session,
+      where: (t) => t.ticketId.equals(ticketId) & t.userId.equals(userId),
+    );
+
+    if (existingView != null) {
+      existingView.lastRead = DateTime.now();
+      await TicketView.db.updateRow(session, existingView);
+    } else {
+      await TicketView.db.insertRow(
         session,
-        comment.userId,
-        include: User.include(color: SystemColor.include()),
-      );
-      items.add(
-        ThreadItemModel(
-          id: comment.id!,
-          userId: comment.userId,
-          userName: user?.userName ?? 'Unknown',
-          userColor: user?.color?.color ?? '#000000',
-          message: comment.message,
-          createdAt: comment.createdAt?.toIso8601String() ?? '',
-          type: 'comment',
+        TicketView(
+          ticketId: ticketId,
+          userId: userId,
+          lastRead: DateTime.now(),
         ),
       );
     }
-
-    for (final change in statusChanges) {
-      items.add(
-        ThreadItemModel(
-          id: change.id!,
-          userId:
-              change.user?.id ??
-              UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-          userName: change.user?.userName ?? 'Unknown',
-          userColor: change.user?.color?.color ?? '#000000',
-          oldStatus: change.oldStatus?.statusName,
-          newStatus: change.newStatus?.statusName ?? 'Unknown',
-          createdAt: change.changedAt?.toIso8601String() ?? '',
-          type: 'status_change',
-        ),
-      );
-    }
-
-    items.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     return GetTicketThreadResponse(items: items);
   }
@@ -506,6 +492,22 @@ class PlannerEndpoint extends Endpoint {
         ticketId: request.ticketId,
         userId: userId,
         message: request.message,
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    final ticket = await Ticket.db.findById(session, request.ticketId);
+    final userColor = await SystemColor.db.findById(session, user.colorId);
+
+    await PlannerActivity.db.insertRow(
+      session,
+      PlannerActivity(
+        ticketId: request.ticketId,
+        ticketName: ticket?.ticketName ?? 'Unknown',
+        userName: user.userName,
+        userColor: userColor?.color ?? '#000000',
+        action: 'commented',
+        details: request.message,
         createdAt: DateTime.now(),
       ),
     );
@@ -621,6 +623,25 @@ class PlannerEndpoint extends Endpoint {
               changedAt: DateTime.now(),
             ),
           );
+
+          await PlannerActivity.db.insertRow(
+            session,
+            PlannerActivity(
+              ticketId: ticket.id!,
+              ticketName: ticket.ticketName,
+              userName: user.userName,
+              userColor:
+                  (await SystemColor.db.findById(
+                    session,
+                    user.colorId,
+                  ))?.color ??
+                  '#000000',
+              action: 'changed status',
+              details:
+                  'from ${ticket.status?.statusName ?? 'None'} to ${newStatus.statusName}',
+              createdAt: DateTime.now(),
+            ),
+          );
         }
       }
     } catch (e) {
@@ -662,6 +683,26 @@ class PlannerEndpoint extends Endpoint {
               changedAt: DateTime.now(),
             ),
           );
+
+          final newStatus = await Status.db.findById(session, newStatusId);
+          await PlannerActivity.db.insertRow(
+            session,
+            PlannerActivity(
+              ticketId: ticket.id!,
+              ticketName: ticket.ticketName,
+              userName: user.userName,
+              userColor:
+                  (await SystemColor.db.findById(
+                    session,
+                    user.colorId,
+                  ))?.color ??
+                  '#000000',
+              action: 'changed status',
+              details:
+                  'from ${ticket.status?.statusName ?? 'None'} to ${newStatus?.statusName ?? 'Unknown'}',
+              createdAt: DateTime.now(),
+            ),
+          );
         }
       } else if (name == 'ticketName') {
         ticket.ticketName = value as String;
@@ -676,5 +717,100 @@ class PlannerEndpoint extends Endpoint {
 
     await Ticket.db.updateRow(session, ticket);
     return true;
+  }
+
+  Future<List<PlannerAssignee>> _getAssigneesForTicket(
+    Session session,
+    UuidValue ticketId,
+  ) async {
+    final assigneesList = <PlannerAssignee>[];
+    final bucketMapsForTicket = await BucketTicketMap.db.find(
+      session,
+      where: (t) => t.ticketId.equals(ticketId),
+      include: BucketTicketMap.include(
+        bucket: Bucket.include(
+          user: User.include(color: SystemColor.include()),
+        ),
+      ),
+    );
+
+    for (final ticketMap in bucketMapsForTicket) {
+      final user = ticketMap.bucket?.user;
+      if (user != null) {
+        assigneesList.add(
+          PlannerAssignee(
+            userId: user.id!,
+            userName: user.userName,
+            color: user.color?.color ?? '#000000',
+            selected: true,
+          ),
+        );
+      }
+    }
+    return assigneesList;
+  }
+
+  /// Get all planner activities for an app
+  Future<GetPlannerActivitiesResponse> getPlannerActivities(
+    Session session,
+    UuidValue appId,
+  ) async {
+    // Check if app belongs to the same organization
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final app = await PlannerApp.db.findById(session, appId);
+    if (app == null || app.organizationId != user.organizationId) {
+      throw Exception('Unauthorized');
+    }
+
+    // Fetch activities for all tickets in this app
+    final tickets = await Ticket.db.find(
+      session,
+      where: (t) => t.appId.equals(appId),
+    );
+    final ticketIds = tickets.map((t) => t.id!).toSet();
+
+    if (ticketIds.isEmpty) {
+      return GetPlannerActivitiesResponse(activities: []);
+    }
+
+    final activities = await PlannerActivity.db.find(
+      session,
+      where: (t) => t.ticketId.inSet(ticketIds),
+      orderBy: (t) => t.createdAt,
+      orderDescending: true,
+    );
+
+    return GetPlannerActivitiesResponse(activities: activities);
+  }
+
+  Future<bool> _hasNewActivity(
+    Session session,
+    UuidValue ticketId,
+    UuidValue userId,
+  ) async {
+    final lastView = await TicketView.db.findFirstRow(
+      session,
+      where: (t) => t.ticketId.equals(ticketId) & t.userId.equals(userId),
+    );
+
+    if (lastView == null) return true; // Never viewed means new activity
+
+    // Check comments after lastView.lastRead
+    final latestComment = await TicketComment.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.ticketId.equals(ticketId) & (t.createdAt > lastView.lastRead),
+    );
+    if (latestComment != null) return true;
+
+    // Check status changes after lastView.lastRead
+    final latestStatusChange = await TicketStatusChange.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.ticketId.equals(ticketId) & (t.changedAt > lastView.lastRead),
+    );
+    if (latestStatusChange != null) return true;
+
+    return false;
   }
 }

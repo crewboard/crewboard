@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../config/palette.dart';
 import '../../controllers/planner_controller.dart';
-import '../../widgets/glass_morph.dart';
-import 'chat_widgets.dart';
+import '../../widgets/widgets.dart';
 
 class TicketThreadsFullView extends StatelessWidget {
   const TicketThreadsFullView({super.key});
@@ -23,39 +22,38 @@ class TicketThreadsFullView extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  "Ticket Threads",
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Pallet.font1,
-                  ),
-                ),
+              Obx(
+                () => controller.selectedTicketId.value != null
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          "Ticket Threads",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Pallet.font1,
+                          ),
+                        ),
+                      ),
               ),
               Expanded(
                 child: Obx(() {
+                  final selectedId = controller.selectedTicketId.value;
+                  if (selectedId != null) {
+                    final ticket = controller.allTickets.firstWhereOrNull(
+                      (t) => t.id == selectedId,
+                    );
+                    if (ticket != null) {
+                      return _ThreadContent(ticket: ticket);
+                    }
+                  }
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     itemCount: controller.allTickets.length,
                     itemBuilder: (context, index) {
                       final ticket = controller.allTickets[index];
-                      return Obx(() {
-                        final isSelected =
-                            controller.selectedTicketId.value == ticket.id;
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _TicketListTile(ticket: ticket),
-                            if (isSelected)
-                              SizedBox(
-                                height: constraints.maxHeight * 0.75,
-                                child: _ThreadContent(ticket: ticket),
-                              ),
-                          ],
-                        );
-                      });
+                      return _TicketListTile(ticket: ticket);
                     },
                   );
                 }),
@@ -95,11 +93,6 @@ class _TicketListTile extends StatelessWidget {
                 ? Colors.blue.withValues(alpha: 0.1)
                 : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: isSelected
-                  ? Colors.blue.withValues(alpha: 0.3)
-                  : Colors.white.withValues(alpha: 0.1),
-            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,25 +111,107 @@ class _TicketListTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      ticket.ticketName,
-                      style: TextStyle(
-                        color: Pallet.font1,
-                        fontSize: 14,
-                        fontWeight: isSelected
-                            ? FontWeight.bold
-                            : FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            ticket.ticketName,
+                            style: TextStyle(
+                              color: Pallet.font1,
+                              fontSize: 14,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        CustomBadge(
+                          label: ticket.typeName,
+                          color: Color(
+                            int.parse(ticket.typeColor.replaceAll("#", "0xFF")),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                ticket.statusName,
-                style: TextStyle(color: Pallet.font3, fontSize: 11),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Text(
+                    ticket.statusName,
+                    style: TextStyle(color: Pallet.font3, fontSize: 11),
+                  ),
+                  const Spacer(),
+                  if (ticket.assignees.isNotEmpty)
+                    SizedBox(
+                      height: 24,
+                      width:
+                          18.0 *
+                              (ticket.assignees.length > 4
+                                  ? 4
+                                  : ticket.assignees.length) +
+                          10,
+                      child: Stack(
+                        children: [
+                          for (
+                            var i = 0;
+                            i < ticket.assignees.length && i < 4;
+                            i++
+                          )
+                            Positioned(
+                              left: i * 14.0,
+                              child: ProfileIcon(
+                                size: 24,
+                                fontSize: 10,
+                                name: ticket.assignees[i].userName,
+                                style: ProfileIconStyle.outlined,
+                                useOpacity: false,
+                                color: Color(
+                                  int.parse(
+                                    ticket.assignees[i].color.replaceAll(
+                                      "#",
+                                      "0xFF",
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (ticket.assignees.length > 4)
+                            Positioned(
+                              left: 4 * 14.0,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: Pallet.inside2,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Pallet.font3,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "+${ticket.assignees.length - 4}",
+                                    style: TextStyle(
+                                      color: Pallet.font3,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
@@ -157,7 +232,70 @@ class _ThreadContent extends StatelessWidget {
     final messageController = TextEditingController();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () => controller.selectedTicketId.value = null,
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Pallet.font1,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  ticket.ticketName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Pallet.font1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Divider with label
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Divider(color: Colors.white.withValues(alpha: 0.1)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                color: const Color(
+                  0xff121212,
+                ), // Matching typical glass backdrop or app background
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 16,
+                      color: Pallet.font3,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "Messages in this thread",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Pallet.font3,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         // Thread Items
         Expanded(
           child: Obx(() {
@@ -170,7 +308,7 @@ class _ThreadContent extends StatelessWidget {
               );
             }
             return ListView.builder(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               reverse: true,
               itemCount: controller.ticketThread.length,
               itemBuilder: (context, index) {
@@ -185,67 +323,75 @@ class _ThreadContent extends StatelessWidget {
           }),
         ),
         // Input Area
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-            ),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: TextField(
-                    controller: messageController,
-                    style: const TextStyle(fontSize: 14),
-                    decoration: const InputDecoration(
-                      hintText: "Type a message or update...",
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextField(
+                        controller: messageController,
+                        style: const TextStyle(fontSize: 14),
+                        decoration: const InputDecoration(
+                          hintText: "Type a message or update...",
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        onSubmitted: (val) {
+                          if (val.isNotEmpty) {
+                            controller.addComment(
+                              AddCommentRequest(
+                                ticketId: ticket.id,
+                                message: val,
+                              ),
+                            );
+                            messageController.clear();
+                            controller.getTicketThread(ticket.id);
+                          }
+                        },
+                      ),
                     ),
-                    onSubmitted: (val) {
-                      if (val.isNotEmpty) {
+                  ),
+                  const SizedBox(width: 15),
+                  IconButton(
+                    onPressed: () {
+                      if (messageController.text.isNotEmpty) {
                         controller.addComment(
-                          AddCommentRequest(ticketId: ticket.id, message: val),
+                          AddCommentRequest(
+                            ticketId: ticket.id,
+                            message: messageController.text,
+                          ),
                         );
                         messageController.clear();
                         controller.getTicketThread(ticket.id);
                       }
                     },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 15),
-              IconButton(
-                onPressed: () {
-                  if (messageController.text.isNotEmpty) {
-                    controller.addComment(
-                      AddCommentRequest(
-                        ticketId: ticket.id,
-                        message: messageController.text,
+                    icon: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
                       ),
-                    );
-                    messageController.clear();
-                    controller.getTicketThread(ticket.id);
-                  }
-                },
-                icon: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
+                      child: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
                   ),
-                  child: const Icon(Icons.send, color: Colors.white, size: 20),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ],
@@ -260,56 +406,28 @@ class StatusChangeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withValues(alpha: 0.1)),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, color: Colors.orange, size: 18),
-          const SizedBox(width: 12),
+          const SizedBox(width: 44), // Alignment with comment text
           Expanded(
-            child: RichText(
-              text: TextSpan(
-                style: const TextStyle(fontSize: 13, color: Colors.orange),
-                children: [
-                  TextSpan(
-                    text: item.userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Divider(color: Colors.white.withValues(alpha: 0.05)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  color: const Color(0xff121212),
+                  child: Text(
+                    "${item.userName} moved this to ${item.newStatus}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Pallet.font3,
+                    ),
                   ),
-                  if (item.oldStatus == null) ...[
-                    const TextSpan(text: " created this with status "),
-                    TextSpan(
-                      text: item.newStatus ?? 'Unknown',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ] else ...[
-                    const TextSpan(text: " moved this from "),
-                    TextSpan(
-                      text: item.oldStatus!,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const TextSpan(text: " to "),
-                    TextSpan(
-                      text: item.newStatus ?? 'Unknown',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          Text(
-            item.createdAt.length > 16
-                ? item.createdAt.substring(11, 16)
-                : item.createdAt,
-            style: TextStyle(
-              color: Colors.orange.withValues(alpha: 0.5),
-              fontSize: 11,
+                ),
+              ],
             ),
           ),
         ],
@@ -326,57 +444,57 @@ class ThreadCommentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 24),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileIcon(
             name: item.userName,
+            style: ProfileIconStyle.outlined,
             color: Color(
               int.parse(
                 item.userColor?.replaceAll("#", "0xFF") ?? "0xFF2196F3",
               ),
             ),
-            size: 40,
-            fontSize: 14,
+            size: 32,
+            fontSize: 12,
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
                       item.userName,
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                         color: Pallet.font1,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 8),
                     Text(
                       item.createdAt.length > 16
                           ? item.createdAt.substring(11, 16)
                           : item.createdAt,
-                      style: TextStyle(color: Pallet.font3, fontSize: 11),
+                      style: GoogleFonts.poppins(
+                        color: Pallet.font3,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.05),
-                    ),
-                  ),
-                  child: Text(
-                    item.message ?? "",
-                    style: TextStyle(fontSize: 14, color: Pallet.font2),
+                const SizedBox(height: 4),
+                Text(
+                  item.message ?? "",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Pallet.font2,
+                    height: 1.4,
                   ),
                 ),
               ],
@@ -387,3 +505,4 @@ class ThreadCommentItem extends StatelessWidget {
     );
   }
 }
+

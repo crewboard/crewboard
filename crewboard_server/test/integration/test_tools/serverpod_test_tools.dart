@@ -66,7 +66,9 @@ import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart
     as _i30;
 import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
     as _i31;
-import 'package:crewboard_server/src/generated/greetings/greeting.dart' as _i32;
+import 'package:crewboard_server/src/generated/protocols/get_planner_activities_response.dart'
+    as _i32;
+import 'package:crewboard_server/src/generated/greetings/greeting.dart' as _i33;
 import 'package:crewboard_server/src/generated/protocol.dart';
 import 'package:crewboard_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -1321,6 +1323,37 @@ class _ChatEndpoint {
       }
     });
   }
+
+  _i3.Future<void> markAsRead(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue roomId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'chat',
+            method: 'markAsRead',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'chat',
+          methodName: 'markAsRead',
+          parameters: _i1.testObjectToJson({'roomId': roomId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _DocsEndpoint {
@@ -1945,6 +1978,37 @@ class _PlannerEndpoint {
       }
     });
   }
+
+  _i3.Future<_i32.GetPlannerActivitiesResponse> getPlannerActivities(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue appId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'planner',
+            method: 'getPlannerActivities',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'planner',
+          methodName: 'getPlannerActivities',
+          parameters: _i1.testObjectToJson({'appId': appId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i32.GetPlannerActivitiesResponse>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _GreetingEndpoint {
@@ -1957,7 +2021,7 @@ class _GreetingEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i32.Greeting> hello(
+  _i3.Future<_i33.Greeting> hello(
     _i1.TestSessionBuilder sessionBuilder,
     String name,
   ) async {
@@ -1980,7 +2044,7 @@ class _GreetingEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i32.Greeting>);
+                as _i3.Future<_i33.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

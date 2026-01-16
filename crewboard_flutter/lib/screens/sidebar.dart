@@ -210,6 +210,7 @@ class SideBar extends StatelessWidget {
                               CurrentPage.chat) {
                             return Column(
                               children: [
+                                const SizedBox(height: 10),
                                 const BotItem(
                                   name: "threads",
                                   image: "assets/bot.jpg",
@@ -223,7 +224,6 @@ class SideBar extends StatelessWidget {
                                   page: "memory",
                                   count: 0,
                                 ),
-                                const SizedBox(height: 10),
                                 const Expanded(child: Rooms()),
                               ],
                             );

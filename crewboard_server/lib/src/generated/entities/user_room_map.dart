@@ -19,13 +19,15 @@ abstract class UserRoomMap
     required this.roomId,
     required this.userId,
     this.lastSeenMessageId,
-  });
+    int? unreadCount,
+  }) : unreadCount = unreadCount ?? 0;
 
   factory UserRoomMap({
     _i1.UuidValue? id,
     required _i1.UuidValue roomId,
     required _i1.UuidValue userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   }) = _UserRoomMapImpl;
 
   factory UserRoomMap.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -40,6 +42,7 @@ abstract class UserRoomMap
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastSeenMessageId'],
             ),
+      unreadCount: jsonSerialization['unreadCount'] as int,
     );
   }
 
@@ -56,6 +59,8 @@ abstract class UserRoomMap
 
   _i1.UuidValue? lastSeenMessageId;
 
+  int unreadCount;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -67,6 +72,7 @@ abstract class UserRoomMap
     _i1.UuidValue? roomId,
     _i1.UuidValue? userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -77,6 +83,7 @@ abstract class UserRoomMap
       'userId': userId.toJson(),
       if (lastSeenMessageId != null)
         'lastSeenMessageId': lastSeenMessageId?.toJson(),
+      'unreadCount': unreadCount,
     };
   }
 
@@ -89,6 +96,7 @@ abstract class UserRoomMap
       'userId': userId.toJson(),
       if (lastSeenMessageId != null)
         'lastSeenMessageId': lastSeenMessageId?.toJson(),
+      'unreadCount': unreadCount,
     };
   }
 
@@ -130,11 +138,13 @@ class _UserRoomMapImpl extends UserRoomMap {
     required _i1.UuidValue roomId,
     required _i1.UuidValue userId,
     _i1.UuidValue? lastSeenMessageId,
+    int? unreadCount,
   }) : super._(
          id: id,
          roomId: roomId,
          userId: userId,
          lastSeenMessageId: lastSeenMessageId,
+         unreadCount: unreadCount,
        );
 
   /// Returns a shallow copy of this [UserRoomMap]
@@ -146,6 +156,7 @@ class _UserRoomMapImpl extends UserRoomMap {
     _i1.UuidValue? roomId,
     _i1.UuidValue? userId,
     Object? lastSeenMessageId = _Undefined,
+    int? unreadCount,
   }) {
     return UserRoomMap(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -154,6 +165,7 @@ class _UserRoomMapImpl extends UserRoomMap {
       lastSeenMessageId: lastSeenMessageId is _i1.UuidValue?
           ? lastSeenMessageId
           : this.lastSeenMessageId,
+      unreadCount: unreadCount ?? this.unreadCount,
     );
   }
 }
@@ -179,6 +191,11 @@ class UserRoomMapUpdateTable extends _i1.UpdateTable<UserRoomMapTable> {
     table.lastSeenMessageId,
     value,
   );
+
+  _i1.ColumnValue<int, int> unreadCount(int value) => _i1.ColumnValue(
+    table.unreadCount,
+    value,
+  );
 }
 
 class UserRoomMapTable extends _i1.Table<_i1.UuidValue?> {
@@ -196,6 +213,11 @@ class UserRoomMapTable extends _i1.Table<_i1.UuidValue?> {
       'lastSeenMessageId',
       this,
     );
+    unreadCount = _i1.ColumnInt(
+      'unreadCount',
+      this,
+      hasDefault: true,
+    );
   }
 
   late final UserRoomMapUpdateTable updateTable;
@@ -206,12 +228,15 @@ class UserRoomMapTable extends _i1.Table<_i1.UuidValue?> {
 
   late final _i1.ColumnUuid lastSeenMessageId;
 
+  late final _i1.ColumnInt unreadCount;
+
   @override
   List<_i1.Column> get columns => [
     id,
     roomId,
     userId,
     lastSeenMessageId,
+    unreadCount,
   ];
 }
 

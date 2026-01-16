@@ -49,10 +49,15 @@ dependencies:
   intl: ^0.20.2
   collection: ^1.17.0
   file_picker: ^8.0.0
+  particles_flutter: ^0.1.4
+  desktop_drop: ^0.4.4
+  mime: ^1.0.5
+  path: ^1.9.0
   
   # Rich Text
   flutter_quill: ^11.5.0
   flutter_quill_extensions: ^11.0.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/theme_controller.dart';
 
 StreamController<String> refresh = StreamController<String>.broadcast();
 StreamSink<String> get refreshSink => refresh.sink;
@@ -35,12 +36,89 @@ class Pallet {
     end: Alignment.bottomLeft,
   );
 
-  static Color divider = const Color(0xFF728b99).withValues(alpha: 0.3);
-  static const Color font1 = Color(0xFFe6e8ed);
-  static const Color font2 = Color(0xFFc9ccd3);
-  static const Color font3 = Color(0xFF728b99);
+  // Dynamic colors based on theme
+  static Color get divider {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight 
+          ? const Color(0xFF728b99).withOpacity(0.3)
+          : const Color(0xFF728b99).withOpacity(0.3);
+    } catch (e) {
+      return const Color(0xFF728b99).withOpacity(0.3);
+    }
+  }
 
-  static Color inside1 = Colors.white.withValues(alpha: 0.1);
-  static Color inside2 = Colors.white.withValues(alpha: 0.1);
-  static Color inside3 = Colors.white.withValues(alpha: 0.1);
+  static Color get font1 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
+    } catch (e) {
+      return const Color(0xFFe6e8ed);
+    }
+  }
+
+  static Color get font2 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight ? const Color(0xFF4B5563) : const Color(0xFFc9ccd3);
+    } catch (e) {
+      return const Color(0xFFc9ccd3);
+    }
+  }
+
+  static Color get font3 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight ? const Color(0xFF6B7280) : const Color(0xFF728b99);
+    } catch (e) {
+      return const Color(0xFF728b99);
+    }
+  }
+
+  static Color get inside1 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight 
+          ? Colors.black.withOpacity(0.05)
+          : Colors.white.withOpacity(0.1);
+    } catch (e) {
+      return Colors.white.withOpacity(0.1);
+    }
+  }
+
+  static Color get inside2 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight 
+          ? Colors.black.withOpacity(0.08)
+          : Colors.white.withOpacity(0.15);
+    } catch (e) {
+      return Colors.white.withOpacity(0.15);
+    }
+  }
+
+  static Color get inside3 {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      return isLight 
+          ? Colors.black.withOpacity(0.1)
+          : Colors.white.withOpacity(0.2);
+    } catch (e) {
+      return Colors.white.withOpacity(0.2);
+    }
+  }
 }

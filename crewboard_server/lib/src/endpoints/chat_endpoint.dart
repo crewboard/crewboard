@@ -18,11 +18,20 @@ class ChatEndpoint extends Endpoint {
     final roomIds = roomMaps.map((m) => m.roomId).toSet();
     if (roomIds.isEmpty) return [];
 
-    return await ChatRoom.db.find(
+    final rooms = await ChatRoom.db.find(
       session,
       where: (t) => t.id.inSet(roomIds),
       orderBy: (t) => t.roomName,
+      include: ChatRoom.include(lastMessage: ChatMessage.include()),
     );
+
+    // Map the per-user unread count from UserRoomMap to ChatRoom.messageCount
+    for (var room in rooms) {
+      final map = roomMaps.firstWhere((m) => m.roomId == room.id);
+      room.messageCount = map.unreadCount;
+    }
+
+    return rooms;
   }
 
   Future<List<User>> searchUsers(Session session, String query) async {
@@ -87,12 +96,12 @@ class ChatEndpoint extends Endpoint {
       // Map both users to the room
       await UserRoomMap.db.insertRow(
         session,
-        UserRoomMap(roomId: room.id!, userId: currentUserId),
+        UserRoomMap(roomId: room.id!, userId: currentUserId, unreadCount: 0),
         transaction: transaction,
       );
       await UserRoomMap.db.insertRow(
         session,
-        UserRoomMap(roomId: room.id!, userId: otherUserId),
+        UserRoomMap(roomId: room.id!, userId: otherUserId, unreadCount: 0),
         transaction: transaction,
       );
 
@@ -127,8 +136,20 @@ class ChatEndpoint extends Endpoint {
     final room = await ChatRoom.db.findById(session, message.roomId);
     if (room != null) {
       room.lastMessageId = savedMessage.id;
-      room.messageCount += 1;
+      // room.messageCount += 1; // This is now per-user in UserRoomMap
       await ChatRoom.db.updateRow(session, room);
+    }
+
+    // Increment unread count for other users in the room
+    final otherUserMaps = await UserRoomMap.db.find(
+      session,
+      where: (t) =>
+          t.roomId.equals(message.roomId) & t.userId.notEquals(user.id!),
+    );
+
+    for (var userMap in otherUserMaps) {
+      userMap.unreadCount += 1;
+      await UserRoomMap.db.updateRow(session, userMap);
     }
 
     await session.messages.postMessage(
@@ -147,6 +168,19 @@ class ChatEndpoint extends Endpoint {
         // ignore: deprecated_member_use
         sendStreamMessage(session, msg);
       });
+    }
+  }
+
+  Future<void> markAsRead(Session session, UuidValue roomId) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final userMap = await UserRoomMap.db.findFirstRow(
+      session,
+      where: (t) => t.userId.equals(user.id!) & t.roomId.equals(roomId),
+    );
+
+    if (userMap != null) {
+      userMap.unreadCount = 0;
+      await UserRoomMap.db.updateRow(session, userMap);
     }
   }
 }

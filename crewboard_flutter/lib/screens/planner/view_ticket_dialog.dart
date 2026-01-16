@@ -316,7 +316,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                           );
                           if (date != null) {
                             controller.deadline.value = DateFormat(
-                              'dd-MM-yyyy',
+                              'yyyy-MM-dd',
                             ).format(date);
                             controller.addToEditStack(
                               "deadline",
@@ -358,7 +358,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       InkWell(
                         onTap: () {
                           setState(() => page = "comments");
-                          controller.getTicketCommentsFull(widget.ticketId);
+                          controller.getTicketThread(widget.ticketId);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8),
@@ -474,17 +474,26 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
             height: 400,
             child: ListView.builder(
               reverse: true,
-              itemCount: controller.comments.length,
+              itemCount: controller.ticketThread.length,
               itemBuilder: (context, index) {
-                final comment = controller.comments[index];
+                final item = controller.ticketThread[index];
+                final isComment = item.type == 'comment';
+
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ProfileIcon(
-                        name: comment.userName,
-                        color: Colors.blue,
+                        name: item.userName,
+                        color: Color(
+                          int.parse(
+                            (item.userColor ?? "#000000").replaceAll(
+                              "#",
+                              "0xFF",
+                            ),
+                          ),
+                        ),
                         size: 30,
                         fontSize: 12,
                       ),
@@ -493,27 +502,89 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              comment.userName,
-                              style: TextStyle(
-                                color: Pallet.font2,
-                                fontSize: 11,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  item.userName,
+                                  style: TextStyle(
+                                    color: Pallet.font2,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  DateFormat('hh:mm a').format(
+                                    DateTime.parse(item.createdAt),
+                                  ),
+                                  style: TextStyle(
+                                    color: Pallet.font3,
+                                    fontSize: 9,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Pallet.inside1,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                comment.message,
-                                style: TextStyle(
-                                  color: Pallet.font1,
-                                  fontSize: 13,
+                            const SizedBox(height: 4),
+                            if (isComment)
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Pallet.inside1,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  item.message ?? '',
+                                  style: TextStyle(
+                                    color: Pallet.font1,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              )
+                            else
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.1),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      item.action == 'created ticket'
+                                          ? Icons.add_circle_outline
+                                          : Icons.sync_alt,
+                                      size: 14,
+                                      color: Pallet.font3,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                            color: Pallet.font3,
+                                            fontSize: 12,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: "${item.action}: ",
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            TextSpan(text: item.details ?? ""),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -535,10 +606,18 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
               const SizedBox(width: 10),
               IconButton(
                 icon: Icon(Icons.send, color: Pallet.font1),
-                onPressed: () {
+                onPressed: () async {
                   if (controller.controller.value.text.isNotEmpty) {
-                    // controller.addComment(widget.ticketId, controller.controller.value.text);
-                    controller.controller.value.clear();
+                    final success = await controller.addComment(
+                      AddCommentRequest(
+                        ticketId: widget.ticketId,
+                        message: controller.controller.value.text,
+                      ),
+                    );
+                    if (success) {
+                      controller.controller.value.clear();
+                      controller.getTicketThread(widget.ticketId);
+                    }
                   }
                 },
               ),
