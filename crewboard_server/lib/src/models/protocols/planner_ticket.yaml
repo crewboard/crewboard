@@ -13,3 +13,4 @@ fields:
   creds: double?
   createdAt: DateTime?
   hasNewActivity: bool, default=false
+  latestActivity: String?

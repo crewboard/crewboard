@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/features/filter_editor/widgets/filter_generator.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/widgets/filter_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
 import '../../filter_editor/widgets/filtered_widget.dart';
 import '../services/sizes_manager.dart';
 import '../services/state_manager.dart';

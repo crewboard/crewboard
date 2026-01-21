@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '/features/main_editor/main_editor.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
 
 /// A widget representing the remove area in the video editor.
 ///

@@ -17,10 +17,10 @@ class SmallButton extends StatelessWidget {
     return InkWell(
       onTap: onPress,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         decoration: BoxDecoration(
           color: color ?? Pallet.inside1,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Text(
           label,

@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 import '../models/editor_callbacks/pro_image_editor_callbacks.dart';

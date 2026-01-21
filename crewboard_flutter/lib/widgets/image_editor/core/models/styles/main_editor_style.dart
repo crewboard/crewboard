@@ -1,6 +1,6 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/services.dart';
-import '/core/constants/editor_style_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_style_constants.dart';
 
 import 'sub_editor_page_style.dart';
 

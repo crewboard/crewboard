@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// A wrapper widget that provides a themed layout for bottom UI components.
 ///

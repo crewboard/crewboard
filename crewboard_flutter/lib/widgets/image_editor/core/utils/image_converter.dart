@@ -1,12 +1,12 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
-import '/core/models/editor_image.dart';
-import '/shared/services/content_recorder/controllers/content_recorder_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/controllers/content_recorder_controller.dart';
 
 /// A utility singleton class that handles conversion of image formats
 /// using custom generation configurations and a recording system.

@@ -1,18 +1,18 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/features/text_editor/widgets/text_editor_appbar.dart';
-import '/features/text_editor/widgets/text_editor_color_picker.dart';
-import '/features/text_editor/widgets/text_editor_input.dart';
-import '/pro_image_editor.dart';
-import '/shared/extensions/color_extension.dart';
-import '/shared/widgets/slider_bottom_sheet.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/text_editor_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/text_editor_color_picker.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/text_editor_input.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/color_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/slider_bottom_sheet.dart';
 import 'widgets/text_editor_bottom_bar.dart';
 
 /// A StatefulWidget that provides a text editing interface for adding and

@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/ui/pro_image_editor_icons.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/ui/pro_image_editor_icons.dart';
 
 /// Customizable icons for the Sticker Editor component.
 class StickerEditorIcons {

@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
-import '/core/models/editor_configs/paint_editor/censor_configs.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/paint_editor/censor_configs.dart';
 
 /// An abstract widget that represents a censored area with configurable
 /// blur intensity and shape.

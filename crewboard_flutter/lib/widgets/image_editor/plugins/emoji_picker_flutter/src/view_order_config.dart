@@ -1,4 +1,4 @@
-/// View order config
+﻿/// View order config
 class ViewOrderConfig {
   /// Constructor
   const ViewOrderConfig({

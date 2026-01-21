@@ -1,4 +1,4 @@
-/// A class that defines callback functions for handling different types of
+﻿/// A class that defines callback functions for handling different types of
 /// helper line hits.
 class HelperLinesCallbacks {
   /// Creates an instance of [HelperLinesCallbacks] with optional callback

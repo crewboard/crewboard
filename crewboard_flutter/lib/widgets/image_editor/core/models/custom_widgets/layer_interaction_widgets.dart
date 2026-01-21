@@ -1,6 +1,6 @@
-import 'utils/custom_widgets_typedef.dart';
+﻿import 'utils/custom_widgets_typedef.dart';
 
-export '/shared/widgets/layer/models/layer_item_interaction.dart';
+export 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/models/layer_item_interaction.dart';
 
 /// A class that defines a layer of interaction for custom widgets,
 /// allowing editing, removing, and rotating/scaling actions.

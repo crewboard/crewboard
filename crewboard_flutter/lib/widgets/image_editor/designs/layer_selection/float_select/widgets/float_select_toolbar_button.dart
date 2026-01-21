@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// A styled text button used in the FloatSelect toolbar
 class FloatSelectToolbarButton extends StatelessWidget {

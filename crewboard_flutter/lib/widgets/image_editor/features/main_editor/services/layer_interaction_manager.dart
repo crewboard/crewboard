@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
@@ -6,12 +6,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/editor_callbacks/main_editor/helper_lines/helper_lines_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/history/last_layer_interaction_position.dart';
-import '/core/models/layers/layer.dart';
-import '/shared/utils/debounce.dart';
-import '/shared/utils/unique_id_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/main_editor/helper_lines/helper_lines_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/history/last_layer_interaction_position.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/debounce.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/unique_id_generator.dart';
 
 /// A helper class responsible for managing layer interactions in the editor.
 ///

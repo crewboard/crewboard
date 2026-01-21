@@ -1,12 +1,12 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/extensions/color_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/color_extension.dart';
 import 'color_picker_configs.dart';
 
 export 'color_picker_configs.dart';

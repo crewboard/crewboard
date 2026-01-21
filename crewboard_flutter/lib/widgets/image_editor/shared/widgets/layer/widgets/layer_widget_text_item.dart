@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/text_editor_configs.dart';
-import '/core/models/layers/text_layer.dart';
-import '../../../../features/text_editor/widgets/rounded_background_text/rounded_background_text.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/text_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/text_layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/rounded_background_text/rounded_background_text.dart';
 
 /// A widget representing a text layer in the sticker editor.
 class LayerWidgetTextItem extends StatelessWidget {

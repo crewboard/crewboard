@@ -1,4 +1,4 @@
-import '../color/color.dart';
+﻿import '../color/color.dart';
 
 /// Provides information about the image being decoded.
 abstract class DecodeInfo {

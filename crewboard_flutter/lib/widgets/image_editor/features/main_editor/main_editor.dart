@@ -1,35 +1,35 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/core/constants/editor_various_constants.dart';
-import '/core/constants/image_constants.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_callbacks_mixin.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/core/models/styles/draggable_sheet_style.dart';
-import '/core/services/gesture_manager.dart';
-import '/core/services/mouse_service.dart';
-import '/features/main_editor/widgets/main_editor_appbar.dart';
-import '/features/main_editor/widgets/main_editor_background_image.dart';
-import '/features/main_editor/widgets/main_editor_background_video.dart';
-import '/features/main_editor/widgets/main_editor_bottombar.dart';
-import '/features/main_editor/widgets/main_editor_helper_lines.dart';
-import '/features/main_editor/widgets/main_editor_layers.dart';
-import '/features/main_editor/widgets/main_editor_remove_layer_area.dart';
-import '/pro_image_editor.dart';
-import '/shared/mixins/editor_zoom.mixin.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/services/import_export/export_state_history.dart';
-import '/shared/services/layer_transform_generator.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/utils/transparent_image_generator_utils.dart';
-import '/shared/widgets/adaptive_dialog.dart';
-import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
-import '/shared/widgets/screen_resize_detector.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_various_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/image_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_callbacks_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/styles/draggable_sheet_style.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/gesture_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/mouse_service.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_background_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_background_video.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_bottombar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_helper_lines.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_layers.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/widgets/main_editor_remove_layer_area.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/mixins/editor_zoom.mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/export_state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/layer_transform_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/transparent_image_generator_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/adaptive_dialog.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/screen_resize_detector.dart';
 import '../filter_editor/types/filter_matrix.dart';
 import '../filter_editor/widgets/filter_generator.dart';
 import '../paint_editor/models/paint_editor_response_model.dart';
@@ -2656,7 +2656,7 @@ class ProImageEditorState extends State<ProImageEditor>
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   /// That function is required so that multiselect works
-                  /// correctly, even when it’s empty.
+                  /// correctly, even when itâ€™s empty.
                 },
                 onLongPress: mainEditorCallbacks?.onLongPress,
                 onScaleStart: _onScaleStart,

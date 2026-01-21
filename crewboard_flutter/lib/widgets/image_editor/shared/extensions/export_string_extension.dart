@@ -1,4 +1,4 @@
-import '../services/import_export/utils/key_minifier.dart';
+﻿import '../services/import_export/utils/key_minifier.dart';
 
 /// Extension on [String] to convert keys using [EditorKeyMinifier].
 extension ExportStringExtension on String {

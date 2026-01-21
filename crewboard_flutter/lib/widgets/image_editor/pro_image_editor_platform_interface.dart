@@ -1,4 +1,4 @@
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+﻿import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'pro_image_editor_method_channel.dart';
 

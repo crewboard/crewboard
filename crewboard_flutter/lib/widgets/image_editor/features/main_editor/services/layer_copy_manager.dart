@@ -1,8 +1,8 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:ui';
 
 // Project imports:
-import '/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
 
 /// A class responsible for managing layers in an image editing environment.
 ///

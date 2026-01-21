@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import '../controllers/theme_controller.dart';
 
 StreamController<String> refresh = StreamController<String>.broadcast();
@@ -120,5 +121,48 @@ class Pallet {
     } catch (e) {
       return Colors.white.withOpacity(0.2);
     }
+  }
+
+  static WindowButtonColors get windowButtonColors {
+    try {
+      final themeController = Get.find<ThemeController>();
+      final isLight = themeController.currentTheme == AppTheme.glassLight || 
+                      themeController.currentTheme == AppTheme.classicLight;
+      
+      // Use theme colors
+      final iconColor = isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
+      // Amber for hover/pressed as originally requested or consistent with theme?
+      // User said: "currently it is amber when i hover ... make the task bar also according to the theme"
+      // So they want to REMOVE the amber if it doesn't match, or make it theme consistent.
+      // I will use a subtle hover color based on theme.
+      final hoverColor = isLight ? Colors.black.withOpacity(0.1) : Colors.white.withOpacity(0.1);
+      final mouseDownColor = isLight ? Colors.black.withOpacity(0.2) : Colors.white.withOpacity(0.2);
+
+      return WindowButtonColors(
+        iconNormal: iconColor,
+        mouseOver: hoverColor,
+        mouseDown: mouseDownColor,
+        iconMouseOver: iconColor,
+        iconMouseDown: iconColor,
+      );
+    } catch (e) {
+      // Fallback
+      return WindowButtonColors(
+        iconNormal: const Color(0xFFe6e8ed),
+        mouseOver: Colors.white.withOpacity(0.1),
+        mouseDown: Colors.white.withOpacity(0.2),
+        iconMouseOver: const Color(0xFFe6e8ed),
+        iconMouseDown: const Color(0xFFe6e8ed),
+      );
+    }
+  }
+
+  static WindowButtonColors get closeWindowButtonColors {
+      return WindowButtonColors(
+        mouseOver: const Color(0xFFD32F2F),
+        mouseDown: const Color(0xFFB71C1C),
+        iconNormal: windowButtonColors.iconNormal,
+        iconMouseOver: Colors.white,
+      );
   }
 }

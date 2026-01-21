@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// [ExtendedTransformScale] is a stateful widget that allows

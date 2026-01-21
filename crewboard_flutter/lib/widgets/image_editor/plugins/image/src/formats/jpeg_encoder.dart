@@ -1,17 +1,17 @@
-// Dart imports:
+﻿// Dart imports:
 // ignore_for_file: implementation_imports, public_member_api_docs
 
 // Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
-import '/plugins/image/src/color/color.dart';
-import '/plugins/image/src/color/color_int32.dart';
-import '/plugins/image/src/color/format.dart';
-import '/plugins/image/src/exif/exif_data.dart';
-import '/plugins/image/src/formats/jpeg/jpeg_marker.dart';
-import '/plugins/image/src/image/image.dart';
-import '/plugins/image/src/util/output_buffer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/color/color.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/color/color_int32.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/color/format.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/exif/exif_data.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_marker.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/util/output_buffer.dart';
 import 'jpeg/jpeg_chroma.dart';
 
 /// Encode an image to the JPEG format.

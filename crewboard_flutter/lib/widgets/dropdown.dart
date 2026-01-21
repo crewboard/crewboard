@@ -205,7 +205,7 @@ class _DropDownState extends State<DropDown> {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: Pallet.inside1,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
           children: [

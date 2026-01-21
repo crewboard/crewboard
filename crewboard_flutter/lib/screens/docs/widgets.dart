@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import '../../widgets/document/flutter_quill.dart';
 import 'document_editor_provider.dart';
 
 void showCustomFontDialog(

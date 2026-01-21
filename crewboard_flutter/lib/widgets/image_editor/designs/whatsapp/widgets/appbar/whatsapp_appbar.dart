@@ -1,11 +1,11 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '../../../../shared/widgets/gesture/gesture_interceptor_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/gesture/gesture_interceptor_widget.dart';
 import '../../styles/whatsapp_appbar_button_style.dart';
 
 /// Represents the app bar for the WhatsApp theme.

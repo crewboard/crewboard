@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 
 /// Provides image information to descendant widgets in the widget tree.
 ///

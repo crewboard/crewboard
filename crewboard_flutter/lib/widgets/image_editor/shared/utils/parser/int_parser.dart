@@ -1,4 +1,4 @@
-import 'double_parser.dart';
+﻿import 'double_parser.dart';
 
 /// Safely parses a [dynamic] value to an [int].
 ///

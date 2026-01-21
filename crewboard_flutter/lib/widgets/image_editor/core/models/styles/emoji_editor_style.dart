@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
     show
         BottomActionBarConfig,
         CategoryViewConfig,
@@ -14,7 +14,7 @@ import '../../constants/editor_style_constants.dart';
 import 'draggable_sheet_style.dart';
 import 'types/style_types.dart';
 
-export '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
+export 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
     show
         BottomActionBarConfig,
         CategoryViewConfig,

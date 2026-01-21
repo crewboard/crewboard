@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
 
 /// Creates custom [BoxConstraints] to use when displaying
 /// editors in modal bottom sheets.

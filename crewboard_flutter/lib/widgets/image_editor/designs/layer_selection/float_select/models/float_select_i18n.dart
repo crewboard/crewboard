@@ -1,4 +1,4 @@
-/// Holds localized labels for FloatSelect actions
+﻿/// Holds localized labels for FloatSelect actions
 class FloatSelectI18n {
   /// Creates a set of localized labels
   const FloatSelectI18n({

@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the Paint Editor component.
+﻿/// Internationalization (i18n) settings for the Paint Editor component.
 class I18nPaintEditor {
   /// Creates an instance of [I18nPaintEditor] with customizable
   /// internationalization settings.

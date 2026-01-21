@@ -1,7 +1,7 @@
-import 'package:flutter/gestures.dart';
+﻿import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
-import '/features/main_editor/services/layer_interaction_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_interaction_manager.dart';
 import '../models/editor_configs/pro_image_editor_configs.dart';
 
 /// A service that tracks the state of mouse buttons (left, right, and middle).

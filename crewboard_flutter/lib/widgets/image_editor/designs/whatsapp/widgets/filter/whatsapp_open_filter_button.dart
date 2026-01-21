@@ -1,11 +1,11 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
 
 /// Represents the button for applying filters in the WhatsApp theme.
 class WhatsAppOpenFilterBtn extends StatefulWidget {

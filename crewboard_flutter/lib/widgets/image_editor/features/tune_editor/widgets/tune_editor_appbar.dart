@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/tune_editor_configs.dart';
-import '/core/models/i18n/i18n_tune_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/tune_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_tune_editor.dart';
 
 /// A custom AppBar for the tune editor, providing controls for undo, redo,
 /// and completing or closing the tuning process.

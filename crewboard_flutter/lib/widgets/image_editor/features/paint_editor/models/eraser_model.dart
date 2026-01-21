@@ -1,8 +1,8 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
-import '/core/constants/int_constants.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/utils/parser/double_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/double_parser.dart';
 
 /// Represents an erased area with a position ([offset]) and a circular
 /// [radius].

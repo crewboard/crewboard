@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '/shared/widgets/video/video_editor_configurable.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_configurable.dart';
 
 /// A mute button for the video editor.
 ///

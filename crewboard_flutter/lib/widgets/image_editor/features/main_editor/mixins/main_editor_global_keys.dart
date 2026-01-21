@@ -1,14 +1,14 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/features/blur_editor/blur_editor.dart';
-import '/features/crop_rotate_editor/crop_rotate_editor.dart';
-import '/features/emoji_editor/emoji_editor.dart';
-import '/features/filter_editor/filter_editor.dart';
-import '/features/paint_editor/paint_editor.dart';
-import '/features/text_editor/text_editor.dart';
-import '/features/tune_editor/tune_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/blur_editor/blur_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/crop_rotate_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/emoji_editor/emoji_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/filter_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/paint_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/text_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/tune_editor.dart';
 
 /// Mixin which contains all global keys for the main-editor
 mixin MainEditorGlobalKeys {

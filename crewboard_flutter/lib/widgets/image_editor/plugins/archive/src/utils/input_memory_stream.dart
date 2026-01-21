@@ -1,4 +1,4 @@
-//import 'dart:async';
+﻿//import 'dart:async';
 // ignore_for_file: public_member_api_docs
 
 import 'dart:typed_data';

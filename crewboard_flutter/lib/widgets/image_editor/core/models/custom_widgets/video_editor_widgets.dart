@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/models/video/trim_duration_span_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/video/trim_duration_span_model.dart';
 
 /// A configuration class for customizable video editor UI components.
 class VideoEditorWidgets {

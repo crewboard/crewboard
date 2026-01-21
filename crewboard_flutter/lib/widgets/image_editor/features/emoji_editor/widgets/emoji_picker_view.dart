@@ -1,12 +1,12 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/i18n/i18n_emoji_editor.dart';
-import '/core/models/styles/emoji_editor_style.dart';
-import '/features/emoji_editor/services/emoji_state_manager.dart';
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
-import '/shared/utils/platform_info.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_emoji_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/styles/emoji_editor_style.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/emoji_editor/services/emoji_state_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/platform_info.dart';
 import './emoji_editor_category_view.dart';
 import 'emoji_cell_extended.dart';
 

@@ -1,5 +1,5 @@
-import '../../../shared/extensions/export_bool_extension.dart';
-import '../../../shared/utils/parser/bool_parser.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/bool_parser.dart';
 
 /// A class representing the interaction settings for a layer.
 ///

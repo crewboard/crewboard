@@ -1,10 +1,10 @@
-// ignore_for_file: annotate_overrides, public_member_api_docs
+﻿// ignore_for_file: annotate_overrides, public_member_api_docs
 
 import 'dart:io';
 import 'dart:typed_data';
 
-import '/plugins/archive/src/utils/input_stream.dart';
-import '/plugins/archive/src/utils/output_stream.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/archive/src/utils/input_stream.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/archive/src/utils/output_stream.dart';
 
 import '_zlib_encoder_base.dart';
 

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import '/core/models/video/trim_duration_span_model.dart';
-import '/shared/controllers/video_controller.dart';
-import '/shared/extensions/duration_extension.dart';
-import '/shared/extensions/int_extension.dart';
-import '/shared/widgets/video/video_editor_configurable.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/video/trim_duration_span_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/controllers/video_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/duration_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/int_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_configurable.dart';
 
 /// Displays an informational banner in the video editor.
 ///

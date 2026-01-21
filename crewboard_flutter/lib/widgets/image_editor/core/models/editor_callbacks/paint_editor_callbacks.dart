@@ -1,7 +1,7 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
-import '/features/paint_editor/paint_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/paint_editor.dart';
 import '../layers/paint_layer.dart';
 import 'standalone_editor_callbacks.dart';
 

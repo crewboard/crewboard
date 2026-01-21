@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_callbacks/text_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/text_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
 import 'rounded_background_text/rounded_background_text_field.dart';
 
 /// A widget for managing the text input in the text editor, providing a

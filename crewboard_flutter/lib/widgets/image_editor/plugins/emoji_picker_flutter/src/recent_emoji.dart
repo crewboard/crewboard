@@ -1,4 +1,4 @@
-import '/plugins/emoji_picker_flutter/src/emoji.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/src/emoji.dart';
 
 /// Class that holds an recent emoji
 /// Recent Emoji has an instance of the emoji

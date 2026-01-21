@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/features/main_editor/services/layer_drag_selection_service.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_drag_selection_service.dart';
 
 /// A widget that visually displays the drag-selection rectangle
 /// used for selecting multiple layers on the canvas.

@@ -1,5 +1,5 @@
-import '/core/models/layers/layer_interaction.dart';
-import '/shared/services/import_export/utils/key_minifier.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer_interaction.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/utils/key_minifier.dart';
 import '../../constants/export_import_version.dart';
 
 /// Handles the compatibility of layer interactions based on the provided

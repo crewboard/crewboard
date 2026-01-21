@@ -7,9 +7,25 @@ import 'package:path_provider/path_provider.dart';
 import '../../widgets/image_editor/pro_image_editor.dart';
 import '../../controllers/messages_controller.dart';
 import '../../config/palette.dart';
+import '../../widgets/video_preview.dart';
+import '../../widgets/audio_preview.dart';
 
-class FilePreviewOverlay extends StatelessWidget {
+class FilePreviewOverlay extends StatefulWidget {
   const FilePreviewOverlay({super.key});
+
+  @override
+  State<FilePreviewOverlay> createState() => _FilePreviewOverlayState();
+}
+
+class _FilePreviewOverlayState extends State<FilePreviewOverlay> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +68,13 @@ class FilePreviewOverlay extends StatelessWidget {
             const SizedBox(height: 24),
             Expanded(
               child: PageView.builder(
+                controller: _pageController,
                 itemCount: files.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
                 itemBuilder: (context, index) {
                   final file = files[index];
                   return Container(
@@ -60,8 +82,6 @@ class FilePreviewOverlay extends StatelessWidget {
                     child: Center(
                       child: _FilePreviewItem(
                         file: file,
-                        // We rely on the global close for cancelling the whole operation for now.
-                        // Individual removal could be added back if requested.
                         onRemove: () {},
                       ),
                     ),
@@ -69,10 +89,85 @@ class FilePreviewOverlay extends StatelessWidget {
                 },
               ),
             ),
+            if (files.length > 1) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 60,
+                child: Center(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: files.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final file = files[index];
+                      final isSelected = index == _currentIndex;
+                      return GestureDetector(
+                        onTap: () {
+                          _pageController.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            border: isSelected
+                                ? Border.all(color: Colors.blue, width: 2)
+                                : null,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: _ThumbnailItem(file: file),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       );
     });
+  }
+}
+
+class _ThumbnailItem extends StatelessWidget {
+  final File file;
+
+  const _ThumbnailItem({required this.file});
+
+  @override
+  Widget build(BuildContext context) {
+    final messagesController = Get.find<MessagesController>();
+    final type = messagesController.getMessageTypeFromFile(file);
+
+    if (type == MessageType.image) {
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+      );
+    } else if (type == MessageType.video) {
+      return Container(
+        color: Colors.black26,
+        child: const Center(
+          child: Icon(Icons.play_arrow, color: Colors.white, size: 20),
+        ),
+      );
+    } else {
+      return Container(
+        color: Colors.black26,
+        child: const Center(
+          child: Icon(Icons.insert_drive_file, color: Colors.white, size: 20),
+        ),
+      );
+    }
   }
 }
 
@@ -90,8 +185,16 @@ class _FilePreviewItem extends StatelessWidget {
     if (type != MessageType.image) {
       Widget content;
       if (type == MessageType.video) {
-        content = const Center(
-          child: Icon(Icons.play_circle_outline, size: 48, color: Colors.white),
+        content = Center(
+          child: VideoPreview(file: file),
+        );
+      } else if (type == MessageType.audio) {
+         content = Center(
+          child: AudioPreview(
+            url: file.path, 
+            localUrl: true,
+            color: Colors.white, // Or generic preview color
+          ),
         );
       } else {
         content = const Center(
@@ -115,6 +218,17 @@ class _FilePreviewItem extends StatelessWidget {
       child: ProImageEditor.file(
         file,
         key: ValueKey(file.path), // Rebuild if file changes (e.g. after edit)
+        configs: const ProImageEditorConfigs(
+          mainEditor: MainEditorConfigs(
+            enableCloseButton: false,
+            style: MainEditorStyle(
+              bottomBarBackground: Colors.transparent,
+              appBarBackground: Colors.transparent,
+              background: Colors.transparent,
+              outsideCaptureAreaLayerOpacity: 0,
+            ),
+          ),
+        ),
         callbacks: ProImageEditorCallbacks(
           onImageEditingComplete: (Uint8List bytes) async {
             try {

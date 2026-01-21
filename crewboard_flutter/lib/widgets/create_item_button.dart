@@ -194,7 +194,7 @@ class _CreateItemInlineButtonState extends State<CreateItemInlineButton> {
   Widget build(BuildContext context) {
     if (_isOpen) {
       return Container(
-        width: 230,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Pallet.inside1,
@@ -214,6 +214,7 @@ class _CreateItemInlineButtonState extends State<CreateItemInlineButton> {
               hintText: "Enter name...",
               onEnter: (value) => _saveAndClose(),
             ),
+            SizedBox(height: 10),
             if (widget.showColor) ...[
               const SizedBox(height: 10),
               ColorPicker(
@@ -237,7 +238,7 @@ class _CreateItemInlineButtonState extends State<CreateItemInlineButton> {
                     });
                   },
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 6),
                 SmallButton(
                   label: "done",
                   onPress: _saveAndClose,

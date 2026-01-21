@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 /// Configuration class for customizing progress indicators.
 class ProgressIndicatorWidgets {

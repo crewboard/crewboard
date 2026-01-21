@@ -1,9 +1,9 @@
-import 'dart:ui' as ui;
+﻿import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 
-import '/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
-import '/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
 import '../utils/converters/convert_flutter_ui_to_image.dart';
 import '../utils/dart_ui_remove_transparent_image_areas.dart';
 import '../utils/encoder/encode_image.dart';

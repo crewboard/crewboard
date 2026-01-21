@@ -1,4 +1,4 @@
-import '../../enums/editor_mode.dart';
+﻿import '../../enums/editor_mode.dart';
 import 'blur_editor_callbacks.dart';
 import 'crop_rotate_editor_callbacks.dart';
 import 'editor_callbacks_typedef.dart';

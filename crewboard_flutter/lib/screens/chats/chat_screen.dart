@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../memory_bank/memory_bank_screen.dart';
 import 'ticket_threads_full_view.dart';
 import 'file_preview_overlay.dart';
+import '../../widgets/chat_input_keyboard.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -102,7 +103,7 @@ class Messages extends StatelessWidget {
                           name: selectedRoom.roomName ?? "",
                           size: 32,
                           fontSize: 14,
-                          color: Colors.red,
+                          color: _getRoomColor(selectedRoom),
                           style: ProfileIconStyle.outlined,
                         ),
                         const SizedBox(width: 12),
@@ -191,22 +192,38 @@ class Messages extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Stack(
+                    child: Column(
                       children: [
-                        if (!messagesController.showFilePreview.value)
-                          ListView.builder(
-                            reverse: true,
-                            itemCount: messagesController.messages.length,
-                            itemBuilder: (context, index) {
-                              final msg = messagesController.messages[index];
-                              return MessageBubble(
-                                message: msg.message,
-                                isMe: true, // TODO: Replace with actual logic
-                                createdAt: msg.createdAt,
-                              );
-                            },
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              if (!messagesController.showFilePreview.value)
+                                ListView.builder(
+                                  reverse: true,
+                                  itemCount: messagesController.messages.length,
+                                  itemBuilder: (context, index) {
+                                    final msg = messagesController.messages[index];
+                                    bool sameUser = false;
+                                    if (index + 1 < messagesController.messages.length) {
+                                      final olderMsg = messagesController.messages[index + 1];
+                                      if (olderMsg.userId == msg.userId) {
+                                        sameUser = true;
+                                      }
+                                    }
+                                    return MessageBubble(
+                                      message: msg.message,
+                                      isMe: true, // TODO: Replace with actual logic
+                                      sameUser: sameUser,
+                                      createdAt: msg.createdAt,
+                                      type: msg.messageType,
+                                    );
+                                  },
+                                ),
+                              const FilePreviewOverlay(),
+                            ],
                           ),
-                        const FilePreviewOverlay(),
+                        ),
+
                       ],
                     ),
                   ),
@@ -262,10 +279,40 @@ class Messages extends StatelessWidget {
       );
     });
   }
+
+  Color _getRoomColor(ChatRoom room) {
+    // If room color is eventually added to the model, use it here.
+    return Colors.blue;
+  }
 }
 
-class Keyboard extends StatelessWidget {
+
+class Keyboard extends StatefulWidget {
   const Keyboard({super.key});
+
+  @override
+  State<Keyboard> createState() => _KeyboardState();
+}
+
+class _KeyboardState extends State<Keyboard> {
+  late final FocusNode _messageFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageFocusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        final messagesController = Get.find<MessagesController>();
+        return messagesController.handleKeyEvent(node, event);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _messageFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -276,268 +323,57 @@ class Keyboard extends StatelessWidget {
 
       final messagesController = Get.put(MessagesController());
 
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Attached files preview
-          if (messagesController.attachedFiles.isNotEmpty &&
-              !messagesController.showFilePreview.value)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Attached Files (${messagesController.attachedFiles.length})',
-                        style: TextStyle(
-                          color: Pallet.font3,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () => messagesController.clearAttachedFiles(),
-                        child: Icon(
-                          Icons.close,
-                          size: 16,
-                          color: Pallet.font3,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: messagesController.attachedFiles.map((file) {
-                      return _AttachedFileChip(
-                        file: file,
-                        onRemove: () =>
-                            messagesController.removeAttachedFile(file),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  bottom: 5,
-                  top: 10,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 8),
-                    Icon(
-                      Icons.sentiment_satisfied_alt_outlined,
-                      color: Pallet.font3,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: messagesController.messageController,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                        ),
-                        onSubmitted: (value) {
-                          if (messagesController.attachedFiles.isNotEmpty) {
-                            messagesController.sendMessageWithAttachments();
-                          } else {
-                            messagesController.sendMessage(
-                              messageText: value,
-                              messageType: MessageType.text,
-                            );
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Type a message...',
-                          hintStyle: TextStyle(
-                            color: Pallet.font3.withValues(alpha: 0.7),
-                            fontSize: 13,
-                          ),
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 0,
-                            vertical: 10,
-                          ),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Icon(Icons.mic_none, color: Pallet.font3, size: 22),
-                    const SizedBox(width: 15),
-                    InkWell(
-                      onTap: () async {
-                        // Open file picker for manual file selection
-                        final result = await FilePicker.platform.pickFiles(
-                          allowMultiple: true,
-                          type: FileType.custom,
-                          allowedExtensions: [
-                            // Images
-                            'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp',
-                            // Videos
-                            'mp4', 'mov', 'avi', 'mkv', 'webm',
-                            // Audio
-                            'mp3', 'wav', 'm4a', 'flac', 'aac', 'ogg',
-                          ],
-                        );
+      return ChatInputKeyboard(
+        controller: messagesController.messageController,
+        focusNode: _messageFocusNode,
+        typingUserNames: messagesController.typingUsers.map((e) => e.userName).toList(),
+        showAutocomplete: messagesController.showAutocomplete.value,
+        autocompleteEmojis: messagesController.autocompleteEmojis,
+        selectedAutocompleteIndex: messagesController.selectedAutocompleteIndex.value,
+        onAutocompleteSelected: (emoji) => messagesController.selectEmojiFromAutocomplete(emoji),
+        onChanged: (text) => messagesController.onTextChanged(text),
+        onSubmitted: (value) {
+          if (messagesController.attachedFiles.isNotEmpty) {
+            messagesController.sendMessageWithAttachments();
+          } else {
+            messagesController.sendMessage(
+              messageText: value,
+              messageType: MessageType.text,
+            );
+          }
+        },
+        onSendPressed: () {
+          if (messagesController.attachedFiles.isNotEmpty) {
+            messagesController.sendMessageWithAttachments();
+          } else {
+            messagesController.sendMessage(
+              messageText: messagesController.messageController.text,
+              messageType: MessageType.text,
+            );
+          }
+        },
+        onAttachPressed: () async {
+          final result = await FilePicker.platform.pickFiles(
+            allowMultiple: true,
+            type: FileType.custom,
+            allowedExtensions: [
+              'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp',
+              'mp4', 'mov', 'avi', 'mkv', 'webm',
+              'mp3', 'wav', 'm4a', 'flac', 'aac', 'ogg',
+            ],
+          );
 
-                        if (result != null) {
-                          final files = result.paths
-                              .where((path) => path != null)
-                              .map((path) => File(path!))
-                              .toList();
-                          messagesController.addAttachedFiles(files);
-                        }
-                      },
-                      child: Icon(
-                        Icons.attach_file,
-                        color: Pallet.font3,
-                        size: 22,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    GestureDetector(
-                      onTap: () {
-                        if (messagesController.attachedFiles.isNotEmpty) {
-                          messagesController.sendMessageWithAttachments();
-                        } else {
-                          messagesController.sendMessage(
-                            messageText:
-                                messagesController.messageController.text,
-                            messageType: MessageType.text,
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF0084FF),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.send_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+          if (result != null) {
+            final files = result.paths
+                .where((path) => path != null)
+                .map((path) => File(path!))
+                .toList();
+            messagesController.addAttachedFiles(files);
+          }
+        },
       );
     });
   }
 }
 
-class _AttachedFileChip extends StatelessWidget {
-  final File file;
-  final VoidCallback onRemove;
 
-  const _AttachedFileChip({
-    required this.file,
-    required this.onRemove,
-  });
-
-  IconData _getFileIcon() {
-    final path = file.path.toLowerCase();
-    if (path.endsWith('.jpg') ||
-        path.endsWith('.jpeg') ||
-        path.endsWith('.png') ||
-        path.endsWith('.gif') ||
-        path.endsWith('.webp')) {
-      return Icons.image;
-    } else if (path.endsWith('.mp4') ||
-        path.endsWith('.mov') ||
-        path.endsWith('.avi') ||
-        path.endsWith('.mkv')) {
-      return Icons.video_file;
-    } else if (path.endsWith('.mp3') ||
-        path.endsWith('.wav') ||
-        path.endsWith('.m4a') ||
-        path.endsWith('.flac')) {
-      return Icons.audio_file;
-    }
-    return Icons.insert_drive_file;
-  }
-
-  String _getFileName() {
-    final name = file.path.split(Platform.pathSeparator).last;
-    if (name.length > 20) {
-      return '${name.substring(0, 17)}...';
-    }
-    return name;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            _getFileIcon(),
-            size: 16,
-            color: Pallet.font3,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            _getFileName(),
-            style: TextStyle(
-              color: Pallet.font3,
-              fontSize: 12,
-            ),
-          ),
-          const SizedBox(width: 6),
-          InkWell(
-            onTap: onRemove,
-            child: Icon(
-              Icons.close,
-              size: 14,
-              color: Pallet.font3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

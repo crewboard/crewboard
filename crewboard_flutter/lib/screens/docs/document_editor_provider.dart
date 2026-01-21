@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io' as io;
+import 'package:crewboard_flutter/widgets/document/quill_delta.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart'; // for client
+import '../../widgets/document/flutter_quill.dart';
+import '../../widgets/document/src/controller/quill_controller.dart';
 import 'flows/flows_controller.dart'; // For FlowModel
 
 /// Unified settings class used both for the current selection (`_fontSettings`)

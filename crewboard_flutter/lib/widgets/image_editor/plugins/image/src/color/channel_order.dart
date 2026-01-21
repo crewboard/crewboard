@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs
+﻿// ignore_for_file: public_member_api_docs
 
 /// Ordering of the channels in a pixel, used with Image.fromBytes and
 /// Image.getBytes to support alternative channel ordering.

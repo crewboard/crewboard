@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs
+﻿// ignore_for_file: public_member_api_docs
 
 import 'dart:typed_data';
 
-import '/plugins/archive/src/codecs/zlib_encoder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/archive/src/codecs/zlib_encoder.dart';
 
 enum IccProfileCompression { none, deflate }
 

@@ -1,22 +1,22 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/core/constants/image_constants.dart';
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/transform_helper.dart';
-import '/core/utils/size_utils.dart';
-import '/features/filter_editor/widgets/filter_editor_appbar.dart';
-import '/pro_image_editor.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/widgets/layer/layer_stack.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/image_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/transform_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/utils/size_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/widgets/filter_editor_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_stack.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
 import 'constants/identity_matrix_constant.dart';
 import 'types/filter_matrix.dart';
 import 'utils/lerp_color_matrix_utils.dart';

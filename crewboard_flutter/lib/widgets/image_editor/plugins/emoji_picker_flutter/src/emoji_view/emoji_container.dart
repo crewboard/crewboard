@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/plugins/emoji_picker_flutter/src/emoji_picker.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/src/emoji_picker.dart';
 
 /// A wrapper around a grid or list of emojis.
 /// If the button style is Cupertino or None, this is just wrapping the

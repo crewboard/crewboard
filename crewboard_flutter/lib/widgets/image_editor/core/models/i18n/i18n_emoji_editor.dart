@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 /// Internationalization (i18n) settings for the Emoji Editor component.
 class I18nEmojiEditor {

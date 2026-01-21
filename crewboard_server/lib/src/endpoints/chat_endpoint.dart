@@ -25,10 +25,42 @@ class ChatEndpoint extends Endpoint {
       include: ChatRoom.include(lastMessage: ChatMessage.include()),
     );
 
-    // Map the per-user unread count from UserRoomMap to ChatRoom.messageCount
+    // Map the per-user unread count first
     for (var room in rooms) {
       final map = roomMaps.firstWhere((m) => m.roomId == room.id);
       room.messageCount = map.unreadCount;
+    }
+
+    // Identify Direct Rooms and fetch other participants
+    final directRooms = rooms.where((r) => r.roomType == 'direct').toList();
+    if (directRooms.isNotEmpty) {
+      final directRoomIds = directRooms.map((r) => r.id!).toSet();
+      
+      // Find UserRoomMaps for these rooms where user is NOT current user
+      final otherUserMaps = await UserRoomMap.db.find(
+        session,
+        where: (t) => t.roomId.inSet(directRoomIds) & t.userId.notEquals(userId),
+      );
+
+      final otherUserIds = otherUserMaps.map((m) => m.userId).toSet();
+      final otherUsers = await User.db.find(
+        session,
+        where: (t) => t.id.inSet(otherUserIds),
+      );
+
+      for (var room in directRooms) {
+        // Find the map for this room
+        try {
+            final otherMap = otherUserMaps.firstWhere((m) => m.roomId == room.id);
+            final otherUser = otherUsers.firstWhere((u) => u.id == otherMap.userId);
+            room.roomName = otherUser.userName;
+        } catch (e) {
+            // If checking against self or user deleted, fallback
+            if (room.roomName == null || room.roomName!.contains('-')) {
+                 room.roomName = 'Unknown User';
+            }
+        }
+      }
     }
 
     return rooms;
@@ -86,7 +118,7 @@ class ChatEndpoint extends Endpoint {
       final room = await ChatRoom.db.insertRow(
         session,
         ChatRoom(
-          roomName: otherUser.userName,
+          roomName: 'Direct Message',
           roomType: 'direct',
           messageCount: 0,
         ),
@@ -154,22 +186,35 @@ class ChatEndpoint extends Endpoint {
 
     await session.messages.postMessage(
       'chat_${message.roomId}',
-      savedMessage,
+      ChatStreamEvent(message: savedMessage),
     );
   }
 
-  @override
-  Future<void> handleStreamMessage(
-    StreamingSession session,
-    SerializableModel message,
-  ) async {
-    if (message is ChatRoom) {
-      session.messages.addListener('chat_${message.id}', (msg) {
-        // ignore: deprecated_member_use
-        sendStreamMessage(session, msg);
-      });
-    }
+  Stream<ChatStreamEvent> subscribeToRoom(Session session, UuidValue roomId) async* {
+    var stream = session.messages.createStream<ChatStreamEvent>('chat_$roomId');
+    yield* stream;
   }
+
+  Future<void> sendTyping(
+    Session session,
+    bool isTyping,
+    UuidValue roomId,
+  ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    final indicator = TypingIndicator(
+      userId: user.id!,
+      roomId: roomId,
+      isTyping: isTyping,
+      userName: user.userName,
+    );
+
+    await session.messages.postMessage(
+      'chat_$roomId',
+      ChatStreamEvent(typing: indicator),
+    );
+  }
+
+
 
   Future<void> markAsRead(Session session, UuidValue roomId) async {
     final user = await AuthHelper.getAuthenticatedUser(session);

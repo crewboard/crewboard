@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../config/palette.dart';
 import '../../controllers/planner_controller.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/chat_input_keyboard.dart';
 
 class TicketThreadsFullView extends StatelessWidget {
   const TicketThreadsFullView({super.key});
@@ -147,7 +148,23 @@ class _TicketListTile extends StatelessWidget {
                     ticket.statusName,
                     style: TextStyle(color: Pallet.font3, fontSize: 11),
                   ),
-                  const Spacer(),
+                  if (ticket.latestActivity != null) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      "•",
+                      style: TextStyle(color: Pallet.font3, fontSize: 11),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        ticket.latestActivity!,
+                        style: TextStyle(color: Pallet.font3, fontSize: 11),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ] else
+                    const Spacer(),
                   if (ticket.assignees.isNotEmpty)
                     SizedBox(
                       height: 24,
@@ -234,9 +251,10 @@ class _ThreadContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 10),
         // Header
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(
             children: [
               IconButton(
@@ -253,7 +271,7 @@ class _ThreadContent extends StatelessWidget {
                   ticket.ticketName,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: Pallet.font1,
                   ),
                 ),
@@ -262,9 +280,7 @@ class _ThreadContent extends StatelessWidget {
           ),
         ),
         // Divider with label
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Stack(
+        Stack(
             alignment: Alignment.center,
             children: [
               Divider(color: Colors.white.withValues(alpha: 0.1)),
@@ -294,7 +310,6 @@ class _ThreadContent extends StatelessWidget {
                 ),
               ),
             ],
-          ),
         ),
         // Thread Items
         Expanded(
@@ -313,7 +328,7 @@ class _ThreadContent extends StatelessWidget {
               itemCount: controller.ticketThread.length,
               itemBuilder: (context, index) {
                 final item = controller.ticketThread.reversed.toList()[index];
-                if (item.type == 'status_change') {
+                if (item.type == 'status_change' || item.type == 'activity') {
                   return StatusChangeItem(item: item);
                 } else {
                   return ThreadCommentItem(item: item);
@@ -323,76 +338,32 @@ class _ThreadContent extends StatelessWidget {
           }),
         ),
         // Input Area
-        Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        controller: messageController,
-                        style: const TextStyle(fontSize: 14),
-                        decoration: const InputDecoration(
-                          hintText: "Type a message or update...",
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15),
-                        ),
-                        onSubmitted: (val) {
-                          if (val.isNotEmpty) {
-                            controller.addComment(
-                              AddCommentRequest(
-                                ticketId: ticket.id,
-                                message: val,
-                              ),
-                            );
-                            messageController.clear();
-                            controller.getTicketThread(ticket.id);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  IconButton(
-                    onPressed: () {
-                      if (messageController.text.isNotEmpty) {
-                        controller.addComment(
-                          AddCommentRequest(
-                            ticketId: ticket.id,
-                            message: messageController.text,
-                          ),
-                        );
-                        messageController.clear();
-                        controller.getTicketThread(ticket.id);
-                      }
-                    },
-                    icon: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.send,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        ChatInputKeyboard(
+          controller: messageController,
+          onSubmitted: (val) {
+            if (val.isNotEmpty) {
+              controller.addComment(
+                AddCommentRequest(
+                  ticketId: ticket.id,
+                  message: val,
+                ),
+              );
+              messageController.clear();
+              controller.getTicketThread(ticket.id);
+            }
+          },
+          onSendPressed: () {
+            if (messageController.text.isNotEmpty) {
+              controller.addComment(
+                AddCommentRequest(
+                  ticketId: ticket.id,
+                  message: messageController.text,
+                ),
+              );
+              messageController.clear();
+              controller.getTicketThread(ticket.id);
+            }
+          },
         ),
       ],
     );
@@ -406,6 +377,14 @@ class StatusChangeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String text = "${item.userName} ${item.action}";
+    if (item.details != null && item.details!.isNotEmpty) {
+      text += " ${item.details}";
+    } else if (item.newStatus != null) {
+      // Fallback for old status_change items locally if any
+      text += " to ${item.newStatus}";
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -420,7 +399,7 @@ class StatusChangeItem extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   color: const Color(0xff121212),
                   child: Text(
-                    "${item.userName} moved this to ${item.newStatus}",
+                    text,
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       color: Pallet.font3,

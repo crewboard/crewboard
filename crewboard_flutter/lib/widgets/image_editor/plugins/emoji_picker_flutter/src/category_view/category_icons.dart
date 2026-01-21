@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Class used to define all the [CategoryIcon] shown for each [Category]
 ///

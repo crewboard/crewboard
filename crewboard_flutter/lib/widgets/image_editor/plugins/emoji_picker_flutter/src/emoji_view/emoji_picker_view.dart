@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/plugins/emoji_picker_flutter/src/config.dart';
-import '/plugins/emoji_picker_flutter/src/emoji_view_state.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/src/config.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/src/emoji_view_state.dart';
 
 /// Template class for custom implementation
 /// Inhert this class to create your own EmojiPicker

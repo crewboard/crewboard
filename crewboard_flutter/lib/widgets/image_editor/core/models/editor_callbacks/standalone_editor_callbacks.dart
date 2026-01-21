@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import 'package:flutter/widgets.dart';
 
 import 'editor_callbacks_typedef.dart';

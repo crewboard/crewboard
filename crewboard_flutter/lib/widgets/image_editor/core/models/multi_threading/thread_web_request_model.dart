@@ -1,11 +1,11 @@
-// Package imports:
+﻿// Package imports:
 import 'dart:js_interop' as js;
 
-import '/plugins/image/src/color/format.dart';
-import '/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
-import '/plugins/image/src/formats/png/png_filter.dart';
-import '/plugins/image/src/image/image.dart';
-import '/shared/services/content_recorder/utils/web_worker_utils.dart';
+import '../../../plugins/image/src/color/format.dart';
+import '../../../plugins/image/src/formats/jpeg/jpeg_chroma.dart';
+import '../../../plugins/image/src/formats/png/png_filter.dart';
+import '../../../plugins/image/src/image/image.dart';
+import '../../../shared/services/content_recorder/utils/web_worker_utils.dart';
 import '../editor_configs/image_generation_configs/output_formats.dart';
 import 'thread_request_model.dart';
 

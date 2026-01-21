@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../config/palette.dart';
+import 'package:crewboard_flutter/config/palette.dart';
 // import 'package:frontend/widgets/widgets.dart'; // Old widgets path, may need specific replacements if used
 // import '../../../widgets/button.dart'; // Need to check if Button exists or replace
 // import '../../../widgets/textbox.dart'; // Need to check if TextBox exists or replace
@@ -107,13 +107,7 @@ class Condition extends StatelessWidget {
             padding: EdgeInsets.all(width / 4),
             width: width,
             height: width,
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(fontSize: 13, color: Pallet.font1),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
           ),
         ),
       ),
@@ -153,18 +147,13 @@ class Terminal extends StatelessWidget {
         child: Container(
           width: width,
           height: height,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.red, width: highlight ? 3 : 1),
             borderRadius: BorderRadius.circular(40),
-            color: Pallet.inside2, // Added background for better visibility
+            // color: Pallet.inside2,
           ),
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 13, color: Pallet.font1),
-            ),
-          ),
+          child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
         ),
       ),
     );
@@ -209,18 +198,13 @@ class Process extends StatelessWidget {
         child: Container(
           width: width,
           height: height,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blue, width: highlight ? 3 : 1),
             borderRadius: BorderRadius.circular(8),
-            color: Pallet.inside2,
+            // color: Pallet.inside2,
           ),
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 13, color: Pallet.font1),
-            ),
-          ),
+          child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
         ),
       ),
     );

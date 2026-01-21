@@ -1,10 +1,10 @@
-import 'dart:typed_data';
+﻿import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/services/content_recorder/controllers/content_recorder_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/controllers/content_recorder_controller.dart';
 
 /// Generates a high-quality image from the provided [ui.Image].
 ///

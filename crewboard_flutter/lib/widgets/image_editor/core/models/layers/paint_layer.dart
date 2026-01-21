@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/constants/int_constants.dart';
-import '/features/paint_editor/models/painted_model.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/services/import_export/utils/key_minifier.dart';
-import '/shared/utils/parser/double_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/models/painted_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/utils/key_minifier.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/double_parser.dart';
 import 'layer.dart';
 import 'layer_interaction.dart';
 

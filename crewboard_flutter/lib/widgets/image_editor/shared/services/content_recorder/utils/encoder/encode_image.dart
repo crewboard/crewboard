@@ -1,13 +1,13 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
-import '/core/models/editor_configs/image_generation_configs/output_formats.dart';
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/plugins/image/src/formats/formats.dart';
-import '/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
-import '/plugins/image/src/formats/png/png_filter.dart';
-import '/plugins/image/src/image/image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/output_formats.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/formats.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/png/png_filter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart';
 
 /// Encodes an image into the specified format and returns the encoded data.
 ///

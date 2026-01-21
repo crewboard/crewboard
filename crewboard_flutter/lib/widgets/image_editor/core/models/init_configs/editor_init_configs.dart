@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/features/filter_editor/types/filter_matrix.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/types/filter_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
 import '../editor_callbacks/pro_image_editor_callbacks.dart';
 import '../editor_configs/pro_image_editor_configs.dart';
 import '../layers/layer.dart';

@@ -1,10 +1,10 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/tune_editor_configs.dart';
-import '/shared/widgets/editor_scrollbar.dart';
-import '/shared/widgets/flat_icon_text_button.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/tune_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/flat_icon_text_button.dart';
 import '../models/tune_adjustment_matrix.dart';
 import '../tune_editor.dart';
 

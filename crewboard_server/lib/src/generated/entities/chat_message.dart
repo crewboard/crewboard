@@ -27,6 +27,7 @@ abstract class ChatMessage
     required this.sameUser,
     required this.deleted,
     required this.createdAt,
+    this.waveform,
   });
 
   factory ChatMessage({
@@ -40,6 +41,7 @@ abstract class ChatMessage
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
+    List<double>? waveform,
   }) = _ChatMessageImpl;
 
   factory ChatMessage.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -66,6 +68,11 @@ abstract class ChatMessage
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
+      waveform: jsonSerialization['waveform'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<double>>(
+              jsonSerialization['waveform'],
+            ),
     );
   }
 
@@ -94,6 +101,8 @@ abstract class ChatMessage
 
   DateTime createdAt;
 
+  List<double>? waveform;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -111,6 +120,7 @@ abstract class ChatMessage
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
+    List<double>? waveform,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -126,6 +136,7 @@ abstract class ChatMessage
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
+      if (waveform != null) 'waveform': waveform?.toJson(),
     };
   }
 
@@ -143,6 +154,7 @@ abstract class ChatMessage
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
+      if (waveform != null) 'waveform': waveform?.toJson(),
     };
   }
 
@@ -190,6 +202,7 @@ class _ChatMessageImpl extends ChatMessage {
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
+    List<double>? waveform,
   }) : super._(
          id: id,
          roomId: roomId,
@@ -201,6 +214,7 @@ class _ChatMessageImpl extends ChatMessage {
          sameUser: sameUser,
          deleted: deleted,
          createdAt: createdAt,
+         waveform: waveform,
        );
 
   /// Returns a shallow copy of this [ChatMessage]
@@ -218,6 +232,7 @@ class _ChatMessageImpl extends ChatMessage {
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
+    Object? waveform = _Undefined,
   }) {
     return ChatMessage(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -232,6 +247,9 @@ class _ChatMessageImpl extends ChatMessage {
       sameUser: sameUser ?? this.sameUser,
       deleted: deleted ?? this.deleted,
       createdAt: createdAt ?? this.createdAt,
+      waveform: waveform is List<double>?
+          ? waveform
+          : this.waveform?.map((e0) => e0).toList(),
     );
   }
 }
@@ -292,6 +310,12 @@ class ChatMessageUpdateTable extends _i1.UpdateTable<ChatMessageTable> {
         table.createdAt,
         value,
       );
+
+  _i1.ColumnValue<List<double>, List<double>> waveform(List<double>? value) =>
+      _i1.ColumnValue(
+        table.waveform,
+        value,
+      );
 }
 
 class ChatMessageTable extends _i1.Table<_i1.UuidValue?> {
@@ -334,6 +358,10 @@ class ChatMessageTable extends _i1.Table<_i1.UuidValue?> {
       'createdAt',
       this,
     );
+    waveform = _i1.ColumnSerializable<List<double>>(
+      'waveform',
+      this,
+    );
   }
 
   late final ChatMessageUpdateTable updateTable;
@@ -356,6 +384,8 @@ class ChatMessageTable extends _i1.Table<_i1.UuidValue?> {
 
   late final _i1.ColumnDateTime createdAt;
 
+  late final _i1.ColumnSerializable<List<double>> waveform;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -368,6 +398,7 @@ class ChatMessageTable extends _i1.Table<_i1.UuidValue?> {
     sameUser,
     deleted,
     createdAt,
+    waveform,
   ];
 }
 

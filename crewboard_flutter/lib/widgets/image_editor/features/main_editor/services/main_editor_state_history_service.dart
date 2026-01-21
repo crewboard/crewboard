@@ -1,17 +1,17 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_callbacks/main_editor/main_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/history/state_history.dart';
-import '/core/models/layers/layer.dart';
-import '/shared/services/import_export/constants/export_import_version.dart';
-import '/shared/services/import_export/enums/export_import_enum.dart';
-import '/shared/services/import_export/export_state_history.dart';
-import '/shared/services/import_export/import_state_history.dart';
-import '/shared/services/import_export/models/export_state_history_configs.dart';
-import '/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/main_editor/main_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/history/state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/constants/export_import_version.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/enums/export_import_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/export_state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/import_state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/models/export_state_history_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 import '../controllers/main_editor_controllers.dart';
 import 'sizes_manager.dart';
 import 'state_manager.dart';

@@ -1,10 +1,10 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '/core/enums/design_mode.dart';
-import '/shared/styles/platform_text_styles.dart';
-import '/shared/widgets/bottom_sheets_header_row.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/styles/platform_text_styles.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/bottom_sheets_header_row.dart';
 import 'reactive_widgets/reactive_custom_widget.dart';
 
 /// A bottom sheet widget with a slider, allowing users to adjust values within

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/mention_text_box.dart';
 
 class AddTicketDialog extends StatelessWidget {
   const AddTicketDialog({super.key, required this.initialBucketId});
@@ -59,9 +60,10 @@ class AddTicketDialog extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            SmallTextBox(
+                            MentionTextBox(
                               controller: controller.body.value,
                               maxLines: 8,
+                              onSearch: controller.searchMentionable,
                             ),
                             const SizedBox(height: 20),
                             Row(
@@ -96,14 +98,6 @@ class AddTicketDialog extends StatelessWidget {
                                   name: "add checklist",
                                   onPress: () {
                                     controller.mode.value = "checklist";
-                                    controller.controller.value.clear();
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                ChipButton(
-                                  name: "add flow",
-                                  onPress: () {
-                                    controller.mode.value = "flow";
                                     controller.controller.value.clear();
                                   },
                                 ),
@@ -149,97 +143,8 @@ class AddTicketDialog extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            if (controller.mode.value == "flow")
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "flow name",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Pallet.font3,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: DropDown(
-                                          label: "",
-                                          itemKey: "name",
-                                          items: controller.allFlows,
-                                          menuDecoration: BoxDecoration(
-                                            color: Pallet.inside3,
-                                            borderRadius: BorderRadius.circular(
-                                              5,
-                                            ),
-                                          ),
-                                          onPress: (val) {
-                                            controller.flows.add(val);
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      AddButton(
-                                        onPress: () {
-                                          controller.controller.value.clear();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
 
                             // Display selected FLOWS
-                            if (controller.flows.isNotEmpty)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "flows",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Pallet.font3,
-                                    ),
-                                  ),
-                                  for (
-                                    var i = 0;
-                                    i < controller.flows.length;
-                                    i++
-                                  )
-                                    InkWell(
-                                      onTap: () {
-                                        controller.flows.removeAt(i);
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 10),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
-                                        ),
-                                        color: Pallet.inside1,
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.link, size: 18),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(
-                                                controller.flows[i].name,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Pallet.font2,
-                                                ),
-                                              ),
-                                            ),
-                                            const Icon(Icons.close, size: 18),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
 
                             // ATTACHMENTS display
                             if (controller.attachments.isNotEmpty)
@@ -408,49 +313,28 @@ class AddTicketDialog extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 10),
-                            InkWell(
+                            DatePicker(
+                              value: controller.deadline.value,
+                              label: "Deadline*",
+                              showCheck: true,
                               onTap: () async {
-                                final date = await showDatePicker(
+                                showDialog(
                                   context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 2),
+                                  builder: (context) => WheelDatePicker(
+                                    initialDate:
+                                        controller.deadline.value == null
+                                            ? DateTime.now()
+                                            : DateTime.parse(
+                                                controller.deadline.value!,
+                                              ),
+                                    onDateSelected: (date) {
+                                      controller.deadline.value = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(date);
+                                    },
+                                  ),
                                 );
-                                if (date != null) {
-                                  controller.deadline.value = DateFormat(
-                                    'dd-MM-yyyy',
-                                  ).format(date);
-                                }
                               },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Pallet.inside1,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        controller.deadline.value ?? "Deadline",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                    ),
-                                    if (controller.deadline.value != null)
-                                      const Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 16,
-                                      ),
-                                  ],
-                                ),
-                              ),
                             ),
                             const SizedBox(height: 15),
                             Row(

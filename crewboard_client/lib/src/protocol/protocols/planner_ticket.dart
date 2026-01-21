@@ -29,6 +29,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     this.creds,
     this.createdAt,
     bool? hasNewActivity,
+    this.latestActivity,
   }) : hasNewActivity = hasNewActivity ?? false;
 
   factory PlannerTicket({
@@ -45,6 +46,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     double? creds,
     DateTime? createdAt,
     bool? hasNewActivity,
+    String? latestActivity,
   }) = _PlannerTicketImpl;
 
   factory PlannerTicket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -66,6 +68,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       hasNewActivity: jsonSerialization['hasNewActivity'] as bool,
+      latestActivity: jsonSerialization['latestActivity'] as String?,
     );
   }
 
@@ -95,6 +98,8 @@ abstract class PlannerTicket implements _i1.SerializableModel {
 
   bool hasNewActivity;
 
+  String? latestActivity;
+
   /// Returns a shallow copy of this [PlannerTicket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -112,6 +117,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     double? creds,
     DateTime? createdAt,
     bool? hasNewActivity,
+    String? latestActivity,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -130,6 +136,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
       if (creds != null) 'creds': creds,
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
       'hasNewActivity': hasNewActivity,
+      if (latestActivity != null) 'latestActivity': latestActivity,
     };
   }
 
@@ -156,6 +163,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     double? creds,
     DateTime? createdAt,
     bool? hasNewActivity,
+    String? latestActivity,
   }) : super._(
          id: id,
          ticketName: ticketName,
@@ -170,6 +178,7 @@ class _PlannerTicketImpl extends PlannerTicket {
          creds: creds,
          createdAt: createdAt,
          hasNewActivity: hasNewActivity,
+         latestActivity: latestActivity,
        );
 
   /// Returns a shallow copy of this [PlannerTicket]
@@ -190,6 +199,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     Object? creds = _Undefined,
     Object? createdAt = _Undefined,
     bool? hasNewActivity,
+    Object? latestActivity = _Undefined,
   }) {
     return PlannerTicket(
       id: id ?? this.id,
@@ -206,6 +216,9 @@ class _PlannerTicketImpl extends PlannerTicket {
       creds: creds is double? ? creds : this.creds,
       createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
       hasNewActivity: hasNewActivity ?? this.hasNewActivity,
+      latestActivity: latestActivity is String?
+          ? latestActivity
+          : this.latestActivity,
     );
   }
 }

@@ -1,9 +1,9 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
-import '/features/main_editor/main_editor.dart';
-import '/features/main_editor/services/state_manager.dart';
-import '/shared/services/import_export/import_state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/state_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/import_state_history.dart';
 import '../../../enums/sub_editors_name.dart';
 import '../../layers/layer.dart';
 import '../standalone_editor_callbacks.dart';

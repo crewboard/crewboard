@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '/shared/widgets/video/video_editor_configurable.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_configurable.dart';
 import 'video_editor_trim_skeleton.dart';
 
 /// Displays a thumbnail preview of the video trim selection.

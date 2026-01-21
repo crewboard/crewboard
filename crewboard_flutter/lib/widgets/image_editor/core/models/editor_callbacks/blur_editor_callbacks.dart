@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/core/models/editor_callbacks/standalone_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/standalone_editor_callbacks.dart';
 
 /// A class representing callbacks for the blur editor.
 class BlurEditorCallbacks extends StandaloneEditorCallbacks {

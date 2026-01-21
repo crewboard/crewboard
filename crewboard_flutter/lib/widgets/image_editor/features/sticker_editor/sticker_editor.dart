@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/shared/widgets/extended/extended_pop_scope.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_pop_scope.dart';
 
 /// The `StickerEditor` class is responsible for creating a widget that allows
 /// users to select stickers

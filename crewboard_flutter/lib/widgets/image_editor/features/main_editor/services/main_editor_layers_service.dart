@@ -1,13 +1,13 @@
-import 'package:flutter/gestures.dart';
+﻿import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/core/services/keyboard_service.dart';
-import '/core/services/mouse_service.dart';
-import '/shared/utils/unique_id_generator.dart';
-import '/shared/widgets/extended/mouse_region/extended_rebuild_mouse_region.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/keyboard_service.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/mouse_service.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/unique_id_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/mouse_region/extended_rebuild_mouse_region.dart';
 import '../controllers/main_editor_controllers.dart';
 import '../main_editor.dart';
 import 'layer_drag_selection_service.dart';

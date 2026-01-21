@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 /// A stateful widget that provides a color picker inspired by WhatsApp.

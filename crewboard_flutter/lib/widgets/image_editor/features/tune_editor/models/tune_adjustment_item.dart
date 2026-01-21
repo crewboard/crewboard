@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import './tune_adjustment_matrix.dart';
 
 /// A class representing an adjustable tune item in the editor.

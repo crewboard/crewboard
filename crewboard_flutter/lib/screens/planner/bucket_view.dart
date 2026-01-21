@@ -8,6 +8,9 @@ import '../../widgets/widgets.dart';
 import 'add_ticket_dialog.dart';
 import 'view_ticket_dialog.dart';
 
+import 'package:flutter/gestures.dart';
+
+
 class BucketView extends StatelessWidget {
   const BucketView({super.key});
 
@@ -157,7 +160,7 @@ class BucketView extends StatelessWidget {
 
   Widget _buildAddBucket(PlannerController controller) {
     return Container(
-      width: 300,
+      width: 280,
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
@@ -191,7 +194,7 @@ class DraggableCard extends StatelessWidget {
       feedback: Material(
         color: Colors.transparent,
         child: SizedBox(
-          width: 280,
+          width: 260,
           child: TicketWidget(ticket: ticket, bucketId: bucketId),
         ),
       ),
@@ -245,7 +248,7 @@ class TicketWidget extends StatelessWidget {
         margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
-          color: Pallet.inside2,
+          color: Pallet.inside1,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -280,19 +283,21 @@ class TicketWidget extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Pallet.font1),
             ),
             const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Text(
-                ticket.ticketBody,
-                maxLines: 12,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, color: Pallet.font3),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Text.rich(
+                  TextSpan(
+                    children: _parseBody(ticket.ticketBody),
+                    style: TextStyle(fontSize: 13, color: Pallet.font3),
+                  ),
+                  maxLines: 12,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.alarm, color: Pallet.font3),
+                Icon(Icons.alarm, color: Pallet.font3, size: 20),
                 const SizedBox(width: 5),
                 Text(
                   _formatDeadline(ticket.deadline),
@@ -335,9 +340,76 @@ class TicketWidget extends StatelessWidget {
     if (deadline == null || deadline.isEmpty) return "No deadline";
     try {
       DateTime dt = DateTime.parse(deadline);
-      return DateFormat('MMM d').format(dt);
+      DateTime now = DateTime.now();
+      
+      // Calculate difference in days
+      Duration diff = dt.difference(now);
+      int days = diff.inDays;
+
+      if (days < 0) {
+        return "Overdue";
+      } else if (days == 0) {
+        return "Ends today";
+      } else if (days < 30) {
+        return "$days ${days == 1 ? 'day' : 'days'} left";
+      } else {
+        // Show months with one decimal point
+        double months = days / 30.0;
+        return "${months.toStringAsFixed(1)} months left";
+      }
     } catch (e) {
       return deadline;
     }
+  }
+
+  List<TextSpan> _parseBody(String text) {
+    if (text.isEmpty) return [];
+    final List<TextSpan> spans = [];
+    
+    final PlannerController controller = Get.find<PlannerController>();
+    final List<String> names = [
+      ...controller.allFlows.map((f) => f.name),
+      ...controller.allDocs.map((d) => d.name),
+    ];
+
+    // Create a regex that matches either valid names (prioritized) or standard hashtags
+    final uniqueNames = names.where((n) => n.isNotEmpty).toSet().toList();
+    uniqueNames.sort((a, b) => b.length.compareTo(a.length));
+    
+    final escapedNames = uniqueNames.map(RegExp.escape).join('|');
+    final pattern = escapedNames.isNotEmpty 
+        ? "#($escapedNames|\\w+)" 
+        : r"#(\w+)";
+    final RegExp exp = RegExp(pattern, caseSensitive: false);
+
+    text.splitMapJoin(
+      exp,
+      onMatch: (Match m) {
+        final String match = m[0]!;
+        final String flowName = m[1] ?? match.substring(1);
+        spans.add(
+          TextSpan(
+            text: match,
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+            recognizer:
+                TapGestureRecognizer()
+                  ..onTap = () {
+                    final PlannerController controller =
+                        Get.find<PlannerController>();
+                    controller.openLinkedFlow(flowName);
+                  },
+          ),
+        );
+        return match;
+      },
+      onNonMatch: (String s) {
+        spans.add(TextSpan(text: s));
+        return s;
+      },
+    );
+    return spans;
   }
 }

@@ -1,4 +1,4 @@
-import '../models/editor_configs/pro_image_editor_configs.dart';
+﻿import '../models/editor_configs/pro_image_editor_configs.dart';
 
 /// A mixin providing access to converted configurations from
 /// [ProImageEditorConfigs].

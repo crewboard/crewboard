@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/enums/design_mode.dart';
-import '/core/models/editor_configs/text_editor_configs.dart';
-import '/core/models/i18n/i18n_text_editor.dart';
-import '/shared/widgets/platform/platform_popup_menu.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/text_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_text_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/platform/platform_popup_menu.dart';
 
 /// A custom AppBar for the text editor, providing options for text alignment,
 /// background mode, and font scaling.

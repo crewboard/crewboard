@@ -1,8 +1,8 @@
-import 'dart:collection';
+﻿import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// Skin tone overlay mixin
 mixin SkinToneOverlayStateMixin<T extends StatefulWidget> on State<T> {

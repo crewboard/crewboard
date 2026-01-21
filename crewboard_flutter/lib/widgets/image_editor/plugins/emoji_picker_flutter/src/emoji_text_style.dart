@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Emoji text style providing commonly available fallback fonts
 // ignore: constant_identifier_names

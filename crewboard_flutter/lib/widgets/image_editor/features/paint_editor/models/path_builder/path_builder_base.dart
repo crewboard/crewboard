@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_configs/paint_editor/paint_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/paint_editor/paint_editor_configs.dart';
 import '../../enums/paint_editor_enum.dart';
 import '../painted_model.dart';
 import 'path_builder_arrow.dart';

@@ -1,10 +1,10 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/enums/design_mode.dart';
-import '/core/models/styles/adaptive_dialog_style.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/styles/adaptive_dialog_style.dart';
 
 /// A dialog that adapts its appearance based on the design mode.
 class AdaptiveDialog extends StatefulWidget {

@@ -1,8 +1,8 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:ui';
 
 // Project imports:
-import '/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
 
 /// A helper class for managing transformation calculations in the image editor.
 ///

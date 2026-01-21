@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_callbacks/video_editor_callbacks.dart';
-import '/core/models/editor_configs/video_editor_configs.dart';
-import '/core/models/video/trim_duration_span_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/video_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/video_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/video/trim_duration_span_model.dart';
 
 /// Controls video playback and trimming for the video editor.
 class ProVideoController {

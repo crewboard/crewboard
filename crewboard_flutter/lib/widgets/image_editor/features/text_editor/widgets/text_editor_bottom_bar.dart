@@ -1,7 +1,7 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
 
 /// Represents the bottom bar for the text-editor.
 class TextEditorBottomBar extends StatefulWidget {

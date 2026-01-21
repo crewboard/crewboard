@@ -1,9 +1,9 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
 import '../extensions/double_extension.dart';
 import 'platform/platform_circular_progress_indicator.dart';
 

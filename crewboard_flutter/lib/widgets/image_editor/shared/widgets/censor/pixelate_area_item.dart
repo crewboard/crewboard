@@ -1,9 +1,9 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '/features/main_editor/providers/image_infos_provider.dart';
-import '/shared/services/shader_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/providers/image_infos_provider.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/shader_manager.dart';
 import 'abstract/censor_area_item.dart';
 import 'constants/censor_backdrop_key.dart';
 

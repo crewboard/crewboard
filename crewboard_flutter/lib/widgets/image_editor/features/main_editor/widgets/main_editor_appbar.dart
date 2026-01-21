@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/widgets/platform/platform_circular_progress_indicator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/platform/platform_circular_progress_indicator.dart';
 import '../services/state_manager.dart';
 
 /// A custom AppBar for the main editor, providing actions for closing,

@@ -1,14 +1,14 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/paint_editor/paint_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/shared/widgets/censor/blur_area_item.dart';
-import '/shared/widgets/censor/pixelate_area_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/paint_editor/paint_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/censor/blur_area_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/censor/pixelate_area_item.dart';
 import '../controllers/paint_controller.dart';
 import '../enums/paint_editor_enum.dart';
 import '../models/eraser_model.dart';

@@ -1,6 +1,6 @@
-/// Defines the available tools in the crop & rotate editor.
+﻿/// Defines the available tools in the crop & rotate editor.
 enum CropRotateTool {
-  /// A tool to rotate the image by 90° steps.
+  /// A tool to rotate the image by 90Â° steps.
   rotate,
 
   /// A tool to flip the image horizontally or vertically.

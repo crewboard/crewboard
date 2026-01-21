@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the Blur Editor component.
+﻿/// Internationalization (i18n) settings for the Blur Editor component.
 class I18nBlurEditor {
   /// Creates an instance of [I18nBlurEditor] with customizable
   /// internationalization settings.

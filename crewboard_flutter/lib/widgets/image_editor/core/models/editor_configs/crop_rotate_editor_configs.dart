@@ -1,21 +1,21 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'package:flutter/material.dart';
 
-import '/features/crop_rotate_editor/enums/crop_mode.enum.dart';
-import '/features/crop_rotate_editor/enums/crop_tool_enum.dart';
-import '/features/crop_rotate_editor/models/aspect_ratio_item.dart';
-import '/features/crop_rotate_editor/models/rotate_direction.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_mode.enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_tool_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/aspect_ratio_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/rotate_direction.dart';
 import '../custom_widgets/crop_rotate_editor_widgets.dart';
 import '../icons/crop_rotate_editor_icons.dart';
 import '../styles/crop_rotate_editor_style.dart';
 import 'utils/base_sub_editor_configs.dart';
 import 'utils/editor_safe_area.dart';
 
-export '/features/crop_rotate_editor/enums/crop_tool_enum.dart';
-export '/features/crop_rotate_editor/models/rotate_direction.dart';
-export '/features/crop_rotate_editor/models/transform_configs.dart';
+export 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_tool_enum.dart';
+export 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/rotate_direction.dart';
+export 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
 export '../custom_widgets/crop_rotate_editor_widgets.dart';
 export '../icons/crop_rotate_editor_icons.dart';
 export '../styles/crop_rotate_editor_style.dart';
@@ -167,7 +167,7 @@ class CropRotateEditorConfigs implements BaseSubEditorConfigs {
   /// Defines which crop-rotate tools are available in the editor.
   ///
   /// The order of the tools in this list determines the order in the UI.
-  /// Simply include the tools you want and leave out the ones you don’t.
+  /// Simply include the tools you want and leave out the ones you donâ€™t.
   ///
   /// Example:
   /// ```dart

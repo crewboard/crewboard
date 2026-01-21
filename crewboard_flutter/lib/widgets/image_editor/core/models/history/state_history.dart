@@ -1,9 +1,9 @@
-// Project imports:
+﻿// Project imports:
 import 'package:flutter/foundation.dart';
 
-import '/features/crop_rotate_editor/models/transform_configs.dart';
-import '/features/filter_editor/types/filter_matrix.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/types/filter_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
 import '../layers/layer.dart';
 
 /// The `EditorStateHistory` class represents changes made to an image in the

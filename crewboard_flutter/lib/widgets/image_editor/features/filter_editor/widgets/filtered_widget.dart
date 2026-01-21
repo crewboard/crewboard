@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:ui';
 
 // Flutter imports:
@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/editor_image.dart';
-import '/shared/widgets/auto_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/auto_image.dart';
 import '../../tune_editor/models/tune_adjustment_matrix.dart';
 import '../types/filter_matrix.dart';
 import 'filter_generator.dart';

@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/features/tune_editor/tune_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/tune_editor.dart';
 import '../frosted_glass_effect.dart';
 
 /// A custom app bar widget that creates a frosted glass effect for the

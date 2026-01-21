@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/emoji_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/emoji_editor_configs.dart';
 
 /// A widget responsible for preloading fonts for the main editor,
 /// ensuring smooth rendering of text and emoji elements.
@@ -25,7 +25,7 @@ class MainEditorFontPreloader extends StatelessWidget {
   Widget build(BuildContext context) {
     if (kIsWeb && emojiEditorConfigs.enablePreloadWebFont) {
       return Offstage(
-        child: Text('😀', style: emojiEditorConfigs.style.textStyle),
+        child: Text('ðŸ˜€', style: emojiEditorConfigs.style.textStyle),
       );
     } else {
       return const SizedBox.shrink();

@@ -1,18 +1,18 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/features/crop_rotate_editor/widgets/crop_layer_painter.dart';
-import '/features/main_editor/controllers/main_editor_controllers.dart';
-import '/features/main_editor/services/layer_interaction_manager.dart';
-import '/shared/controllers/video_controller.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
-import '/shared/widgets/layer/layer_drag_selection_area_widget.dart';
-import '/shared/widgets/video/video_editor_configurable.dart';
-import '/shared/widgets/video/video_editor_controls_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/widgets/crop_layer_painter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/controllers/main_editor_controllers.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_interaction_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/controllers/video_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_drag_selection_area_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_configurable.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_controls_widget.dart';
 import '../../crop_rotate_editor/enums/crop_mode.enum.dart';
 import '../main_editor.dart';
 import '../services/layer_drag_selection_service.dart';

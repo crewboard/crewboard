@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+﻿// ignore_for_file: constant_identifier_names
 
 /// The duration used for fade-in animations in the Grounded design.
 const kGroundedFadeInDuration = Duration(milliseconds: 220);

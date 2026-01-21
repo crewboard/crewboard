@@ -1,5 +1,5 @@
-// Flutter imports:
-import 'package:flutter/widgets.dart';
+﻿// Flutter imports:
+import 'package:flutter/material.dart';
 
 /// A style configuration for adaptive dialogs.
 class AdaptiveDialogStyle {

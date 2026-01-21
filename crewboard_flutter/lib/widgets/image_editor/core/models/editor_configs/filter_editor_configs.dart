@@ -1,8 +1,8 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Project imports:
-import '/features/filter_editor/utils/filter_generator/filter_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/utils/filter_generator/filter_model.dart';
 
 import '../custom_widgets/filter_editor_widgets.dart';
 import '../icons/filter_editor_icons.dart';

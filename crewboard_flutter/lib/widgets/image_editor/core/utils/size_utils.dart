@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 /// Gets the minimum size between two sizes.
 ///

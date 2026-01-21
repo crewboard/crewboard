@@ -1,9 +1,9 @@
-// ignore_for_file: directives_ordering
+﻿// ignore_for_file: directives_ordering
 
 library;
 
 /// Emoji
-export '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
+export 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
     show Emoji, RecentTabBehavior, CategoryIcons, Category, CategoryEmoji;
 
 export 'core/models/editor_callbacks/pro_image_editor_callbacks.dart';
@@ -15,11 +15,11 @@ export 'core/models/editor_image.dart';
 export 'core/models/history/state_history.dart';
 
 /// Video editing
-export '/shared/controllers/video_controller.dart';
-export '/shared/widgets/video/export_prebuild/video_editor_prebuild_widgets.dart';
-export '/core/models/editor_callbacks/video_editor_callbacks.dart';
-export '/core/models/editor_configs/video_editor_configs.dart';
-export '/core/models/video/trim_duration_span_model.dart';
+export 'shared/controllers/video_controller.dart';
+export 'shared/widgets/video/export_prebuild/video_editor_prebuild_widgets.dart';
+export 'core/models/editor_callbacks/video_editor_callbacks.dart';
+export 'core/models/editor_configs/video_editor_configs.dart';
+export 'core/models/video/trim_duration_span_model.dart';
 
 /// Import/Export state history
 export 'shared/services/import_export/models/export_state_history_configs.dart';
@@ -35,7 +35,7 @@ export 'core/models/init_configs/filter_editor_init_configs.dart';
 export 'core/models/init_configs/tune_editor_init_configs.dart';
 
 /// Various
-export '/core/models/complete_parameters.dart';
+export 'core/models/complete_parameters.dart';
 export 'core/models/layers/layer.dart';
 export 'core/models/custom_widgets/layer_interaction_widgets.dart';
 export 'features/blur_editor/blur_editor.dart';
@@ -43,9 +43,9 @@ export 'features/crop_rotate_editor/crop_rotate_editor.dart';
 export 'features/emoji_editor/emoji_editor.dart';
 export 'features/filter_editor/filter_editor.dart';
 export 'features/tune_editor/tune_editor.dart';
-export '/shared/utils/debounce.dart';
-export '/features/main_editor/services/state_manager.dart';
-export '/features/tune_editor/models/tune_adjustment_matrix.dart';
+export 'shared/utils/debounce.dart';
+export 'features/main_editor/services/state_manager.dart';
+export 'features/tune_editor/models/tune_adjustment_matrix.dart';
 
 /// Editors
 export 'features/main_editor/main_editor.dart';
@@ -63,9 +63,9 @@ export 'shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 export 'shared/widgets/extended/extended_pop_scope.dart';
 export 'core/constants/editor_style_constants.dart';
 export 'core/utils/image_converter.dart';
-export '/shared/utils/parser/int_parser.dart';
-export '/shared/utils/parser/double_parser.dart';
-export '/shared/utils/parser/size_parser.dart';
+export 'shared/utils/parser/int_parser.dart';
+export 'shared/utils/parser/double_parser.dart';
+export 'shared/utils/parser/size_parser.dart';
 
 /// Widgets
 export 'shared/widgets/animated/fade_in_up.dart';

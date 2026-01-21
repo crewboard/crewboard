@@ -1,0 +1,11 @@
+class: Emoji
+table: emoji
+fields:
+  emoji: String
+  hexcode: String
+  group: String
+  subgroup: String
+  annotation: String
+  tags: List<String>
+  shortcodes: List<String>
+  emoticons: List<String>

@@ -1,7 +1,7 @@
-// Project imports:
+﻿// Project imports:
 import 'package:flutter/widgets.dart';
 
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
 import 'standalone_editor_callbacks.dart';
 
 /// A class representing callbacks for the tune editor.

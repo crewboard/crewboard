@@ -1,4 +1,4 @@
-/// A class that defines the safe area configuration for the editor.
+﻿/// A class that defines the safe area configuration for the editor.
 ///
 /// The [EditorSafeArea] class is used to specify which edges of the editor
 /// should have padding to avoid overlapping with system UI elements, such

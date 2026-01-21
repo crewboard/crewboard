@@ -1,18 +1,18 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/core/models/custom_widgets/utils/custom_widgets_typedef.dart';
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/features/paint_editor/enums/paint_editor_enum.dart';
-import '/plugins/defer_pointer/defer_pointer.dart';
-import '/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/utils/custom_widgets_typedef.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/enums/paint_editor_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/defer_pointer/defer_pointer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 import '../models/layer_item_interaction.dart';
 import 'layer_interaction_border_painter.dart';
 import 'layer_interaction_button.dart';

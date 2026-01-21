@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import '../utils/interpolation_utils.dart';
 
 /// A mixin that provides an extended loop with transition timing for

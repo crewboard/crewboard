@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:crewboard_flutter/config/palette.dart';
+import 'package:crewboard_flutter/widgets/glass_morph.dart';
 
 import 'types.dart';
 import 'flows_controller.dart';
-import '../../../widgets/glass_morph.dart'; // Ensure this exists or use Container
-
-import '../../../widgets/widgets.dart';
 
 class AddFlow extends StatelessWidget {
   const AddFlow({super.key});
@@ -18,69 +17,114 @@ class AddFlow extends StatelessWidget {
       width: 200,
       child: GlassMorph(
         borderRadius: 10,
-        margin: const EdgeInsets.only(top: 10, right: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("add flow", style: TextStyle(fontSize: 12)),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: SmallButton(
-                label: "Terminal",
+        child: Container(
+          margin: const EdgeInsets.only(top: 10, right: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Button(
+                label: "Add Terminal",
                 onPress: () {
                   controller.addFlow(FlowType.terminal);
                 },
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: SmallButton(
-                label: "Process",
+              const SizedBox(height: 10),
+              Button(
+                label: "Add Process",
                 onPress: () {
                   controller.addFlow(FlowType.process);
                 },
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: SmallButton(
-                label: "Condition",
+              const SizedBox(height: 10),
+              Button(
+                label: "Add Condition",
                 onPress: () {
                   controller.addFlow(FlowType.condition);
                 },
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: SmallButton(
-                label: "User",
+              const SizedBox(height: 10),
+              Button(
+                label: "Add Loop",
                 onPress: () {
-                  controller.addFlow(FlowType.user);
+                  controller.startLoopSelection();
                 },
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Button extends StatelessWidget {
+  const Button({super.key, required this.label, required this.onPress});
+  final String label;
+  final Function onPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onPress();
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: label.toLowerCase().contains("loop") ? 8 : 10,
+          horizontal: 15,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Pallet.inside2,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(fontSize: 12, color: Pallet.font1),
+              ),
             ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    controller.window.value = "none";
-                    controller.refreshUI();
-                  },
-                  child: const Text(
-                    "close",
-                    style: TextStyle(color: Colors.grey),
+            if (label.toLowerCase().contains("condition"))
+              Transform.rotate(
+                angle: 40,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.yellow, width: 2.5),
                   ),
                 ),
-              ],
-            ),
+              )
+            else if (label.toLowerCase().contains("process"))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2.5),
+                ),
+              )
+            else if (label.toLowerCase().contains("terminal"))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.red, width: 2.5),
+                ),
+              )
+            else
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: Icon(
+                  Icons.loop,
+                  size: 20,
+                  color: Colors.green,
+                ),
+              ),
           ],
         ),
       ),

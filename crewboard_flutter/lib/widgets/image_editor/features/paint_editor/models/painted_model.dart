@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/constants/int_constants.dart';
-import '/shared/extensions/color_extension.dart';
-import '/shared/extensions/export_bool_extension.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/utils/parser/bool_parser.dart';
-import '/shared/utils/parser/double_parser.dart';
-import '/shared/utils/unique_id_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/color_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/bool_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/double_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/unique_id_generator.dart';
 import '../enums/paint_editor_enum.dart';
 import 'eraser_model.dart';
 

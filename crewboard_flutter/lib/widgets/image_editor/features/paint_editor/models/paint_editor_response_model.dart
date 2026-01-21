@@ -1,4 +1,4 @@
-import '/core/models/layers/layer.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
 
 /// A response model for the Paint Editor feature, encapsulating the changes
 /// made to layers during the editing process.

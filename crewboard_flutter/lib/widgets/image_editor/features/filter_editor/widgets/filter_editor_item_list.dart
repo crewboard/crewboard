@@ -1,14 +1,14 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/editor_image.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
-import '/shared/widgets/animated/fade_in_up.dart';
-import '/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/animated/fade_in_up.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
 import '../types/filter_matrix.dart';
 import '../utils/filter_generator/filter_model.dart';
 import '../utils/filter_generator/filter_presets.dart';

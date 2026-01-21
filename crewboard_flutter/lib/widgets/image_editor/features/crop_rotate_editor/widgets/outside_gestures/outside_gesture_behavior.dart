@@ -1,4 +1,4 @@
-/// How to behave during hit tests.
+﻿/// How to behave during hit tests.
 enum OutsideHitTestBehavior {
   /// Targets that defer to their children receive events within their bounds
   /// only if one of their children is hit by the hit test.

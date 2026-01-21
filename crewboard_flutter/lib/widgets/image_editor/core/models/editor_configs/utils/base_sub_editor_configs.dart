@@ -1,4 +1,4 @@
-/// Base configuration class for all sub-editors.
+﻿/// Base configuration class for all sub-editors.
 ///
 /// This class defines shared settings that can be reused across different
 /// sub-editor configurations. It provides a common contract for features

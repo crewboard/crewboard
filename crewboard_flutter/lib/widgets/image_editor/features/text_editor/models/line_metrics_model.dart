@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 /// A model representing a single line of text and its layout metrics,
 /// with support for cursor adjustments and rounded background rendering.

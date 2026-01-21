@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/features/text_editor/widgets/text_editor_bottom_bar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/text_editor_bottom_bar.dart';
 import '../../../whatsapp/whatsapp_color_picker.dart';
 import '../../frosted_glass.dart';
 

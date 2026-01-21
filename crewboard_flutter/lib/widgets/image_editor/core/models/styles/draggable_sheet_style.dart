@@ -1,4 +1,4 @@
-/// Configuration settings for a draggable bottom sheet component.
+﻿/// Configuration settings for a draggable bottom sheet component.
 class DraggableSheetStyle {
   /// Creates an instance of [DraggableSheetStyle] with customizable settings.
   ///

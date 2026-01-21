@@ -1,6 +1,6 @@
-// Project imports:
-import '/core/models/editor_callbacks/standalone_editor_callbacks.dart';
-import '/features/main_editor/main_editor.dart';
+﻿// Project imports:
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/standalone_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
 import '../layers/layer.dart';
 
 /// A class representing callbacks for the sticker editor.

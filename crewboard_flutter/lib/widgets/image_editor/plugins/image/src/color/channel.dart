@@ -1,4 +1,4 @@
-/// A channel of a color
+﻿/// A channel of a color
 enum Channel {
   /// Red channel
   red,

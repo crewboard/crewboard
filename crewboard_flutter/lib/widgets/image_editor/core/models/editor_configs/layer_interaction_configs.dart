@@ -1,4 +1,4 @@
-import '../custom_widgets/layer_interaction_widgets.dart';
+﻿import '../custom_widgets/layer_interaction_widgets.dart';
 import '../icons/layer_interaction_icons.dart';
 import '../styles/layer_interaction_style.dart';
 

@@ -1,17 +1,17 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/constants/int_constants.dart';
-import '/shared/extensions/box_constraints_extension.dart';
-import '/shared/extensions/export_bool_extension.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/services/import_export/types/widget_loader.dart';
-import '/shared/services/import_export/utils/key_minifier.dart';
-import '/shared/utils/map_utils.dart';
-import '/shared/utils/parser/bool_parser.dart';
-import '/shared/utils/parser/double_parser.dart';
-import '/shared/utils/unique_id_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/box_constraints_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/types/widget_loader.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/utils/key_minifier.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/map_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/bool_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/double_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/unique_id_generator.dart';
 import '../editor_image.dart';
 import 'emoji_layer.dart';
 import 'layer_interaction.dart';

@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/features/filter_editor/utils/filter_generator/filter_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/utils/filter_generator/filter_model.dart';
 import 'standalone_editor_callbacks.dart';
 
 /// A class representing callbacks for the filter editor.

@@ -1,11 +1,11 @@
-import 'dart:math';
+﻿
 
 import 'package:flutter/material.dart';
 
-import '/core/models/custom_widgets/layer_interaction_widgets.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/features/main_editor/main_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/layer_interaction_widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
 import '../models/float_select_configs.dart';
 import '../painter/float_select_border_painter.dart';
 import 'float_select_resize_handler.dart';
@@ -90,57 +90,21 @@ class _FloatSelectionOverlayState extends State<FloatSelectionOverlay> {
     super.dispose();
   }
 
-  /// Calculates the toolbar offset with clamping to the visible area
+  /// Calculates the toolbar offset to position it at the top center
   Offset _calculateToolbarOffset() {
-    final renderBox = _transformedLayerKey.currentContext?.findRenderObject();
     final parentBox = _stackKey.currentContext?.findRenderObject();
-    final toolbarBox = _toolbarKey.currentContext?.findRenderObject();
 
-    if (renderBox is! RenderBox ||
-        parentBox is! RenderBox ||
-        !renderBox.hasSize ||
-        !parentBox.hasSize) {
+    if (parentBox is! RenderBox || !parentBox.hasSize) {
       return Offset.zero;
     }
 
-    final layerSize = renderBox.size;
     final parentSize = parentBox.size;
 
-    // Convert corners of the layer to local coordinates
-    final topLeft =
-        parentBox.globalToLocal(renderBox.localToGlobal(Offset.zero));
-    final topRight = parentBox
-        .globalToLocal(renderBox.localToGlobal(Offset(layerSize.width, 0)));
-    final bottomLeft = parentBox
-        .globalToLocal(renderBox.localToGlobal(Offset(0, layerSize.height)));
-    final bottomRight = parentBox.globalToLocal(
-        renderBox.localToGlobal(Offset(layerSize.width, layerSize.height)));
+    // Center horizontally
+    final dx = parentSize.width / 2;
 
-    // Get bounds and center
-    final allX = [topLeft.dx, topRight.dx, bottomLeft.dx, bottomRight.dx];
-    final allY = [topLeft.dy, topRight.dy, bottomLeft.dy, bottomRight.dy];
-    final minX = allX.reduce(min);
-    final maxX = allX.reduce(max);
-    final minY = allY.reduce(min);
-    final centerX = (minX + maxX) / 2;
-
-    // Toolbar size
-    double toolboxWidth = 0;
-    double toolboxHeight = 0;
-    if (toolbarBox is RenderBox) {
-      toolboxWidth = toolbarBox.size.width;
-      toolboxHeight = toolbarBox.size.height;
-    }
-
-    // Final clamped position
-    final dx = (centerX + _style.offset.dx).clamp(
-      toolboxWidth / 2 + widget.safeArea.left,
-      parentSize.width - toolboxWidth / 2 - widget.safeArea.right,
-    );
-    final dy = (minY + _style.offset.dy).clamp(
-      toolboxHeight + widget.safeArea.top,
-      parentSize.height - widget.safeArea.bottom,
-    );
+    // Position at top, respecting safe area and adding some padding
+    final dy = widget.safeArea.top + _style.outsideSpace;
 
     return Offset(dx, dy);
   }
@@ -167,7 +131,7 @@ class _FloatSelectionOverlayState extends State<FloatSelectionOverlay> {
           top: offset.dy,
           left: offset.dx,
           child: FractionalTranslation(
-            translation: const Offset(-0.5, -1),
+            translation: const Offset(-0.5, 0),
             child: SizedBox(
               key: _toolbarKey,
               child: _widgets.toolbar ??

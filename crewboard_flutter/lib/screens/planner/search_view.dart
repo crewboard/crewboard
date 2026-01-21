@@ -4,6 +4,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
+import 'package:flutter/gestures.dart';
 import 'types.dart';
 import 'string_extensions.dart';
 import 'view_ticket_dialog.dart';
@@ -160,6 +161,80 @@ class _SearchViewState extends State<SearchView> {
     return result;
   }
 
+  String _formatDeadline(String? deadline) {
+    if (deadline == null || deadline.isEmpty) return "No deadline";
+    try {
+      DateTime dt = DateTime.parse(deadline);
+      DateTime now = DateTime.now();
+
+      // Calculate difference in days
+      Duration diff = dt.difference(now);
+      int days = diff.inDays;
+
+      if (days < 0) {
+        return "Overdue";
+      } else if (days == 0) {
+        return "Ends today";
+      } else if (days < 30) {
+        return "$days ${days == 1 ? 'day' : 'days'} left";
+      } else {
+        // Show months with one decimal point
+        double months = days / 30.0;
+        return "${months.toStringAsFixed(1)} months left";
+      }
+    } catch (e) {
+      return deadline;
+    }
+  }
+
+  List<TextSpan> _parseBody(String text) {
+    if (text.isEmpty) return [];
+    final List<TextSpan> spans = [];
+
+    final List<String> names = [
+      ...plannerController.allFlows.map((f) => f.name),
+      ...plannerController.allDocs.map((d) => d.name),
+    ];
+
+    // Create a regex that matches either valid names (prioritized) or standard hashtags
+    final uniqueNames = names.where((n) => n.isNotEmpty).toSet().toList();
+    uniqueNames.sort((a, b) => b.length.compareTo(a.length));
+    
+    final escapedNames = uniqueNames.map(RegExp.escape).join('|');
+    final pattern = escapedNames.isNotEmpty 
+        ? "#($escapedNames|\\w+)" 
+        : r"#(\w+)";
+    final RegExp exp = RegExp(pattern, caseSensitive: false);
+
+    text.splitMapJoin(
+      exp,
+      onMatch: (Match m) {
+        final String match = m[0]!;
+        final String flowName = m[1] ?? match.substring(1);
+        spans.add(
+          TextSpan(
+            text: match,
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+            recognizer:
+                TapGestureRecognizer()
+                  ..onTap = () {
+                    plannerController.openLinkedFlow(flowName);
+                  },
+          ),
+        );
+        return match;
+      },
+      onNonMatch: (String s) {
+        spans.add(TextSpan(text: s));
+        return s;
+      },
+    );
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -262,14 +337,16 @@ class _SearchViewState extends State<SearchView> {
                                         ],
                                       ),
                                       const SizedBox(height: 5),
-                                      Text(
-                                        ticket.ticketBody,
+                                      Text.rich(
+                                        TextSpan(
+                                          children: _parseBody(ticket.ticketBody),
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: Pallet.font3,
+                                          ),
+                                        ),
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Pallet.font3,
-                                        ),
                                       ),
                                     ],
                                   ),
@@ -285,11 +362,11 @@ class _SearchViewState extends State<SearchView> {
                                         Icon(
                                           Icons.alarm,
                                           color: Pallet.font3,
-                                          size: 16,
+                                          size: 20,
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          ticket.deadline ?? "None",
+                                          _formatDeadline(ticket.deadline),
                                           style: TextStyle(
                                             color: Pallet.font3,
                                             fontSize: 12,

@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
-import '../../features/filter_editor/utils/combine_color_matrix_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/utils/combine_color_matrix_utils.dart';
 import 'layers/layer.dart';
 
 /// A data class that contains all parameters needed for applying visual
@@ -62,7 +62,7 @@ class CompleteParameters {
   /// The target crop height in pixels (optional).
   final int? cropHeight;
 
-  /// Number of clockwise 90° rotations to apply.
+  /// Number of clockwise 90Â° rotations to apply.
   final int rotateTurns;
 
   /// The horizontal crop offset (optional).

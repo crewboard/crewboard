@@ -1,4 +1,4 @@
-/// An enumeration representing different modes for color picking.
+﻿/// An enumeration representing different modes for color picking.
 enum PickMode {
   /// Color mode: Allows picking from a range of colors.
   color,

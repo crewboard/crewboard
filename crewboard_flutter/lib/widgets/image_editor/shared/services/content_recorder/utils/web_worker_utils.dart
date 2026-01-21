@@ -1,4 +1,4 @@
-import 'dart:js_interop';
+﻿import 'dart:js_interop';
 import 'dart:typed_data';
 
 /// A function that converts a Dart object to a JavaScript object.

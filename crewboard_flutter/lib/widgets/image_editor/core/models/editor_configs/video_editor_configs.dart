@@ -1,12 +1,12 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/models/custom_widgets/video_editor_widgets.dart';
-import '/core/models/icons/video_editor_icons.dart';
-import '/core/models/styles/video_editor_style.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/video_editor_widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/icons/video_editor_icons.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/styles/video_editor_style.dart';
 
-export '/core/models/custom_widgets/video_editor_widgets.dart';
-export '/core/models/icons/video_editor_icons.dart';
-export '/core/models/styles/video_editor_style.dart';
+export 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/video_editor_widgets.dart';
+export 'package:crewboard_flutter/widgets/image_editor/core/models/icons/video_editor_icons.dart';
+export 'package:crewboard_flutter/widgets/image_editor/core/models/styles/video_editor_style.dart';
 
 /// Configuration settings for the video editor.
 class VideoEditorConfigs {

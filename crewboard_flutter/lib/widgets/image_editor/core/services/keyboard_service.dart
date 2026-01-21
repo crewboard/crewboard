@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+﻿import 'package:flutter/services.dart';
 
 /// A service class for querying the current state of the hardware keyboard.
 ///

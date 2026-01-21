@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/widgets/platform/platform_popup_menu.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/platform/platform_popup_menu.dart';
 
 /// A custom AppBar for the paint editor, providing controls for undo, redo,
 /// toggling fill mode, and accessing additional settings like opacity and

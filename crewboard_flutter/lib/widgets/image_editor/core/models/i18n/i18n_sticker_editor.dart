@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the I18nStickerEditor Editor
+﻿/// Internationalization (i18n) settings for the I18nStickerEditor Editor
 /// component.
 class I18nStickerEditor {
   /// Creates an instance of [I18nStickerEditor] with customizable

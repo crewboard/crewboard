@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/filter_editor_configs.dart';
-import '/core/models/i18n/i18n_filter_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/filter_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_filter_editor.dart';
 
 /// A custom AppBar for the Filter Editor, providing close and apply options.
 class FilterEditorAppBar extends StatelessWidget

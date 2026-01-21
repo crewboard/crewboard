@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// Default delimiter for regex
 const delimiter = '|';

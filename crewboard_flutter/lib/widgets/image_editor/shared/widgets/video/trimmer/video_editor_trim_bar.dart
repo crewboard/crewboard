@@ -1,11 +1,11 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/video/trim_duration_span_model.dart';
-import '/shared/widgets/video/trimmer/video_editor_play_time_indicator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/video/trim_duration_span_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/trimmer/video_editor_play_time_indicator.dart';
 import '../../../utils/debounce.dart';
 import '../video_editor_configurable.dart';
 import 'video_editor_trim_handle.dart';

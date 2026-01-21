@@ -1,16 +1,16 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/constants/int_constants.dart';
-import '/core/platform/io/io_helper.dart';
-import '/shared/services/import_export/types/widget_loader.dart';
-import '/shared/utils/parser/double_parser.dart';
-import '/shared/utils/parser/int_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/types/widget_loader.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/double_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/int_parser.dart';
 import '../editor_image.dart';
 import 'layer.dart';
 import 'layer_interaction.dart';
 
-export '/shared/services/import_export/models/widget_layer_export_configs.dart';
+export 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/models/widget_layer_export_configs.dart';
 
 /// A class representing a layer with custom widget content.
 ///

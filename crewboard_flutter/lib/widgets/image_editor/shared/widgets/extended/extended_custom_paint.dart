@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// [ExtendedCustomPaint] is a stateful widget that allows you to use

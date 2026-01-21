@@ -1,10 +1,10 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/constants/editor_style_constants.dart';
-import '/features/tune_editor/tune_editor.dart';
-import '/shared/widgets/editor_scrollbar.dart';
-import '/shared/widgets/flat_icon_text_button.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_style_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/tune_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/flat_icon_text_button.dart';
 import '../frosted_glass_effect.dart';
 
 /// A custom bottom bar widget that creates a frosted glass effect for the

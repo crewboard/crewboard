@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 /// A configuration class for defining blur settings for censoring content.
 class CensorConfigs {

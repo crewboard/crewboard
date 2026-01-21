@@ -3,9 +3,11 @@ import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:get/get.dart';
 import 'package:crewboard_flutter/main.dart'; // For client
 import 'signin_page.dart';
 import 'widgets.dart';
+import '../../config/palette.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -175,13 +177,13 @@ class _SignupPageState extends State<SignupPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Row(
+            child: Obx(() => Row(
               children: [
-                MinimizeWindowButton(),
-                MaximizeWindowButton(),
-                CloseWindowButton(),
+                MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
               ],
-            ),
+            )),
           ),
         ],
       ),

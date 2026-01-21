@@ -1,4 +1,4 @@
-/// Compares two dynamic objects to check if they are equal.
+﻿/// Compares two dynamic objects to check if they are equal.
 ///
 /// This function supports comparison of nested Maps and Lists. It recursively
 /// checks the equality of each element in the Maps or Lists. If the objects are

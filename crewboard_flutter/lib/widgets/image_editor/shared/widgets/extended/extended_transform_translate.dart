@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// [ExtendedTransformTranslate] is a stateful widget that allows

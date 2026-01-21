@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
-import '/shared/extensions/duration_extension.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/duration_extension.dart';
 
 import '../video_editor_configurable.dart';
 

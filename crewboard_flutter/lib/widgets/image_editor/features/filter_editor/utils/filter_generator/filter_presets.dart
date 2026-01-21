@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import 'filter_addons.dart';
 import 'filter_model.dart';
 
@@ -65,7 +65,7 @@ class PresetFilters {
     ],
   );
 
-  /// Reyes: a vintage filter, gives your photos a “dusty” look
+  /// Reyes: a vintage filter, gives your photos a â€œdustyâ€ look
   static FilterModel reyes = FilterModel(
     name: 'Reyes',
     filters: [
@@ -85,7 +85,7 @@ class PresetFilters {
   );
 
   /// Slumber: Desaturates the image as well as adds haze for a retro, dreamy
-  /// look – with an emphasis on blacks and blues
+  /// look â€“ with an emphasis on blacks and blues
   static FilterModel slumber = FilterModel(
     name: 'Slumber',
     filters: [
@@ -240,7 +240,7 @@ class PresetFilters {
   );
 
   /// Nashville: Warms the temperature, lowers contrast and increases exposure
-  /// to give a light "pink" tint – making it feel "nostalgic"
+  /// to give a light "pink" tint â€“ making it feel "nostalgic"
   static FilterModel nashville = FilterModel(
     name: 'Nashville',
     filters: [

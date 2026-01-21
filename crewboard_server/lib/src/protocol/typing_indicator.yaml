@@ -1,0 +1,6 @@
+class: TypingIndicator
+fields:
+  userId: UuidValue
+  roomId: UuidValue
+  isTyping: bool
+  userName: String

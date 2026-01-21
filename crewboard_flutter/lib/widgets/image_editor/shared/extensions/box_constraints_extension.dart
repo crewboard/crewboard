@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
 import 'num_extension.dart';
 
 /// An extension on [BoxConstraints] that provides additional functionality

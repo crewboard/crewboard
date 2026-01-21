@@ -1,18 +1,18 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '/core/models/editor_image.dart';
-import '/core/models/history/state_history.dart';
-import '/core/models/layers/layer.dart';
-import '/core/platform/io/io_helper.dart';
-import '/features/crop_rotate_editor/models/transform_configs.dart';
-import '/features/filter_editor/constants/identity_matrix_constant.dart';
-import '/features/filter_editor/utils/lerp_color_matrix_utils.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/history/state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/constants/identity_matrix_constant.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/utils/lerp_color_matrix_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
 import '../../utils/parser/double_parser.dart';
 import '../../utils/parser/int_parser.dart';
 import '../../utils/parser/size_parser.dart';

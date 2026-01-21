@@ -1,13 +1,13 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/core/platform/io/io_helper.dart';
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
-import '/pro_image_editor_platform_interface.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor_platform_interface.dart';
 
 /// Initial value for RecentEmoji
 const initVal = 1;

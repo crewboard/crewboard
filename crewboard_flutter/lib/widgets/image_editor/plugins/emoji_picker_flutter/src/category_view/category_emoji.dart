@@ -1,4 +1,4 @@
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// Container for Category and their emoji
 class CategoryEmoji {

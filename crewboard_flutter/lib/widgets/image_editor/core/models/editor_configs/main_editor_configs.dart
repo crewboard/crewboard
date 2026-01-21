@@ -1,7 +1,7 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/features/crop_rotate_editor/models/transform_configs.dart';
-import '/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 import '../../enums/editor_mode.dart';
 import '../custom_widgets/main_editor_widgets.dart';
 import '../icons/main_editor_icons.dart';
@@ -93,7 +93,7 @@ class MainEditorConfigs extends ZoomConfigs {
   /// Defines which sub-editors are available in the bottom-bar of the editor.
   ///
   /// The order of the tools in this list determines the order in the UI.
-  /// Simply include the tools you want and leave out the ones you don’t.
+  /// Simply include the tools you want and leave out the ones you donâ€™t.
   ///
   /// Example:
   /// ```dart

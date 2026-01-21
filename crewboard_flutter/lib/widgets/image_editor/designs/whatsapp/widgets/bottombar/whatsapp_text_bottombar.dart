@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/features/text_editor/widgets/text_editor_bottom_bar.dart';
-import '/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/widgets/text_editor_bottom_bar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
 import '../../whatsapp_color_picker.dart';
 
 /// A stateful widget that represents the bottom bar for text editing in the

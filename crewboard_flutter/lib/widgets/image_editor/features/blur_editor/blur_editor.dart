@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 
 // Flutter imports:
@@ -6,20 +6,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/editor_image.dart';
-import '/core/models/init_configs/blur_editor_init_configs.dart';
-import '/core/models/transform_helper.dart';
-import '/core/utils/size_utils.dart';
-import '/features/blur_editor/widgets/blur_editor_bottombar.dart';
-import '/shared/controllers/video_controller.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/widgets/extended/extended_pop_scope.dart';
-import '/shared/widgets/layer/layer_stack.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/init_configs/blur_editor_init_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/transform_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/utils/size_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/blur_editor/widgets/blur_editor_bottombar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/controllers/video_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_pop_scope.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_stack.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
 import '../crop_rotate_editor/models/transform_configs.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import '../tune_editor/models/tune_adjustment_matrix.dart';

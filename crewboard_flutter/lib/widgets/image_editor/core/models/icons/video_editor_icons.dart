@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Defines icon configurations for the video editor.
 class VideoEditorIcons {

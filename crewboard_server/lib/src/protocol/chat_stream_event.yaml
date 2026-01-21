@@ -1,0 +1,4 @@
+class: ChatStreamEvent
+fields:
+  message: ChatMessage?
+  typing: TypingIndicator?

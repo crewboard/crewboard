@@ -43,32 +43,38 @@ import 'package:crewboard_server/src/generated/protocols/sign_in_response.dart'
 import 'package:crewboard_server/src/generated/entities/chat_room.dart' as _i18;
 import 'package:crewboard_server/src/generated/entities/chat_message.dart'
     as _i19;
+import 'package:crewboard_server/src/generated/chat_stream_event.dart' as _i20;
 import 'package:crewboard_server/src/generated/entities/flow_model.dart'
-    as _i20;
-import 'package:crewboard_server/src/generated/entities/doc.dart' as _i21;
+    as _i21;
+import 'package:crewboard_server/src/generated/entities/doc.dart' as _i22;
+import 'package:crewboard_server/src/generated/entities/emoji.dart' as _i23;
+import 'package:crewboard_server/src/generated/gif.dart' as _i24;
 import 'package:crewboard_server/src/generated/protocols/get_planner_data_response.dart'
-    as _i22;
-import 'package:crewboard_server/src/generated/protocols/get_add_ticket_data_response.dart'
-    as _i23;
-import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
-    as _i24;
-import 'package:crewboard_server/src/generated/protocols/get_all_tickets_response.dart'
     as _i25;
-import 'package:crewboard_server/src/generated/protocols/get_ticket_data_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_add_ticket_data_response.dart'
     as _i26;
-import 'package:crewboard_server/src/generated/protocols/get_ticket_thread_response.dart'
+import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
     as _i27;
-import 'package:crewboard_server/src/generated/protocols/get_ticket_comments_response.dart'
+import 'package:crewboard_server/src/generated/protocols/get_all_tickets_response.dart'
     as _i28;
-import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
+import 'package:crewboard_server/src/generated/protocols/get_ticket_data_response.dart'
     as _i29;
-import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+import 'package:crewboard_server/src/generated/protocols/get_ticket_thread_response.dart'
     as _i30;
-import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
+import 'package:crewboard_server/src/generated/protocols/get_ticket_comments_response.dart'
     as _i31;
-import 'package:crewboard_server/src/generated/protocols/get_planner_activities_response.dart'
+import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
     as _i32;
-import 'package:crewboard_server/src/generated/greetings/greeting.dart' as _i33;
+import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+    as _i33;
+import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
+    as _i34;
+import 'package:crewboard_server/src/generated/protocols/ticket_model.dart'
+    as _i35;
+import 'package:crewboard_server/src/generated/protocols/get_planner_activities_response.dart'
+    as _i36;
+import 'dart:typed_data' as _i37;
+import 'package:crewboard_server/src/generated/greetings/greeting.dart' as _i38;
 import 'package:crewboard_server/src/generated/protocol.dart';
 import 'package:crewboard_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -188,7 +194,13 @@ class TestEndpoints {
 
   late final _DocsEndpoint docs;
 
+  late final _EmojiEndpoint emoji;
+
+  late final _GiphyEndpoint giphy;
+
   late final _PlannerEndpoint planner;
+
+  late final _UploadEndpoint upload;
 
   late final _GreetingEndpoint greeting;
 }
@@ -224,7 +236,19 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
+    emoji = _EmojiEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    giphy = _GiphyEndpoint(
+      endpoints,
+      serializationManager,
+    );
     planner = _PlannerEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    upload = _UploadEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1324,6 +1348,73 @@ class _ChatEndpoint {
     });
   }
 
+  _i3.Stream<_i20.ChatStreamEvent> subscribeToRoom(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue roomId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i20.ChatStreamEvent>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'chat',
+              method: 'subscribeToRoom',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'chat',
+              methodName: 'subscribeToRoom',
+              arguments: {'roomId': roomId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
+  }
+
+  _i3.Future<void> sendTyping(
+    _i1.TestSessionBuilder sessionBuilder,
+    bool isTyping,
+    _i2.UuidValue roomId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'chat',
+            method: 'sendTyping',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'chat',
+          methodName: 'sendTyping',
+          parameters: _i1.testObjectToJson({
+            'isTyping': isTyping,
+            'roomId': roomId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<void> markAsRead(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue roomId,
@@ -1368,7 +1459,7 @@ class _DocsEndpoint {
 
   _i3.Future<bool> createFlow(
     _i1.TestSessionBuilder sessionBuilder,
-    _i20.FlowModel flow,
+    _i21.FlowModel flow,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1399,7 +1490,7 @@ class _DocsEndpoint {
 
   _i3.Future<bool> updateFlow(
     _i1.TestSessionBuilder sessionBuilder,
-    _i20.FlowModel flow,
+    _i21.FlowModel flow,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1428,7 +1519,7 @@ class _DocsEndpoint {
     });
   }
 
-  _i3.Future<List<_i20.FlowModel>> getFlows(
+  _i3.Future<List<_i21.FlowModel>> getFlows(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appId,
   ) async {
@@ -1451,7 +1542,7 @@ class _DocsEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i20.FlowModel>>);
+                as _i3.Future<List<_i21.FlowModel>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1459,7 +1550,7 @@ class _DocsEndpoint {
     });
   }
 
-  _i3.Future<_i20.FlowModel?> getFlow(
+  _i3.Future<_i21.FlowModel?> getFlow(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue flowId,
   ) async {
@@ -1482,7 +1573,7 @@ class _DocsEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i20.FlowModel?>);
+                as _i3.Future<_i21.FlowModel?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1521,7 +1612,7 @@ class _DocsEndpoint {
     });
   }
 
-  _i3.Future<List<_i21.Doc>> getDocs(
+  _i3.Future<List<_i22.Doc>> getDocs(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appId,
   ) async {
@@ -1544,7 +1635,7 @@ class _DocsEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i21.Doc>>);
+                as _i3.Future<List<_i22.Doc>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1625,6 +1716,156 @@ class _DocsEndpoint {
   }
 }
 
+class _EmojiEndpoint {
+  _EmojiEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<int> getEmojiCount(_i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emoji',
+            method: 'getEmojiCount',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'emoji',
+          methodName: 'getEmojiCount',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<int>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i23.Emoji>> getEmojis(
+    _i1.TestSessionBuilder sessionBuilder, {
+    int? limit,
+    int? offset,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emoji',
+            method: 'getEmojis',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'emoji',
+          methodName: 'getEmojis',
+          parameters: _i1.testObjectToJson({
+            'limit': limit,
+            'offset': offset,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i23.Emoji>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _GiphyEndpoint {
+  _GiphyEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<String?> getApiKey(_i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'giphy',
+            method: 'getApiKey',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'giphy',
+          methodName: 'getApiKey',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<String?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i24.Gif>> getGifs(
+    _i1.TestSessionBuilder sessionBuilder, {
+    String? query,
+    required int limit,
+    required int offset,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'giphy',
+            method: 'getGifs',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'giphy',
+          methodName: 'getGifs',
+          parameters: _i1.testObjectToJson({
+            'query': query,
+            'limit': limit,
+            'offset': offset,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i24.Gif>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _PlannerEndpoint {
   _PlannerEndpoint(
     this._endpointDispatch,
@@ -1635,7 +1876,7 @@ class _PlannerEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i22.GetPlannerDataResponse> getPlannerData(
+  _i3.Future<_i25.GetPlannerDataResponse> getPlannerData(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appId,
   ) async {
@@ -1658,7 +1899,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i22.GetPlannerDataResponse>);
+                as _i3.Future<_i25.GetPlannerDataResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1666,7 +1907,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i23.GetAddTicketDataResponse> getAddTicketData(
+  _i3.Future<_i26.GetAddTicketDataResponse> getAddTicketData(
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -1688,7 +1929,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i23.GetAddTicketDataResponse>);
+                as _i3.Future<_i26.GetAddTicketDataResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1698,7 +1939,7 @@ class _PlannerEndpoint {
 
   _i3.Future<bool> addTicket(
     _i1.TestSessionBuilder sessionBuilder,
-    _i24.AddTicketRequest request,
+    _i27.AddTicketRequest request,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1727,7 +1968,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i25.GetAllTicketsResponse> getAllTickets(
+  _i3.Future<_i28.GetAllTicketsResponse> getAllTickets(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appId,
   ) async {
@@ -1750,7 +1991,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i25.GetAllTicketsResponse>);
+                as _i3.Future<_i28.GetAllTicketsResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1758,7 +1999,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i26.GetTicketDataResponse> getTicketData(
+  _i3.Future<_i29.GetTicketDataResponse> getTicketData(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue ticketId,
   ) async {
@@ -1781,7 +2022,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i26.GetTicketDataResponse>);
+                as _i3.Future<_i29.GetTicketDataResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1789,7 +2030,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i27.GetTicketThreadResponse> getTicketThread(
+  _i3.Future<_i30.GetTicketThreadResponse> getTicketThread(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue ticketId,
   ) async {
@@ -1812,7 +2053,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i27.GetTicketThreadResponse>);
+                as _i3.Future<_i30.GetTicketThreadResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1820,7 +2061,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i28.GetTicketCommentsResponse> getTicketComments(
+  _i3.Future<_i31.GetTicketCommentsResponse> getTicketComments(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue ticketId,
   ) async {
@@ -1843,7 +2084,7 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i28.GetTicketCommentsResponse>);
+                as _i3.Future<_i31.GetTicketCommentsResponse>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1853,7 +2094,7 @@ class _PlannerEndpoint {
 
   _i3.Future<bool> addComment(
     _i1.TestSessionBuilder sessionBuilder,
-    _i29.AddCommentRequest request,
+    _i32.AddCommentRequest request,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1884,7 +2125,7 @@ class _PlannerEndpoint {
 
   _i3.Future<bool> addBucket(
     _i1.TestSessionBuilder sessionBuilder,
-    _i30.AddBucketRequest request,
+    _i33.AddBucketRequest request,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1915,7 +2156,7 @@ class _PlannerEndpoint {
 
   _i3.Future<bool> changeBucket(
     _i1.TestSessionBuilder sessionBuilder,
-    _i31.ChangeBucketRequest request,
+    _i34.ChangeBucketRequest request,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1946,8 +2187,7 @@ class _PlannerEndpoint {
 
   _i3.Future<bool> updateTicket(
     _i1.TestSessionBuilder sessionBuilder,
-    _i2.UuidValue ticketId,
-    List<Map<String, dynamic>> updates,
+    _i35.TicketModel updatedTicket,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1960,10 +2200,7 @@ class _PlannerEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'planner',
           methodName: 'updateTicket',
-          parameters: _i1.testObjectToJson({
-            'ticketId': ticketId,
-            'updates': updates,
-          }),
+          parameters: _i1.testObjectToJson({'updatedTicket': updatedTicket}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -1979,7 +2216,7 @@ class _PlannerEndpoint {
     });
   }
 
-  _i3.Future<_i32.GetPlannerActivitiesResponse> getPlannerActivities(
+  _i3.Future<_i36.GetPlannerActivitiesResponse> getPlannerActivities(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appId,
   ) async {
@@ -2002,7 +2239,53 @@ class _PlannerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i32.GetPlannerActivitiesResponse>);
+                as _i3.Future<_i36.GetPlannerActivitiesResponse>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _UploadEndpoint {
+  _UploadEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<String?> uploadFile(
+    _i1.TestSessionBuilder sessionBuilder,
+    String path,
+    _i37.ByteData data,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'upload',
+            method: 'uploadFile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'upload',
+          methodName: 'uploadFile',
+          parameters: _i1.testObjectToJson({
+            'path': path,
+            'data': data,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<String?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2021,7 +2304,7 @@ class _GreetingEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i33.Greeting> hello(
+  _i3.Future<_i38.Greeting> hello(
     _i1.TestSessionBuilder sessionBuilder,
     String name,
   ) async {
@@ -2044,7 +2327,7 @@ class _GreetingEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i33.Greeting>);
+                as _i3.Future<_i38.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

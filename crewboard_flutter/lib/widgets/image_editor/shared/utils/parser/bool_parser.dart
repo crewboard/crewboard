@@ -1,4 +1,4 @@
-/// Safely parses a dynamic [value] to a boolean.
+﻿/// Safely parses a dynamic [value] to a boolean.
 ///
 /// Accepts `true`, `'true'`, `'t'`, 1 as true, and `false`, `'false'`, `'f'`, 0
 /// as false. Returns [fallback] if the value is unrecognized.

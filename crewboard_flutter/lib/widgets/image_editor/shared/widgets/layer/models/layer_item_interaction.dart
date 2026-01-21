@@ -1,4 +1,4 @@
-import 'package:flutter/gestures.dart';
+﻿import 'package:flutter/gestures.dart';
 
 /// Class that holds interactions for a layer item.
 class LayerItemInteractions {

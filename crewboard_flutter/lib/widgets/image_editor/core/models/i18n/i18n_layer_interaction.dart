@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for layer interaction components.
+﻿/// Internationalization (i18n) settings for layer interaction components.
 ///
 /// This class provides customizable internationalization settings for various
 /// layer interaction actions such as removing, editing, and rotating/scaling

@@ -1,4 +1,4 @@
-/// Class containing version constants for export and import functionality.
+﻿/// Class containing version constants for export and import functionality.
 class ExportImportVersion {
   /// The version string representing version `1.0.0` which is used in the
   /// editor version < `3.0.0`.

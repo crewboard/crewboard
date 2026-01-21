@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 /// Defines visual styles for FloatSelect elements
 class FloatSelectStyle {
@@ -19,7 +19,7 @@ class FloatSelectStyle {
       color: Color(0x61FFFFFF),
       fontWeight: FontWeight.bold,
     ),
-    this.toolbarColor = const Color(0xDD000000),
+    this.toolbarColor = const Color(0x00000000),
     this.toolbarRadius = 8.0,
   });
 

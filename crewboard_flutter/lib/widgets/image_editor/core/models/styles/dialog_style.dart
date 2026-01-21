@@ -1,4 +1,4 @@
-import 'adaptive_dialog_style.dart';
+﻿import 'adaptive_dialog_style.dart';
 import 'loading_dialog_style.dart';
 
 export 'adaptive_dialog_style.dart';

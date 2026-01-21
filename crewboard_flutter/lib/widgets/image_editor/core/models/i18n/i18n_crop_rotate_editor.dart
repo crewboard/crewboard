@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the Crop and Rotate Editor
+﻿/// Internationalization (i18n) settings for the Crop and Rotate Editor
 /// component.
 class I18nCropRotateEditor {
   /// Creates an instance of [I18nCropRotateEditor] with customizable

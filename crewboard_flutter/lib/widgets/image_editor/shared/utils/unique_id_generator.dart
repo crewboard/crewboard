@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 /// Generates a unique ID based on the current time.

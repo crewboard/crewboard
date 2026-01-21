@@ -1,4 +1,4 @@
-/// A class that represents the export configurations for a widget layer.
+﻿/// A class that represents the export configurations for a widget layer.
 class WidgetLayerExportConfigs {
   /// Creates a [WidgetLayerExportConfigs] instance with the provided
   /// configuration values.

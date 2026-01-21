@@ -1,4 +1,4 @@
-import 'float_select_i18n.dart';
+﻿import 'float_select_i18n.dart';
 import 'float_select_style.dart';
 import 'float_select_widgets.dart';
 
@@ -18,8 +18,8 @@ class FloatSelectConfigs {
     this.enableBackwardButton = false,
     this.enableMoveToFrontButton = false,
     this.enableMoveToBackButton = false,
-    this.enableDuplicateButton = true,
-    this.enableDeleteButton = true,
+    this.enableDuplicateButton = false,
+    this.enableDeleteButton = false,
   });
 
   /// Style settings for the widget

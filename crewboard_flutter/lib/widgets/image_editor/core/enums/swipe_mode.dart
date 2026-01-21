@@ -1,4 +1,4 @@
-/// An enumeration representing the modes of swipe interaction.
+﻿/// An enumeration representing the modes of swipe interaction.
 ///
 /// The [SwipeMode] enum defines the possible directions for swipe gestures
 /// and a default state representing no swipe action. It can be used in

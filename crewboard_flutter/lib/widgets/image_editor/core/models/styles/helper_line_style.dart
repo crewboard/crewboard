@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// The `HelperLineStyle` class defines the style for helper lines in the image

@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Dart imports:
@@ -9,10 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/features/emoji_editor/emoji_editor.dart';
-import '/features/sticker_editor/sticker_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/emoji_editor/emoji_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/sticker_editor/sticker_editor.dart';
 
 /// Represents the temporary sticker mode for WhatsApp.
 ///

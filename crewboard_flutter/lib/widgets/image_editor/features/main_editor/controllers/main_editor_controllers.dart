@@ -1,13 +1,13 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/services/content_recorder/controllers/content_recorder_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/controllers/content_recorder_controller.dart';
 
 /// A class that manages various controllers used in the main editor interface.
 class MainEditorControllers {

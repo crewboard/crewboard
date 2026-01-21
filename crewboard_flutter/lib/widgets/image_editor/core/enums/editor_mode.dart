@@ -1,4 +1,4 @@
-/// Defines the available editor modes.
+﻿/// Defines the available editor modes.
 enum EditorMode {
   /// The main editor.
   main,

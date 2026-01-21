@@ -11,6 +11,8 @@ import 'config/app_config.dart';
 import 'config/palette.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/theme_controller.dart';
+import 'controllers/emoji_controller.dart';
+import 'controllers/giphy_controller.dart';
 import 'screens/home.dart';
 import 'screens/auth/signin_page.dart';
 
@@ -38,6 +40,10 @@ void main() async {
   client.authKeyProvider = sessionManager;
   client.authSessionManager = sessionManager;
 
+  // Open streaming connection for real-time updates
+  await client.openStreamingConnection();
+
+
   // Try to initialize session manager, but handle invalid cached data
   try {
     await sessionManager.initialize();
@@ -47,8 +53,8 @@ void main() async {
       print('Session restored, validating with server...');
       try {
         // Attempt a lightweight server call to validate the session
-        // We use 'status' endpoint which is standard in Serverpod auth
-        await client.modules.auth.status.getUserInfo();
+        // We use 'getRooms' or another authenticated endpoint since 'getUserInfo' fails with UUIDs
+        await client.chat.getRooms();
         print('Session validation successful.');
       } catch (e) {
         print('Session validation message: $e');
@@ -76,6 +82,8 @@ void main() async {
 
   // Initialize Theme Controller
   Get.put(ThemeController());
+  Get.put(EmojiController());
+  Get.put(GiphyController());
 
   runApp(const MyApp());
 
@@ -136,6 +144,7 @@ class _AppEntryState extends State<AppEntry> {
   Widget build(BuildContext context) {
     // Initialize Window dimensions for sidebar
     Window.height = MediaQuery.of(context).size.height;
+    Window.width = MediaQuery.of(context).size.width;
     print(
       'AppEntry Build: isAuthenticated=${authController.isAuthenticated.value}',
     );

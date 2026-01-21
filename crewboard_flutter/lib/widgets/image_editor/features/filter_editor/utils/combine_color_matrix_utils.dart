@@ -1,6 +1,6 @@
-import '../constants/identity_matrix_constant.dart';
+﻿import '../constants/identity_matrix_constant.dart';
 
-/// Multiplies two 4×5 color‐matrices (each a List of length 20).
+/// Multiplies two 4Ã—5 colorâ€matrices (each a List of length 20).
 /// Returns the composed matrix: applying [b] then [a].
 List<double> _multiplyMatrices(List<double> a, List<double> b) {
   const int size = 4;

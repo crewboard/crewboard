@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'double_parser.dart';
 
 /// Safely parses a [Map] representation of a size to a [Size] object.

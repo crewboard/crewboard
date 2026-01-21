@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:crewboard_flutter/controllers/auth_controller.dart';
 import 'signup_page.dart';
 import 'widgets.dart';
+import '../../config/palette.dart';
 
 class SignInPage extends StatefulWidget {
   final VoidCallback? onSignIn;
@@ -206,13 +207,13 @@ class _SignInPageState extends State<SignInPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Row(
+            child: Obx(() => Row(
               children: [
-                MinimizeWindowButton(),
-                MaximizeWindowButton(),
-                CloseWindowButton(),
+                MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
               ],
-            ),
+            )),
           ),
         ],
       ),

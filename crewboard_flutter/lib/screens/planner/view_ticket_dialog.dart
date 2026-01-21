@@ -7,6 +7,8 @@ import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
 import '../../widgets/glass_morph.dart';
+import '../../widgets/mention_text_box.dart';
+import 'package:flutter/gestures.dart';
 
 class ViewTicketDialog extends StatefulWidget {
   const ViewTicketDialog({super.key, required this.ticketId});
@@ -47,8 +49,8 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
   Widget _buildTicketView(PlannerController controller) {
     return GlassMorph(
       borderRadius: 15,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-      width: 700,
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      width: 500,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -66,7 +68,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         children: [
                           Text(
                             "title",
-                            style: TextStyle(color: Pallet.font3, fontSize: 13),
+                            style: TextStyle(color: Pallet.font3, fontSize: 14),
                           ),
                           const SizedBox(width: 8),
                           InkWell(
@@ -106,7 +108,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         children: [
                           Text(
                             "body",
-                            style: TextStyle(color: Pallet.font3, fontSize: 13),
+                            style: TextStyle(color: Pallet.font3, fontSize: 14),
                           ),
                           const SizedBox(width: 8),
                           InkWell(
@@ -127,16 +129,19 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       ),
                       const SizedBox(height: 5),
                       if (editType == "body")
-                        SmallTextBox(
+                        MentionTextBox(
                           controller: controller.body.value,
                           maxLines: 8,
+                          onSearch: controller.searchMentionable,
                           onType: (val) =>
                               controller.addToEditStack("ticketBody", val),
                         )
                       else
-                        Text(
-                          controller.body.value.text,
-                          style: TextStyle(color: Pallet.font1, fontSize: 13),
+                        SelectableText.rich(
+                          TextSpan(
+                            children: _parseBody(controller.body.value.text),
+                            style: TextStyle(color: Pallet.font1, fontSize: 13),
+                          ),
                         ),
                       const SizedBox(height: 20),
                       Row(
@@ -151,10 +156,6 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                             onPress: () => controller.mode.value = "checklist",
                           ),
                           const SizedBox(width: 10),
-                          ChipButton(
-                            name: "add flow",
-                            onPress: () => controller.mode.value = "flow",
-                          ),
                         ],
                       ),
                       if (controller.mode.value == "checklist")
@@ -194,7 +195,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                               "check list",
                               style: TextStyle(
                                 color: Pallet.font3,
-                                fontSize: 13,
+                                fontSize: 14,
                               ),
                             ),
                             for (var item in controller.checklist)
@@ -244,8 +245,8 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                   i < controller.selectedUsers.length;
                                   i++
                                 )
-                                  Positioned(
-                                    left: i * 20.0,
+                                  Padding(
+                                    padding: EdgeInsets.only(left: i * 15.0),
                                     child: ProfileIcon(
                                       name:
                                           controller.selectedUsers[i].userName,
@@ -270,10 +271,13 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         selected: controller.selectedUsers,
                       ),
                       const SizedBox(height: 10),
-                      Options(
-                        selected: controller.status.value,
+                      DropDown(
+                        label: (controller.status.value == null)
+                            ? "Status"
+                            : controller.status.value!.statusName,
+                        itemKey: "statusName",
                         items: controller.statuses,
-                        onSelect: (val) {
+                        onPress: (val) {
                           controller.status.value = val;
                           controller.addToEditStack(
                             "statusId",
@@ -282,10 +286,13 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      Options(
-                        selected: controller.type.value,
+                      DropDown(
+                        label: (controller.type.value == null)
+                            ? "Type"
+                            : controller.type.value!.typeName,
+                        itemKey: "typeName",
                         items: controller.types,
-                        onSelect: (val) {
+                        onPress: (val) {
                           controller.type.value = val;
                           controller.addToEditStack(
                             "typeId",
@@ -294,10 +301,13 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      Options(
-                        selected: controller.priority.value,
+                      DropDown(
+                        label: (controller.priority.value == null)
+                            ? "Priority"
+                            : controller.priority.value!.priorityName,
+                        itemKey: "priorityName",
                         items: controller.priorities,
-                        onSelect: (val) {
+                        onPress: (val) {
                           controller.priority.value = val;
                           controller.addToEditStack(
                             "priorityId",
@@ -306,53 +316,28 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      InkWell(
+                      DatePicker(
+                        value: controller.deadline.value,
+                        label: "Deadline",
+                        showCheck: true,
                         onTap: () async {
-                          final date = await showDatePicker(
+                          showDialog(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(DateTime.now().year + 5),
+                            builder: (context) => WheelDatePicker(
+                              initialDate: controller.deadline.value == null
+                                  ? DateTime.now()
+                                  : DateTime.parse(controller.deadline.value!),
+                              onDateSelected: (date) {
+                                controller.deadline.value =
+                                    DateFormat('yyyy-MM-dd').format(date);
+                                controller.addToEditStack(
+                                  "deadline",
+                                  controller.deadline.value!,
+                                );
+                              },
+                            ),
                           );
-                          if (date != null) {
-                            controller.deadline.value = DateFormat(
-                              'yyyy-MM-dd',
-                            ).format(date);
-                            controller.addToEditStack(
-                              "deadline",
-                              controller.deadline.value!,
-                            );
-                          }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Pallet.inside1,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  controller.deadline.value ?? "Deadline",
-                                  style: TextStyle(
-                                    color: Pallet.font1,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              if (controller.deadline.value != null)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                  size: 16,
-                                ),
-                            ],
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 10),
                       InkWell(
@@ -431,7 +416,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                   label: "done",
                   onPress: () async {
                     if (controller.editStack.isNotEmpty) {
-                      await controller.saveEditStack(widget.ticketId);
+                      await controller.updateTicket(widget.ticketId);
                     }
                     Get.back();
                   },
@@ -447,7 +432,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
   Widget _buildCommentsView(PlannerController controller) {
     return GlassMorph(
       borderRadius: 15,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       width: 500,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -626,5 +611,40 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
         ],
       ),
     );
+  }
+
+  List<TextSpan> _parseBody(String text) {
+    if (text.isEmpty) return [];
+    final List<TextSpan> spans = [];
+    final RegExp exp = RegExp(r"(#\w+)");
+    text.splitMapJoin(
+      exp,
+      onMatch: (Match m) {
+        final String match = m[0]!;
+        final String flowName = match.substring(1);
+        spans.add(
+          TextSpan(
+            text: match,
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+            recognizer:
+                TapGestureRecognizer()
+                  ..onTap = () {
+                    final PlannerController controller =
+                        Get.find<PlannerController>();
+                    controller.openLinkedFlow(flowName);
+                  },
+          ),
+        );
+        return match;
+      },
+      onNonMatch: (String s) {
+        spans.add(TextSpan(text: s));
+        return s;
+      },
+    );
+    return spans;
   }
 }

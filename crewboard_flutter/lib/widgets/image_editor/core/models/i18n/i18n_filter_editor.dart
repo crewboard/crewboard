@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs
+﻿// ignore_for_file: public_member_api_docs
 
 /// Internationalization (i18n) settings for the Filter Editor component.
 class I18nFilterEditor {

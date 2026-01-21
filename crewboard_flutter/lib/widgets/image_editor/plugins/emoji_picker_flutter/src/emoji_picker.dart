@@ -1,10 +1,10 @@
-// ignore_for_file: constant_identifier_names
+﻿// ignore_for_file: constant_identifier_names
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/platform/io/io_helper.dart';
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 import '../locales/default_emoji_set_locale.dart';
 import '../src/emoji_picker_internal_utils.dart';
 

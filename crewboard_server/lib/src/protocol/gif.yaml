@@ -1,0 +1,6 @@
+class: Gif
+fields:
+  id: String
+  url: String
+  title: String?
+  previewUrl: String?

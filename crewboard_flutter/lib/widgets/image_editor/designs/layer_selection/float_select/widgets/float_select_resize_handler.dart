@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/custom_widgets/layer_interaction_widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/layer_interaction_widgets.dart';
 import '../utils/float_select_transparent_hit_test.dart';
 
 /// A resize/rotate corner handler for FloatSelect items
@@ -21,7 +21,7 @@ class FloatSelectResizeRotateHandler extends StatelessWidget {
   /// Total length of each handler arm
   final double handlerLength;
 
-  /// Number of 90° rotations applied to the handler
+  /// Number of 90Â° rotations applied to the handler
   final int rotationCount;
 
   /// Color of the handler

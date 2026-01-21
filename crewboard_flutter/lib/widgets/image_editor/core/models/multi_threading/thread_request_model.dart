@@ -1,7 +1,7 @@
-import '/core/models/editor_configs/image_generation_configs/output_formats.dart';
-import '/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
-import '/plugins/image/src/formats/png/png_filter.dart';
-import '/plugins/image/src/image/image.dart' as img;
+﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/output_formats.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/png/png_filter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart' as img;
 
 /// Represents an image object sent from the main thread.
 class ImageConvertThreadRequest extends ThreadRequest {
@@ -96,8 +96,8 @@ class ThreadRequest {
   /// - `'jpegChroma'`: The chroma subsampling mode for JPEG format
   ///    (e.g., `'yuv444'`).
   /// - `'pngFilter'`: The PNG filter type used for compression.
-  /// - `'jpegQuality'`: An `int` specifying the JPEG quality (0–100).
-  /// - `'pngLevel'`: An `int` specifying the PNG compression level (0–9).
+  /// - `'jpegQuality'`: An `int` specifying the JPEG quality (0â€“100).
+  /// - `'pngLevel'`: An `int` specifying the PNG compression level (0â€“9).
   /// - `'singleFrame'`: A `bool` indicating whether to process a single frame
   ///    only.
   /// - `'image'`: A `Map<String, dynamic>` representation of the image, created

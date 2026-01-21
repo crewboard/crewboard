@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
-import '/plugins/emoji_picker_flutter/locales/default_emoji_set_locale.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/locales/default_emoji_set_locale.dart';
 
 /// Number of skin tone icons
 const kSkinToneCount = 6;

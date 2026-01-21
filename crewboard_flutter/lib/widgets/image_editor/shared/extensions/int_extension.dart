@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 /// Extension for formatting an [int] value representing bytes.
 extension IntFormatter on int {

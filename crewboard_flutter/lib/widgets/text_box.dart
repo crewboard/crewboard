@@ -58,7 +58,7 @@ class SmallTextBox extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
               borderSide: errorText != null
                   ? BorderSide(color: Colors.red)
-                  : BorderSide(color: Pallet.font1),
+                  : BorderSide(color: Pallet.divider),
             ),
           ),
         ),

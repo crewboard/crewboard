@@ -99,13 +99,14 @@ Future<void> addUser(context, Map? data) async {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          Options(
-                                            width: 140,
-                                            selected: controller
-                                                .selectedUserType
-                                                .value,
+                                          DropDown(
+                                            // width: 140, // DropDown handles width differently, usually expanded or constrained by parent
+                                            label: controller
+                                                    .selectedUserType
+                                                    .value?.userType ?? "Select",
+                                            itemKey: "userType",
                                             items: controller.userTypes,
-                                            onSelect: (userType) {
+                                            onPress: (userType) {
                                               controller
                                                       .selectedUserType
                                                       .value =
@@ -146,13 +147,14 @@ Future<void> addUser(context, Map? data) async {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          Options(
-                                            width: 140,
-                                            selected: controller
-                                                .selectedLeaveConfig
-                                                .value,
+                                          DropDown(
+                                            // width: 140,
+                                            label: controller
+                                                    .selectedLeaveConfig
+                                                    .value?.configName ?? "Select",
+                                            itemKey: "configName",
                                             items: controller.leaveConfigs,
-                                            onSelect: (config) {
+                                            onPress: (config) {
                                               controller
                                                       .selectedLeaveConfig
                                                       .value =
@@ -287,12 +289,14 @@ Future<void> addUser(context, Map? data) async {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          Options(
-                                            width: 140,
-                                            selected:
-                                                controller.selectedGender.value,
+                                          DropDown(
+                                            // width: 140,
+                                            label: controller
+                                                    .selectedGender
+                                                    .value.toString(),
+                                            itemKey: "name",
                                             items: controller.genders,
-                                            onSelect: (gender) {
+                                            onPress: (gender) {
                                               controller.selectedGender.value =
                                                   gender as Gender;
                                               controller.genderError.value = '';
@@ -326,7 +330,9 @@ Future<void> addUser(context, Map? data) async {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          InkWell(
+                                          DatePicker(
+                                            value: controller.dateOfBirth.value,
+                                            label: "Select",
                                             onTap: () async {
                                               showDialog(
                                                 context: context,
@@ -357,44 +363,6 @@ Future<void> addUser(context, Map? data) async {
                                                     ),
                                               );
                                             },
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 12,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: Pallet.inside1,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      controller
-                                                              .dateOfBirth
-                                                              .value
-                                                              .isEmpty
-                                                          ? "Select"
-                                                          : controller
-                                                                .dateOfBirth
-                                                                .value,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            controller
-                                                                .dateOfBirth
-                                                                .value
-                                                                .isEmpty
-                                                            ? Pallet.font3
-                                                            : Pallet.font1,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
                                           ),
                                           if (controller
                                               .dateOfBirthError
@@ -453,11 +421,14 @@ Future<void> addUser(context, Map? data) async {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                Options(
-                                  width: 140,
-                                  selected: controller.selectedBloodGroup.value,
+                                DropDown(
+                                  // width: 140,
+                                  label: controller
+                                          .selectedBloodGroup
+                                          .value.toString(),
+                                  itemKey: "name",
                                   items: controller.bloodGroups,
-                                  onSelect: (group) {
+                                  onPress: (group) {
                                     controller.selectedBloodGroup.value =
                                         group as BloodGroup;
                                   },

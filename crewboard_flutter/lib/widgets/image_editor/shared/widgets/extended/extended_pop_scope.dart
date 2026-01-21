@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 import '../overlays/loading_dialog/loading_dialog.dart';
 

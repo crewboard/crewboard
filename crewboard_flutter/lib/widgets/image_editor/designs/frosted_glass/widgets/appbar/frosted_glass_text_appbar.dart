@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/features/text_editor/text_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/text_editor/text_editor.dart';
 import '../frosted_glass_effect.dart';
 
 /// A stateless widget that represents an app bar with a frosted glass effect.

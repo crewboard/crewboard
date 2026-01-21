@@ -1,9 +1,9 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:isolate';
 
 // Project imports:
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/core/models/multi_threading/thread_response_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_response_model.dart';
 import '../utils/isolate_thread_utils.dart';
 import 'thread.dart';
 

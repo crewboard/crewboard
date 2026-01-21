@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Decoration that can be used to render a triangle in the bottom-right
 /// corner of a container

@@ -1,4 +1,4 @@
-/// The maximum number of decimal places that can be used.
+﻿/// The maximum number of decimal places that can be used.
 const int kMaxSafeDecimalPlaces = 15;
 
 /// The maximum value for a 32-bit signed integer (2^31 - 1).

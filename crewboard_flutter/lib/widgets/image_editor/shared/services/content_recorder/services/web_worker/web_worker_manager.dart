@@ -1,8 +1,8 @@
-import 'dart:js_interop' as js;
+﻿import 'dart:js_interop' as js;
 
 import 'package:web/web.dart' as web;
 
-import '/core/constants/editor_web_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_web_constants.dart';
 import '../../models/web_worker_thread.dart';
 import '../../utils/processor_helper.dart';
 import '../../utils/web_worker_utils.dart';

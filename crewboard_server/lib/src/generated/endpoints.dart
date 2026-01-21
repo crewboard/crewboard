@@ -17,32 +17,38 @@ import '../endpoints/admin_endpoint.dart' as _i4;
 import '../endpoints/auth_endpoint.dart' as _i5;
 import '../endpoints/chat_endpoint.dart' as _i6;
 import '../endpoints/docs_endpoint.dart' as _i7;
-import '../endpoints/planner_endpoint.dart' as _i8;
-import '../greetings/greeting_endpoint.dart' as _i9;
+import '../endpoints/emoji_endpoint.dart' as _i8;
+import '../endpoints/giphy_endpoint.dart' as _i9;
+import '../endpoints/planner_endpoint.dart' as _i10;
+import '../endpoints/upload_endpoint.dart' as _i11;
+import '../greetings/greeting_endpoint.dart' as _i12;
 import 'package:crewboard_server/src/generated/entities/user_types.dart'
-    as _i10;
-import 'package:crewboard_server/src/generated/entities/user.dart' as _i11;
-import 'package:crewboard_server/src/generated/entities/leave_config.dart'
-    as _i12;
-import 'package:crewboard_server/src/generated/entities/leave_request.dart'
     as _i13;
-import 'package:crewboard_server/src/generated/entities/chat_message.dart'
-    as _i14;
-import 'package:crewboard_server/src/generated/entities/flow_model.dart'
+import 'package:crewboard_server/src/generated/entities/user.dart' as _i14;
+import 'package:crewboard_server/src/generated/entities/leave_config.dart'
     as _i15;
-import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
+import 'package:crewboard_server/src/generated/entities/leave_request.dart'
     as _i16;
-import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
+import 'package:crewboard_server/src/generated/entities/chat_message.dart'
     as _i17;
-import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+import 'package:crewboard_server/src/generated/entities/flow_model.dart'
     as _i18;
-import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
+import 'package:crewboard_server/src/generated/protocols/add_ticket_request.dart'
     as _i19;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:crewboard_server/src/generated/protocols/add_comment_request.dart'
     as _i20;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i21;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import 'package:crewboard_server/src/generated/protocols/add_bucket_request.dart'
+    as _i21;
+import 'package:crewboard_server/src/generated/protocols/change_bucket_request.dart'
     as _i22;
+import 'package:crewboard_server/src/generated/protocols/ticket_model.dart'
+    as _i23;
+import 'dart:typed_data' as _i24;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i25;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i26;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i27;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -84,13 +90,31 @@ class Endpoints extends _i1.EndpointDispatch {
           'docs',
           null,
         ),
-      'planner': _i8.PlannerEndpoint()
+      'emoji': _i8.EmojiEndpoint()
+        ..initialize(
+          server,
+          'emoji',
+          null,
+        ),
+      'giphy': _i9.GiphyEndpoint()
+        ..initialize(
+          server,
+          'giphy',
+          null,
+        ),
+      'planner': _i10.PlannerEndpoint()
         ..initialize(
           server,
           'planner',
           null,
         ),
-      'greeting': _i9.GreetingEndpoint()
+      'upload': _i11.UploadEndpoint()
+        ..initialize(
+          server,
+          'upload',
+          null,
+        ),
+      'greeting': _i12.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -365,7 +389,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i10.UserTypes>(),
+              type: _i1.getType<_i13.UserTypes>(),
               nullable: false,
             ),
           },
@@ -458,7 +482,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'user': _i1.ParameterDescription(
               name: 'user',
-              type: _i1.getType<_i11.User>(),
+              type: _i1.getType<_i14.User>(),
               nullable: false,
             ),
             'password': _i1.ParameterDescription(
@@ -501,7 +525,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'config': _i1.ParameterDescription(
               name: 'config',
-              type: _i1.getType<_i12.LeaveConfig>(),
+              type: _i1.getType<_i15.LeaveConfig>(),
               nullable: false,
             ),
           },
@@ -520,7 +544,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i13.LeaveRequest>(),
+              type: _i1.getType<_i16.LeaveRequest>(),
               nullable: false,
             ),
           },
@@ -737,7 +761,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'message': _i1.ParameterDescription(
               name: 'message',
-              type: _i1.getType<_i14.ChatMessage>(),
+              type: _i1.getType<_i17.ChatMessage>(),
               nullable: false,
             ),
           },
@@ -748,6 +772,30 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['chat'] as _i6.ChatEndpoint).sendMessage(
                 session,
                 params['message'],
+              ),
+        ),
+        'sendTyping': _i1.MethodConnector(
+          name: 'sendTyping',
+          params: {
+            'isTyping': _i1.ParameterDescription(
+              name: 'isTyping',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['chat'] as _i6.ChatEndpoint).sendTyping(
+                session,
+                params['isTyping'],
+                params['roomId'],
               ),
         ),
         'markAsRead': _i1.MethodConnector(
@@ -768,6 +816,27 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['roomId'],
               ),
         ),
+        'subscribeToRoom': _i1.MethodStreamConnector(
+          name: 'subscribeToRoom',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['chat'] as _i6.ChatEndpoint).subscribeToRoom(
+                session,
+                params['roomId'],
+              ),
+        ),
       },
     );
     connectors['docs'] = _i1.EndpointConnector(
@@ -779,7 +848,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'flow': _i1.ParameterDescription(
               name: 'flow',
-              type: _i1.getType<_i15.FlowModel>(),
+              type: _i1.getType<_i18.FlowModel>(),
               nullable: false,
             ),
           },
@@ -797,7 +866,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'flow': _i1.ParameterDescription(
               name: 'flow',
-              type: _i1.getType<_i15.FlowModel>(),
+              type: _i1.getType<_i18.FlowModel>(),
               nullable: false,
             ),
           },
@@ -938,6 +1007,92 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['emoji'] = _i1.EndpointConnector(
+      name: 'emoji',
+      endpoint: endpoints['emoji']!,
+      methodConnectors: {
+        'getEmojiCount': _i1.MethodConnector(
+          name: 'getEmojiCount',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emoji'] as _i8.EmojiEndpoint)
+                  .getEmojiCount(session),
+        ),
+        'getEmojis': _i1.MethodConnector(
+          name: 'getEmojis',
+          params: {
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'offset': _i1.ParameterDescription(
+              name: 'offset',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emoji'] as _i8.EmojiEndpoint).getEmojis(
+                session,
+                limit: params['limit'],
+                offset: params['offset'],
+              ),
+        ),
+      },
+    );
+    connectors['giphy'] = _i1.EndpointConnector(
+      name: 'giphy',
+      endpoint: endpoints['giphy']!,
+      methodConnectors: {
+        'getApiKey': _i1.MethodConnector(
+          name: 'getApiKey',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['giphy'] as _i9.GiphyEndpoint).getApiKey(session),
+        ),
+        'getGifs': _i1.MethodConnector(
+          name: 'getGifs',
+          params: {
+            'query': _i1.ParameterDescription(
+              name: 'query',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'offset': _i1.ParameterDescription(
+              name: 'offset',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['giphy'] as _i9.GiphyEndpoint).getGifs(
+                session,
+                query: params['query'],
+                limit: params['limit'],
+                offset: params['offset'],
+              ),
+        ),
+      },
+    );
     connectors['planner'] = _i1.EndpointConnector(
       name: 'planner',
       endpoint: endpoints['planner']!,
@@ -956,7 +1111,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).getPlannerData(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).getPlannerData(
                     session,
                     params['appId'],
                   ),
@@ -968,7 +1123,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
+              ) async => (endpoints['planner'] as _i10.PlannerEndpoint)
                   .getAddTicketData(session),
         ),
         'addTicket': _i1.MethodConnector(
@@ -976,7 +1131,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i16.AddTicketRequest>(),
+              type: _i1.getType<_i19.AddTicketRequest>(),
               nullable: false,
             ),
           },
@@ -985,7 +1140,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).addTicket(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).addTicket(
                     session,
                     params['request'],
                   ),
@@ -1004,7 +1159,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).getAllTickets(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).getAllTickets(
                     session,
                     params['appId'],
                   ),
@@ -1023,7 +1178,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).getTicketData(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).getTicketData(
                     session,
                     params['ticketId'],
                   ),
@@ -1041,8 +1196,8 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).getTicketThread(
+              ) async => (endpoints['planner'] as _i10.PlannerEndpoint)
+                  .getTicketThread(
                     session,
                     params['ticketId'],
                   ),
@@ -1060,7 +1215,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
+              ) async => (endpoints['planner'] as _i10.PlannerEndpoint)
                   .getTicketComments(
                     session,
                     params['ticketId'],
@@ -1071,7 +1226,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i17.AddCommentRequest>(),
+              type: _i1.getType<_i20.AddCommentRequest>(),
               nullable: false,
             ),
           },
@@ -1080,7 +1235,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).addComment(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).addComment(
                     session,
                     params['request'],
                   ),
@@ -1090,7 +1245,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i18.AddBucketRequest>(),
+              type: _i1.getType<_i21.AddBucketRequest>(),
               nullable: false,
             ),
           },
@@ -1099,7 +1254,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).addBucket(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).addBucket(
                     session,
                     params['request'],
                   ),
@@ -1109,7 +1264,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'request': _i1.ParameterDescription(
               name: 'request',
-              type: _i1.getType<_i19.ChangeBucketRequest>(),
+              type: _i1.getType<_i22.ChangeBucketRequest>(),
               nullable: false,
             ),
           },
@@ -1118,7 +1273,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).changeBucket(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).changeBucket(
                     session,
                     params['request'],
                   ),
@@ -1126,14 +1281,9 @@ class Endpoints extends _i1.EndpointDispatch {
         'updateTicket': _i1.MethodConnector(
           name: 'updateTicket',
           params: {
-            'ticketId': _i1.ParameterDescription(
-              name: 'ticketId',
-              type: _i1.getType<_i1.UuidValue>(),
-              nullable: false,
-            ),
-            'updates': _i1.ParameterDescription(
-              name: 'updates',
-              type: _i1.getType<List<Map<String, dynamic>>>(),
+            'updatedTicket': _i1.ParameterDescription(
+              name: 'updatedTicket',
+              type: _i1.getType<_i23.TicketModel>(),
               nullable: false,
             ),
           },
@@ -1142,10 +1292,9 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['planner'] as _i8.PlannerEndpoint).updateTicket(
+                  (endpoints['planner'] as _i10.PlannerEndpoint).updateTicket(
                     session,
-                    params['ticketId'],
-                    params['updates'],
+                    params['updatedTicket'],
                   ),
         ),
         'getPlannerActivities': _i1.MethodConnector(
@@ -1161,10 +1310,41 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['planner'] as _i8.PlannerEndpoint)
+              ) async => (endpoints['planner'] as _i10.PlannerEndpoint)
                   .getPlannerActivities(
                     session,
                     params['appId'],
+                  ),
+        ),
+      },
+    );
+    connectors['upload'] = _i1.EndpointConnector(
+      name: 'upload',
+      endpoint: endpoints['upload']!,
+      methodConnectors: {
+        'uploadFile': _i1.MethodConnector(
+          name: 'uploadFile',
+          params: {
+            'path': _i1.ParameterDescription(
+              name: 'path',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'data': _i1.ParameterDescription(
+              name: 'data',
+              type: _i1.getType<_i24.ByteData>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['upload'] as _i11.UploadEndpoint).uploadFile(
+                    session,
+                    params['path'],
+                    params['data'],
                   ),
         ),
       },
@@ -1186,17 +1366,17 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['greeting'] as _i9.GreetingEndpoint).hello(
+              ) async => (endpoints['greeting'] as _i12.GreetingEndpoint).hello(
                 session,
                 params['name'],
               ),
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i20.Endpoints()
+    modules['serverpod_auth_idp'] = _i25.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth'] = _i21.Endpoints()..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i22.Endpoints()
+    modules['serverpod_auth'] = _i26.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth_core'] = _i27.Endpoints()
       ..initializeEndpoints(server);
   }
 }

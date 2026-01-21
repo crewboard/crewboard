@@ -1,10 +1,10 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/features/crop_rotate_editor/enums/crop_mode.enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_mode.enum.dart';
 
 /// A [StatelessWidget] that applies transformations to its [child] widget
 /// based on provided transformation and editor configurations.

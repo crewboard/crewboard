@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
-import '/shared/widgets/extended/repaint/extended_repaint_boundary.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/repaint/extended_repaint_boundary.dart';
 import '../controllers/content_recorder_controller.dart';
 
 /// A widget that records an invisible child widget.

@@ -1,4 +1,5 @@
-// Flutter imports:
+﻿// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../constants/editor_style_constants.dart';

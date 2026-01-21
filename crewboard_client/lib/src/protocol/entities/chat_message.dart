@@ -26,6 +26,7 @@ abstract class ChatMessage implements _i1.SerializableModel {
     required this.sameUser,
     required this.deleted,
     required this.createdAt,
+    this.waveform,
   });
 
   factory ChatMessage({
@@ -39,6 +40,7 @@ abstract class ChatMessage implements _i1.SerializableModel {
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
+    List<double>? waveform,
   }) = _ChatMessageImpl;
 
   factory ChatMessage.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -65,6 +67,11 @@ abstract class ChatMessage implements _i1.SerializableModel {
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
+      waveform: jsonSerialization['waveform'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<double>>(
+              jsonSerialization['waveform'],
+            ),
     );
   }
 
@@ -91,6 +98,8 @@ abstract class ChatMessage implements _i1.SerializableModel {
 
   DateTime createdAt;
 
+  List<double>? waveform;
+
   /// Returns a shallow copy of this [ChatMessage]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -105,6 +114,7 @@ abstract class ChatMessage implements _i1.SerializableModel {
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
+    List<double>? waveform,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -120,6 +130,7 @@ abstract class ChatMessage implements _i1.SerializableModel {
       'sameUser': sameUser,
       'deleted': deleted,
       'createdAt': createdAt.toJson(),
+      if (waveform != null) 'waveform': waveform?.toJson(),
     };
   }
 
@@ -143,6 +154,7 @@ class _ChatMessageImpl extends ChatMessage {
     required bool sameUser,
     required bool deleted,
     required DateTime createdAt,
+    List<double>? waveform,
   }) : super._(
          id: id,
          roomId: roomId,
@@ -154,6 +166,7 @@ class _ChatMessageImpl extends ChatMessage {
          sameUser: sameUser,
          deleted: deleted,
          createdAt: createdAt,
+         waveform: waveform,
        );
 
   /// Returns a shallow copy of this [ChatMessage]
@@ -171,6 +184,7 @@ class _ChatMessageImpl extends ChatMessage {
     bool? sameUser,
     bool? deleted,
     DateTime? createdAt,
+    Object? waveform = _Undefined,
   }) {
     return ChatMessage(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -185,6 +199,9 @@ class _ChatMessageImpl extends ChatMessage {
       sameUser: sameUser ?? this.sameUser,
       deleted: deleted ?? this.deleted,
       createdAt: createdAt ?? this.createdAt,
+      waveform: waveform is List<double>?
+          ? waveform
+          : this.waveform?.map((e0) => e0).toList(),
     );
   }
 }

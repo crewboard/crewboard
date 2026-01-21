@@ -1,4 +1,4 @@
-/// Extension for formatting [Duration] as a time string.
+﻿/// Extension for formatting [Duration] as a time string.
 extension DurationFormatter on Duration {
   /// Converts the duration to a formatted time string (MM:SS).
   ///

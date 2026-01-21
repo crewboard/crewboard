@@ -1,11 +1,11 @@
-import 'dart:math';
+﻿import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
-import '/shared/utils/decode_image.dart';
-import '/shared/widgets/extended/repaint/extended_render_repaint_boundary.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/image_generation_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/repaint/extended_render_repaint_boundary.dart';
 
 /// Service for rendering images from widgets or custom canvases.
 /// This service captures and processes images from the widget tree,

@@ -1,9 +1,9 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
 
 /// Determines the appropriate text style based on the platform and design mode.
 ///

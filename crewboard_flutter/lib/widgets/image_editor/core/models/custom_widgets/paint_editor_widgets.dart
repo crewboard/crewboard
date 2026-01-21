@@ -1,9 +1,9 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
 
-import '/features/paint_editor/paint_editor.dart';
-import '/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
-import '/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/paint_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 import '../layers/paint_layer.dart';
 import 'utils/custom_widgets_standalone_editor.dart';
 import 'utils/custom_widgets_typedef.dart';

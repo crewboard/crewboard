@@ -1,9 +1,9 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'package:flutter/widgets.dart';
 
-import '/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
 import '../icons/sticker_editor_icons.dart';
 import '../styles/sticker_editor_style.dart';
 import 'utils/base_editor_layer_configs.dart';

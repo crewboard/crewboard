@@ -1,10 +1,10 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:isolate';
 
 // Project imports:
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/core/models/multi_threading/thread_response_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_response_model.dart';
 import 'converters/convert_raw_image.dart';
 import 'encoder/encode_image.dart';
 

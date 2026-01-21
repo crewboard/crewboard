@@ -1,4 +1,4 @@
-// dart compile js -o lib/web/web_worker.dart.js lib/web/web_worker.dart
+﻿// dart compile js -o lib/web/web_worker.dart.js lib/web/web_worker.dart
 // dart compile wasm -o lib/web/web_worker.dart.wasm lib/web/web_worker.dart
 
 // ignore_for_file: argument_type_not_assignable
@@ -10,10 +10,10 @@ import 'dart:typed_data';
 
 import 'package:web/web.dart' as web;
 
-import '/core/models/multi_threading/thread_web_request_model.dart';
-import '../shared/services/content_recorder/utils/converters/convert_raw_image.dart';
-import '../shared/services/content_recorder/utils/encoder/encode_image.dart';
-import '../shared/services/content_recorder/utils/web_worker_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_web_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/utils/converters/convert_raw_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/utils/encoder/encode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/utils/web_worker_utils.dart';
 
 void main() {
   WebWorkerManager();

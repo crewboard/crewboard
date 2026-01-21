@@ -1,9 +1,9 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
 // Project imports:
-import '/shared/utils/unique_id_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/unique_id_generator.dart';
 
 /// A class representing the state of a thread capturing an image.
 ///

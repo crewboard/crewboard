@@ -1,4 +1,4 @@
-/// Enumeration of image output formats.
+﻿/// Enumeration of image output formats.
 enum OutputFormat {
   /// JPG (JPEG)
   ///

@@ -1,5 +1,5 @@
-// Project imports:
-import '/core/constants/int_constants.dart';
+﻿// Project imports:
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
 import '../enums/export_import_enum.dart';
 
 /// Configuration options for exporting editor contents.

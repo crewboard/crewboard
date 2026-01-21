@@ -1,4 +1,4 @@
-/// Identity color matrix.
+﻿/// Identity color matrix.
 const identityMatrix = <double>[
   // Row R
   1, 0, 0, 0, 0,

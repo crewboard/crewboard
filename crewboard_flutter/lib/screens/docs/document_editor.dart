@@ -1,14 +1,20 @@
+import 'package:crewboard_flutter/widgets/document/src/document/attribute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import '../../widgets/document/src/editor/embed/local_embed_builders.dart';
+import '../../widgets/document/src/common/structs/horizontal_spacing.dart';
+import '../../widgets/document/src/common/structs/vertical_spacing.dart';
+import '../../widgets/document/src/editor/config/editor_config.dart';
+import '../../widgets/document/src/editor/editor.dart';
+import '../../widgets/document/src/editor/widgets/default_styles.dart';
 import 'document_editor_provider.dart';
 import 'widgets.dart'; // showCustomFontDialog
 import '../../config/palette.dart';
 import '../../widgets/glass_morph.dart';
 import '../../widgets/document_dropdown.dart';
+
 
 class DocumentEditor extends StatefulWidget {
   const DocumentEditor({super.key});
@@ -52,9 +58,6 @@ class _DocumentEditorState extends State<DocumentEditor> {
         _hideFlowOverlay();
       }
     });
-
-    // Handle key events via HardwareKeyboard
-    HardwareKeyboard.instance.addHandler(_onHardwareKey);
   }
 
   @override
@@ -63,38 +66,7 @@ class _DocumentEditorState extends State<DocumentEditor> {
     if (_controllerListener != null) {
       provider.quillController.removeListener(_controllerListener!);
     }
-    HardwareKeyboard.instance.removeHandler(_onHardwareKey);
     super.dispose();
-  }
-
-  bool _onHardwareKey(KeyEvent event) {
-    if (event is! KeyDownEvent) return false;
-
-    if (event.logicalKey == LogicalKeyboardKey.keyP &&
-        HardwareKeyboard.instance.isControlPressed) {
-      provider.insertBulletPoint();
-      return true;
-    }
-
-    if (event.logicalKey == LogicalKeyboardKey.tab) {
-      provider.cycleFontPreset();
-      return true;
-    }
-
-    if (provider.showFlowOverlay.value) {
-      if (event.logicalKey == LogicalKeyboardKey.escape) {
-        provider.dismissFlowOverlay();
-        return true;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.enter) {
-        if (provider.overlayFlows.isNotEmpty) {
-          provider.selectFlow(provider.overlayFlows.first);
-          return true;
-        }
-      }
-    }
-
-    return false;
   }
 
   // ---------- Overlay creation/update logic ----------
@@ -373,22 +345,22 @@ class _DocumentEditorState extends State<DocumentEditor> {
       Get.put(DocumentEditorProvider());
     }
 
-    return GlassMorph(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Obx(() {
-        if (provider.selectedDocId.value == null) {
-          return SizedBox(
-            height: 400,
-            child: Center(
-              child: Text(
-                "Select a document to start editing",
-                style: TextStyle(color: Pallet.font3, fontSize: 14),
-              ),
+    return Obx(() {
+      if (provider.selectedDocId.value == null) {
+        return SizedBox(
+          height: 400,
+          child: Center(
+            child: Text(
+              "Select a document to start editing",
+              style: TextStyle(color: Pallet.font3, fontSize: 14),
             ),
-          );
-        }
+          ),
+        );
+      }
 
-        return Column(
+      return GlassMorph(
+        margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+        child: Column(
           children: [
             // Toolbar
             Container(
@@ -456,30 +428,6 @@ class _DocumentEditorState extends State<DocumentEditor> {
                   ),
                   const SizedBox(width: 16),
 
-                  // Font Size
-                  SizedBox(
-                    width: 50,
-                    child: TextField(
-                      controller: provider.fontSizeController,
-                      onSubmitted: (val) {
-                        provider.updateEditorStyleSizeForCurrentPreset(val);
-                        provider.quillController.formatSelection(
-                          Attribute.fromKeyValue(Attribute.size.key, val),
-                        );
-                      },
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
-                        ),
-                      ),
-                      style: TextStyle(color: Pallet.font2),
-                    ),
-                  ),
-
-                  const SizedBox(width: 16),
 
                   // Formatting buttons
                   IconButton(
@@ -517,11 +465,6 @@ class _DocumentEditorState extends State<DocumentEditor> {
                           : Pallet.font2,
                     ),
                     onPressed: provider.insertBulletPoint,
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.save, color: Pallet.font2),
-                    onPressed: provider.saveDocument,
                   ),
                 ],
               ),
@@ -628,12 +571,23 @@ class _DocumentEditorState extends State<DocumentEditor> {
                                     provider.editorScrollController,
                                 controller: provider.quillController,
                                 config: QuillEditorConfig(
-                                  placeholder: 'Start writing your notes...',
+                                  placeholder:
+                                      'Start writing your notes...',
                                   padding: const EdgeInsets.all(16),
                                   customStyles: _buildCustomStyles(),
                                   embedBuilders: [
-                                    ...FlutterQuillEmbeds.editorBuilders(),
+                                    const LocalImageEmbedBuilder(),
+                                    const LocalVideoEmbedBuilder(),
                                   ],
+                                  onKeyPressed: (event, node) {
+                                    if (event is KeyDownEvent &&
+                                        event.logicalKey ==
+                                            LogicalKeyboardKey.tab) {
+                                      provider.cycleFontPreset();
+                                      return KeyEventResult.handled;
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ),
@@ -646,9 +600,8 @@ class _DocumentEditorState extends State<DocumentEditor> {
               ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
-

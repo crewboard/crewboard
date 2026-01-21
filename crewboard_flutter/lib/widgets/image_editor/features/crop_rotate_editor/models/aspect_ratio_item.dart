@@ -1,4 +1,4 @@
-/// The `AspectRatioItem` class represents an item with an aspect ratio value
+﻿/// The `AspectRatioItem` class represents an item with an aspect ratio value
 /// and an optional text description. It is commonly used to define aspect ratio
 /// options for widgets or components that require a specific aspect ratio.
 ///

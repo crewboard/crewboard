@@ -4,7 +4,7 @@ export 'color_picker.dart';
 export 'create_item_button.dart';
 export 'custom_badge.dart';
 export 'dropdown.dart';
-export 'dropdown_options.dart';
+
 export 'glass_morph.dart';
 export 'icon_text_button.dart';
 export 'multi_select.dart';

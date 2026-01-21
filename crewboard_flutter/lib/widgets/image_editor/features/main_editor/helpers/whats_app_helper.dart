@@ -1,11 +1,11 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
-import '/core/enums/swipe_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/swipe_mode.dart';
 import '../main_editor.dart';
 
 /// A helper class for managing WhatsApp filter animations and values.

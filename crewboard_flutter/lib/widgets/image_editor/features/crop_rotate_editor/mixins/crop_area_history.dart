@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -6,12 +6,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/complete_parameters.dart';
-import '/core/models/init_configs/crop_rotate_editor_init_configs.dart';
-import '/shared/widgets/extended/extended_custom_paint.dart';
-import '/shared/widgets/extended/extended_transform_scale.dart';
-import '/shared/widgets/extended/extended_transform_translate.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/complete_parameters.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/init_configs/crop_rotate_editor_init_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_custom_paint.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_transform_scale.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_transform_translate.dart';
 import '../crop_rotate_editor.dart';
 import '../models/transform_configs.dart';
 import '../utils/crop_aspect_ratios.dart';
@@ -477,7 +477,7 @@ mixin CropAreaHistory
   ///
   /// Returns a [CompleteParameters] object containing:
   /// * Crop dimensions (width, height) and offset (x, y) if transformed
-  /// * Flip operations in x and y directions (adjusted for 90° rotations)
+  /// * Flip operations in x and y directions (adjusted for 90Â° rotations)
   /// * Rotation in turns
   /// * Applied blur factor
   /// * List of matrix filters

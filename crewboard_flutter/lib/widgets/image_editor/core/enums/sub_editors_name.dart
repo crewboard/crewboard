@@ -1,4 +1,4 @@
-/// An enumeration representing different types of sub-editors available in the
+﻿/// An enumeration representing different types of sub-editors available in the
 /// image editor.
 enum SubEditor {
   /// Represents the paint sub-editor.

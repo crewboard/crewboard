@@ -1,7 +1,7 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/constants/editor_various_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_various_constants.dart';
 // Project imports:
 import '../../enums/design_mode.dart';
 import '../i18n/i18n.dart';
@@ -22,8 +22,8 @@ import 'text_editor_configs.dart';
 import 'tune_editor_configs.dart';
 import 'video_editor_configs.dart';
 
-export '/features/crop_rotate_editor/models/aspect_ratio_item.dart';
-export '/shared/utils/platform_info.dart';
+export 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/aspect_ratio_item.dart';
+export 'package:crewboard_flutter/widgets/image_editor/shared/utils/platform_info.dart';
 export '../../enums/design_mode.dart';
 export '../i18n/i18n.dart';
 export '../layers/enums/layer_background_mode.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Dart imports:
@@ -10,30 +10,30 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/transform_helper.dart';
-import '/core/platform/io/io_helper.dart';
-import '/features/crop_rotate_editor/widgets/crop_editor_appbar.dart';
-import '/features/crop_rotate_editor/widgets/crop_editor_bottombar.dart';
-import '/features/crop_rotate_editor/widgets/outside_gestures/crop_rotate_gesture_detector.dart';
-import '/features/crop_rotate_editor/widgets/outside_gestures/outside_gesture_listener.dart';
-import '/plugins/defer_pointer/defer_pointer.dart';
-import '/pro_image_editor.dart';
-import '/shared/mixins/extended_loop.dart';
-import '/shared/services/content_recorder/widgets/record_invisible_widget.dart';
-import '/shared/services/layer_transform_generator.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/utils/transparent_image_generator_utils.dart';
-import '/shared/widgets/extended/extended_custom_paint.dart';
-import '/shared/widgets/extended/extended_transform_scale.dart';
-import '/shared/widgets/extended/extended_transform_translate.dart';
-import '/shared/widgets/extended/mouse_region/extended_rebuild_mouse_region.dart';
-import '/shared/widgets/layer/layer_stack.dart';
-import '/shared/widgets/screen_resize_detector.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
-import '../../shared/extensions/double_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/transform_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/widgets/crop_editor_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/widgets/crop_editor_bottombar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/widgets/outside_gestures/crop_rotate_gesture_detector.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/widgets/outside_gestures/outside_gesture_listener.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/defer_pointer/defer_pointer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/mixins/extended_loop.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/record_invisible_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/layer_transform_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/transparent_image_generator_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_custom_paint.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_transform_scale.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/extended_transform_translate.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/mouse_region/extended_rebuild_mouse_region.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_stack.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/screen_resize_detector.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/double_extension.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import 'enums/crop_area_part.dart';
 import 'enums/crop_rotate_angle_side.dart';

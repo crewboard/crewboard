@@ -1,4 +1,4 @@
-/// Enumeration representing different parts of a crop area.
+﻿/// Enumeration representing different parts of a crop area.
 enum CropAreaPart {
   /// Represents no specific part of the crop area.
   none,

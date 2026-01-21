@@ -10,10 +10,12 @@ class MultiSelect extends StatefulWidget {
     required this.items,
     required this.selected,
     this.width = 150,
+    this.label = "Assignees",
   });
   final List<dynamic> items;
   final List<dynamic> selected;
   final double width;
+  final String label;
 
   @override
   State<MultiSelect> createState() => _MultiSelectState();
@@ -72,7 +74,9 @@ class _MultiSelectState extends State<MultiSelect> {
                                     } else {
                                       widget.selected.add(item);
                                     }
-                                    setState(() {});
+                                    setState(() {
+                                      dropdown?.markNeedsBuild();
+                                    });
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -89,10 +93,10 @@ class _MultiSelectState extends State<MultiSelect> {
                                         ProfileIcon(
                                           name: _getItemName(item),
                                           color: _getItemColor(item),
-                                          size: 25,
-                                          fontSize: 10,
+                                          size: 18,
+                                          fontSize: 8,
                                         ),
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 8),
                                         Expanded(
                                           child: Text(
                                             _getItemName(item),
@@ -102,12 +106,28 @@ class _MultiSelectState extends State<MultiSelect> {
                                             ),
                                           ),
                                         ),
-                                        if (widget.selected.contains(item))
-                                          const Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                            size: 16,
+                                        Container(
+                                          height: 16,
+                                          width: 16,
+                                          decoration: BoxDecoration(
+                                            color: widget.selected.contains(item)
+                                                ? Pallet.inside3
+                                                : Colors.transparent,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: widget.selected.contains(item)
+                                                  ? Pallet.inside3
+                                                  : Pallet.font1.withValues(alpha: 0.3),
+                                            ),
                                           ),
+                                          child: widget.selected.contains(item)
+                                              ? Icon(
+                                                  Icons.check,
+                                                  color: Pallet.font1,
+                                                  size: 10,
+                                                )
+                                              : null,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -163,35 +183,19 @@ class _MultiSelectState extends State<MultiSelect> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: Pallet.inside1,
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: isOpen ? Pallet.font1 : Colors.transparent),
         ),
         child: Row(
           children: [
-            if (widget.selected.isEmpty)
-              Text(
-                "Select...",
-                style: TextStyle(color: Pallet.font3, fontSize: 12),
-              )
-            else
-              Expanded(
-                child: Wrap(
-                  spacing: 5,
-                  children: [
-                    for (var user in widget.selected)
-                      ProfileIcon(
-                        name: _getItemName(user),
-                        color: _getItemColor(user),
-                        size: 20,
-                        fontSize: 8,
-                      ),
-                  ],
-                ),
+            Expanded(
+              child: Text(
+                widget.label,
+                style: TextStyle(color: Pallet.font1, fontSize: 12),
               ),
-            Icon(Icons.arrow_drop_down, color: Pallet.font3),
+            ),
           ],
         ),
       ),

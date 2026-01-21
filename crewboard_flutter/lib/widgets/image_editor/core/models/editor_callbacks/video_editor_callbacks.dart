@@ -1,4 +1,4 @@
-import '../video/trim_duration_span_model.dart';
+﻿import '../video/trim_duration_span_model.dart';
 
 /// Defines callback functions for handling video editor events.
 class VideoEditorCallbacks {

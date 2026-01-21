@@ -1,14 +1,14 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
-import '/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
-import '/plugins/image/src/formats/png/png_filter.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/png/png_filter.dart';
 import 'output_formats.dart';
 import 'processor_configs.dart';
 
-export '/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
-export '/plugins/image/src/formats/png/png_filter.dart';
+export 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
+export 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/png/png_filter.dart';
 export 'output_formats.dart';
 export 'processor_configs.dart';
 

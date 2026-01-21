@@ -1,5 +1,5 @@
-// Project imports:
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+﻿// Project imports:
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
 
 /// A mixin that provides access to various editor callback configurations.
 ///

@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'dart:async';
@@ -9,26 +9,26 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/core/constants/image_constants.dart';
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/transform_helper.dart';
-import '/core/utils/size_utils.dart';
-import '/features/paint_editor/widgets/paint_editor_appbar.dart';
-import '/features/paint_editor/widgets/paint_editor_bottombar.dart';
-import '/features/paint_editor/widgets/paint_editor_color_picker.dart';
-import '/pro_image_editor.dart';
-import '/shared/mixins/editor_zoom.mixin.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/services/shader_manager.dart';
-import '/shared/styles/platform_text_styles.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/widgets/auto_image.dart';
-import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
-import '/shared/widgets/layer/layer_stack.dart';
-import '/shared/widgets/slider_bottom_sheet.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/image_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/transform_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/utils/size_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/widgets/paint_editor_appbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/widgets/paint_editor_bottombar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/widgets/paint_editor_color_picker.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/mixins/editor_zoom.mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/shader_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/styles/platform_text_styles.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/auto_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_stack.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/slider_bottom_sheet.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import '../main_editor/services/layer_copy_manager.dart';
 import 'controllers/paint_controller.dart';

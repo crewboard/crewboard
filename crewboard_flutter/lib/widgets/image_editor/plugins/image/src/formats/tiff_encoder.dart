@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+﻿import 'dart:typed_data';
 
 import '../color/format.dart';
 import '../exif/exif_data.dart';

@@ -1,4 +1,4 @@
-/// A utility class containing commonly used crop aspect ratios.
+﻿/// A utility class containing commonly used crop aspect ratios.
 class CropAspectRatios {
   /// Represents a custom aspect ratio.
   ///

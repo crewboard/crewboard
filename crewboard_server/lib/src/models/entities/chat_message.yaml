@@ -11,3 +11,4 @@ fields:
   sameUser: bool # UI optimization from old project
   deleted: bool
   createdAt: DateTime
+  waveform: List<double>?

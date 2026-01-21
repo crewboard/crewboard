@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
@@ -6,15 +6,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/history/state_history.dart';
-import '/core/models/layers/layer.dart';
-import '/core/platform/io/io_helper.dart';
-import '/features/filter_editor/types/filter_matrix.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
-import '/shared/extensions/export_string_extension.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/history/state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/types/filter_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_string_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 import '../content_recorder/controllers/content_recorder_controller.dart';
 import 'constants/export_import_version.dart';
 import 'enums/export_import_enum.dart';

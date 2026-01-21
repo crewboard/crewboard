@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Paints a custom rectangular border for FloatSelect
 class FloatSelectBorderPainter extends CustomPainter {

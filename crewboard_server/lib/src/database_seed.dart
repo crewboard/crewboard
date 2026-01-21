@@ -5,6 +5,8 @@ import 'services/user_service.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
 Future<void> seedDatabase(Session session) async {
   // 0. Seed Organization
   var defaultOrg = await Organization.db.findFirstRow(session);
@@ -192,6 +194,48 @@ Future<void> seedDatabase(Session session) async {
     await PlannerSeed.seedAll(session);
   } catch (e) {
     stdout.writeln('Error seeding planner data: $e');
+  }
+
+  // 6. Seed Emojis
+  var emojiCount = await Emoji.db.count(session);
+  if (emojiCount == 0) {
+    stdout.writeln('Seeding emojis from external API...');
+    try {
+      final response = await http.get(Uri.parse('https://www.emoji.family/api/emojis'));
+      if (response.statusCode == 200) {
+        final List<dynamic> emojiList = jsonDecode(response.body);
+        stdout.writeln('Fetched ${emojiList.length} emojis. Inserting into database...');
+
+        var batch = <Emoji>[];
+        for (var item in emojiList) {
+          batch.add(Emoji(
+            emoji: item['emoji'] ?? '',
+            hexcode: item['hexcode'] ?? '',
+            group: item['group'] ?? '',
+            subgroup: item['subgroup'] ?? '',
+            annotation: item['annotation'] ?? '',
+            tags: (item['tags'] as List?)?.map((e) => e.toString()).toList() ?? [],
+            shortcodes: (item['shortcodes'] as List?)?.map((e) => e.toString()).toList() ?? [],
+            emoticons: (item['emoticons'] as List?)?.map((e) => e.toString()).toList() ?? [],
+          ));
+
+          if (batch.length >= 100) {
+             await Emoji.db.insert(session, batch);
+             batch.clear();
+          }
+        }
+        if (batch.isNotEmpty) {
+           await Emoji.db.insert(session, batch);
+        }
+        stdout.writeln('Emoji seeding completed.');
+      } else {
+        stdout.writeln('Failed to fetch emojis: ${response.statusCode}');
+      }
+    } catch (e) {
+      stdout.writeln('Error seeding emojis: $e');
+    }
+  } else {
+    stdout.writeln('Emojis already seeded ($emojiCount found).');
   }
 
   stdout.writeln('Database seeding completed.');

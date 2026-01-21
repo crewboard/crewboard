@@ -1,20 +1,20 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
-import '/core/mixins/converted_callbacks.dart';
-import '/core/models/complete_parameters.dart';
-import '/features/filter_editor/types/filter_matrix.dart';
-import '/features/tune_editor/models/tune_adjustment_matrix.dart';
-import '/shared/controllers/video_controller.dart';
-import '/shared/factories/editor_factory.dart';
-import '/shared/factories/editor_mapper.dart';
-import '/shared/services/content_recorder/controllers/content_recorder_controller.dart';
-import '/shared/utils/decode_image.dart';
-import '/shared/utils/transparent_image_generator_utils.dart';
-import '/shared/widgets/overlays/loading_dialog/loading_dialog.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/complete_parameters.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/types/filter_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/models/tune_adjustment_matrix.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/controllers/video_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/factories/editor_factory.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/factories/editor_mapper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/controllers/content_recorder_controller.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/transparent_image_generator_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/overlays/loading_dialog/loading_dialog.dart';
 import '../models/editor_callbacks/pro_image_editor_callbacks.dart';
 import '../models/editor_configs/pro_image_editor_configs.dart';
 import '../models/editor_image.dart';

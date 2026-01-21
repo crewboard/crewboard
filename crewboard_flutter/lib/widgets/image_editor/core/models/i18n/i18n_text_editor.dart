@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the Text Editor component.
+﻿/// Internationalization (i18n) settings for the Text Editor component.
 class I18nTextEditor {
   /// Creates an instance of [I18nTextEditor] with customizable
   /// internationalization settings.

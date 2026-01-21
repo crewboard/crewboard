@@ -1,4 +1,4 @@
-/// Represents the different types of layer widgets that can be used in the
+﻿/// Represents the different types of layer widgets that can be used in the
 /// application.
 enum LayerWidgetType {
   /// A layer that contains an emoji.

@@ -1,15 +1,15 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 
-import '/core/constants/int_constants.dart';
-import '/features/crop_rotate_editor/enums/crop_rotate_angle_side.dart';
-import '/features/crop_rotate_editor/utils/rotate_angle.dart';
-import '/pro_image_editor.dart';
-import '/shared/extensions/export_bool_extension.dart';
-import '/shared/extensions/num_extension.dart';
-import '/shared/utils/parser/bool_parser.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_rotate_angle_side.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/utils/rotate_angle.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/bool_parser.dart';
 
 /// A class representing configuration settings for image transformation.
 ///
@@ -225,8 +225,8 @@ class TransformConfigs {
   /// Converts the angle (in radians) to the number of 90-degree turns
   /// (quarter turns).
   ///
-  /// The method assumes that a 90-degree turn is equivalent to π/2 radians.
-  /// It calculates the number of quarter turns by dividing the angle by π/2
+  /// The method assumes that a 90-degree turn is equivalent to Ï€/2 radians.
+  /// It calculates the number of quarter turns by dividing the angle by Ï€/2
   /// and rounding the result to the nearest integer.
   ///
   /// Returns:

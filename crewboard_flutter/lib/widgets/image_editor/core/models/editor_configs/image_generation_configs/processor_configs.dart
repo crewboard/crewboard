@@ -1,4 +1,4 @@
-/// Configuration class for managing processor settings.
+﻿/// Configuration class for managing processor settings.
 class ProcessorConfigs {
   /// Creates a new instance of [ProcessorConfigs] with the given settings.
   ///

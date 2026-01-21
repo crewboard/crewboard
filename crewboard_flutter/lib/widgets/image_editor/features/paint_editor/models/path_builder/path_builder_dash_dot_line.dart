@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 import 'path_builder_base.dart';
 
-/// Builds a dashed–dot line path between the start and end offsets.
+/// Builds a dashedâ€“dot line path between the start and end offsets.
 class PathBuilderDashDotLine extends PathBuilderBase {
   /// Creates an dash-dot path builder using the given item and scale factor.
   PathBuilderDashDotLine({

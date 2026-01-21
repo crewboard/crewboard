@@ -1,4 +1,4 @@
-/// Enum representing different spans of export history.
+﻿/// Enum representing different spans of export history.
 enum ExportHistorySpan {
   /// Export the entire export history.
   all,

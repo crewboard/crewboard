@@ -1,4 +1,4 @@
-/// Hero tag used for transitions in the Pro Image Editor.
+﻿/// Hero tag used for transitions in the Pro Image Editor.
 const kImageEditorHeroTag = 'Pro-Image-Editor-Hero';
 
 /// The maximum distance (in logical pixels) that a pointer can move before

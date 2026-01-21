@@ -1,4 +1,4 @@
-/// Safely parses a [dynamic] value to a [double].
+﻿/// Safely parses a [dynamic] value to a [double].
 ///
 /// This function attempts to convert the provided [value] to a [double].
 /// If the [value] is `null`, an invalid number, or cannot be parsed,

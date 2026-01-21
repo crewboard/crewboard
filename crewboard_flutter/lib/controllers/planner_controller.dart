@@ -2,7 +2,15 @@ import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
+
+import 'package:crewboard_flutter/screens/docs/flows/flows_controller.dart';
+import 'package:crewboard_flutter/screens/docs/docs_sidebar.dart';
+import 'package:crewboard_flutter/screens/docs/document_editor_provider.dart';
+import 'package:crewboard_flutter/widgets/mention_text_box.dart';
+import 'package:crewboard_flutter/controllers/sidebar_controller.dart';
+import 'package:crewboard_flutter/config/palette.dart';
 
 enum PlannerSubPage { bucket, search }
 
@@ -32,6 +40,8 @@ class PlannerController extends GetxController {
   final RxList<PriorityModel> priorities = <PriorityModel>[].obs;
   final RxList<TypeModel> types = <TypeModel>[].obs;
   final RxList<FlowModel> allFlows = <FlowModel>[].obs;
+  // TODO: Add allDocs if we want to preload them here, for now we can fetch them on demand or reuse existing logic
+  final RxList<Doc> allDocs = <Doc>[].obs;
 
   // New states for ticket creation and viewing
   final RxString mode = "none".obs;
@@ -49,7 +59,6 @@ class PlannerController extends GetxController {
   final Rx<TextEditingController> controller = TextEditingController().obs;
   final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
   final RxList<AttachmentModel> attachments = <AttachmentModel>[].obs;
-  final RxList<FlowModel> flows = <FlowModel>[].obs;
   final RxList<ThreadItemModel> ticketThread = <ThreadItemModel>[].obs;
   final Rxn<ThreadItemModel> lastActivity = Rxn<ThreadItemModel>();
   final Rxn<UuidValue> selectedTicketId = Rxn<UuidValue>();
@@ -162,9 +171,38 @@ class PlannerController extends GetxController {
       priorities.value = response.priorities;
       types.value = response.types;
       allFlows.value = response.flows;
+
+      // Also try to load docs for the current app for autocomplete
+      if (selectedAppId.value != null) {
+        try {
+          final docs = await client.docs.getDocs(selectedAppId.value!);
+          allDocs.value = docs;
+        } catch (e) {
+          debugPrint("Error loading docs for suggestions: $e");
+        }
+      }
     } catch (e) {
       debugPrint('Error getting add ticket data: $e');
     }
+  }
+
+  Future<List<MentionSuggestion>> searchMentionable(String query) async {
+    final lowerQuery = query.toLowerCase();
+    
+    // Flows
+    final flowSuggestions = allFlows
+        .where((f) => f.name.toLowerCase().contains(lowerQuery))
+        .map((f) => MentionSuggestion(id: f.id.toString(), name: f.name, type: 'flow'))
+        .toList();
+
+    // Docs
+    // If not loaded yet, maybe we trigger load? But assume getAddTicketData tries to load them.
+    final docSuggestions = allDocs
+        .where((d) => d.name.toLowerCase().contains(lowerQuery))
+        .map((d) => MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'))
+        .toList();
+
+    return [...flowSuggestions, ...docSuggestions];
   }
 
   // Clear data for adding a new ticket
@@ -191,7 +229,11 @@ class PlannerController extends GetxController {
       title.value.text = ticket.ticketName;
       body.value.text = ticket.ticketBody;
       creds.value.text = ticket.creds.toString();
-      deadline.value = ticket.deadline;
+      if (ticket.deadline != null) {
+        deadline.value = DateFormat('yyyy-MM-dd').format(DateTime.parse(ticket.deadline!));
+      } else {
+        deadline.value = null;
+      }
       selectedUsers.assignAll(ticket.assignees);
       checklist.assignAll(ticket.checklist);
       status.value = ticket.status;
@@ -240,6 +282,10 @@ class PlannerController extends GetxController {
     }
     if (priority.value == null) {
       error.value = "priority cannot be empty";
+      return;
+    }
+    if (deadline.value == null) {
+      error.value = "deadline cannot be empty";
       return;
     }
 
@@ -294,17 +340,43 @@ class PlannerController extends GetxController {
     checklist.add(CheckModel(label: label, selected: false));
   }
 
-  Future<void> saveEditStack(UuidValue ticketId) async {
-    debugPrint('Saving edit stack for ticket $ticketId: $editStack');
+  Future<void> updateTicket(UuidValue ticketId) async {
+    debugPrint('Updating ticket $ticketId');
     try {
-      final success = await client.planner.updateTicket(ticketId, editStack);
+      final ticketModel = TicketModel(
+        id: ticketId,
+        ticketName: title.value.text,
+        ticketBody: body.value.text,
+        status: status.value!,
+        priority: priority.value!,
+        type: type.value!,
+        assignees: selectedUsers,
+        creds: double.tryParse(creds.value.text) ?? 0.0,
+        deadline: deadline.value, // Assuming format is already correct (yyyy-MM-dd) or null
+        checklist: checklist,
+        flows: "",
+        attachments: [],
+      );
+
+      final success = await client.planner.updateTicket(ticketModel);
+      
       if (success) {
-        editStack.clear();
+        editStack.clear(); // Clear stack as we just synced everything
         loadPlannerData();
         getTicketThread(ticketId);
+        
+        // Also refresh individual ticket data just in case
+        await getTicketDataFull(ticketId);
       }
     } catch (e) {
-      debugPrint('Error saving edit stack: $e');
+      debugPrint('Error updating ticket: $e');
+      Get.snackbar(
+        "Error",
+        "Failed to update ticket",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+      );
     }
   }
 
@@ -493,5 +565,76 @@ class PlannerController extends GetxController {
       }
     }
     buckets.refresh();
+  }
+
+  void openLinkedFlow(String flowName) {
+    debugPrint("Opening linked flow: $flowName");
+    final flow = allFlows.firstWhereOrNull(
+      (f) => f.name.toLowerCase() == flowName.toLowerCase(),
+    );
+
+    if (flow != null) {
+      // Close any open dialogs (like the ticket view)
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      // Find Flow Provider or Controller to switch context
+      final FlowsController flowsController = Get.put(FlowsController());
+
+      // Switching to Flows tab in Sidebar
+      if (Get.isRegistered<SidebarController>()) {
+        Get.find<SidebarController>().navigate(CurrentPage.flowie);
+      }
+      
+      flowsController.sidebarMode.value = SidebarMode.flows;
+      flowsController.currentSubPage.value = FlowSubPage.flows;
+      flowsController.loadFlow(flow.id!);
+      return;
+    } 
+
+    final doc = allDocs.firstWhereOrNull(
+      (d) => d.name.toLowerCase() == flowName.toLowerCase(),
+    );
+
+    if (doc != null) {
+       if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      if (Get.isRegistered<SidebarController>()) {
+        Get.find<SidebarController>().navigate(CurrentPage.flowie);
+      }
+
+      final FlowsController flowsController = Get.put(FlowsController());
+      
+      // Sync selected app
+      if (selectedAppId.value != null) {
+        flowsController.selectedAppId.value = selectedAppId.value;
+      }
+
+      flowsController.sidebarMode.value = SidebarMode.flows;
+      flowsController.changeSubPage("docs");
+
+      if (!Get.isRegistered<DocumentEditorProvider>()) {
+        Get.put(DocumentEditorProvider());
+      }
+      final docProvider = Get.find<DocumentEditorProvider>();
+      
+      // Use a slight delay to ensure the UI switch doesn't interfere, 
+      // though typically GetX state should handle it.
+      // Also ensuring we don't await loadSavedDocs which is triggered by changeSubPage
+      docProvider.loadDoc(doc);
+      return;
+    }
+    
+    Get.snackbar(
+        "Link Not Found",
+        "Could not find a flow or doc named '#$flowName'",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    
   }
 }

@@ -42,6 +42,10 @@ void run(List<String> args) async {
   final root = Directory(Uri(path: 'web/static').toFilePath());
   pod.webServer.addRoute(StaticRoute.directory(root));
 
+  // Serve uploaded files
+  final uploadsDir = Directory(Uri(path: 'web/public/uploads').toFilePath());
+  pod.webServer.addRoute(StaticRoute.directory(uploadsDir), '/uploads');
+
   // Setup the app config route.
   // We build this configuration based on the servers api url and serve it to
   // the flutter app.

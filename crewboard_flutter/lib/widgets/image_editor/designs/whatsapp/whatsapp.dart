@@ -1,4 +1,4 @@
-export '/features/main_editor/helpers/whats_app_helper.dart';
+﻿export 'package:crewboard_flutter/widgets/image_editor/features/main_editor/helpers/whats_app_helper.dart';
 export 'whatsapp_crop_rotate_toolbar.dart';
 export 'whatsapp_paint_colorpicker.dart';
 export 'whatsapp_sticker_editor.dart';

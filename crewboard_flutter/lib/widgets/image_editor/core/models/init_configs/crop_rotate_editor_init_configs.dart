@@ -1,6 +1,6 @@
-// Project imports:
-import '/features/crop_rotate_editor/models/transform_configs.dart';
-import '/shared/utils/decode_image.dart';
+﻿// Project imports:
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 import 'editor_init_configs.dart';
 
 /// A typedef representing a callback function signature for completing the

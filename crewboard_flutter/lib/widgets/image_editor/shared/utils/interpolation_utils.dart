@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 /// Applies an ease-in-out interpolation function to the input value [t].

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '/shared/widgets/video/video_editor_configurable.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/video_editor_configurable.dart';
 
 /// A customizable play/pause button widget for the video editor.
 ///

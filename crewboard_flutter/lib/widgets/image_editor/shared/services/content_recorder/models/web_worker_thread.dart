@@ -1,13 +1,13 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:js_interop' as js;
 
 import 'package:flutter/foundation.dart';
 import 'package:web/web.dart' as web;
 
-import '/core/constants/editor_web_constants.dart';
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/core/models/multi_threading/thread_response_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_web_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_response_model.dart';
 import '../utils/web_worker_utils.dart';
 import 'thread.dart';
 

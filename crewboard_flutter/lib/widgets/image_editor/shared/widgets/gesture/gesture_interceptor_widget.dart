@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/services/gesture_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/gesture_manager.dart';
 
 /// A widget that intercepts pointer events to stop their propagation
 /// within the image editor context.

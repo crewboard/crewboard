@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import '../thread_manager.dart';
 
 /// Manages web workers for background operations.

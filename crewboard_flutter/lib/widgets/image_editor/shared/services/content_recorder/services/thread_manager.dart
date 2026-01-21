@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
@@ -6,9 +6,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 // Project imports:
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/core/models/multi_threading/thread_task_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_task_model.dart';
 import '../models/thread.dart';
 
 /// Manages multiple threads for background operations.

@@ -1,4 +1,4 @@
-/// Enum representing different rotation angle sides.
+﻿/// Enum representing different rotation angle sides.
 enum RotateAngleSide {
   /// Represents the left rotation angle side.
   left,

@@ -1,4 +1,4 @@
-/// Enumeration for controlling the background color mode of the text layer.
+﻿/// Enumeration for controlling the background color mode of the text layer.
 enum LayerBackgroundMode {
   /// Display only the background without affecting the text color.
   background,

@@ -1,11 +1,11 @@
-import 'dart:math';
+﻿import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
 import 'layer_interaction_manager.dart';
 
 /// A service that enables drag-to-select functionality for layers on a canvas.

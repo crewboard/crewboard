@@ -1,12 +1,12 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/history/state_history.dart';
-import '/shared/widgets/screen_resize_detector.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/history/state_history.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/screen_resize_detector.dart';
 
 /// A helper class for managing screen size and padding calculations.
 class SizesManager {

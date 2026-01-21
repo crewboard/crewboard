@@ -1,4 +1,4 @@
-/// The `PaintMode` enum represents different paint-item modes for a drawing
+﻿/// The `PaintMode` enum represents different paint-item modes for a drawing
 /// application in Flutter.
 enum PaintMode {
   /// Allows to move and zoom the editor

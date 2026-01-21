@@ -1,6 +1,6 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
-import '/core/constants/editor_shader_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_shader_constants.dart';
 
 /// A singleton class that manages and caches fragment shaders for different
 /// modes.

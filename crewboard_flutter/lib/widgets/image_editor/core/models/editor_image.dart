@@ -1,10 +1,10 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/platform/io/io_helper.dart';
-import '/shared/utils/converters.dart';
-import '/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/converters.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
 
 /// Flutter EditorImage Class Documentation
 ///

@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
-import '/shared/services/import_export/constants/minified_keys.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/constants/minified_keys.dart';
 
 /// A service class responsible for minifying or preserving keys in data
 /// structures, such as for history, layers, references, and other maps.

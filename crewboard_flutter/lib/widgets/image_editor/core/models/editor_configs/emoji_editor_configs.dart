@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'dart:ui';
@@ -7,7 +7,7 @@ import 'emoji_editor_configs.dart';
 import 'utils/base_editor_layer_configs.dart';
 import 'utils/base_sub_editor_configs.dart';
 
-export '/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
+export 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart'
     show
         CategoryEmoji,
         emojiSetChinese,

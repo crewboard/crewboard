@@ -1,10 +1,10 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/widgets/color_picker/bar_color_picker.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/color_picker/bar_color_picker.dart';
 import '../text_editor.dart';
 
 /// A widget for selecting and customizing text colors in the text editor,

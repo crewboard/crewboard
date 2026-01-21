@@ -1,10 +1,10 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/widgets.dart';
-import '/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
 
-import '/features/main_editor/main_editor.dart';
-import '/shared/widgets/layer/models/layer_item_interaction.dart';
-import '/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/models/layer_item_interaction.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
 
 /// {@template removeLayerArea}
 /// A function that returns a [Widget] used as a remove area in the

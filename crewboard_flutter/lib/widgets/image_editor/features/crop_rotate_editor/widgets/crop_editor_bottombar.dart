@@ -1,10 +1,10 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/widgets/editor_scrollbar.dart';
-import '/shared/widgets/flat_icon_text_button.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/flat_icon_text_button.dart';
 
 /// A widget representing the bottom bar for the crop editor, providing
 /// options like rotate, flip, aspect ratio, and reset.

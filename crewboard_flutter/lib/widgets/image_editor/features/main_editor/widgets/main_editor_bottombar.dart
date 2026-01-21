@@ -1,13 +1,13 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/shared/widgets/editor_scrollbar.dart';
-import '/shared/widgets/flat_icon_text_button.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/flat_icon_text_button.dart';
 import '../controllers/main_editor_controllers.dart';
 import '../services/sizes_manager.dart';
 

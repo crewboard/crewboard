@@ -1,4 +1,4 @@
-/// The `LayerLastPosition` enum represents positions relative to the center of
+﻿/// The `LayerLastPosition` enum represents positions relative to the center of
 /// an image or container. It is used to specify alignments or positions in
 /// relation to the center point, providing options such as left, right, top,
 /// bottom, or center.

@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 /// A utility class providing various color filter transformations.
@@ -284,7 +284,7 @@ class ColorFilterAddons {
       return [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0];
     }
 
-    // Convert value from [0, 1] range to radians (full rotation is 2π)
+    // Convert value from [0, 1] range to radians (full rotation is 2Ï€)
     value *= pi;
 
     double cosVal = cos(value); // Cosine of the angle

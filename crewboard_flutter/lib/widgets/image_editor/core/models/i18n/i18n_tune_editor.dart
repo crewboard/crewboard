@@ -1,4 +1,4 @@
-/// Internationalization (i18n) settings for the Tune Editor component.
+﻿/// Internationalization (i18n) settings for the Tune Editor component.
 class I18nTuneEditor {
   /// Creates an instance of [I18nTuneEditor] with customizable text
   /// for various UI elements in the Tune Editor.

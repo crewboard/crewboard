@@ -1,8 +1,8 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+﻿// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 import 'package:flutter/widgets.dart';
 
-import '/features/paint_editor/enums/paint_editor_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/enums/paint_editor_enum.dart';
 import '../../custom_widgets/paint_editor_widgets.dart';
 import '../../icons/paint_editor_icons.dart';
 import '../../styles/paint_editor_style.dart';
@@ -188,7 +188,7 @@ class PaintEditorConfigs extends ZoomConfigs
   /// Defines which paint tools are available in the editor.
   ///
   /// The order of the tools in this list determines the order in the UI.
-  /// Simply include the tools you want and leave out the ones you don’t.
+  /// Simply include the tools you want and leave out the ones you donâ€™t.
   ///
   /// Example:
   /// ```dart
@@ -286,7 +286,7 @@ class PaintEditorConfigs extends ZoomConfigs
   /// The actual dash width is calculated as:
   /// `dashWidth = dashLineWidthFactor * strokeWidth`
   ///
-  /// Keeps the dashed line’s visual proportions stable when stroke width
+  /// Keeps the dashed lineâ€™s visual proportions stable when stroke width
   /// changes.
   final double dashLineWidthFactor;
 

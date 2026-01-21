@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/pro_image_editor.dart';
-import '/shared/widgets/layer/widgets/layer_widget_paint_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/widgets/layer_widget_paint_item.dart';
 
 /// A widget that allows editing a [PaintLayer]'s properties such as
 /// opacity, color, stroke width, and fill mode.

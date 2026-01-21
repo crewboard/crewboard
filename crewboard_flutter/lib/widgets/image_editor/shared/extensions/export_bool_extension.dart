@@ -1,4 +1,4 @@
-/// Extension on [bool] to provide export-related utilities.
+﻿/// Extension on [bool] to provide export-related utilities.
 extension ExportBoolExtension on bool {
   /// Returns `1` if true, `0` if false when [enable] is true.
   ///

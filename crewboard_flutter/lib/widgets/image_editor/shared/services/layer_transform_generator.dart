@@ -1,12 +1,12 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 import 'dart:ui';
 
-import '/core/models/layers/layer.dart';
-import '/features/crop_rotate_editor/enums/crop_rotate_angle_side.dart';
-import '/features/crop_rotate_editor/models/transform_configs.dart';
-import '/features/crop_rotate_editor/utils/rotate_angle.dart';
-import '/features/main_editor/services/layer_copy_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/enums/crop_rotate_angle_side.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/utils/rotate_angle.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_copy_manager.dart';
 
 /// A class for generating transformed layers in an image editor.
 ///

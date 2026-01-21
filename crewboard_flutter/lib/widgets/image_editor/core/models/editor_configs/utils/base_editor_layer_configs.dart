@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
 /// An abstract base class for editor layer configuration objects.
 ///
@@ -19,7 +19,7 @@ abstract class BaseEditorLayerConfigs {
   /// The layer fractional offset to apply to the layer's child widget.
   ///
   /// This offset is relative to the child's size, where (0, 0) represents
-  /// no translation, and values are scaled based on the child’s width and
+  /// no translation, and values are scaled based on the childâ€™s width and
   /// height.
   ///
   /// For example, an [Offset] of (0.25, 0.0) translates the child 25% of its

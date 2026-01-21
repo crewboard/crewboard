@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import 'i18n_blur_editor.dart';
 import 'i18n_crop_rotate_editor.dart';
 import 'i18n_emoji_editor.dart';

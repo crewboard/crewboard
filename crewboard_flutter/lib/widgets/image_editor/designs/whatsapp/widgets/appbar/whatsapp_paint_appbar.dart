@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
 import '../../styles/whatsapp_appbar_button_style.dart';
 import '../../whatsapp_done_btn.dart';
 

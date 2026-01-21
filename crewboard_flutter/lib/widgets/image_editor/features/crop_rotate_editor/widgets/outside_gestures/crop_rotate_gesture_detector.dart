@@ -1,4 +1,4 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 

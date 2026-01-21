@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/layer_interaction_configs.dart';
-import '/core/models/editor_configs/main_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/layer_interaction_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/main_editor_configs.dart';
 import '../controllers/main_editor_controllers.dart';
 import '../main_editor.dart';
 import '../services/layer_interaction_manager.dart';

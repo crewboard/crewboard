@@ -1,10 +1,10 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
-import '/core/models/multi_threading/thread_request_model.dart';
-import '/core/models/multi_threading/thread_response_model.dart';
-import '/plugins/image/src/image/image.dart' as img;
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_response_model.dart';
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart' as img;
 import '../encoder/encode_image.dart';
 
 /// Converts an image to PNG format and finds the bounding box of

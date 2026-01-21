@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/designs/grounded/grounded_design.dart';
-import '/pro_image_editor.dart';
-import '/shared/widgets/editor_scrollbar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/designs/grounded/grounded_design.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/editor_scrollbar.dart';
 
 /// A widget that represents a grounded tune adjustment bar for the editor.
 ///

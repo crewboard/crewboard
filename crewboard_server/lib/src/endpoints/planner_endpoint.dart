@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import '../utils.dart';
+import 'package:collection/collection.dart';
 
 class PlannerEndpoint extends Endpoint {
   @override
@@ -71,6 +72,7 @@ class PlannerEndpoint extends Endpoint {
             holder: 'Unknown',
             creds: ticket.creds.toDouble(),
             hasNewActivity: await _hasNewActivity(session, ticket.id!, userId),
+            latestActivity: await _getLatestActivity(session, ticket.id!),
           ),
         );
       }
@@ -140,20 +142,8 @@ class PlannerEndpoint extends Endpoint {
     }
 
     // Default flows - Placeholder data
-    final flows = [
-      FlowModel(
-        appId: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
-        name: 'Default Flow',
-        flow: '{}',
-        lastUpdated: DateTime.now(),
-      )..id = UuidValue.fromString('00000000-0000-4000-8000-000000000001'),
-      FlowModel(
-        appId: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
-        name: 'Bug Fix Flow',
-        flow: '{}',
-        lastUpdated: DateTime.now(),
-      )..id = UuidValue.fromString('00000000-0000-4000-8000-000000000002'),
-    ];
+    // Fetch available flows
+    final flows = await FlowModel.db.find(session);
 
     return GetAddTicketDataResponse(
       users: userModels,
@@ -284,6 +274,7 @@ class PlannerEndpoint extends Endpoint {
           holder: 'Unknown',
           creds: ticket.creds.toDouble(),
           hasNewActivity: await _hasNewActivity(session, ticket.id!, user.id!),
+          latestActivity: await _getLatestActivity(session, ticket.id!),
         ),
       );
     }
@@ -655,66 +646,123 @@ class PlannerEndpoint extends Endpoint {
   /// Update ticket fields
   Future<bool> updateTicket(
     Session session,
-    UuidValue ticketId,
-    List<Map<String, dynamic>> updates,
+    TicketModel updatedTicket,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
-    final ticket = await Ticket.db.findById(session, ticketId);
-    if (ticket == null) return false;
+    // Find the existing ticket in DB
+    final ticket = await Ticket.db.findById(session, updatedTicket.id);
+    if (ticket == null) {
+      return false;
+    }
 
-    // TODO: Verify authorization
+    // TODO: Verify authorization (check if user has access to app/org)
+    // For now assuming if they can find it, they can edit it (basic check)
+    if (ticket.userId != user.id) {
+       // Ideally check organization/team permissions here
+    }
 
-    for (final update in updates) {
-      final name = update['name'] as String;
-      final value = update['value'];
+    // 1. Detect Status Change
+    final newStatusId = updatedTicket.status.statusId;
+    if (ticket.statusId != newStatusId) {
+      final oldStatusId = ticket.statusId;
+      ticket.statusId = newStatusId;
+      
+      // Log status change
+      await TicketStatusChange.db.insertRow(
+        session,
+        TicketStatusChange(
+          ticketId: ticket.id!,
+          userId: user.id!,
+          oldStatusId: oldStatusId,
+          newStatusId: newStatusId,
+          changedAt: DateTime.now(),
+        ),
+      );
 
-      if (name == 'statusId') {
-        final newStatusId = UuidValue.fromString(value as String);
-        if (ticket.statusId != newStatusId) {
-          final oldStatusId = ticket.statusId;
-          ticket.statusId = newStatusId;
-          await TicketStatusChange.db.insertRow(
-            session,
-            TicketStatusChange(
-              ticketId: ticket.id!,
-              userId: user.id!,
-              oldStatusId: oldStatusId,
-              newStatusId: newStatusId,
-              changedAt: DateTime.now(),
-            ),
-          );
+      final newStatus = await Status.db.findById(session, newStatusId);
+      final oldStatus = await Status.db.findById(session, oldStatusId);
 
-          final newStatus = await Status.db.findById(session, newStatusId);
-          await PlannerActivity.db.insertRow(
-            session,
-            PlannerActivity(
-              ticketId: ticket.id!,
-              ticketName: ticket.ticketName,
-              userName: user.userName,
-              userColor:
-                  (await SystemColor.db.findById(
-                    session,
-                    user.colorId,
-                  ))?.color ??
-                  '#000000',
-              action: 'changed status',
-              details:
-                  'from ${ticket.status?.statusName ?? 'None'} to ${newStatus?.statusName ?? 'Unknown'}',
-              createdAt: DateTime.now(),
-            ),
-          );
-        }
-      } else if (name == 'ticketName') {
-        ticket.ticketName = value as String;
-      } else if (name == 'ticketBody') {
-        ticket.ticketBody = value as String;
-      } else if (name == 'creds') {
-        ticket.creds = int.tryParse(value.toString()) ?? 0;
-      } else if (name == 'deadline') {
-        ticket.deadline = DateTime.tryParse(value.toString());
+      await PlannerActivity.db.insertRow(
+        session,
+        PlannerActivity(
+          ticketId: ticket.id!,
+          ticketName: ticket.ticketName,
+          userName: user.userName,
+          userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
+          action: 'changed status',
+          details: 'from ${oldStatus?.statusName ?? 'None'} to ${newStatus?.statusName ?? 'Unknown'}',
+          createdAt: DateTime.now(),
+        ),
+      );
+    }
+
+    // 2. Update Basic Fields
+    ticket.ticketName = updatedTicket.ticketName;
+    ticket.ticketBody = updatedTicket.ticketBody;
+    ticket.priorityId = updatedTicket.priority.priorityId;
+    ticket.typeId = updatedTicket.type.typeId;
+    ticket.creds = updatedTicket.creds.toInt();
+    
+    // Parse deadline from string if it exists
+    if (updatedTicket.deadline != null && updatedTicket.deadline!.isNotEmpty) {
+       ticket.deadline = DateTime.tryParse(updatedTicket.deadline!);
+    } else {
+       ticket.deadline = null;
+    }
+    
+    // 3. Update Assignees
+    final currentMaps = await BucketTicketMap.db.find(
+      session,
+      where: (t) => t.ticketId.equals(ticket.id!),
+      include: BucketTicketMap.include(bucket: Bucket.include()),
+    );
+
+    final currentAssigneeIds =
+        currentMaps.map((m) => m.bucket?.userId).whereType<UuidValue>().toSet();
+    final newAssigneeIds =
+        updatedTicket.assignees.map((u) => u.userId).toSet();
+
+    // To Remove
+    final toRemove = currentAssigneeIds.difference(newAssigneeIds);
+    if (toRemove.isNotEmpty) {
+      final mapsToRemove =
+          currentMaps
+              .where((m) => toRemove.contains(m.bucket?.userId))
+              .toList();
+      for (var map in mapsToRemove) {
+        await BucketTicketMap.db.deleteRow(session, map);
       }
     }
 
+    // To Add
+    final toAdd = newAssigneeIds.difference(currentAssigneeIds);
+    for (final userId in toAdd) {
+      // Find a bucket for this user in this app
+      // We explicitly look for a default bucket first, but finding any is okay
+      var userBuckets = await Bucket.db.find(
+        session,
+        where: (b) => b.userId.equals(userId) & b.appId.equals(ticket.appId),
+      );
+      
+      Bucket? targetBucket;
+      if (userBuckets.isNotEmpty) {
+         // Try to find default
+         targetBucket = userBuckets.firstWhereOrNull((b) => b.isDefault) ?? userBuckets.first;
+      }
+
+      if (targetBucket != null) {
+        await BucketTicketMap.db.insertRow(
+          session,
+          BucketTicketMap(
+            bucketId: targetBucket.id!,
+            ticketId: ticket.id!,
+            order: 0, // Add to top
+          ),
+        );
+      }
+    }
+
+    // Save the ticket row
     await Ticket.db.updateRow(session, ticket);
     return true;
   }
@@ -781,6 +829,20 @@ class PlannerEndpoint extends Endpoint {
     );
 
     return GetPlannerActivitiesResponse(activities: activities);
+  }
+
+  Future<String?> _getLatestActivity(Session session, UuidValue ticketId) async {
+    final activity = await PlannerActivity.db.findFirstRow(
+      session,
+      where: (t) => t.ticketId.equals(ticketId),
+      orderBy: (t) => t.createdAt,
+      orderDescending: true,
+    );
+    if (activity == null) return null;
+    if (activity.action == 'commented') {
+      return "${activity.userName}: ${activity.details}";
+    }
+    return "${activity.userName} ${activity.action} ${activity.details ?? ''}".trim();
   }
 
   Future<bool> _hasNewActivity(

@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
-import '/core/models/editor_configs/utils/zoom_configs.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/utils/zoom_configs.dart';
 import 'extended_raw_interactive_viewer.dart';
 
 /// A widget that provides interactive viewing capabilities with zoom and pan

@@ -1,4 +1,4 @@
-// ignore_for_file: unintended_html_in_doc_comment
+﻿// ignore_for_file: unintended_html_in_doc_comment
 
 import 'package:flutter/widgets.dart';
 

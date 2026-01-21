@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 
-import '/core/models/editor_configs/utils/zoom_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/utils/zoom_configs.dart';
 import '../utils/debounce.dart';
 import '../widgets/extended/interactive_viewer/extended_interactive_viewer.dart';
 
@@ -55,7 +55,7 @@ mixin EditorZoomMixin<T extends StatefulWidget> on State<T> {
 
     if (_lastTapDownOffset != null &&
         (tapPosition - _lastTapDownOffset!).distance > _doubleTapSlop) {
-      // Too far apart — reset
+      // Too far apart â€” reset
       _doubleTapCountHelper = 0;
     }
 

@@ -1,4 +1,4 @@
-import 'double_extension.dart';
+﻿import 'double_extension.dart';
 
 /// Extension on [num] to provide smart rounding functionality.
 extension NumExtension on num {

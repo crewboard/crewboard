@@ -1,4 +1,4 @@
-export 'emoji_set_de.dart';
+﻿export 'emoji_set_de.dart';
 export 'emoji_set_en.dart';
 export 'emoji_set_es.dart';
 export 'emoji_set_fr.dart';

@@ -1,4 +1,4 @@
-/// A typedef representing a matrix for image filtering operations.
+﻿/// A typedef representing a matrix for image filtering operations.
 ///
 /// This typedef defines a two-dimensional list of doubles, used as a matrix
 /// for applying various image filtering transformations. Each sub-list

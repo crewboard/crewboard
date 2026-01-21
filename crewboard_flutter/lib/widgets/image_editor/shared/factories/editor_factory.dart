@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
-import '/core/models/editor_callbacks/standalone_editor_callbacks.dart';
-import '/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/standalone_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
 
 /// A factory class for creating [StandaloneEditorCallbacks] instances
 /// for each supported [EditorMode].

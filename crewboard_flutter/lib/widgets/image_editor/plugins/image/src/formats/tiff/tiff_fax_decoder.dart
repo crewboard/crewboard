@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs
+﻿// ignore_for_file: public_member_api_docs
 
 import '../../util/image_exception.dart';
 import '../../util/input_buffer.dart';

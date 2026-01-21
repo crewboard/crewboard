@@ -1,21 +1,21 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/core/mixins/converted_callbacks.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/standalone_editor.dart';
-import '/core/models/transform_helper.dart';
-import '/core/utils/size_utils.dart';
-import '/features/tune_editor/widgets/tune_editor_bottombar.dart';
-import '/pro_image_editor.dart';
-import '/shared/services/content_recorder/widgets/content_recorder.dart';
-import '/shared/utils/file_constructor_utils.dart';
-import '/shared/widgets/layer/layer_stack.dart';
-import '/shared/widgets/transform/transformed_content_generator.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/standalone_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/transform_helper.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/utils/size_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/widgets/tune_editor_bottombar.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/services/content_recorder/widgets/content_recorder.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/utils/file_constructor_utils.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/layer_stack.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/transform/transformed_content_generator.dart';
 import '../filter_editor/widgets/filtered_widget.dart';
 import 'utils/tune_presets.dart';
 import 'widgets/tune_editor_appbar.dart';

@@ -1,11 +1,11 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/models/styles/crop_rotate_editor_style.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/styles/crop_rotate_editor_style.dart';
 
 /// A custom painter for drawing crop corners and interaction elements.
 ///

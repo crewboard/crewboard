@@ -1,4 +1,4 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
@@ -7,22 +7,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '/core/constants/editor_various_constants.dart';
-import '/core/mixins/converted_configs.dart';
-import '/core/mixins/editor_configs_mixin.dart';
-import '/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import '/core/models/editor_configs/pro_image_editor_configs.dart';
-import '/core/models/layers/layer.dart';
-import '/core/services/gesture_manager.dart';
-import '/features/main_editor/services/layer_interaction_manager.dart';
-import '/features/main_editor/services/main_editor_layers_service.dart';
-import '/features/paint_editor/enums/paint_editor_enum.dart';
-import '/shared/widgets/layer/enums/layer_widget_type_enum.dart';
-import '/shared/widgets/layer/services/layer_widget_context_menu.dart';
-import '/shared/widgets/layer/widgets/layer_widget_censor_item.dart';
-import '/shared/widgets/layer/widgets/layer_widget_emoji_item.dart';
-import '/shared/widgets/layer/widgets/layer_widget_paint_item.dart';
-import '/shared/widgets/layer/widgets/layer_widget_text_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_various_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/services/gesture_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_interaction_manager.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/main_editor_layers_service.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/enums/paint_editor_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/enums/layer_widget_type_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/services/layer_widget_context_menu.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/widgets/layer_widget_censor_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/widgets/layer_widget_emoji_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/widgets/layer_widget_paint_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/layer/widgets/layer_widget_text_item.dart';
 import 'interaction_helper/layer_interaction_helper_widget.dart';
 import 'widgets/layer_widget_custom_item.dart';
 

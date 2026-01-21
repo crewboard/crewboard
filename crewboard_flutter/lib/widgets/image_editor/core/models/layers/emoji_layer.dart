@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '/core/constants/int_constants.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
 import 'layer.dart';
 import 'layer_interaction.dart';
 
@@ -14,7 +14,7 @@ import 'layer_interaction.dart';
 /// Example usage:
 /// ```dart
 /// EmojiLayer(
-///   emoji: '😀',
+///   emoji: 'ðŸ˜€',
 ///   offset: Offset(100.0, 100.0),
 ///   rotation: 45.0,
 ///   scale: 2.0,

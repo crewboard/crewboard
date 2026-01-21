@@ -138,7 +138,7 @@ class _RoomsState extends State<Rooms> {
                             children: [
                               RoomItem(
                                 name: room.roomName ?? "",
-                                color: Colors.red,
+                                color: _getRoomColor(room),
                                 message: room.lastMessage?.toJson() ?? {},
                                 userId: userId,
                                 messageCount: room.messageCount,
@@ -187,7 +187,7 @@ class _RoomsState extends State<Rooms> {
                           ),
                           child: RoomItem(
                             name: user.userName,
-                            color: Colors.blue,
+                            color: _getUserColor(user),
                             message: const {},
                             userId: userId,
                             messageCount: 0,
@@ -226,8 +226,25 @@ class _RoomsState extends State<Rooms> {
 
   void _loadUserId() async {
     // TODO: Load user ID from local storage or auth controller
-    userId = UuidValue.fromString('00000000-0000-4000-8000-000000000000');
     setState(() {});
+  }
+
+  Color _getRoomColor(ChatRoom room) {
+    // If room color is eventually added to the model, use it here.
+    // For now, we can derive it from name or use a default that isn't hardcoded red.
+    // Ideally, for direct chats, we'd fetch the other user's color.
+    return Colors.blue; 
+  }
+
+  Color _getUserColor(User user) {
+    if (user.color != null) {
+      try {
+        return Color(int.parse(user.color!.color.replaceAll("#", "0xFF")));
+      } catch (e) {
+        debugPrint("Error parsing user color: $e");
+      }
+    }
+    return Colors.blue;
   }
 }
 

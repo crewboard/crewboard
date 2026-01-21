@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/i18n/i18n_layer_interaction.dart';
-import '/core/models/icons/layer_interaction_icons.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_layer_interaction.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/icons/layer_interaction_icons.dart';
 
 /// Represents a context menu for interacting with a layer widget.
 class LayerWidgetContextMenu {

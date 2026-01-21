@@ -1,4 +1,4 @@
-/// Enum representing design modes for an image editor.
+﻿/// Enum representing design modes for an image editor.
 ///
 /// The `ImageEditorDesignMode` enum defines two design modes: Material and
 /// Cupertino. These design modes determine the visual style and user interface

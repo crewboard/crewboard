@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/enums/design_mode.dart';
-import '/core/models/editor_configs/emoji_editor_configs.dart';
-import '/core/models/editor_configs/text_editor_configs.dart';
-import '/core/models/layers/emoji_layer.dart';
-import '/shared/styles/platform_text_styles.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/emoji_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/text_editor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/emoji_layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/styles/platform_text_styles.dart';
 
 /// A widget representing an emoji layer in the sticker editor.
 class LayerWidgetEmojiItem extends StatelessWidget {

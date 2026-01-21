@@ -1,8 +1,8 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/shared/widgets/extended/repaint/extended_repaint_boundary.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/repaint/extended_repaint_boundary.dart';
 import '../controllers/content_recorder_controller.dart';
 
 export '../widgets/record_invisible_widget.dart';

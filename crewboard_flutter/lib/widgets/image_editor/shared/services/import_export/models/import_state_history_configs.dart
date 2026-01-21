@@ -1,4 +1,4 @@
-// Project imports:
+﻿// Project imports:
 import '../enums/export_import_enum.dart';
 import '../types/widget_loader.dart';
 

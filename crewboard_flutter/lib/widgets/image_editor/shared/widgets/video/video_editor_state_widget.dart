@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'video_editor_configurable.dart';
 
 /// Displays the current play state in the video editor.

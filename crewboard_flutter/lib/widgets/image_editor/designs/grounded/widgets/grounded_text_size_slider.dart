@@ -1,11 +1,11 @@
-// Dart imports:
+﻿// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import '/pro_image_editor.dart';
-import '/shared/widgets/animated/fade_in_left.dart';
+import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/animated/fade_in_left.dart';
 import '../constants/grounded_constants.dart';
 
 /// A widget that provides a slider for adjusting the text size in the

@@ -1,5 +1,5 @@
-// Project imports:
-import '/features/filter_editor/types/filter_matrix.dart';
+﻿// Project imports:
+import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/types/filter_matrix.dart';
 
 /// A model class that represents a filter with a name and associated filter
 /// matrix.

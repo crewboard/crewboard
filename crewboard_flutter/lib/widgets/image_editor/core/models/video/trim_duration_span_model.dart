@@ -1,4 +1,4 @@
-/// Represents a span of time within a video for trimming purposes.
+﻿/// Represents a span of time within a video for trimming purposes.
 class TrimDurationSpan {
   /// Creates a [TrimDurationSpan] with a required start and end duration.
   const TrimDurationSpan({

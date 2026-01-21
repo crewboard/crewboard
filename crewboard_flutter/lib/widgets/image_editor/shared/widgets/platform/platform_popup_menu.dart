@@ -1,9 +1,9 @@
-// Flutter imports:
+﻿// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import '/core/enums/design_mode.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
 
 /// A platform-aware popup button that displays a context menu based on the
 /// platform design mode.

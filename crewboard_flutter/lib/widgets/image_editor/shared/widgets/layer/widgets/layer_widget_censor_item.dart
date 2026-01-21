@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/core/models/editor_configs/paint_editor/censor_configs.dart';
-import '/core/models/layers/paint_layer.dart';
-import '/features/paint_editor/enums/paint_editor_enum.dart';
-import '/shared/widgets/censor/blur_area_item.dart';
-import '/shared/widgets/censor/pixelate_area_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/paint_editor/censor_configs.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/paint_layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/paint_editor/enums/paint_editor_enum.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/censor/blur_area_item.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/censor/pixelate_area_item.dart';
 
 /// A widget representing a censor layer in the sticker editor.
 ///

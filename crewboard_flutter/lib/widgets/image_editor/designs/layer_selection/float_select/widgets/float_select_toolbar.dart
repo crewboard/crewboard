@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '/core/models/custom_widgets/layer_interaction_widgets.dart';
-import '/core/models/layers/layer.dart';
-import '/features/main_editor/main_editor.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/layer_interaction_widgets.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
+import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/main_editor.dart';
 import '../models/float_select_configs.dart';
 import 'float_select_toolbar_button.dart';
 
@@ -46,7 +46,7 @@ class FloatSelectToolbar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: _style.toolbarColor,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(_style.toolbarRadius),
       ),
       child: ConstrainedBox(
@@ -99,25 +99,25 @@ class FloatSelectToolbar extends StatelessWidget {
                     disabledTextStyle: _style.buttonDisabledTextStyle,
                     textStyle: _style.buttonTextStyle,
                   ),
-                if (configs.enableDuplicateButton)
-                  FloatSelectToolbarButton(
-                    text: _i18n.duplicate,
-                    onTap: () {
-                      interactions.duplicated();
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        editor.selectLayerByIndex(totalLayers);
-                      });
-                    },
-                    disabledTextStyle: _style.buttonDisabledTextStyle,
-                    textStyle: _style.buttonTextStyle,
-                  ),
-                if (configs.enableDeleteButton)
-                  FloatSelectToolbarButton(
-                    text: _i18n.delete,
-                    onTap: interactions.remove,
-                    disabledTextStyle: _style.buttonDisabledTextStyle,
-                    textStyle: _style.buttonTextStyle,
-                  ),
+                // if (configs.enableDuplicateButton)
+                //   FloatSelectToolbarButton(
+                //     text: _i18n.duplicate,
+                //     onTap: () {
+                //       interactions.duplicated();
+                //       WidgetsBinding.instance.addPostFrameCallback((_) {
+                //         editor.selectLayerByIndex(totalLayers);
+                //       });
+                //     },
+                //     disabledTextStyle: _style.buttonDisabledTextStyle,
+                //     textStyle: _style.buttonTextStyle,
+                //   ),
+                // if (configs.enableDeleteButton)
+                //   FloatSelectToolbarButton(
+                //     text: _i18n.delete,
+                //     onTap: interactions.remove,
+                //     disabledTextStyle: _style.buttonDisabledTextStyle,
+                //     textStyle: _style.buttonTextStyle,
+                //   ),
               ],
         ),
       ),

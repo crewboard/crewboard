@@ -1,4 +1,4 @@
-import '/core/models/editor_configs/image_generation_configs/processor_configs.dart';
+﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/processor_configs.dart';
 
 /// Determines the number of processors to use based on the given [configs] and
 /// the device's number of processors.
