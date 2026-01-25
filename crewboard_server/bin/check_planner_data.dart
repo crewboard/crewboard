@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:crewboard_server/src/generated/endpoints.dart';
 import 'package:crewboard_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';

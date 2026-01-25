@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:convert';
 import 'dart:math';
 
@@ -156,8 +157,8 @@ class DocGenerator {
     ops.add({"insert": "• CI/CD: Continuous Integration / Continuous Deployment\n"});
 
     ops.add({"insert": "\nAppendix B: Revision History\n", "attributes": {"header": 2}});
-    ops.add({"insert": "v1.0 - Initial Draft - " + DateTime.now().subtract(Duration(days: 10)).toString().split(' ')[0] + "\n"});
-    ops.add({"insert": "v1.1 - Added Security Section - " + DateTime.now().subtract(Duration(days: 2)).toString().split(' ')[0] + "\n"});
+    ops.add({"insert": "v1.0 - Initial Draft - ${DateTime.now().subtract(Duration(days: 10)).toString().split(' ')[0]}\n"});
+    ops.add({"insert": "v1.1 - Added Security Section - ${DateTime.now().subtract(Duration(days: 2)).toString().split(' ')[0]}\n"});
   }
 }
 

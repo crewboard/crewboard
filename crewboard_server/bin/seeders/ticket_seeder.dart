@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:io';
 import 'dart:math';
 
@@ -92,14 +93,10 @@ void main(List<String> args) async {
         final colorHex = entry.value;
 
         var color = await SystemColor.db.findFirstRow(session, where: (t) => t.color.equals(colorHex));
-        if (color == null) {
-             color = await SystemColor.db.insertRow(session, SystemColor(colorName: name, color: colorHex, isDefault: false));
-        }
+        color ??= await SystemColor.db.insertRow(session, SystemColor(colorName: name, color: colorHex, isDefault: false));
 
         var type = await TicketType.db.findFirstRow(session, where: (t) => t.typeName.equals(name));
-        if (type == null) {
-             type = await TicketType.db.insertRow(session, TicketType(typeName: name, colorId: color.id!));
-        }
+        type ??= await TicketType.db.insertRow(session, TicketType(typeName: name, colorId: color.id!));
         ticketTypes[name] = type;
     }
 

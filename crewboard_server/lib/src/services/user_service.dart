@@ -79,7 +79,7 @@ class UserService {
 
 
       // 7. Create default resources (Buckets in all existing apps)
-      if (user.organizationId != null) {
+      {
         final apps = await PlannerApp.db.find(
           session,
           where: (t) => t.organizationId.equals(user.organizationId),

@@ -20,7 +20,7 @@ class PlannerEndpoint extends Endpoint {
     final app = await PlannerApp.db.findById(session, appIdVal);
     if (app == null || app.organizationId != user.organizationId) {
       stdout.writeln(
-        'UNAUTHORIZED: User ${user.userName} (Org: ${user.organizationId}) attempted to access App ${appIdVal} (Org: ${app?.organizationId})',
+        'UNAUTHORIZED: User ${user.userName} (Org: ${user.organizationId}) attempted to access App $appIdVal (Org: ${app?.organizationId})',
       );
       throw Exception('Unauthorized access to app');
     }
@@ -812,7 +812,8 @@ class PlannerEndpoint extends Endpoint {
         );
       }
       
-      if (targetBucket != null) {
+      // targetBucket is guaranteed to be non-null here
+
         await BucketTicketMap.db.insertRow(
           session,
           BucketTicketMap(
@@ -838,7 +839,7 @@ class PlannerEndpoint extends Endpoint {
             ),
           );
         }
-      }
+
     }
 
     // LOG REMOVAL ACTIVITY

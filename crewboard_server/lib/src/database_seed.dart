@@ -8,9 +8,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<void> seedDatabase(Session session) async {
-  print('=========================================');
-  print('!!! seedDatabase CALLED !!!');
-  print('=========================================');
+  stdout.writeln('=========================================');
+  stdout.writeln('!!! seedDatabase CALLED !!!');
+  stdout.writeln('=========================================');
   // 0. Seed Organization
   var defaultOrg = await Organization.db.findFirstRow(session);
   if (defaultOrg == null) {
@@ -371,8 +371,8 @@ Future<void> seedDatabase(Session session) async {
     stdout.writeln('Error seeding planner data: $e');
   }
 
-  print('=========================================');
-  print('!!! seedDatabase COMPLETED !!!');
-  print('=========================================');
+  stdout.writeln('=========================================');
+  stdout.writeln('!!! seedDatabase COMPLETED !!!');
+  stdout.writeln('=========================================');
   stdout.writeln('Database seeding completed.');
 }

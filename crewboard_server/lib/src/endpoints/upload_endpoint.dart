@@ -33,7 +33,7 @@ class UploadEndpoint extends Endpoint {
       // 2. Generate unique filename
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final random = Random().nextInt(10000);
-      final filename = '${timestamp}_${random}$ext';
+      final filename = '${timestamp}_$random$ext';
 
       // 3. Define storage path (web/public/uploads)
       final publicUrl = 'http://localhost:8082/uploads/$filename';
@@ -53,8 +53,7 @@ class UploadEndpoint extends Endpoint {
 
       return publicUrl;
     } catch (e, stack) {
-      print('Upload failed: $e');
-      print(stack);
+      session.log('Upload failed: $e', level: LogLevel.error, exception: e, stackTrace: stack);
       return null;
     }
   }
