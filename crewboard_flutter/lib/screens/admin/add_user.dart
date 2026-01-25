@@ -101,9 +101,12 @@ Future<void> addUser(context, Map? data) async {
                                           const SizedBox(height: 10),
                                           DropDown(
                                             // width: 140, // DropDown handles width differently, usually expanded or constrained by parent
-                                            label: controller
+                                            label:
+                                                controller
                                                     .selectedUserType
-                                                    .value?.userType ?? "Select",
+                                                    .value
+                                                    ?.userType ??
+                                                "Select",
                                             itemKey: "userType",
                                             items: controller.userTypes,
                                             onPress: (userType) {
@@ -149,9 +152,12 @@ Future<void> addUser(context, Map? data) async {
                                           const SizedBox(height: 10),
                                           DropDown(
                                             // width: 140,
-                                            label: controller
+                                            label:
+                                                controller
                                                     .selectedLeaveConfig
-                                                    .value?.configName ?? "Select",
+                                                    .value
+                                                    ?.configName ??
+                                                "Select",
                                             itemKey: "configName",
                                             items: controller.leaveConfigs,
                                             onPress: (config) {
@@ -292,8 +298,9 @@ Future<void> addUser(context, Map? data) async {
                                           DropDown(
                                             // width: 140,
                                             label: controller
-                                                    .selectedGender
-                                                    .value.toString(),
+                                                .selectedGender
+                                                .value
+                                                .toString(),
                                             itemKey: "name",
                                             items: controller.genders,
                                             onPress: (gender) {
@@ -423,9 +430,8 @@ Future<void> addUser(context, Map? data) async {
                                 const SizedBox(height: 10),
                                 DropDown(
                                   // width: 140,
-                                  label: controller
-                                          .selectedBloodGroup
-                                          .value.toString(),
+                                  label: controller.selectedBloodGroup.value
+                                      .toString(),
                                   itemKey: "name",
                                   items: controller.bloodGroups,
                                   onPress: (group) {

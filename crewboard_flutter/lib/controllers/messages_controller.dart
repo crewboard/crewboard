@@ -19,7 +19,7 @@ class MessagesController extends GetxController {
   final RxBool isDragging = false.obs;
   final RxList<File> attachedFiles = <File>[].obs;
   final RxBool showFilePreview = false.obs;
-  
+
   // User cache for displaying message author info
   final Map<UuidValue, User> _userCache = {};
 
@@ -28,19 +28,18 @@ class MessagesController extends GetxController {
   final RxInt selectedAutocompleteIndex = 0.obs;
   final RxBool showAutocomplete = false.obs;
 
-
-
-
   void addEmojiToMessage(String emoji) {
     print("Adding emoji: $emoji");
     final text = messageController.text;
     final selection = messageController.selection;
-    
+
     if (selection.baseOffset >= 0) {
       final newText = text.replaceRange(selection.start, selection.end, emoji);
       messageController.value = TextEditingValue(
         text: newText,
-        selection: TextSelection.collapsed(offset: selection.baseOffset + emoji.length),
+        selection: TextSelection.collapsed(
+          offset: selection.baseOffset + emoji.length,
+        ),
       );
     } else {
       messageController.text += emoji;
@@ -48,21 +47,21 @@ class MessagesController extends GetxController {
   }
 
   Future<void> sendGifMessage(GiphyGif gif) async {
-      print("Sending GIF: ${gif.id}");
-      if(gif.images?.original?.url != null) {
-          sendMessage(
-            messageText: gif.images!.original!.url,
-            messageType: MessageType.image, 
-          );
-      }
+    print("Sending GIF: ${gif.id}");
+    if (gif.images?.original?.url != null) {
+      sendMessage(
+        messageText: gif.images!.original!.url,
+        messageType: MessageType.image,
+      );
+    }
   }
 
   Future<void> sendInlineGifMessage(Gif gif) async {
-      print("Sending Inline GIF: ${gif.id}");
-      sendMessage(
-        messageText: gif.url,
-        messageType: MessageType.image, 
-      );
+    print("Sending Inline GIF: ${gif.id}");
+    sendMessage(
+      messageText: gif.url,
+      messageType: MessageType.image,
+    );
   }
 
   final Rx<ChatMessage?> reply = Rx<ChatMessage?>(null);
@@ -106,7 +105,9 @@ class MessagesController extends GetxController {
       sameUser: false,
       deleted: false,
       createdAt: DateTime.now(),
-      userId: Get.find<AuthController>().currentUserId.value ?? UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
+      userId:
+          Get.find<AuthController>().currentUserId.value ??
+          UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       waveform: waveform,
     );
 
@@ -135,11 +136,11 @@ class MessagesController extends GetxController {
     if (_typingDebounce?.isActive ?? false) _typingDebounce!.cancel();
 
     _typingDebounce = Timer(const Duration(milliseconds: 500), () {
-        _sendTypingStatus(false);
+      _sendTypingStatus(false);
     });
 
     _sendTypingStatus(true);
-    
+
     _checkAutocomplete(text);
   }
 
@@ -178,17 +179,24 @@ class MessagesController extends GetxController {
   }
 
   KeyEventResult handleKeyEvent(FocusNode node, KeyEvent event) {
-    if (!showAutocomplete.value || autocompleteEmojis.isEmpty) return KeyEventResult.ignored;
+    if (!showAutocomplete.value || autocompleteEmojis.isEmpty)
+      return KeyEventResult.ignored;
 
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        selectedAutocompleteIndex.value = (selectedAutocompleteIndex.value + 1) % autocompleteEmojis.length;
+        selectedAutocompleteIndex.value =
+            (selectedAutocompleteIndex.value + 1) % autocompleteEmojis.length;
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        selectedAutocompleteIndex.value = (selectedAutocompleteIndex.value - 1 + autocompleteEmojis.length) % autocompleteEmojis.length;
+        selectedAutocompleteIndex.value =
+            (selectedAutocompleteIndex.value - 1 + autocompleteEmojis.length) %
+            autocompleteEmojis.length;
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.tab) {
-        selectEmojiFromAutocomplete(autocompleteEmojis[selectedAutocompleteIndex.value]);
+      } else if (event.logicalKey == LogicalKeyboardKey.enter ||
+          event.logicalKey == LogicalKeyboardKey.tab) {
+        selectEmojiFromAutocomplete(
+          autocompleteEmojis[selectedAutocompleteIndex.value],
+        );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.escape) {
         showAutocomplete.value = false;
@@ -206,7 +214,11 @@ class MessagesController extends GetxController {
     final lastColonIndex = textBeforeCursor.lastIndexOf(':');
 
     if (lastColonIndex != -1) {
-      final newText = text.replaceRange(lastColonIndex, selection.baseOffset, emoji.emoji);
+      final newText = text.replaceRange(
+        lastColonIndex,
+        selection.baseOffset,
+        emoji.emoji,
+      );
       messageController.text = newText;
       messageController.selection = TextSelection.fromPosition(
         TextPosition(offset: lastColonIndex + emoji.emoji.length),
@@ -217,14 +229,13 @@ class MessagesController extends GetxController {
     }
   }
 
-
   Future<void> _sendTypingStatus(bool isTyping) async {
     final room = Get.find<RoomsController>().selectedRoom.value;
     if (room == null) return;
     try {
-        await client.chat.sendTyping(isTyping, room.id!);
+      await client.chat.sendTyping(isTyping, room.id!);
     } catch (e) {
-        debugPrint("Error sending typing status: $e");
+      debugPrint("Error sending typing status: $e");
     }
   }
 
@@ -232,11 +243,11 @@ class MessagesController extends GetxController {
   User? getUserProfile(UuidValue userId) {
     return _userCache[userId];
   }
-  
+
   /// Cache user information from room data
   void cacheUserFromRoom(ChatRoom room, UuidValue userId) {
     if (_userCache.containsKey(userId)) return;
-    
+
     // For direct rooms, extract username from room name (format: "User1 & User2")
     if (room.roomType == 'direct' && room.roomName != null) {
       final names = room.roomName!.split(' & ');
@@ -252,27 +263,27 @@ class MessagesController extends GetxController {
     _subscription?.cancel();
     _subscription = client.chat.subscribeToRoom(roomId).listen((event) {
       if (event.message != null) {
-         final message = event.message!;
-         if (messages.any((m) => m.id == message.id)) return;
-         messages.insert(0, message);
-         
-         // Remove typing indicator for this user if message received
-         typingUsers.removeWhere((t) => t.userId == message.userId);
+        final message = event.message!;
+        if (messages.any((m) => m.id == message.id)) return;
+        messages.insert(0, message);
+
+        // Remove typing indicator for this user if message received
+        typingUsers.removeWhere((t) => t.userId == message.userId);
       } else if (event.typing != null) {
-          final typing = event.typing!;
-          if (typing.isTyping) {
-             // Add if not exists
-             if (!typingUsers.any((t) => t.userId == typing.userId)) {
-                 typingUsers.add(typing);
-             }
-             
-             // Auto-remove after 3 seconds if no stop received or message
-              Timer(const Duration(seconds: 3), () {
-                 typingUsers.removeWhere((t) => t.userId == typing.userId);
-              });
-          } else {
-              typingUsers.removeWhere((t) => t.userId == typing.userId);
+        final typing = event.typing!;
+        if (typing.isTyping) {
+          // Add if not exists
+          if (!typingUsers.any((t) => t.userId == typing.userId)) {
+            typingUsers.add(typing);
           }
+
+          // Auto-remove after 3 seconds if no stop received or message
+          Timer(const Duration(seconds: 3), () {
+            typingUsers.removeWhere((t) => t.userId == typing.userId);
+          });
+        } else {
+          typingUsers.removeWhere((t) => t.userId == typing.userId);
+        }
       }
     });
   }
@@ -360,7 +371,6 @@ class MessagesController extends GetxController {
           final extractor = WaveformExtractor();
           final result = await extractor.extractWaveform(
             file.path,
-
           );
           // Result is List<double> but generic?
           // Check package signature. usually returns List<double>.

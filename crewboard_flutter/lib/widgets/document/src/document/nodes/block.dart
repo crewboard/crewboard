@@ -1,4 +1,3 @@
-
 import '../../../quill_delta.dart';
 import 'container.dart';
 import 'line.dart';

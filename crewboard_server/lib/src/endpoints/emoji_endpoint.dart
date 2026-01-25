@@ -6,7 +6,11 @@ class EmojiEndpoint extends Endpoint {
     return await Emoji.db.count(session);
   }
 
-  Future<List<Emoji>> getEmojis(Session session, {int? limit, int? offset}) async {
+  Future<List<Emoji>> getEmojis(
+    Session session, {
+    int? limit,
+    int? offset,
+  }) async {
     return await Emoji.db.find(
       session,
       limit: limit,

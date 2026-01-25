@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 /// A custom TextButton widget with an icon placed above the label.
@@ -16,18 +16,17 @@ class FlatIconTextButton extends TextButton {
     required Widget icon,
     required Widget label,
   }) : super(
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            maximumSize:
-                const Size(double.infinity, kBottomNavigationBarHeight),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              icon,
-              SizedBox(height: spacing),
-              label,
-            ],
-          ),
-        );
+         style: TextButton.styleFrom(
+           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+           maximumSize: const Size(double.infinity, kBottomNavigationBarHeight),
+         ),
+         child: Column(
+           mainAxisSize: MainAxisSize.min,
+           children: <Widget>[
+             icon,
+             SizedBox(height: spacing),
+             label,
+           ],
+         ),
+       );
 }

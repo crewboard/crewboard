@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -46,21 +46,22 @@ class PixelateAreaItem extends CensorAreaItem {
 
     /// Load shader
     return FutureBuilder(
-        future: ShaderManager.instance.loadShader(ShaderMode.pixelate),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            assert(false, 'Error loading shader: ${snapshot.error}');
-            return const SizedBox.shrink();
-          } else if (!snapshot.hasData) {
-            assert(false, 'Shader is null');
-            return const SizedBox.shrink();
-          }
+      future: ShaderManager.instance.loadShader(ShaderMode.pixelate),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          assert(false, 'Error loading shader: ${snapshot.error}');
+          return const SizedBox.shrink();
+        } else if (!snapshot.hasData) {
+          assert(false, 'Shader is null');
+          return const SizedBox.shrink();
+        }
 
-          FragmentShader shader = snapshot.data!;
-          return _buildFilter(shader: shader, child: child, context: context);
-        });
+        FragmentShader shader = snapshot.data!;
+        return _buildFilter(shader: shader, child: child, context: context);
+      },
+    );
   }
 
   Widget _buildFilter({

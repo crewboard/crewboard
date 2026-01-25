@@ -1,8 +1,6 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 
 import './embed_editor_builder.dart';
 
@@ -70,12 +68,12 @@ class FlowEmbedBuilder extends EmbedBuilder {
     // For simplicity, let's assume it's "Flow Name" or a JSON string.
     String flowName = "Unknown Flow";
     if (embedContext.node.value.data is String) {
-       flowName = embedContext.node.value.data;
-       try {
-         // If we decide to pass JSON later
-         // final data = jsonDecode(embedContext.node.value.data);
-         // flowName = data['name'];
-       } catch (_) {}
+      flowName = embedContext.node.value.data;
+      try {
+        // If we decide to pass JSON later
+        // final data = jsonDecode(embedContext.node.value.data);
+        // flowName = data['name'];
+      } catch (_) {}
     }
 
     return Card(

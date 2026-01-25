@@ -9,10 +9,9 @@ abstract final class UtilityWidgets {
   static Widget maybeTooltip({
     required Widget child,
     String? message,
-  }) =>
-      (message?.isNotEmpty ?? false)
-          ? Tooltip(message: message, child: child)
-          : child;
+  }) => (message?.isNotEmpty ?? false)
+      ? Tooltip(message: message, child: child)
+      : child;
 
   /// Conditionally wraps the [child] with [wrapper] widget if [enabled]
   /// is true.
@@ -20,6 +19,5 @@ abstract final class UtilityWidgets {
     required WidgetWrapper wrapper,
     required Widget child,
     bool enabled = false,
-  }) =>
-      enabled ? wrapper(child) : child;
+  }) => enabled ? wrapper(child) : child;
 }

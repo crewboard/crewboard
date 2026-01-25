@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/utils/custom_widgets_typedef.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
@@ -42,7 +42,10 @@ abstract class CustomWidgetsStandaloneEditor<EditorState> {
   ///   ),
   /// ),
   final ReactiveAppbar? Function(
-      EditorState editorState, Stream<void> rebuildStream)? appBar;
+    EditorState editorState,
+    Stream<void> rebuildStream,
+  )?
+  appBar;
 
   /// A custom bottom bar widget.
   ///
@@ -59,7 +62,10 @@ abstract class CustomWidgetsStandaloneEditor<EditorState> {
   /// },
   /// ```
   final ReactiveWidget? Function(
-      EditorState editorState, Stream<void> rebuildStream)? bottomBar;
+    EditorState editorState,
+    Stream<void> rebuildStream,
+  )?
+  bottomBar;
 
   /// {@macro customBodyItem}
   final CustomBodyItems<EditorState>? bodyItems;
@@ -71,11 +77,15 @@ abstract class CustomWidgetsStandaloneEditor<EditorState> {
   /// in all subclasses.
   CustomWidgetsStandaloneEditor<EditorState> copyWith({
     ReactiveAppbar? Function(
-            EditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      EditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            EditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      EditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<EditorState>? bodyItems,
   });
 }

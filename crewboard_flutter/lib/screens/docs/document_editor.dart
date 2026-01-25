@@ -17,7 +17,6 @@ import '../../widgets/font_family_search_dropdown.dart';
 import '../../../widgets/widgets.dart';
 import '../../widgets/font_size_editor.dart';
 
-
 class DocumentEditor extends StatefulWidget {
   const DocumentEditor({super.key});
 
@@ -247,7 +246,7 @@ class _DocumentEditorState extends State<DocumentEditor> {
   }
 
   // ---------- Styles ----------
-  
+
   TextStyle _safeGoogleFont(String fontFamily, {TextStyle? textStyle}) {
     try {
       return GoogleFonts.getFont(fontFamily, textStyle: textStyle);
@@ -264,7 +263,9 @@ class _DocumentEditorState extends State<DocumentEditor> {
     final p = provider.getSettingsForLevel(0);
 
     // Use a safe fallback for line height if the provided one is null or anomalous
-    final safeLineHeight = (lineHeight == null || lineHeight > 5.0) ? 1.5 : lineHeight;
+    final safeLineHeight = (lineHeight == null || lineHeight > 5.0)
+        ? 1.5
+        : lineHeight;
 
     return DefaultStyles(
       h1: DefaultTextBlockStyle(
@@ -384,310 +385,342 @@ class _DocumentEditorState extends State<DocumentEditor> {
 
       return GlassMorph(
         margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-        child: Obx(() => Column(
-          children: [
-            // Toolbar
-            if (provider.systemVariables.value?.showEdit ?? true)
-              Container(
-                height: 60,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Pallet.inside1,
-                  border: Border(bottom: BorderSide(color: Pallet.divider)),
-                ),
-                child: Row(
-                  children: [
-                    // Font Presets Dropdown
-                    DocumentDropdown(
-                      value: provider.fontSettings.value.preset,
-                      items: provider.dynamicPresets,
-                      onChanged: (value) {
-                        provider.applyFontPreset(value);
-                      },
-                    ),
-                    const SizedBox(width: 16),
+        child: Obx(
+          () => Column(
+            children: [
+              // Toolbar
+              if (provider.systemVariables.value?.showEdit ?? true)
+                Container(
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Pallet.inside1,
+                    border: Border(bottom: BorderSide(color: Pallet.divider)),
+                  ),
+                  child: Row(
+                    children: [
+                      // Font Presets Dropdown
+                      DocumentDropdown(
+                        value: provider.fontSettings.value.preset,
+                        items: provider.dynamicPresets,
+                        onChanged: (value) {
+                          provider.applyFontPreset(value);
+                        },
+                      ),
+                      const SizedBox(width: 16),
 
-                    // Font Family Dropdown
-                    FontFamilySearchDropdown(
-                      value: provider.fontSettings.value.fontFamily,
-                      items: provider.availableFonts,
-                      onChanged: (value) {
-                        final newFamily = value;
+                      // Font Family Dropdown
+                      FontFamilySearchDropdown(
+                        value: provider.fontSettings.value.fontFamily,
+                        items: provider.availableFonts,
+                        onChanged: (value) {
+                          final newFamily = value;
 
-                        provider.fontSettings.value = provider.fontSettings.value
-                            .copyWith(
-                          fontFamily: newFamily,
-                        );
+                          provider.fontSettings.value = provider
+                              .fontSettings
+                              .value
+                              .copyWith(
+                                fontFamily: newFamily,
+                              );
 
-                        final selection = provider.quillController.selection;
-                        if (selection.isCollapsed) {
-                          // If nothing is selected, apply to the whole line/paragraph
-                          final plainText = provider.quillController.document.toPlainText();
-                          final len = plainText.length;
-                          int start = selection.baseOffset;
-                          int end = selection.baseOffset;
+                          final selection = provider.quillController.selection;
+                          if (selection.isCollapsed) {
+                            // If nothing is selected, apply to the whole line/paragraph
+                            final plainText = provider.quillController.document
+                                .toPlainText();
+                            final len = plainText.length;
+                            int start = selection.baseOffset;
+                            int end = selection.baseOffset;
 
-                          // Find start of line
-                          while (start > 0 && plainText[start - 1] != '\n') {
-                            start--;
-                          }
-
-                          // Find end of line
-                          while (end < len && plainText[end] != '\n') {
-                            end++;
-                          }
-
-                          final length = end - start;
-                          // Format the line
-                          if (length > 0) {
-                            provider.quillController.formatText(
-                              start,
-                              length,
-                              Attribute.fromKeyValue(Attribute.font.key, newFamily),
-                            );
-                          } else {
-                            // If empty line, just format selection (cursor)
-                             provider.quillController.formatSelection(
-                              Attribute.fromKeyValue(Attribute.font.key, newFamily),
-                            );
-                          }
-                        } else {
-                          // Normal selection behavior
-                          provider.quillController.formatSelection(
-                            Attribute.fromKeyValue(Attribute.font.key, newFamily),
-                          );
-                        }
-                      },
-                      fontFamily: provider.currentFontFamily(),
-                    ),
-                    const SizedBox(width: 16),
-                    FontSizeEditor(
-                      key: ValueKey('font-size-${provider.fontSettings.value.fontSize}'),
-                      initialSize: double.tryParse(provider.fontSettings.value.fontSize) ?? 14.0,
-                      onSizeChanged: (newSize) {
-                        provider.applyFontSize(newSize);
-                      },
-                      showLabel: false,
-                    ),
-                    const SizedBox(width: 16),
-
-                    // Line Height Editor
-                    Row(
-                      children: [
-                        Text(
-                          "Line Height:",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Pallet.font3,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        FontSizeEditor(
-                          key: ValueKey('line-height-${provider.fontSettings.value.preset}-${() {
-                            final preset = provider.fontSettings.value.preset.toLowerCase();
-                            final fs = provider.editorFontSettings[preset];
-                            return fs?.lineHeight ?? 1.5;
-                          }()}'),
-                          initialSize: () {
-                            final preset = provider.fontSettings.value.preset.toLowerCase();
-                            final fs = provider.editorFontSettings[preset];
-                            return fs?.lineHeight ?? 1.5;
-                          }(),
-                          onSizeChanged: (newLineHeight) {
-                            final preset = provider.fontSettings.value.preset.toLowerCase();
-                            final existing = provider.editorFontSettings[preset];
-                            if (existing != null) {
-                              provider.editorFontSettings[preset] = existing.copyWith(lineHeight: newLineHeight);
+                            // Find start of line
+                            while (start > 0 && plainText[start - 1] != '\n') {
+                              start--;
                             }
-                          },
-                          showLabel: false,
+
+                            // Find end of line
+                            while (end < len && plainText[end] != '\n') {
+                              end++;
+                            }
+
+                            final length = end - start;
+                            // Format the line
+                            if (length > 0) {
+                              provider.quillController.formatText(
+                                start,
+                                length,
+                                Attribute.fromKeyValue(
+                                  Attribute.font.key,
+                                  newFamily,
+                                ),
+                              );
+                            } else {
+                              // If empty line, just format selection (cursor)
+                              provider.quillController.formatSelection(
+                                Attribute.fromKeyValue(
+                                  Attribute.font.key,
+                                  newFamily,
+                                ),
+                              );
+                            }
+                          } else {
+                            // Normal selection behavior
+                            provider.quillController.formatSelection(
+                              Attribute.fromKeyValue(
+                                Attribute.font.key,
+                                newFamily,
+                              ),
+                            );
+                          }
+                        },
+                        fontFamily: provider.currentFontFamily(),
+                      ),
+                      const SizedBox(width: 16),
+                      FontSizeEditor(
+                        key: ValueKey(
+                          'font-size-${provider.fontSettings.value.fontSize}',
                         ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-
-                    AppColorPicker(
-                      initialColor: provider.fontSettings.value.color,
-                      onColorChanged: (hex) {
-                        provider.applyColorHex(hex);
-                      },
-                      title: 'Text Color',
-                    ),
-                    const SizedBox(width: 16),
-
-
-                    // Formatting buttons
-                    IconButton(
-                      icon: Icon(
-                        Icons.format_bold,
-                        color: provider.isBold.value
-                            ? Colors.white
-                            : Pallet.font2,
+                        initialSize:
+                            double.tryParse(
+                              provider.fontSettings.value.fontSize,
+                            ) ??
+                            14.0,
+                        onSizeChanged: (newSize) {
+                          provider.applyFontSize(newSize);
+                        },
+                        showLabel: false,
                       ),
-                      onPressed: provider.toggleBold,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.format_italic,
-                        color: provider.isItalic.value
-                            ? Colors.white
-                            : Pallet.font2,
-                      ),
-                      onPressed: provider.toggleItalic,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.format_underline,
-                        color: provider.isUnderline.value
-                            ? Colors.white
-                            : Pallet.font2,
-                      ),
-                      onPressed: provider.toggleUnderline,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.format_list_bulleted,
-                        color: provider.isBulletList.value
-                            ? Colors.white
-                            : Pallet.font2,
-                      ),
-                      onPressed: provider.insertBulletPoint,
-                    ),
-                  ],
-                ),
-              ),
+                      const SizedBox(width: 16),
 
-            // Editor content with Outline
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Outline Sidebar
-                  Container(
-                    width: 250,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(color: Pallet.divider, width: 1),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 5,
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Obx(
-                            () => ListView.builder(
-                              itemCount: _getVisibleOutline().length,
-                              itemBuilder: (context, index) {
-                                final heading = _getVisibleOutline()[index];
-                                final isH2 = heading.level == 2;
-                                final isExpanded = heading.isExpanded;
-
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 0,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (isH2) {
-                                        provider.toggleH2Expansion(
-                                          heading.position,
-                                        );
-                                      } else {
-                                        _jumpToHeading(heading.position);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        left: (heading.level - 1) * 12.0,
-                                        top: 4,
-                                        bottom: 4,
-                                        right: 8,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              heading.text,
-                                              style: TextStyle(
-                                                color: Pallet.font2,
-                                                fontSize: heading.fontSize,
-                                                fontWeight: heading.fontWeight,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          if (isH2)
-                                            Icon(
-                                              isExpanded.value
-                                                  ? Icons.expand_more
-                                                  : Icons.chevron_right,
-                                              size: 16,
-                                              color: Pallet.font3,
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                      // Line Height Editor
+                      Row(
+                        children: [
+                          Text(
+                            "Line Height:",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Pallet.font3,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          const SizedBox(width: 8),
+                          FontSizeEditor(
+                            key: ValueKey(
+                              'line-height-${provider.fontSettings.value.preset}-${() {
+                                final preset = provider.fontSettings.value.preset.toLowerCase();
+                                final fs = provider.editorFontSettings[preset];
+                                return fs?.lineHeight ?? 1.5;
+                              }()}',
+                            ),
+                            initialSize: () {
+                              final preset = provider.fontSettings.value.preset
+                                  .toLowerCase();
+                              final fs = provider.editorFontSettings[preset];
+                              return fs?.lineHeight ?? 1.5;
+                            }(),
+                            onSizeChanged: (newLineHeight) {
+                              final preset = provider.fontSettings.value.preset
+                                  .toLowerCase();
+                              final existing =
+                                  provider.editorFontSettings[preset];
+                              if (existing != null) {
+                                provider.editorFontSettings[preset] = existing
+                                    .copyWith(lineHeight: newLineHeight);
+                              }
+                            },
+                            showLabel: false,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
 
-                  // Main Editor Area
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Stack(
+                      AppColorPicker(
+                        initialColor: provider.fontSettings.value.color,
+                        onColorChanged: (hex) {
+                          provider.applyColorHex(hex);
+                        },
+                        title: 'Text Color',
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Formatting buttons
+                      IconButton(
+                        icon: Icon(
+                          Icons.format_bold,
+                          color: provider.isBold.value
+                              ? Colors.white
+                              : Pallet.font2,
+                        ),
+                        onPressed: provider.toggleBold,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.format_italic,
+                          color: provider.isItalic.value
+                              ? Colors.white
+                              : Pallet.font2,
+                        ),
+                        onPressed: provider.toggleItalic,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.format_underline,
+                          color: provider.isUnderline.value
+                              ? Colors.white
+                              : Pallet.font2,
+                        ),
+                        onPressed: provider.toggleUnderline,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.format_list_bulleted,
+                          color: provider.isBulletList.value
+                              ? Colors.white
+                              : Pallet.font2,
+                        ),
+                        onPressed: provider.insertBulletPoint,
+                      ),
+                    ],
+                  ),
+                ),
+
+              // Editor content with Outline
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Outline Sidebar
+                    Container(
+                      width: 250,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(color: Pallet.divider, width: 1),
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 5,
+                      ),
+                      child: Column(
                         children: [
-                          CompositedTransformTarget(
-                            link: _editorLayerLink,
-                            child: Container(
-                              key: _editorKey,
-                              child: QuillEditor(
-                                focusNode: provider.editorFocusNode,
-                                scrollController:
-                                    provider.editorScrollController,
-                                controller: provider.quillController,
-                                config: QuillEditorConfig(
-                                  placeholder:
-                                      'Start writing your notes...',
-                                  padding: const EdgeInsets.all(16),
-                                  customStyles: _buildCustomStyles(provider.systemVariables.value?.lineHeight),
-                                  customStyleBuilder: _customStyleBuilder,
-                                  embedBuilders: [
-                                    const LocalImageEmbedBuilder(),
-                                    const LocalVideoEmbedBuilder(),
-                                    const FlowEmbedBuilder(),
-                                  ],
-                                    onKeyPressed: (event, node) {
-                                      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.tab) {
-                                        provider.cycleFontPreset();
-                                        return KeyEventResult.handled;
-                                      }
-                                      return null;
-                                    },
-                                ),
+                          Expanded(
+                            child: Obx(
+                              () => ListView.builder(
+                                itemCount: _getVisibleOutline().length,
+                                itemBuilder: (context, index) {
+                                  final heading = _getVisibleOutline()[index];
+                                  final isH2 = heading.level == 2;
+                                  final isExpanded = heading.isExpanded;
+
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 0,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (isH2) {
+                                          provider.toggleH2Expansion(
+                                            heading.position,
+                                          );
+                                        } else {
+                                          _jumpToHeading(heading.position);
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          left: (heading.level - 1) * 12.0,
+                                          top: 4,
+                                          bottom: 4,
+                                          right: 8,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                heading.text,
+                                                style: TextStyle(
+                                                  color: Pallet.font2,
+                                                  fontSize: heading.fontSize,
+                                                  fontWeight:
+                                                      heading.fontWeight,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            if (isH2)
+                                              Icon(
+                                                isExpanded.value
+                                                    ? Icons.expand_more
+                                                    : Icons.chevron_right,
+                                                size: 16,
+                                                color: Pallet.font3,
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+
+                    // Main Editor Area
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Stack(
+                          children: [
+                            CompositedTransformTarget(
+                              link: _editorLayerLink,
+                              child: Container(
+                                key: _editorKey,
+                                child: QuillEditor(
+                                  focusNode: provider.editorFocusNode,
+                                  scrollController:
+                                      provider.editorScrollController,
+                                  controller: provider.quillController,
+                                  config: QuillEditorConfig(
+                                    placeholder: 'Start writing your notes...',
+                                    padding: const EdgeInsets.all(16),
+                                    customStyles: _buildCustomStyles(
+                                      provider
+                                          .systemVariables
+                                          .value
+                                          ?.lineHeight,
+                                    ),
+                                    customStyleBuilder: _customStyleBuilder,
+                                    embedBuilders: [
+                                      const LocalImageEmbedBuilder(),
+                                      const LocalVideoEmbedBuilder(),
+                                      const FlowEmbedBuilder(),
+                                    ],
+                                    onKeyPressed: (event, node) {
+                                      if (event is KeyDownEvent &&
+                                          event.logicalKey ==
+                                              LogicalKeyboardKey.tab) {
+                                        provider.cycleFontPreset();
+                                        return KeyEventResult.handled;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
       );
     });
   }
@@ -701,8 +734,12 @@ class _DocumentEditorState extends State<DocumentEditor> {
         return TextStyle(fontFamily: attribute.value.toString());
       }
     } else if (attribute.key == Attribute.color.key) {
-       if (attribute.value == null) return const TextStyle();
-       return TextStyle(color: Color(int.parse(attribute.value.toString().replaceFirst('#', '0xff'))));
+      if (attribute.value == null) return const TextStyle();
+      return TextStyle(
+        color: Color(
+          int.parse(attribute.value.toString().replaceFirst('#', '0xff')),
+        ),
+      );
     }
     return const TextStyle();
   }

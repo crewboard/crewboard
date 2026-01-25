@@ -25,7 +25,7 @@ void _sendPasswordResetCode(
 void main(List<String> args) async {
   print('Initializing Serverpod...');
   final pod = Serverpod(args, Protocol(), Endpoints());
-  
+
   pod.initializeAuthServices(
     tokenManagerBuilders: [
       ServerSideSessionsConfig(
@@ -42,16 +42,18 @@ void main(List<String> args) async {
 
   try {
     try {
-    print('Starting Serverpod...');
-    await pod.start();
-  } catch (e) {
-    print('Warning: Failed to start server listeners (likely port conflict), attempting to continue with database session: $e');
-  }
+      print('Starting Serverpod...');
+      await pod.start();
+    } catch (e) {
+      print(
+        'Warning: Failed to start server listeners (likely port conflict), attempting to continue with database session: $e',
+      );
+    }
     print('Creating session...');
     final session = await pod.createSession();
 
     print('\n--- Database Inspection ---');
-    
+
     final flows = await FlowModel.db.find(session);
     print('Flows Found: ${flows.length}');
     for (var f in flows) {
@@ -67,19 +69,23 @@ void main(List<String> args) async {
     final apps = await PlannerApp.db.find(session);
     print('\nApps Found: ${apps.length}');
     for (var a in apps) {
-      print('  - App: "${a.appName}" (ID: ${a.id}, OrgID: ${a.organizationId})');
-      
+      print(
+        '  - App: "${a.appName}" (ID: ${a.id}, OrgID: ${a.organizationId})',
+      );
+
       final buckets = await Bucket.db.find(
         session,
         where: (t) => t.appId.equals(a.id!),
       );
       print('    - Buckets: ${buckets.length}');
       for (var b in buckets) {
-          final ticketCount = await BucketTicketMap.db.count(
-              session,
-              where: (t) => t.bucketId.equals(b.id!),
-          );
-          print('      - Bucket: "${b.bucketName}" (Tickets: $ticketCount, UserID: ${b.userId})');
+        final ticketCount = await BucketTicketMap.db.count(
+          session,
+          where: (t) => t.bucketId.equals(b.id!),
+        );
+        print(
+          '      - Bucket: "${b.bucketName}" (Tickets: $ticketCount, UserID: ${b.userId})',
+        );
       }
     }
 

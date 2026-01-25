@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -78,8 +78,10 @@ class _GroundedStickerEditorState extends State<GroundedStickerEditor> {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 3,
+                  horizontal: 12,
+                ),
                 color: const Color(0xFF222222),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +93,9 @@ class _GroundedStickerEditorState extends State<GroundedStickerEditor> {
                           setState(() {
                             _searchCtrl.clear();
                             _activeSearch = false;
-                            widget.callbacks.stickerEditorCallbacks
+                            widget
+                                .callbacks
+                                .stickerEditorCallbacks
                                 ?.onSearchChanged
                                 ?.call('');
                           });
@@ -125,7 +129,7 @@ class _GroundedStickerEditorState extends State<GroundedStickerEditor> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

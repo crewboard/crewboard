@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/ui/pro_image_editor_icons.dart';
@@ -158,8 +158,9 @@ class _WhatsAppPaintBottomBarState extends State<WhatsAppPaintBottomBar> {
     return Padding(
       padding: const EdgeInsets.only(left: 14),
       child: Wrap(
-        alignment:
-            _isMaterial ? WrapAlignment.start : WrapAlignment.spaceEvenly,
+        alignment: _isMaterial
+            ? WrapAlignment.start
+            : WrapAlignment.spaceEvenly,
         runAlignment: WrapAlignment.center,
         spacing: 10,
         children: [

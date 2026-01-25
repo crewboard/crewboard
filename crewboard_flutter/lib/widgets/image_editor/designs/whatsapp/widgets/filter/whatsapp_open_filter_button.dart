@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -46,13 +46,16 @@ class _WhatsAppOpenFilterBtnState extends State<WhatsAppOpenFilterBtn>
       duration: const Duration(seconds: 2),
     );
 
-    _animation = Tween<double>(
-      begin: -3,
-      end: 3,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _animation =
+        Tween<double>(
+          begin: -3,
+          end: 3,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeInOut,
+          ),
+        );
 
     _controller
       ..addStatusListener((status) {

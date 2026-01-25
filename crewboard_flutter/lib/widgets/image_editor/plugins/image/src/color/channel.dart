@@ -1,4 +1,4 @@
-﻿/// A channel of a color
+/// A channel of a color
 enum Channel {
   /// Red channel
   red,
@@ -14,5 +14,5 @@ enum Channel {
 
   /// Luminance is not an actual channel, it is the brightness value of the
   /// color.
-  luminance
+  luminance,
 }

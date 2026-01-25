@@ -13,8 +13,8 @@ class QuillToolbarSearchButton extends QuillToolbarBaseButtonStateless {
     /// over the [baseOptions].
     super.baseOptions,
     super.key,
-  })  : _options = options,
-        super(options: options);
+  }) : _options = options,
+       super(options: options);
 
   final QuillToolbarSearchButtonOptions? _options;
 

@@ -1,4 +1,4 @@
-﻿/// Internationalization (i18n) settings for various components.
+/// Internationalization (i18n) settings for various components.
 class I18nVarious {
   /// Creates an instance of [I18nVarious] with customizable
   /// internationalization settings.
@@ -20,7 +20,7 @@ class I18nVarious {
     this.closeEditorWarningTitle = 'Close Image Editor?',
     this.closeEditorWarningMessage =
         'Are you sure you want to close the Image Editor? Your changes will '
-            'not be saved.',
+        'not be saved.',
     this.closeEditorWarningConfirmBtn = 'OK',
     this.closeEditorWarningCancelBtn = 'Cancel',
   });

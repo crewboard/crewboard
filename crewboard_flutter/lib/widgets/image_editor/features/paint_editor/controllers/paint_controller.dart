@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import '../enums/paint_editor_enum.dart';
@@ -66,16 +66,16 @@ class PaintController extends ChangeNotifier {
   /// Returns a [PaintedModel] instance representing the current state of the
   /// paint.
   PaintedModel get paintedModel => PaintedModel(
-        mode: mode,
-        offsets: mode == PaintMode.freeStyle || mode == PaintMode.polygon
-            ? [..._offsets]
-            : [start, end],
-        erasedOffsets: [],
-        color: color,
-        strokeWidth: strokeWidth,
-        fill: fill,
-        opacity: opacity,
-      );
+    mode: mode,
+    offsets: mode == PaintMode.freeStyle || mode == PaintMode.polygon
+        ? [..._offsets]
+        : [start, end],
+    erasedOffsets: [],
+    color: color,
+    strokeWidth: strokeWidth,
+    fill: fill,
+    opacity: opacity,
+  );
 
   /// Returns the current paint mode (e.g., line, circle, rectangle).
   PaintMode get mode => _mode;

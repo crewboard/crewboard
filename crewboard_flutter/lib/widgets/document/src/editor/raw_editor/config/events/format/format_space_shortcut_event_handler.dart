@@ -14,8 +14,10 @@ bool handleFormatBlockStyleBySpaceEvent({
   required String character,
   required BlockFormatStyle formatStyle,
 }) {
-  assert(character.trim().isNotEmpty && character != '\n',
-      'Expected character that cannot be empty, a whitespace or a new line. Got $character');
+  assert(
+    character.trim().isNotEmpty && character != '\n',
+    'Expected character that cannot be empty, a whitespace or a new line. Got $character',
+  );
   if (formatStyle == BlockFormatStyle.todo) {
     _updateSelectionForKeyPhrase(character, Attribute.unchecked, controller);
     return true;
@@ -43,9 +45,16 @@ bool handleFormatBlockStyleBySpaceEvent({
 }
 
 void _updateSelectionForKeyPhrase(
-    String phrase, Attribute attribute, QuillController controller) {
-  controller.replaceText(controller.selection.baseOffset - phrase.length,
-      phrase.length, '\n', null);
+  String phrase,
+  Attribute attribute,
+  QuillController controller,
+) {
+  controller.replaceText(
+    controller.selection.baseOffset - phrase.length,
+    phrase.length,
+    '\n',
+    null,
+  );
   _moveCursor(-phrase.length, controller);
   controller
     ..formatSelection(attribute)
@@ -56,10 +65,12 @@ void _updateSelectionForKeyPhrase(
 void _moveCursor(int chars, QuillController controller) {
   final selection = controller.selection;
   controller.updateSelection(
-      controller.selection.copyWith(
-          baseOffset: selection.baseOffset + chars,
-          extentOffset: selection.baseOffset + chars),
-      ChangeSource.local);
+    controller.selection.copyWith(
+      baseOffset: selection.baseOffset + chars,
+      extentOffset: selection.baseOffset + chars,
+    ),
+    ChangeSource.local,
+  );
 }
 
 int _count(String char, String matchChar) {

@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -27,7 +27,10 @@ class _PlatformCircularProgressIndicatorState
   @override
   Widget build(BuildContext context) {
     // Conditionally choose the progress indicator based on the platform.
-    return widget.configs.progressIndicatorConfigs.widgets
+    return widget
+            .configs
+            .progressIndicatorConfigs
+            .widgets
             .circularProgressIndicator ??
         (widget.configs.designMode == ImageEditorDesignMode.material
             ? const CircularProgressIndicator()

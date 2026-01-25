@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'video_editor_configurable.dart';
 
 /// Displays the current play state in the video editor.
@@ -23,21 +23,21 @@ class VideoEditorStateWidget extends StatelessWidget {
             child: isPlaying
                 ? player.widgets.pauseIndicator ?? const SizedBox.shrink()
                 : player.widgets.playIndicator ??
-                    IgnorePointer(
-                      child: Container(
-                        width: 64,
-                        height: 64,
-                        decoration: ShapeDecoration(
-                          shape: const CircleBorder(),
-                          color: player.style.playIndicatorBackground,
-                        ),
-                        child: Icon(
-                          player.icons.playIndicator,
-                          color: player.style.playIndicatorColor,
-                          size: 44,
+                      IgnorePointer(
+                        child: Container(
+                          width: 64,
+                          height: 64,
+                          decoration: ShapeDecoration(
+                            shape: const CircleBorder(),
+                            color: player.style.playIndicatorBackground,
+                          ),
+                          child: Icon(
+                            player.icons.playIndicator,
+                            color: player.style.playIndicatorColor,
+                            size: 44,
+                          ),
                         ),
                       ),
-                    ),
           );
         },
       ),

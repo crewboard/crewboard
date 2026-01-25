@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
@@ -56,8 +56,9 @@ class TransformConfigs {
   /// The map should contain keys corresponding to the properties of
   /// `TransformConfigs`, and each key should map to the appropriate value.
   factory TransformConfigs.fromMap(Map<String, dynamic> map) {
-    final cropMode =
-        map['cropMode'] == 'oval' ? CropMode.oval : CropMode.rectangular;
+    final cropMode = map['cropMode'] == 'oval'
+        ? CropMode.oval
+        : CropMode.rectangular;
 
     return TransformConfigs(
       angle: safeParseDouble(map['angle']),
@@ -71,8 +72,10 @@ class TransformConfigs {
         safeParseDouble(map['originalSize']?['width']),
         safeParseDouble(map['originalSize']?['height']),
       ),
-      cropEditorScreenRatio:
-          safeParseDouble(map['cropEditorScreenRatio'], fallback: 0),
+      cropEditorScreenRatio: safeParseDouble(
+        map['cropEditorScreenRatio'],
+        fallback: 0,
+      ),
       scaleUser: safeParseDouble(map['scaleUser'], fallback: 1),
       scaleRotation: safeParseDouble(map['scaleRotation'], fallback: 1),
       aspectRatio: safeParseDouble(map['aspectRatio'], fallback: -1),
@@ -257,8 +260,9 @@ class TransformConfigs {
         'width': originalSize.width.roundSmart(maxDecimalPlaces),
         'height': originalSize.height.roundSmart(maxDecimalPlaces),
       },
-      'cropEditorScreenRatio':
-          cropEditorScreenRatio.roundSmart(maxDecimalPlaces),
+      'cropEditorScreenRatio': cropEditorScreenRatio.roundSmart(
+        maxDecimalPlaces,
+      ),
       'scaleUser': scaleUser.roundSmart(maxDecimalPlaces),
       'scaleRotation': scaleRotation.roundSmart(maxDecimalPlaces),
       'aspectRatio': aspectRatio.roundSmart(maxDecimalPlaces),
@@ -404,5 +408,5 @@ enum ImageMaxSide {
   vertical,
 
   /// Indicates that the maximum side is unset.
-  unset
+  unset,
 }

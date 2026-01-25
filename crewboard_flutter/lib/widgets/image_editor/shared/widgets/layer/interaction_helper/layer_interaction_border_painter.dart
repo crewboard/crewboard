@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -104,7 +104,7 @@ class LayerInteractionBorderPainter extends CustomPainter {
     }
   }
 
-// Method to draw a solid border
+  // Method to draw a solid border
   void _drawSolidBorder(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = style.borderColor
@@ -118,21 +118,18 @@ class LayerInteractionBorderPainter extends CustomPainter {
         Offset(size.width, 0),
         paint,
       )
-
       // Draw right border
       ..drawLine(
         Offset(size.width, 0),
         Offset(size.width, size.height),
         paint,
       )
-
       // Draw bottom border
       ..drawLine(
         Offset(0, size.height),
         Offset(size.width, size.height),
         paint,
       )
-
       // Draw left border
       ..drawLine(
         const Offset(0, 0),
@@ -141,7 +138,7 @@ class LayerInteractionBorderPainter extends CustomPainter {
       );
   }
 
-// Method to draw a rounded dotted border
+  // Method to draw a rounded dotted border
   void _drawDottedBorder(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = style.borderColor

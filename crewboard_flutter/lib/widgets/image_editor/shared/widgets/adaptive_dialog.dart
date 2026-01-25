@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -119,7 +119,9 @@ class _AdaptiveDialogActionState extends State<AdaptiveDialogAction> {
     if (widget.designMode == ImageEditorDesignMode.cupertino) {
       // Return a Cupertino-style action when in Cupertino design mode.
       return CupertinoDialogAction(
-          onPressed: widget.onPressed, child: widget.child);
+        onPressed: widget.onPressed,
+        child: widget.child,
+      );
     } else {
       // Return a Material-style action for other design modes.
       return TextButton(onPressed: widget.onPressed, child: widget.child);

@@ -192,18 +192,27 @@ class PlannerController extends GetxController {
 
   Future<List<MentionSuggestion>> searchMentionable(String query) async {
     final lowerQuery = query.toLowerCase();
-    
+
     // Flows
     final flowSuggestions = allFlows
         .where((f) => f.name.toLowerCase().contains(lowerQuery))
-        .map((f) => MentionSuggestion(id: f.id.toString(), name: f.name, type: 'flow'))
+        .map(
+          (f) => MentionSuggestion(
+            id: f.id.toString(),
+            name: f.name,
+            type: 'flow',
+          ),
+        )
         .toList();
 
     // Docs
     // If not loaded yet, maybe we trigger load? But assume getAddTicketData tries to load them.
     final docSuggestions = allDocs
         .where((d) => d.name.toLowerCase().contains(lowerQuery))
-        .map((d) => MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'))
+        .map(
+          (d) =>
+              MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'),
+        )
         .toList();
 
     return [...flowSuggestions, ...docSuggestions];
@@ -236,14 +245,16 @@ class PlannerController extends GetxController {
       body.value.text = ticket.ticketBody;
       creds.value.text = ticket.creds.toString();
       if (ticket.deadline != null) {
-        deadline.value = DateFormat('yyyy-MM-dd').format(DateTime.parse(ticket.deadline!));
+        deadline.value = DateFormat(
+          'yyyy-MM-dd',
+        ).format(DateTime.parse(ticket.deadline!));
       } else {
         deadline.value = null;
       }
       selectedUsers.assignAll(ticket.assignees);
       checklist.assignAll(ticket.checklist);
       attachments.assignAll(ticket.attachments);
-      pendingFiles.clear();  // Clear pending files when loading existing ticket
+      pendingFiles.clear(); // Clear pending files when loading existing ticket
       status.value = ticket.status;
       priority.value = ticket.priority;
       type.value = ticket.type;
@@ -277,12 +288,12 @@ class PlannerController extends GetxController {
   /// Upload pending files and return AttachmentModel list
   Future<List<AttachmentModel>> _uploadPendingAttachments() async {
     final uploadedAttachments = <AttachmentModel>[];
-    
+
     for (final file in pendingFiles) {
       try {
         // Read file bytes - on desktop, bytes might be null, so use path
         Uint8List? bytes = file.bytes;
-        
+
         if (bytes == null && file.path != null) {
           try {
             final fileObj = File(file.path!);
@@ -291,7 +302,7 @@ class PlannerController extends GetxController {
             debugPrint('Error reading file from path: $e');
           }
         }
-        
+
         if (bytes == null) {
           continue;
         }
@@ -299,7 +310,7 @@ class PlannerController extends GetxController {
         // Upload to server
         final byteData = ByteData.view(bytes.buffer);
         final url = await client.upload.uploadFile(file.name, byteData);
-        
+
         if (url != null) {
           uploadedAttachments.add(
             AttachmentModel(
@@ -315,7 +326,7 @@ class PlannerController extends GetxController {
         debugPrint('Error uploading file ${file.name}: $e');
       }
     }
-    
+
     return uploadedAttachments;
   }
 
@@ -345,7 +356,7 @@ class PlannerController extends GetxController {
     try {
       // Upload pending files
       final uploadedAttachments = await _uploadPendingAttachments();
-      
+
       // Combine with existing attachments
       final allAttachments = [...attachments, ...uploadedAttachments];
 
@@ -405,7 +416,7 @@ class PlannerController extends GetxController {
     try {
       // Upload pending files
       final uploadedAttachments = await _uploadPendingAttachments();
-      
+
       // Combine with existing attachments
       final allAttachments = [...attachments, ...uploadedAttachments];
 
@@ -418,20 +429,21 @@ class PlannerController extends GetxController {
         type: type.value!,
         assignees: selectedUsers,
         creds: double.tryParse(creds.value.text) ?? 0.0,
-        deadline: deadline.value, // Assuming format is already correct (yyyy-MM-dd) or null
+        deadline: deadline
+            .value, // Assuming format is already correct (yyyy-MM-dd) or null
         checklist: checklist,
         flows: "",
         attachments: allAttachments,
       );
 
       final success = await client.planner.updateTicket(ticketModel);
-      
+
       if (success) {
         editStack.clear(); // Clear stack as we just synced everything
         pendingFiles.clear();
         loadPlannerData();
         getTicketThread(ticketId);
-        
+
         // Also refresh individual ticket data just in case
         await getTicketDataFull(ticketId);
       }
@@ -607,14 +619,18 @@ class PlannerController extends GetxController {
     // Optimistic UI update: Remove from source, insert at target
     // 1. Remove from source bucket
     if (sourceBucketId != null) {
-      final sourceBucket = buckets.firstWhereOrNull((b) => b.bucketId == sourceBucketId);
+      final sourceBucket = buckets.firstWhereOrNull(
+        (b) => b.bucketId == sourceBucketId,
+      );
       if (sourceBucket != null) {
         sourceBucket.tickets.removeWhere((t) => t.id == ticketId);
       }
     }
 
     // 2. Remove placeholder from target bucket and insert ticket
-    final targetBucket = buckets.firstWhereOrNull((b) => b.bucketId == bucketId);
+    final targetBucket = buckets.firstWhereOrNull(
+      (b) => b.bucketId == bucketId,
+    );
     if (targetBucket != null) {
       targetBucket.tickets.removeWhere((t) => t.holder == 'true');
       final safeIndex = index.clamp(0, targetBucket.tickets.length);
@@ -675,19 +691,19 @@ class PlannerController extends GetxController {
       if (Get.isRegistered<SidebarController>()) {
         Get.find<SidebarController>().navigate(CurrentPage.documentation);
       }
-      
+
       flowsController.sidebarMode.value = SidebarMode.flows;
       flowsController.currentSubPage.value = FlowSubPage.flows;
       flowsController.loadFlow(flow.id!);
       return;
-    } 
+    }
 
     final doc = allDocs.firstWhereOrNull(
       (d) => d.name.toLowerCase() == flowName.toLowerCase(),
     );
 
     if (doc != null) {
-       if (Get.isDialogOpen ?? false) {
+      if (Get.isDialogOpen ?? false) {
         Get.back();
       }
 
@@ -696,7 +712,7 @@ class PlannerController extends GetxController {
       }
 
       final FlowsController flowsController = Get.put(FlowsController());
-      
+
       // Sync selected app
       if (selectedAppId.value != null) {
         flowsController.selectedAppId.value = selectedAppId.value;
@@ -709,21 +725,20 @@ class PlannerController extends GetxController {
         Get.put(DocumentEditorProvider());
       }
       final docProvider = Get.find<DocumentEditorProvider>();
-      
-      // Use a slight delay to ensure the UI switch doesn't interfere, 
+
+      // Use a slight delay to ensure the UI switch doesn't interfere,
       // though typically GetX state should handle it.
       // Also ensuring we don't await loadSavedDocs which is triggered by changeSubPage
       docProvider.loadDoc(doc);
       return;
     }
-    
+
     Get.snackbar(
-        "Link Not Found",
-        "Could not find a flow or doc named '#$flowName'",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-    
+      "Link Not Found",
+      "Could not find a flow or doc named '#$flowName'",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+    );
   }
 }

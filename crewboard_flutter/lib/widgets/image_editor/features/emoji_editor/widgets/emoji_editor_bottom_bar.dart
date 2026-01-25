@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 import '../services/emoji_state_manager.dart';
@@ -44,14 +44,16 @@ class EmojiEditorBottomBar extends StatelessWidget {
         ),
         onTap: (index) {
           closeSkinToneOverlay();
-          EmojiStateManager.of(context)
-              ?.setActiveCategory(categoryEmojis[index].category);
+          EmojiStateManager.of(
+            context,
+          )?.setActiveCategory(categoryEmojis[index].category);
         },
         tabs: categoryEmojis
             .asMap()
             .entries
             .map<Widget>(
-                (item) => _buildCategory(item.key, item.value.category))
+              (item) => _buildCategory(item.key, item.value.category),
+            )
             .toList(),
       ),
     );

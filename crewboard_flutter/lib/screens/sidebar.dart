@@ -110,7 +110,9 @@ class SideBar extends StatelessWidget {
                                     ),
                                     subtitle: "Documentation",
                                     onPress: () {
-                                      controller.navigate(CurrentPage.documentation);
+                                      controller.navigate(
+                                        CurrentPage.documentation,
+                                      );
                                     },
                                   ),
                                 ],
@@ -163,7 +165,9 @@ class SideBar extends StatelessWidget {
                                     ),
                                     subtitle: "Documentation",
                                     onPress: () {
-                                      controller.navigate(CurrentPage.documentation);
+                                      controller.navigate(
+                                        CurrentPage.documentation,
+                                      );
                                     },
                                   ),
                                 ],
@@ -200,7 +204,8 @@ class SideBar extends StatelessWidget {
                     if (controller.currentPage.value == CurrentPage.planner ||
                         controller.currentPage.value == CurrentPage.chat ||
                         controller.currentPage.value == CurrentPage.settings ||
-                        controller.currentPage.value == CurrentPage.documentation)
+                        controller.currentPage.value ==
+                            CurrentPage.documentation)
                       Expanded(
                         child: Obx(() {
                           if (controller.currentPage.value ==

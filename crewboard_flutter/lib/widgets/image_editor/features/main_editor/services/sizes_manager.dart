@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -56,42 +56,45 @@ class SizesManager {
 
   /// Get the screen padding values.
   EdgeInsets get imageMargin => EdgeInsets.only(
-        top: (lastScreenSize.height -
-                screenPadding.top -
-                screenPadding.bottom -
-                decodedImageSize.height) /
-            2,
-        left: (lastScreenSize.width -
-                screenPadding.left -
-                screenPadding.right -
-                decodedImageSize.width) /
-            2,
-      );
+    top:
+        (lastScreenSize.height -
+            screenPadding.top -
+            screenPadding.bottom -
+            decodedImageSize.height) /
+        2,
+    left:
+        (lastScreenSize.width -
+            screenPadding.left -
+            screenPadding.right -
+            decodedImageSize.width) /
+        2,
+  );
 
   /// Calculates the gaps around the image on the screen using padding and
   /// toolbar height.
   EdgeInsets get imageScreenGaps => EdgeInsets.only(
-        /// Calculates the top gap based on screen height, padding, image
-        /// height, and toolbar height, centered vertically.
-        top: (screen.height -
-                screenPadding.top -
-                screenPadding.bottom -
-                decodedImageSize.height -
-                allToolbarHeight) /
-            2,
+    /// Calculates the top gap based on screen height, padding, image
+    /// height, and toolbar height, centered vertically.
+    top:
+        (screen.height -
+            screenPadding.top -
+            screenPadding.bottom -
+            decodedImageSize.height -
+            allToolbarHeight) /
+        2,
 
-        /// Calculates the left gap based on screen width, padding, and image
-        /// width, centered horizontally.
-        left: (screen.width -
-                screenPadding.left -
-                screenPadding.right -
-                decodedImageSize.width) /
-            2,
-      );
+    /// Calculates the left gap based on screen width, padding, and image
+    /// width, centered horizontally.
+    left:
+        (screen.width -
+            screenPadding.left -
+            screenPadding.right -
+            decodedImageSize.width) /
+        2,
+  );
 
   /// Calculates the vertical center position of the editor.
   double editorCenterY(int selectedLayerIndex) =>
-
       /// Computes the vertical center by subtracting the heights of the
       /// app bar and bottom bar from the editor's total height.
       (editorSize.height - appBarHeight - bottomBarHeight) / 2;
@@ -118,8 +121,9 @@ class SizesManager {
       double ratio = transformConfigs.originalSize.isInfinite
           ? decodedImageSize.aspectRatio
           : transformConfigs.cropRect.size.aspectRatio;
-      double convertedRatio =
-          transformConfigs.is90DegRotated ? 1 / ratio : ratio;
+      double convertedRatio = transformConfigs.is90DegRotated
+          ? 1 / ratio
+          : ratio;
 
       if (convertedRatio < drawSize.aspectRatio) {
         return Size(drawSize.height * convertedRatio, drawSize.height);

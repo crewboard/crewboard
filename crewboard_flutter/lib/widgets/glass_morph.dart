@@ -34,7 +34,8 @@ class GlassMorph extends StatelessWidget {
     return Obx(() {
       final currentTheme = themeController.currentTheme;
 
-      if (currentTheme == AppTheme.glassDark || currentTheme == AppTheme.glassLight) {
+      if (currentTheme == AppTheme.glassDark ||
+          currentTheme == AppTheme.glassLight) {
         return SizedBox(
           width: width,
           height: height,

@@ -51,7 +51,8 @@ class DocsSidebar extends StatelessWidget {
                   ),
                 ),
               ),
-              if (Get.find<FlowsController>().systemVariables.value?.showEdit ?? true)
+              if (Get.find<FlowsController>().systemVariables.value?.showEdit ??
+                  true)
                 CreateItemOverlayButton(
                   showColor: true,
                   onSave: (name, colorId) async {

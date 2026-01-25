@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
@@ -36,12 +36,18 @@ class ImageGenerationConfigs {
     this.processorConfigs = const ProcessorConfigs(),
     this.maxOutputSize = const Size(2000, 2000),
     this.maxThumbnailSize = const Size(100, 100),
-  })  : assert(jpegQuality > 0 && jpegQuality <= 100,
-            'jpegQuality must be between 1 and 100'),
-        assert(
-            pngLevel >= 0 && pngLevel <= 9, 'pngLevel must be between 0 and 9'),
-        assert(customPixelRatio == null || customPixelRatio > 0,
-            'customPixelRatio must be greater than 0');
+  }) : assert(
+         jpegQuality > 0 && jpegQuality <= 100,
+         'jpegQuality must be between 1 and 100',
+       ),
+       assert(
+         pngLevel >= 0 && pngLevel <= 9,
+         'pngLevel must be between 0 and 9',
+       ),
+       assert(
+         customPixelRatio == null || customPixelRatio > 0,
+         'customPixelRatio must be greater than 0',
+       );
 
   /// Indicates if it should only capture the background image area and cut all
   /// stuff outside, such as when a layer overlaps the image.

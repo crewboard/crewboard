@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
@@ -126,10 +126,12 @@ class _GroundedTextBarState extends State<GroundedTextBar>
                               ),
                             ),
                             style: IconButton.styleFrom(
-                              backgroundColor:
-                                  isSelected ? Colors.white : Colors.black38,
-                              foregroundColor:
-                                  isSelected ? Colors.black : Colors.white,
+                              backgroundColor: isSelected
+                                  ? Colors.white
+                                  : Colors.black38,
+                              foregroundColor: isSelected
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                           ),
                         ),

@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/features/tune_editor/tune_editor.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
@@ -49,11 +49,15 @@ class TuneEditorWidgets extends CustomWidgetsStandaloneEditor<TuneEditorState> {
   @override
   TuneEditorWidgets copyWith({
     ReactiveAppbar? Function(
-            TuneEditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      TuneEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            TuneEditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      TuneEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<TuneEditorState>? bodyItems,
     CustomBodyItems<TuneEditorState>? bodyItemsRecorded,
     CustomSlider<TuneEditorState>? slider,

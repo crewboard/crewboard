@@ -708,7 +708,7 @@ class PlannerEndpoint extends Endpoint {
     // TODO: Verify authorization (check if user has access to app/org)
     // For now assuming if they can find it, they can edit it (basic check)
     if (ticket.userId != user.id) {
-       // Ideally check organization/team permissions here
+      // Ideally check organization/team permissions here
     }
 
     // 1. Detect Status Change
@@ -716,7 +716,7 @@ class PlannerEndpoint extends Endpoint {
     if (ticket.statusId != newStatusId) {
       final oldStatusId = ticket.statusId;
       ticket.statusId = newStatusId;
-      
+
       // Log status change
       await TicketStatusChange.db.insertRow(
         session,
@@ -738,9 +738,12 @@ class PlannerEndpoint extends Endpoint {
           ticketId: ticket.id!,
           ticketName: ticket.ticketName,
           userName: user.userName,
-          userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
+          userColor:
+              (await SystemColor.db.findById(session, user.colorId))?.color ??
+              '#000000',
           action: 'changed status',
-          details: 'from ${oldStatus?.statusName ?? 'None'} to ${newStatus?.statusName ?? 'Unknown'}',
+          details:
+              'from ${oldStatus?.statusName ?? 'None'} to ${newStatus?.statusName ?? 'Unknown'}',
           createdAt: DateTime.now(),
         ),
       );
@@ -752,14 +755,14 @@ class PlannerEndpoint extends Endpoint {
     ticket.priorityId = updatedTicket.priority.priorityId;
     ticket.typeId = updatedTicket.type.typeId;
     ticket.creds = updatedTicket.creds.toInt();
-    
+
     // Parse deadline from string if it exists
     if (updatedTicket.deadline != null && updatedTicket.deadline!.isNotEmpty) {
-       ticket.deadline = DateTime.tryParse(updatedTicket.deadline!);
+      ticket.deadline = DateTime.tryParse(updatedTicket.deadline!);
     } else {
-       ticket.deadline = null;
+      ticket.deadline = null;
     }
-    
+
     // 3. Update Assignees
     final currentMaps = await BucketTicketMap.db.find(
       session,
@@ -767,18 +770,18 @@ class PlannerEndpoint extends Endpoint {
       include: BucketTicketMap.include(bucket: Bucket.include()),
     );
 
-    final currentAssigneeIds =
-        currentMaps.map((m) => m.bucket?.userId).whereType<UuidValue>().toSet();
-    final newAssigneeIds =
-        updatedTicket.assignees.map((u) => u.userId).toSet();
+    final currentAssigneeIds = currentMaps
+        .map((m) => m.bucket?.userId)
+        .whereType<UuidValue>()
+        .toSet();
+    final newAssigneeIds = updatedTicket.assignees.map((u) => u.userId).toSet();
 
     // To Remove
     final toRemove = currentAssigneeIds.difference(newAssigneeIds);
     if (toRemove.isNotEmpty) {
-      final mapsToRemove =
-          currentMaps
-              .where((m) => toRemove.contains(m.bucket?.userId))
-              .toList();
+      final mapsToRemove = currentMaps
+          .where((m) => toRemove.contains(m.bucket?.userId))
+          .toList();
       for (var map in mapsToRemove) {
         await BucketTicketMap.db.deleteRow(session, map);
       }
@@ -793,7 +796,7 @@ class PlannerEndpoint extends Endpoint {
         session,
         where: (b) => b.userId.equals(userId) & b.appId.equals(ticket.appId),
       );
-      
+
       Bucket? targetBucket;
       if (userBuckets.isNotEmpty) {
         // Try to find default
@@ -811,54 +814,57 @@ class PlannerEndpoint extends Endpoint {
           ),
         );
       }
-      
+
       // targetBucket is guaranteed to be non-null here
 
-        await BucketTicketMap.db.insertRow(
+      await BucketTicketMap.db.insertRow(
+        session,
+        BucketTicketMap(
+          bucketId: targetBucket.id!,
+          ticketId: ticket.id!,
+          order: 0, // Add to top
+        ),
+      );
+
+      // LOG ACTIVITY for adding assignee
+      final addedUser = await User.db.findById(session, userId);
+      if (addedUser != null) {
+        await PlannerActivity.db.insertRow(
           session,
-          BucketTicketMap(
-            bucketId: targetBucket.id!,
+          PlannerActivity(
             ticketId: ticket.id!,
-            order: 0, // Add to top
+            ticketName: ticket.ticketName,
+            userName: user.userName,
+            userColor:
+                (await SystemColor.db.findById(session, user.colorId))?.color ??
+                '#000000',
+            action: 'added assignee',
+            details: addedUser.userName,
+            createdAt: DateTime.now(),
           ),
         );
-        
-        // LOG ACTIVITY for adding assignee
-        final addedUser = await User.db.findById(session, userId);
-        if (addedUser != null) {
-          await PlannerActivity.db.insertRow(
-            session,
-            PlannerActivity(
-              ticketId: ticket.id!,
-              ticketName: ticket.ticketName,
-              userName: user.userName,
-              userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
-              action: 'added assignee',
-              details: addedUser.userName,
-              createdAt: DateTime.now(),
-            ),
-          );
-        }
-
+      }
     }
 
     // LOG REMOVAL ACTIVITY
     for (final userId in toRemove) {
-       final removedUser = await User.db.findById(session, userId);
-       if (removedUser != null) {
-          await PlannerActivity.db.insertRow(
-            session,
-            PlannerActivity(
-              ticketId: ticket.id!,
-              ticketName: ticket.ticketName,
-              userName: user.userName,
-              userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
-              action: 'removed assignee',
-              details: removedUser.userName,
-              createdAt: DateTime.now(),
-            ),
-          );
-       }
+      final removedUser = await User.db.findById(session, userId);
+      if (removedUser != null) {
+        await PlannerActivity.db.insertRow(
+          session,
+          PlannerActivity(
+            ticketId: ticket.id!,
+            ticketName: ticket.ticketName,
+            userName: user.userName,
+            userColor:
+                (await SystemColor.db.findById(session, user.colorId))?.color ??
+                '#000000',
+            action: 'removed assignee',
+            details: removedUser.userName,
+            createdAt: DateTime.now(),
+          ),
+        );
+      }
     }
 
     // 4. Update Attachments
@@ -950,7 +956,10 @@ class PlannerEndpoint extends Endpoint {
     }
 
     // Find max priority to append
-    final priorities = await Priority.db.find(session, orderBy: (p) => p.priority);
+    final priorities = await Priority.db.find(
+      session,
+      orderBy: (p) => p.priority,
+    );
     int nextOrder = 1;
     if (priorities.isNotEmpty) {
       nextOrder = priorities.last.priority + 1;
@@ -1009,7 +1018,10 @@ class PlannerEndpoint extends Endpoint {
     int currentOrder,
     String direction,
   ) async {
-    final priorities = await Priority.db.find(session, orderBy: (p) => p.priority);
+    final priorities = await Priority.db.find(
+      session,
+      orderBy: (p) => p.priority,
+    );
     final index = priorities.indexWhere((p) => p.id == priorityId);
     if (index == -1) return false;
 
@@ -1065,7 +1077,10 @@ class PlannerEndpoint extends Endpoint {
     return GetPlannerActivitiesResponse(activities: activities);
   }
 
-  Future<String?> _getLatestActivity(Session session, UuidValue ticketId) async {
+  Future<String?> _getLatestActivity(
+    Session session,
+    UuidValue ticketId,
+  ) async {
     final activity = await PlannerActivity.db.findFirstRow(
       session,
       where: (t) => t.ticketId.equals(ticketId),
@@ -1076,7 +1091,8 @@ class PlannerEndpoint extends Endpoint {
     if (activity.action == 'commented') {
       return "${activity.userName}: ${activity.details}";
     }
-    return "${activity.userName} ${activity.action} ${activity.details ?? ''}".trim();
+    return "${activity.userName} ${activity.action} ${activity.details ?? ''}"
+        .trim();
   }
 
   Future<bool> _hasNewActivity(

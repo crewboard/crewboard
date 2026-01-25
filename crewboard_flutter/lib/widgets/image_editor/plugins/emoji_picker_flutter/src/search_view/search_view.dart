@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -43,10 +43,10 @@ class SearchViewState<T extends SearchView> extends State<T>
       FocusScope.of(context).requestFocus(focusNode);
       // Load recent emojis initially
       utils.getRecentEmojis().then(
-            (value) => setState(
-              () => _updateResults(value.map((e) => e.emoji).toList()),
-            ),
-          );
+        (value) => setState(
+          () => _updateResults(value.map((e) => e.emoji).toList()),
+        ),
+      );
     });
     super.initState();
   }
@@ -55,7 +55,9 @@ class SearchViewState<T extends SearchView> extends State<T>
   void onTextInputChanged(String text) {
     links.clear();
     results.clear();
-    utils.searchEmoji(text, widget.state.categoryEmoji).then(
+    utils
+        .searchEmoji(text, widget.state.categoryEmoji)
+        .then(
           (value) => setState(
             () => _updateResults(value),
           ),
@@ -84,20 +86,20 @@ class SearchViewState<T extends SearchView> extends State<T>
         config: widget.config,
         onSkinToneDialogRequested:
             (emojiBoxPosition, emoji, emojiSize, category) {
-          closeSkinToneOverlay();
-          if (!emoji.hasSkinTone || !widget.config.skinToneConfig.enabled) {
-            return;
-          }
-          showSkinToneOverlay(
-            emojiBoxPosition,
-            emoji,
-            emojiSize,
-            null, // Todo: check if we can provide the category
-            widget.config,
-            _onSkinTonedEmojiSelected,
-            links[emoji.emoji]!,
-          );
-        },
+              closeSkinToneOverlay();
+              if (!emoji.hasSkinTone || !widget.config.skinToneConfig.enabled) {
+                return;
+              }
+              showSkinToneOverlay(
+                emojiBoxPosition,
+                emoji,
+                emojiSize,
+                null, // Todo: check if we can provide the category
+                widget.config,
+                _onSkinTonedEmojiSelected,
+                links[emoji.emoji]!,
+              );
+            },
       ),
     );
   }

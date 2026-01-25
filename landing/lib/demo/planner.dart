@@ -25,7 +25,8 @@ class PlannerDemo extends StatefulWidget {
   State<PlannerDemo> createState() => _PlannerDemoState();
 }
 
-class _PlannerDemoState extends State<PlannerDemo> with TickerProviderStateMixin {
+class _PlannerDemoState extends State<PlannerDemo>
+    with TickerProviderStateMixin {
   late final AnimationController _controller;
   bool played = false;
 
@@ -66,7 +67,8 @@ class _PlannerDemoState extends State<PlannerDemo> with TickerProviderStateMixin
           _controller.reset();
         }
 
-        debugPrint('Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
+        debugPrint(
+            'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
       },
       child: SizedBox(
         width: Window.fullWidth,
@@ -104,19 +106,24 @@ class _PlannerDemoState extends State<PlannerDemo> with TickerProviderStateMixin
                             },
                             child: Container(
                               padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey.withOpacity(0.25)),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.withOpacity(0.25)),
                               child: const Text("Bucket View"),
                             ),
                           ),
                           const SizedBox(height: 15),
-                          const Text("use search view to perform search and filtering on your tickets",
+                          const Text(
+                              "use search view to perform search and filtering on your tickets",
                               style: TextStyle(fontSize: 16)),
                           const SizedBox(height: 10),
                           InkWell(
                             onTap: () {},
                             child: Container(
                               padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey.withOpacity(0.25)),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.withOpacity(0.25)),
                               child: const Text("Search View"),
                             ),
                           ),
@@ -263,7 +270,8 @@ class _SearchViewState extends State<SearchView> {
             break;
           }
           await Future.delayed(const Duration(milliseconds: 500));
-          RenderBox renderBox = screenKey.currentContext!.findRenderObject() as RenderBox;
+          RenderBox renderBox =
+              screenKey.currentContext!.findRenderObject() as RenderBox;
           Window.stageWidth = renderBox.size.width;
           // print(Window.stageWidth);
           mouseX = ((Window.stageWidth - 430) / 2) - 10;
@@ -534,13 +542,15 @@ class _SearchViewState extends State<SearchView> {
       child: Container(
         width: 150,
         padding: EdgeInsets.symmetric(vertical: 2),
-        decoration: BoxDecoration(color: Pallet.inner3, borderRadius: BorderRadius.circular(5)),
+        decoration: BoxDecoration(
+            color: Pallet.inner3, borderRadius: BorderRadius.circular(5)),
         child: ListView.builder(
             // controller: controller,
             itemCount: items.length,
             itemBuilder: (_, i) => Container(
                   decoration: BoxDecoration(
-                      color: (selectedIdx == i) ? Colors.red : Colors.transparent,
+                      color:
+                          (selectedIdx == i) ? Colors.red : Colors.transparent,
                       // color: (selectedIdx == i) ? Pallet.inner3 : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   height: 30,
@@ -585,13 +595,17 @@ class _SearchViewState extends State<SearchView> {
                 children: [
                   Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.only(top: 25, left: 10, right: 10),
+                    padding:
+                        const EdgeInsets.only(top: 25, left: 10, right: 10),
                     child: Column(
                       children: [
                         Container(
                           width: 250,
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                          decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(20)),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Pallet.inner1,
+                              borderRadius: BorderRadius.circular(20)),
                           child: Row(
                             children: [
                               Expanded(
@@ -601,7 +615,8 @@ class _SearchViewState extends State<SearchView> {
                                     style: TextStyle(fontSize: 10),
                                     decoration: InputDecoration(
                                       hintText: "search",
-                                      hintStyle: TextStyle(fontSize: 10, color: Pallet.font3),
+                                      hintStyle: TextStyle(
+                                          fontSize: 10, color: Pallet.font3),
                                       isDense: true,
                                       border: InputBorder.none,
                                     )),
@@ -624,10 +639,13 @@ class _SearchViewState extends State<SearchView> {
                                   onTap: () {},
                                   child: Container(
                                     margin: EdgeInsets.only(bottom: 10),
-                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
                                     height: 90,
-                                    decoration:
-                                        BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                                    decoration: BoxDecoration(
+                                        color: Pallet.inner1,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     child: Row(
                                       children: [
                                         Expanded(
@@ -637,14 +655,16 @@ class _SearchViewState extends State<SearchView> {
                                                 children: [
                                                   Text(
                                                     ticket["ticketName"],
-                                                    style: TextStyle(fontSize: 12),
+                                                    style:
+                                                        TextStyle(fontSize: 12),
                                                   ),
                                                   SizedBox(
                                                     width: 10,
                                                   ),
                                                   CustomBadge(
                                                       label: ticket["typeName"],
-                                                      color: Color(int.parse(ticket["typeColor"])))
+                                                      color: Color(int.parse(
+                                                          ticket["typeColor"])))
                                                 ],
                                               ),
                                               SizedBox(
@@ -654,7 +674,9 @@ class _SearchViewState extends State<SearchView> {
                                                 ticket["ticketBody"],
                                                 maxLines: 3,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(fontSize: 10, color: Pallet.font3),
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Pallet.font3),
                                               ),
                                             ],
                                           ),
@@ -663,8 +685,10 @@ class _SearchViewState extends State<SearchView> {
                                           width: 10,
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               children: [
@@ -677,8 +701,11 @@ class _SearchViewState extends State<SearchView> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  (ticket["deadline"] == null) ? "None" : ticket["deadline"],
-                                                  style: TextStyle(fontSize: 12),
+                                                  (ticket["deadline"] == null)
+                                                      ? "None"
+                                                      : ticket["deadline"],
+                                                  style:
+                                                      TextStyle(fontSize: 12),
                                                 ),
                                               ],
                                             ),
@@ -687,14 +714,22 @@ class _SearchViewState extends State<SearchView> {
                                             ),
                                             Stack(
                                               children: [
-                                                for (var i = 0; i < ticket["assignees"].length; i++)
+                                                for (var i = 0;
+                                                    i <
+                                                        ticket["assignees"]
+                                                            .length;
+                                                    i++)
                                                   Padding(
-                                                    padding: EdgeInsets.only(left: i * 10),
+                                                    padding: EdgeInsets.only(
+                                                        left: i * 10),
                                                     child: ProfileIcon(
                                                       size: 20,
                                                       fontSize: 10,
-                                                      name: ticket["assignees"][i]["userName"],
-                                                      color: Color(int.parse(ticket["assignees"][i]["color"])),
+                                                      name: ticket["assignees"]
+                                                          [i]["userName"],
+                                                      color: Color(int.parse(
+                                                          ticket["assignees"][i]
+                                                              ["color"])),
                                                     ),
                                                   ),
                                               ],
@@ -728,35 +763,40 @@ class _SearchViewState extends State<SearchView> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                                Expanded(
-                                    child: Text(
-                                  "filters",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                                SmallButton(
-                                  label: "add",
-                                  onPress: () {},
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                SmallButton(
-                                  label: "apply",
-                                  onPress: () {},
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ]),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      "filters",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                    SmallButton(
+                                      label: "add",
+                                      onPress: () {},
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    SmallButton(
+                                      label: "apply",
+                                      onPress: () {},
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ]),
                               for (var i = 0; i < filters.length; i++)
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
-                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  decoration:
-                                      BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Pallet.inner2),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "property",
@@ -764,13 +804,20 @@ class _SearchViewState extends State<SearchView> {
                                       ),
                                       SizedBox(height: 5),
                                       Container(
-                                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                                        decoration:
-                                            BoxDecoration(borderRadius: BorderRadius.circular(5), color: Pallet.inner1),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: Pallet.inner1),
                                         child: Row(
                                           children: [
                                             Text(
-                                              (filters[i]["name"].toString().isEmpty) ? "select" : filters[i]["name"],
+                                              (filters[i]["name"]
+                                                      .toString()
+                                                      .isEmpty)
+                                                  ? "select"
+                                                  : filters[i]["name"],
                                               style: TextStyle(fontSize: 10),
                                             ),
                                           ],
@@ -783,13 +830,20 @@ class _SearchViewState extends State<SearchView> {
                                       ),
                                       SizedBox(height: 5),
                                       Container(
-                                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                                        decoration:
-                                            BoxDecoration(borderRadius: BorderRadius.circular(5), color: Pallet.inner1),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: Pallet.inner1),
                                         child: Row(
                                           children: [
                                             Text(
-                                              (filters[i]["value"].toString().isEmpty) ? "select" : filters[i]["value"],
+                                              (filters[i]["value"]
+                                                      .toString()
+                                                      .isEmpty)
+                                                  ? "select"
+                                                  : filters[i]["value"],
                                               style: TextStyle(fontSize: 10),
                                             ),
                                           ],
@@ -1089,7 +1143,8 @@ class _BucketViewState extends State<BucketView> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 5),
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 8, bottom: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1100,7 +1155,8 @@ class _BucketViewState extends State<BucketView> {
                         if (i == 0)
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Pallet.font3), borderRadius: BorderRadius.circular(2)),
+                                border: Border.all(color: Pallet.font3),
+                                borderRadius: BorderRadius.circular(2)),
                             child: InkWell(
                               onTap: () {},
                               child: Icon(
@@ -1116,7 +1172,9 @@ class _BucketViewState extends State<BucketView> {
                   Expanded(
                       child: ListView(
                     children: [
-                      for (var ticket in buckets[i]) GestureDetector(onTap: () {}, child: Ticket(data: ticket))
+                      for (var ticket in buckets[i])
+                        GestureDetector(
+                            onTap: () {}, child: Ticket(data: ticket))
                     ],
                   )),
                 ],
@@ -1144,13 +1202,16 @@ class Ticket extends StatelessWidget {
       width: 200,
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      decoration: BoxDecoration(color: Pallet.inner2, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: Pallet.inner2, borderRadius: BorderRadius.circular(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CustomBadge(label: data["typeName"], color: Color(int.parse(data["typeColor"]))),
+              CustomBadge(
+                  label: data["typeName"],
+                  color: Color(int.parse(data["typeColor"]))),
               Expanded(child: SizedBox()),
               Icon(
                 Icons.upload_outlined,
@@ -1197,7 +1258,9 @@ class Ticket extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                (data["deadline"] == null) ? "None" : data["deadline"].toString(),
+                (data["deadline"] == null)
+                    ? "None"
+                    : data["deadline"].toString(),
                 style: TextStyle(fontSize: 12),
               ),
               Expanded(child: Container()),
@@ -1224,7 +1287,13 @@ class Ticket extends StatelessWidget {
 }
 
 class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key, this.image, this.name, this.color, required this.size, this.fontSize});
+  const ProfileIcon(
+      {super.key,
+      this.image,
+      this.name,
+      this.color,
+      required this.size,
+      this.fontSize});
   final String? image;
   final String? name;
   final Color? color;
@@ -1235,10 +1304,13 @@ class ProfileIcon extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(size)),
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.circular(size)),
       child: Center(
         child: Text(name![0].toString().toUpperCase(),
-            style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500))),
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                    fontSize: fontSize, fontWeight: FontWeight.w500))),
       ),
     );
   }

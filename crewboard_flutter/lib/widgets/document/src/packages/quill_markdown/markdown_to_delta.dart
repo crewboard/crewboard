@@ -11,14 +11,16 @@ import './embeddable_table_syntax.dart';
 import './utils.dart';
 
 /// Converts markdown [md.Element] to list of [Attribute].
-typedef ElementToAttributeConvertor = List<Attribute<dynamic>> Function(
-  md.Element element,
-);
+typedef ElementToAttributeConvertor =
+    List<Attribute<dynamic>> Function(
+      md.Element element,
+    );
 
 /// Converts markdown [md.Element] to [Embeddable].
-typedef ElementToEmbeddableConvertor = Embeddable Function(
-  Map<String, String> elAttrs,
-);
+typedef ElementToEmbeddableConvertor =
+    Embeddable Function(
+      Map<String, String> elAttrs,
+    );
 
 /// Convertor from Markdown string to quill [Delta].
 class MarkdownToDelta extends Converter<String, Delta>
@@ -92,7 +94,7 @@ class MarkdownToDelta extends Converter<String, Delta>
   final _elementToEmbed = <String, ElementToEmbeddableConvertor>{
     'hr': (_) => horizontalRule,
     'img': (elAttrs) => BlockEmbed.image(elAttrs['src'] ?? ''),
-    'video': (elAttrs) => BlockEmbed.video(elAttrs['src'] ?? '')
+    'video': (elAttrs) => BlockEmbed.video(elAttrs['src'] ?? ''),
   };
 
   var _delta = Delta();
@@ -379,7 +381,8 @@ class MarkdownToDelta extends Converter<String, Delta>
     }
     if (result == null) {
       throw Exception(
-          'Element $element cannot be converted to inline attribute');
+        'Element $element cannot be converted to inline attribute',
+      );
     }
     return result;
   }
@@ -399,7 +402,8 @@ class MarkdownToDelta extends Converter<String, Delta>
     final result = _effectiveElementToBlockAttr()[element.tag]?.call(element);
     if (result == null) {
       throw Exception(
-          'Element $element cannot be converted to block attribute');
+        'Element $element cannot be converted to block attribute',
+      );
     }
     return result;
   }
@@ -415,8 +419,9 @@ class MarkdownToDelta extends Converter<String, Delta>
       _effectiveElementToEmbed().containsKey(element.tag);
 
   Embeddable _toEmbeddable(md.Element element) {
-    final result =
-        _effectiveElementToEmbed()[element.tag]?.call(element.attributes);
+    final result = _effectiveElementToEmbed()[element.tag]?.call(
+      element.attributes,
+    );
     if (result == null) {
       throw Exception('Element $element cannot be converted to Embeddable');
     }

@@ -1,13 +1,15 @@
-﻿/// View order config
+/// View order config
 class ViewOrderConfig {
   /// Constructor
   const ViewOrderConfig({
     this.top = EmojiPickerItem.categoryBar,
     this.middle = EmojiPickerItem.emojiView,
     this.bottom = EmojiPickerItem.searchBar,
-  }) : assert(!identical(top, middle) &&
-            !identical(top, bottom) &&
-            !identical(middle, bottom));
+  }) : assert(
+         !identical(top, middle) &&
+             !identical(top, bottom) &&
+             !identical(middle, bottom),
+       );
 
   /// First item
   final EmojiPickerItem top;

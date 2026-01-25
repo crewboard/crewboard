@@ -5,7 +5,7 @@ import '../main.dart'; // To access serverpod client 'client'
 
 class EmojiController extends GetxController {
   final EmojiService _emojiService = EmojiService();
-  
+
   var isLoading = true.obs;
   var syncProgress = 0.0.obs;
   var totalEmojis = 0.obs;
@@ -20,11 +20,11 @@ class EmojiController extends GetxController {
   Future<void> syncEmojis() async {
     try {
       await _emojiService.init();
-      
+
       // Get counts
       localCount.value = await _emojiService.getCount();
       totalEmojis.value = await client.emoji.getEmojiCount();
-      
+
       print('Emoji Sync: Local=$localCount, Server=$totalEmojis');
 
       if (localCount.value < totalEmojis.value) {
@@ -43,7 +43,7 @@ class EmojiController extends GetxController {
   Future<void> _downloadEmojis({required int offset}) async {
     const int batchSize = 100;
     int currentOffset = offset;
-    
+
     while (currentOffset < totalEmojis.value) {
       try {
         print('Fetching emojis from $currentOffset...');
@@ -51,18 +51,17 @@ class EmojiController extends GetxController {
           limit: batchSize,
           offset: currentOffset,
         );
-        
+
         if (emojis.isEmpty) break;
-        
+
         await _emojiService.addEmojis(emojis);
-        
+
         currentOffset += emojis.length;
         localCount.value = currentOffset;
         syncProgress.value = currentOffset / totalEmojis.value;
-        
+
         // Tiny delay to yield to UI thread if needed, though await does that
         await Future.delayed(Duration(milliseconds: 10));
-        
       } catch (e) {
         print('Error downloading batch at $currentOffset: $e');
         // Stop on error, will resume next app start

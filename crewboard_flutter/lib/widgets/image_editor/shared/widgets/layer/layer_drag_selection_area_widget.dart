@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/features/main_editor/services/layer_drag_selection_service.dart';
 
@@ -29,28 +29,29 @@ class LayerDragSelectionAreaWidget extends StatelessWidget {
     final style = configs.style;
 
     return ValueListenableBuilder(
-        valueListenable: service.dragRectNotifier,
-        builder: (_, dragRect, __) {
-          return Positioned(
-            left: dragRect.offset.dx,
-            top: dragRect.offset.dy,
-            width: dragRect.size.width,
-            height: dragRect.size.height,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: dragRect.isVisible && configs.enableLayerDragSelection
-                  ? Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: style.dragSelectionBorderColor,
-                          width: style.dragSelectionBorderWidth,
-                        ),
-                        color: style.dragSelectionBackground,
+      valueListenable: service.dragRectNotifier,
+      builder: (_, dragRect, __) {
+        return Positioned(
+          left: dragRect.offset.dx,
+          top: dragRect.offset.dy,
+          width: dragRect.size.width,
+          height: dragRect.size.height,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: dragRect.isVisible && configs.enableLayerDragSelection
+                ? Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: style.dragSelectionBorderColor,
+                        width: style.dragSelectionBorderWidth,
                       ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          );
-        });
+                      color: style.dragSelectionBackground,
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
+        );
+      },
+    );
   }
 }

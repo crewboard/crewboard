@@ -46,7 +46,8 @@ class SideBar extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              if (Window.siderBarOpen.value && Window.closeOnExit == false) {
+                              if (Window.siderBarOpen.value &&
+                                  Window.closeOnExit == false) {
                                 Window.siderBarOpen.value = false;
                               }
                               Window.closeOnExit = !Window.closeOnExit;
@@ -74,8 +75,11 @@ class SideBar extends StatelessWidget {
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                            color: Pallet.inner1,
+                            borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           children: [
                             const SizedBox(
@@ -236,7 +240,11 @@ class SideBar extends StatelessWidget {
 }
 
 class MenuItem extends StatelessWidget {
-  const MenuItem({super.key, required this.name, required this.color, required this.onPress});
+  const MenuItem(
+      {super.key,
+      required this.name,
+      required this.color,
+      required this.onPress});
   final String name;
   final Color color;
   final Function onPress;
@@ -252,7 +260,8 @@ class MenuItem extends StatelessWidget {
           Container(
             width: 50,
             height: 50,
-            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                color: color, borderRadius: BorderRadius.circular(10)),
             child: Center(
               child: Text(
                 name[0],

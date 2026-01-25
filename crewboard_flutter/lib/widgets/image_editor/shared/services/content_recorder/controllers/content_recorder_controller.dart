@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
 
@@ -84,8 +84,9 @@ class ContentRecorderController {
       /// For video editing is it important to enforce the following
       /// configurations
       configs: _configs.copyWith(
-        cropToDrawingBounds:
-            isVideoEditor ? false : _configs.cropToDrawingBounds,
+        cropToDrawingBounds: isVideoEditor
+            ? false
+            : _configs.cropToDrawingBounds,
         cropToImageBounds: isVideoEditor ? true : _configs.cropToImageBounds,
       ),
       threadManager: _threadManager,
@@ -223,9 +224,9 @@ class ContentRecorderController {
     if (screenshots != null) {
       /// Set every screenshot to broken which didn't read the ui image before
       /// changes happen.
-      screenshots
-          .where((el) => !el.processedRenderedImage)
-          .forEach((screenshot) {
+      screenshots.where((el) => !el.processedRenderedImage).forEach((
+        screenshot,
+      ) {
         screenshot.broken = true;
       });
       screenshots.add(isolateCaptureState);
@@ -276,8 +277,9 @@ class ContentRecorderController {
 
     bool isGenerationActive =
         backgroundScreenshot != null && !backgroundScreenshot.broken;
-    String id =
-        isGenerationActive ? backgroundScreenshot.id : generateUniqueId();
+    String id = isGenerationActive
+        ? backgroundScreenshot.id
+        : generateUniqueId();
 
     try {
       _threadManager.destroyAllActiveTasks(id);
@@ -352,15 +354,18 @@ class ContentRecorderController {
 
     /// Check if the image format is already same like the output format.
     List<String> sp = contentType.split('/');
-    bool isFormatSame = sp.length > 1 &&
+    bool isFormatSame =
+        sp.length > 1 &&
         (_configs.outputFormat.name == sp[1] ||
             (sp[1] == 'jpeg' && _configs.outputFormat == OutputFormat.jpg));
 
     /// Check if the output size is too large.
     double outputRatio = imageInfos.pixelRatio;
     if (!_configs.cropToDrawingBounds && context != null && context.mounted) {
-      outputRatio =
-          max(imageInfos.pixelRatio, MediaQuery.devicePixelRatioOf(context));
+      outputRatio = max(
+        imageInfos.pixelRatio,
+        MediaQuery.devicePixelRatioOf(context),
+      );
     }
     bool isOutputSizeTooLarge = _imageRenderService.checkOutputSizeIsTooLarge(
       imageInfos.renderedSize,

@@ -39,22 +39,23 @@ class _AddControllerState extends State<AddController> {
   }
 
   OverlayEntry _createDropDown() {
-    return OverlayEntry(builder: (context) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: GestureDetector(
-          onTap: () {
-            close();
-          },
-          child: Container(
-            color: Colors.black.withOpacity(0.1),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: initX,
-                  top: initY + height + 5,
-                  child: Material(
+    return OverlayEntry(
+      builder: (context) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: GestureDetector(
+            onTap: () {
+              close();
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.1),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: initX,
+                    top: initY + height + 5,
+                    child: Material(
                       elevation: 60,
                       color: Colors.transparent,
                       child: Container(
@@ -72,7 +73,10 @@ class _AddControllerState extends State<AddController> {
                             ),
                             Text(
                               "Name",
-                              style: TextStyle(fontSize: 12, color: Pallet.font1),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Pallet.font1,
+                              ),
                             ),
                             const SizedBox(
                               height: 10,
@@ -89,18 +93,21 @@ class _AddControllerState extends State<AddController> {
                                 children: [
                                   Text(
                                     "Color",
-                                    style: TextStyle(fontSize: 12, color: Pallet.font1),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Pallet.font1,
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
                                   ColorPicker(
-                                      selectedColorId: selectedColorId,
-                                      onColorSelected: (systemColor) {
-                                        setState(() {
-                                          selectedColorId = systemColor.id;
-                                        });
-                                      },
+                                    selectedColorId: selectedColorId,
+                                    onColorSelected: (systemColor) {
+                                      setState(() {
+                                        selectedColorId = systemColor.id;
+                                      });
+                                    },
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -119,57 +126,70 @@ class _AddControllerState extends State<AddController> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                 SmallButton(
-                                   label: "done",
-                                   onPress: () async {
-                                     if (name.text.isEmpty) return;
- 
-                                     if (widget.type == "status") {
-                                       await client.planner.addStatus(null, name.text);
-                                     } else if (widget.type == "type") {
-                                        if (selectedColorId != null) {
-                                          await client.planner.addTicketType(null, name.text, selectedColorId!);
-                                        } else {
-                                           return; 
-                                        }
-                                     } else if (widget.type == "priority") {
-                                       await client.planner.addPriority(null, name.text);
-                                     }
- 
-                                     refreshSink.add("get_admin_planner_data");
-                                     name.clear();
-                                     close();
-                                   },
-                                 ),
+                                SmallButton(
+                                  label: "done",
+                                  onPress: () async {
+                                    if (name.text.isEmpty) return;
+
+                                    if (widget.type == "status") {
+                                      await client.planner.addStatus(
+                                        null,
+                                        name.text,
+                                      );
+                                    } else if (widget.type == "type") {
+                                      if (selectedColorId != null) {
+                                        await client.planner.addTicketType(
+                                          null,
+                                          name.text,
+                                          selectedColorId!,
+                                        );
+                                      } else {
+                                        return;
+                                      }
+                                    } else if (widget.type == "priority") {
+                                      await client.planner.addPriority(
+                                        null,
+                                        name.text,
+                                      );
+                                    }
+
+                                    refreshSink.add("get_admin_planner_data");
+                                    name.clear();
+                                    close();
+                                  },
+                                ),
                               ],
-                            )
+                            ),
                           ],
                         ),
-                      )),
-                ),
-              ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return AddButton(
-        key: actionKey,
-        onPress: () {
-          if (isOpen) {
-            dropdown?.remove();
-          } else {
-            findDropDownData();
-            dropdown = _createDropDown();
-            Overlay.of(context).insert(dropdown!);
-          }
+      key: actionKey,
+      onPress: () {
+        if (isOpen) {
+          dropdown?.remove();
+        } else {
+          findDropDownData();
+          dropdown = _createDropDown();
+          Overlay.of(context).insert(dropdown!);
+        }
 
-          isOpen = !isOpen;
-          setState(() {});
-        });
+        isOpen = !isOpen;
+        setState(() {});
+      },
+    );
   }
 }

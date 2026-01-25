@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 /// Get the CRC-32 checksum of the given array. You can append bytes to an
 /// already computed crc by specifying the previous [crc] value.
@@ -282,5 +282,5 @@ const _crc32Table = <int>[
   3020668471,
   3272380065,
   1510334235,
-  755167117
+  755167117,
 ];

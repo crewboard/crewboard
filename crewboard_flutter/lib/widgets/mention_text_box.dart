@@ -95,8 +95,8 @@ class _MentionTextBoxState extends State<MentionTextBox> {
     // If we are already showing suggestions, maybe show loading state?
     // For now just fetch and update.
     // Debouncing could be added here if needed.
-    
-    // setState(() => _isLoading = true); 
+
+    // setState(() => _isLoading = true);
     final results = await widget.onSearch(query);
     if (!mounted) return;
 
@@ -219,9 +219,9 @@ class _MentionTextBoxState extends State<MentionTextBox> {
           TextField(
             controller: widget.controller,
             onChanged: (val) {
-               // We also need to trigger onType if provided
-               widget.onType?.call(val);
-               // The listener _onTextChanged logic runs via controller listener mainly for cursor checks
+              // We also need to trigger onType if provided
+              widget.onType?.call(val);
+              // The listener _onTextChanged logic runs via controller listener mainly for cursor checks
             },
             onSubmitted: widget.onEnter,
             maxLines: widget.maxLines,

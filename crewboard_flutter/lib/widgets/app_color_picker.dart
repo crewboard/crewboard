@@ -40,7 +40,8 @@ class AppColorPicker extends StatelessWidget {
                 ElevatedButton(
                   child: const Text('Got it'),
                   onPressed: () {
-                    String hex = '#${selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2)}';
+                    String hex =
+                        '#${selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2)}';
                     onColorChanged(hex);
                     Navigator.of(context).pop();
                   },

@@ -1,4 +1,4 @@
-﻿/// Configuration class for managing processor settings.
+/// Configuration class for managing processor settings.
 class ProcessorConfigs {
   /// Creates a new instance of [ProcessorConfigs] with the given settings.
   ///
@@ -11,9 +11,11 @@ class ProcessorConfigs {
     this.numberOfBackgroundProcessors = 2,
     this.maxConcurrency = 1,
     this.processorMode = ProcessorMode.auto,
-  })  : assert(numberOfBackgroundProcessors > 0,
-            'minBackgroundProcessors must be positive'),
-        assert(maxConcurrency > 0, 'maxConcurrency must be positive');
+  }) : assert(
+         numberOfBackgroundProcessors > 0,
+         'minBackgroundProcessors must be positive',
+       ),
+       assert(maxConcurrency > 0, 'maxConcurrency must be positive');
 
   /// The number of background processors to use.
   ///

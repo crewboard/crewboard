@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/crop_rotate_editor.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
@@ -50,11 +50,15 @@ class CropRotateEditorWidgets
   @override
   CropRotateEditorWidgets copyWith({
     ReactiveAppbar? Function(
-            CropRotateEditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      CropRotateEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            CropRotateEditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      CropRotateEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<CropRotateEditorState>? bodyItems,
     CropEditorAspectRatioOptions<CropRotateEditorState>? aspectRatioOptions,
   }) {

@@ -177,13 +177,15 @@ class _SignupPageState extends State<SignupPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Obx(() => Row(
-              children: [
-                MinimizeWindowButton(colors: Pallet.windowButtonColors),
-                MaximizeWindowButton(colors: Pallet.windowButtonColors),
-                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
-              ],
-            )),
+            child: Obx(
+              () => Row(
+                children: [
+                  MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                  MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                  CloseWindowButton(colors: Pallet.closeWindowButtonColors),
+                ],
+              ),
+            ),
           ),
         ],
       ),

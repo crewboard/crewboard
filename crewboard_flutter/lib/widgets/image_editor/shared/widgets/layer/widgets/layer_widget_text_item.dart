@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/text_editor_configs.dart';
@@ -55,13 +55,15 @@ class LayerWidgetTextItem extends StatelessWidget {
 
     return RoundedBackgroundText(
       enableHitBoxCorrection: true,
-      maxTextWidth:
-          maxTextWidth == null ? double.infinity : maxTextWidth * layer.scale,
+      maxTextWidth: maxTextWidth == null
+          ? double.infinity
+          : maxTextWidth * layer.scale,
       onHitTestResult: _handleLayerHit,
       layer.text.toString(),
       backgroundColor: layer.background,
       textAlign: layer.align,
-      style: layer.textStyle?.copyWith(
+      style:
+          layer.textStyle?.copyWith(
             fontSize: style.fontSize,
             fontWeight: style.fontWeight,
             color: style.color,

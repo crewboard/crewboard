@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 /// Ordering of the channels in a pixel, used with Image.fromBytes and
 /// Image.getBytes to support alternative channel ordering.
@@ -22,5 +22,5 @@ const channelOrderLength = <ChannelOrder, int>{
   ChannelOrder.rgb: 3,
   ChannelOrder.bgr: 3,
   ChannelOrder.grayAlpha: 2,
-  ChannelOrder.red: 1
+  ChannelOrder.red: 1,
 };

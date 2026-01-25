@@ -1,7 +1,8 @@
-﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/output_formats.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/image_generation_configs/output_formats.dart';
 import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/jpeg/jpeg_chroma.dart';
 import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/formats/png/png_filter.dart';
-import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart' as img;
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart'
+    as img;
 
 /// Represents an image object sent from the main thread.
 class ImageConvertThreadRequest extends ThreadRequest {

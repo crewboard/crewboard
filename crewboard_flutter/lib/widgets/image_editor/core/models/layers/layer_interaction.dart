@@ -1,4 +1,4 @@
-﻿import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
+import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/export_bool_extension.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/utils/parser/bool_parser.dart';
 
 /// A class representing the interaction settings for a layer.
@@ -39,16 +39,26 @@ class LayerInteraction {
     keyConverter ??= (String key) => key;
 
     return LayerInteraction(
-      enableMove:
-          safeParseBool(map[keyConverter('enableMove')], fallback: true),
-      enableScale:
-          safeParseBool(map[keyConverter('enableScale')], fallback: true),
-      enableRotate:
-          safeParseBool(map[keyConverter('enableRotate')], fallback: true),
-      enableSelection:
-          safeParseBool(map[keyConverter('enableSelection')], fallback: true),
-      enableEdit:
-          safeParseBool(map[keyConverter('enableEdit')], fallback: true),
+      enableMove: safeParseBool(
+        map[keyConverter('enableMove')],
+        fallback: true,
+      ),
+      enableScale: safeParseBool(
+        map[keyConverter('enableScale')],
+        fallback: true,
+      ),
+      enableRotate: safeParseBool(
+        map[keyConverter('enableRotate')],
+        fallback: true,
+      ),
+      enableSelection: safeParseBool(
+        map[keyConverter('enableSelection')],
+        fallback: true,
+      ),
+      enableEdit: safeParseBool(
+        map[keyConverter('enableEdit')],
+        fallback: true,
+      ),
     );
   }
 

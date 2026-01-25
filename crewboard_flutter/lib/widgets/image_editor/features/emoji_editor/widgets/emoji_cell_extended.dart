@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -88,7 +88,8 @@ class EmojiCellExtended extends StatelessWidget {
       style: emojiStyle,
     );
 
-    bool hasMultipleOptions = emoji.hasSkinTone &&
+    bool hasMultipleOptions =
+        emoji.hasSkinTone &&
         enableSkinTones &&
         onSkinToneDialogRequested != null;
 

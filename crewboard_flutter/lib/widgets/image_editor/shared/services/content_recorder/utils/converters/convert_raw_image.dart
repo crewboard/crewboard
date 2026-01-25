@@ -1,10 +1,11 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_request_model.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/multi_threading/thread_response_model.dart';
-import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart' as img;
+import 'package:crewboard_flutter/widgets/image_editor/plugins/image/src/image/image.dart'
+    as img;
 import '../encoder/encode_image.dart';
 
 /// Converts an image to PNG format and finds the bounding box of
@@ -170,7 +171,8 @@ Future<img.Image> _resizeCropRect(
   final numFrames = src.numFrames;
   for (var i = 0; i < numFrames; ++i) {
     final frame = src.frames[i];
-    final dst = firstFrame?.addFrame() ??
+    final dst =
+        firstFrame?.addFrame() ??
         img.Image.fromResized(
           frame,
           width: width,

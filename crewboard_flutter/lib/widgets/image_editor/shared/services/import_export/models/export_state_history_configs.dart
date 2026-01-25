@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
 import '../enums/export_import_enum.dart';
 
@@ -21,10 +21,10 @@ class ExportEditorConfigs {
     this.enableMinify = true,
     this.maxDecimalPlaces = kMaxSafeDecimalPlaces,
   }) : assert(
-          maxDecimalPlaces <= kMaxSafeDecimalPlaces + 1,
-          'maxDecimalPlaces must be less than or equal to '
-          '${kMaxSafeDecimalPlaces + 1}',
-        );
+         maxDecimalPlaces <= kMaxSafeDecimalPlaces + 1,
+         'maxDecimalPlaces must be less than or equal to '
+         '${kMaxSafeDecimalPlaces + 1}',
+       );
 
   /// The maximum number of decimal places allowed for numerical values.
   ///

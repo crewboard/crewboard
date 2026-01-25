@@ -26,19 +26,23 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
     try {
       final data = await client.admin.getSystemVariables();
       final fonts = await client.admin.getFontSettings();
-      print('DocumentationSettings: Fetched variables. tabPreset1: ${data?.tabPreset1}, tabPreset2: ${data?.tabPreset2}');
+      print(
+        'DocumentationSettings: Fetched variables. tabPreset1: ${data?.tabPreset1}, tabPreset2: ${data?.tabPreset2}',
+      );
       setState(() {
-        variables = data ?? SystemVariables(
-          punchingMode: 'manual', 
-          lineHeight: 1.5,
-          processWidth: 150,
-          conditionWidth: 120,
-          terminalWidth: 100,
-          allowEdit: true,
-          showEdit: true,
-          allowDelete: true,
-          showDelete: true,
-        );
+        variables =
+            data ??
+            SystemVariables(
+              punchingMode: 'manual',
+              lineHeight: 1.5,
+              processWidth: 150,
+              conditionWidth: 120,
+              terminalWidth: 100,
+              allowEdit: true,
+              showEdit: true,
+              allowDelete: true,
+              showDelete: true,
+            );
         fontSettings = fonts;
         fontSettings.sort((a, b) => (a.id ?? 0).compareTo(b.id ?? 0));
         isLoading = false;
@@ -52,7 +56,9 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
   Future<void> _save() async {
     if (variables == null) return;
     try {
-      print('DocumentationSettings: Saving variables. tabPreset1: ${variables!.tabPreset1}, tabPreset2: ${variables!.tabPreset2}');
+      print(
+        'DocumentationSettings: Saving variables. tabPreset1: ${variables!.tabPreset1}, tabPreset2: ${variables!.tabPreset2}',
+      );
       await client.admin.updateSystemVariables(variables!);
     } catch (e) {
       debugPrint("Error saving system variables: $e");
@@ -96,7 +102,7 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -104,7 +110,7 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
   Widget _buildTabSwitchingSection() {
     final available = fontSettings.map((f) => f.name.toLowerCase()).toList();
     if (available.isEmpty) available.add('body');
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,42 +129,79 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("tab presets", style: TextStyle(fontSize: 13)),
-                  Text("document", style: TextStyle(color: Pallet.font3.withValues(alpha: 0.5), fontSize: 12)),
+                  Text(
+                    "document",
+                    style: TextStyle(
+                      color: Pallet.font3.withValues(alpha: 0.5),
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
-              _buildFontDropdownRow("preset 1", (variables!.tabPreset1 ?? 'heading').toLowerCase(), available, (val) {
-                setState(() => variables!.tabPreset1 = val.toLowerCase());
-                _save();
-              }),
+              _buildFontDropdownRow(
+                "preset 1",
+                (variables!.tabPreset1 ?? 'heading').toLowerCase(),
+                available,
+                (val) {
+                  setState(() => variables!.tabPreset1 = val.toLowerCase());
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildFontDropdownRow("preset 2", (variables!.tabPreset2 ?? 'body').toLowerCase(), available, (val) {
-                setState(() => variables!.tabPreset2 = val.toLowerCase());
-                _save();
-              }),
+              _buildFontDropdownRow(
+                "preset 2",
+                (variables!.tabPreset2 ?? 'body').toLowerCase(),
+                available,
+                (val) {
+                  setState(() => variables!.tabPreset2 = val.toLowerCase());
+                  _save();
+                },
+              ),
               const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("header levels", style: TextStyle(fontSize: 13)),
-                  Text("font", style: TextStyle(color: Pallet.font3.withValues(alpha: 0.5), fontSize: 12)),
+                  Text(
+                    "font",
+                    style: TextStyle(
+                      color: Pallet.font3.withValues(alpha: 0.5),
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
-              _buildFontDropdownRow("h1", (variables!.titleFont ?? 'title').toLowerCase(), available, (val) {
-                setState(() => variables!.titleFont = val.toLowerCase());
-                _save();
-              }),
+              _buildFontDropdownRow(
+                "h1",
+                (variables!.titleFont ?? 'title').toLowerCase(),
+                available,
+                (val) {
+                  setState(() => variables!.titleFont = val.toLowerCase());
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildFontDropdownRow("h2", (variables!.headingFont ?? 'heading').toLowerCase(), available, (val) {
-                setState(() => variables!.headingFont = val.toLowerCase());
-                _save();
-              }),
+              _buildFontDropdownRow(
+                "h2",
+                (variables!.headingFont ?? 'heading').toLowerCase(),
+                available,
+                (val) {
+                  setState(() => variables!.headingFont = val.toLowerCase());
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildFontDropdownRow("h3", (variables!.subHeadingFont ?? 'sub heading').toLowerCase(), available, (val) {
-                setState(() => variables!.subHeadingFont = val.toLowerCase());
-                _save();
-              }),
+              _buildFontDropdownRow(
+                "h3",
+                (variables!.subHeadingFont ?? 'sub heading').toLowerCase(),
+                available,
+                (val) {
+                  setState(() => variables!.subHeadingFont = val.toLowerCase());
+                  _save();
+                },
+              ),
             ],
           ),
         ),
@@ -166,7 +209,12 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
     );
   }
 
-  Widget _buildFontDropdownRow(String label, String value, List<String> items, Function(String) onChanged) {
+  Widget _buildFontDropdownRow(
+    String label,
+    String value,
+    List<String> items,
+    Function(String) onChanged,
+  ) {
     return Row(
       children: [
         Expanded(
@@ -206,25 +254,53 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
           borderRadius: 10,
           child: Column(
             children: [
-              _buildInputRow("Process Width", (variables!.processWidth ?? 150).toString(), (val) {
-                setState(() => variables!.processWidth = double.tryParse(val) ?? variables!.processWidth);
-                _save();
-              }),
+              _buildInputRow(
+                "Process Width",
+                (variables!.processWidth ?? 150).toString(),
+                (val) {
+                  setState(
+                    () => variables!.processWidth =
+                        double.tryParse(val) ?? variables!.processWidth,
+                  );
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildInputRow("Condition Width", (variables!.conditionWidth ?? 120).toString(), (val) {
-                setState(() => variables!.conditionWidth = double.tryParse(val) ?? variables!.conditionWidth);
-                _save();
-              }),
+              _buildInputRow(
+                "Condition Width",
+                (variables!.conditionWidth ?? 120).toString(),
+                (val) {
+                  setState(
+                    () => variables!.conditionWidth =
+                        double.tryParse(val) ?? variables!.conditionWidth,
+                  );
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildInputRow("Terminal Width", (variables!.terminalWidth ?? 100).toString(), (val) {
-                setState(() => variables!.terminalWidth = double.tryParse(val) ?? variables!.terminalWidth);
-                _save();
-              }),
+              _buildInputRow(
+                "Terminal Width",
+                (variables!.terminalWidth ?? 100).toString(),
+                (val) {
+                  setState(
+                    () => variables!.terminalWidth =
+                        double.tryParse(val) ?? variables!.terminalWidth,
+                  );
+                  _save();
+                },
+              ),
               const SizedBox(height: 10),
-              _buildInputRow("Line Height", (variables!.lineHeight ?? 1.5).toString(), (val) {
-                setState(() => variables!.lineHeight = double.tryParse(val) ?? variables!.lineHeight);
-                _save();
-              }),
+              _buildInputRow(
+                "Line Height",
+                (variables!.lineHeight ?? 1.5).toString(),
+                (val) {
+                  setState(
+                    () => variables!.lineHeight =
+                        double.tryParse(val) ?? variables!.lineHeight,
+                  );
+                  _save();
+                },
+              ),
             ],
           ),
         ),
@@ -234,28 +310,32 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
 
   Widget _buildFontSettingsSection() {
     return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             const Text("document presets"),
             SmallButton(
               label: "add preset",
               onPress: () => _showFontSettingDialog(null),
             ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 15,
-                runSpacing: 15,
-                children: fontSettings.isEmpty
-                    ? [
-                        const Text("No presets yet",
-                            style: TextStyle(fontSize: 12, color: Colors.grey))
-                      ]
-              : fontSettings.map((font) => _buildFontSettingCard(font)).toList(),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 15,
+          runSpacing: 15,
+          children: fontSettings.isEmpty
+              ? [
+                  const Text(
+                    "No presets yet",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ]
+              : fontSettings
+                    .map((font) => _buildFontSettingCard(font))
+                    .toList(),
         ),
       ],
     );
@@ -286,8 +366,11 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
               Expanded(
                 child: available.isEmpty
                     ? const Center(
-                        child: Text("No custom fonts added",
-                            style: TextStyle(fontSize: 12, color: Colors.grey)))
+                        child: Text(
+                          "No custom fonts added",
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      )
                     : SingleChildScrollView(
                         child: Column(
                           children: available
@@ -339,7 +422,7 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
   void _showGoogleFontsSearchDialog() {
     final searchController = TextEditingController();
     List<String> filteredFonts = List.from(_allGoogleFonts);
-    
+
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -360,7 +443,10 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                     onChanged: (val) {
                       setDialogState(() {
                         filteredFonts = _allGoogleFonts
-                            .where((f) => f.toLowerCase().contains(val.toLowerCase()))
+                            .where(
+                              (f) =>
+                                  f.toLowerCase().contains(val.toLowerCase()),
+                            )
                             .toList();
                       });
                     },
@@ -371,8 +457,9 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                       itemCount: filteredFonts.length,
                       itemBuilder: (context, index) {
                         final font = filteredFonts[index];
-                        final isAdded = variables?.googleFonts?.contains(font) ?? false;
-                        
+                        final isAdded =
+                            variables?.googleFonts?.contains(font) ?? false;
+
                         return ListTile(
                           title: Text(
                             font,
@@ -381,15 +468,19 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                           trailing: isAdded
                               ? const Icon(Icons.check, color: Colors.green)
                               : const Icon(Icons.add),
-                          onTap: isAdded ? null : () {
-                            setState(() {
-                              variables!.googleFonts ??= [];
-                              if (!variables!.googleFonts!.contains(font)) {
-                                variables!.googleFonts!.add(font);
-                              }
-                            });
-                            setDialogState(() {});
-                          },
+                          onTap: isAdded
+                              ? null
+                              : () {
+                                  setState(() {
+                                    variables!.googleFonts ??= [];
+                                    if (!variables!.googleFonts!.contains(
+                                      font,
+                                    )) {
+                                      variables!.googleFonts!.add(font);
+                                    }
+                                  });
+                                  setDialogState(() {});
+                                },
                         );
                       },
                     ),
@@ -410,26 +501,119 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
   }
 
   static const List<String> _allGoogleFonts = [
-    'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Source Sans Pro', 
-    'Roboto Condensed', 'Oswald', 'Roboto Mono', 'Raleway', 'Inter', 'Noto Sans', 
-    'Mukta', 'Ubuntu', 'Playfair Display', 'Lora', 'PT Sans', 'Nunito', 'Roboto Slab', 
-    'Merriweather', 'PT Serif', 'Open Sans Condensed', 'Kanit', 'Titillium Web', 
-    'Heebo', 'Muli', 'Nunito Sans', 'Quicksand', 'Fira Sans', 'Libre Franklin', 
-    'Inconsolata', 'Oxygen', 'Josefin Sans', 'Work Sans', 'Anton', 'Arimo', 'Karla', 
-    'Dosis', 'Hind', 'Cabin', 'Abel', 'Crimson Text', 'Bitter', 'Lobster', 
-    'PT Sans Narrow', 'Dancing Script', 'Pacifico', 'Exo 2', 'Questrial', 
-    'Shadows Into Light', 'Fjalla One', 'Caveat', 'Source Code Pro', 'Indie Flower', 
-    'Arvo', 'Crimson Pro', 'Merriweather Sans', 'Ubuntu Condensed', 'Catamaran', 
-    'Signika', 'Bree Serif', 'Play', 'Rubik', 'Comfortaa', 'Domine', 'Asap', 
-    'Patua One', 'Maven Pro', 'Assistant', 'Archivo Narrow', 'Acme', 'Satisfy', 
-    'Yellowtail', 'EB Garamond', 'Courgette', 'Josefin Slab', 'Volkhov', 'Rokkitt', 
-    'Kalam', 'Righteous', 'Philosopher', 'Fredoka One', 'Concert One', 'Russo One', 
-    'Architects Daughter', 'Orbitron', 'Exo', 'Lobster Two', 'Cookie', 'Khand', 
-    'Vollkorn', 'Amatic SC', 'Bricolage Grotesque', 'Figtree', 'Gelasio', 
-    'Hanken Grotesque', 'Instrument Sans', 'Jura', 'Kumbh Sans', 
-    'League Spartan', 'Lexend', 'Manrope', 'Onest', 'Outfit', 'Plus Jakarta Sans', 
-    'Public Sans', 'Red Hat Display', 'Schibsted Grotesque', 'Sen', 'Sora', 
-    'Space Grotesque', 'Syne', 'Urbanist'
+    'Roboto',
+    'Open Sans',
+    'Lato',
+    'Montserrat',
+    'Poppins',
+    'Source Sans Pro',
+    'Roboto Condensed',
+    'Oswald',
+    'Roboto Mono',
+    'Raleway',
+    'Inter',
+    'Noto Sans',
+    'Mukta',
+    'Ubuntu',
+    'Playfair Display',
+    'Lora',
+    'PT Sans',
+    'Nunito',
+    'Roboto Slab',
+    'Merriweather',
+    'PT Serif',
+    'Open Sans Condensed',
+    'Kanit',
+    'Titillium Web',
+    'Heebo',
+    'Muli',
+    'Nunito Sans',
+    'Quicksand',
+    'Fira Sans',
+    'Libre Franklin',
+    'Inconsolata',
+    'Oxygen',
+    'Josefin Sans',
+    'Work Sans',
+    'Anton',
+    'Arimo',
+    'Karla',
+    'Dosis',
+    'Hind',
+    'Cabin',
+    'Abel',
+    'Crimson Text',
+    'Bitter',
+    'Lobster',
+    'PT Sans Narrow',
+    'Dancing Script',
+    'Pacifico',
+    'Exo 2',
+    'Questrial',
+    'Shadows Into Light',
+    'Fjalla One',
+    'Caveat',
+    'Source Code Pro',
+    'Indie Flower',
+    'Arvo',
+    'Crimson Pro',
+    'Merriweather Sans',
+    'Ubuntu Condensed',
+    'Catamaran',
+    'Signika',
+    'Bree Serif',
+    'Play',
+    'Rubik',
+    'Comfortaa',
+    'Domine',
+    'Asap',
+    'Patua One',
+    'Maven Pro',
+    'Assistant',
+    'Archivo Narrow',
+    'Acme',
+    'Satisfy',
+    'Yellowtail',
+    'EB Garamond',
+    'Courgette',
+    'Josefin Slab',
+    'Volkhov',
+    'Rokkitt',
+    'Kalam',
+    'Righteous',
+    'Philosopher',
+    'Fredoka One',
+    'Concert One',
+    'Russo One',
+    'Architects Daughter',
+    'Orbitron',
+    'Exo',
+    'Lobster Two',
+    'Cookie',
+    'Khand',
+    'Vollkorn',
+    'Amatic SC',
+    'Bricolage Grotesque',
+    'Figtree',
+    'Gelasio',
+    'Hanken Grotesque',
+    'Instrument Sans',
+    'Jura',
+    'Kumbh Sans',
+    'League Spartan',
+    'Lexend',
+    'Manrope',
+    'Onest',
+    'Outfit',
+    'Plus Jakarta Sans',
+    'Public Sans',
+    'Red Hat Display',
+    'Schibsted Grotesque',
+    'Sen',
+    'Sora',
+    'Space Grotesque',
+    'Syne',
+    'Urbanist',
   ];
 
   Widget _buildFontSettingCard(FontSetting font) {
@@ -447,7 +631,10 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
               Expanded(
                 child: Text(
                   font.name,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Row(
@@ -471,7 +658,10 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Text("Size: ", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              const Text(
+                "Size: ",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
               FontSizeEditor(
                 initialSize: font.fontSize ?? 14.0,
                 onSizeChanged: (newSize) async {
@@ -496,7 +686,8 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
             children: [
               FontFamilySearchDropdown(
                 value: font.fontFamily ?? 'Roboto',
-                items: variables?.googleFonts ?? ['Roboto', 'Montserrat', 'Lato'],
+                items:
+                    variables?.googleFonts ?? ['Roboto', 'Montserrat', 'Lato'],
                 onChanged: (newFamily) async {
                   font.fontFamily = newFamily;
                   await client.admin.saveFontSetting(font);
@@ -507,8 +698,17 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
               DocumentDropdown(
                 value: font.fontWeight ?? 'normal',
                 items: const [
-                  'normal', 'bold', 'w100', 'w200', 'w300', 'w400', 
-                  'w500', 'w600', 'w700', 'w800', 'w900'
+                  'normal',
+                  'bold',
+                  'w100',
+                  'w200',
+                  'w300',
+                  'w400',
+                  'w500',
+                  'w600',
+                  'w700',
+                  'w800',
+                  'w900',
                 ],
                 onChanged: (newWeight) async {
                   font.fontWeight = newWeight;
@@ -521,11 +721,16 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Text("Line Height: ", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              const Text(
+                "Line Height: ",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
               SizedBox(
                 width: 80,
                 child: SmallTextBox(
-                  controller: TextEditingController(text: (font.lineHeight ?? 1.5).toString()),
+                  controller: TextEditingController(
+                    text: (font.lineHeight ?? 1.5).toString(),
+                  ),
                   onType: (value) async {
                     if (value.isEmpty) return;
                     final newLineHeight = double.tryParse(value);
@@ -546,11 +751,19 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
 
   void _showFontSettingDialog(FontSetting? font) {
     final nameController = TextEditingController(text: font?.name ?? '');
-    final sizeController = TextEditingController(text: font?.fontSize?.toString() ?? '');
-    final familyController = TextEditingController(text: font?.fontFamily ?? '');
-    final weightController = TextEditingController(text: font?.fontWeight ?? '');
+    final sizeController = TextEditingController(
+      text: font?.fontSize?.toString() ?? '',
+    );
+    final familyController = TextEditingController(
+      text: font?.fontFamily ?? '',
+    );
+    final weightController = TextEditingController(
+      text: font?.fontWeight ?? '',
+    );
     final colorController = TextEditingController(text: font?.color ?? '');
-    final lineHeightController = TextEditingController(text: font?.lineHeight?.toString() ?? '');
+    final lineHeightController = TextEditingController(
+      text: font?.lineHeight?.toString() ?? '',
+    );
     int selectedHeaderLevel = font?.headerLevel ?? 0;
 
     showDialog(
@@ -577,7 +790,9 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                 ),
                 TextField(
                   controller: weightController,
-                  decoration: const InputDecoration(labelText: "Font Weight (e.g., bold, normal)"),
+                  decoration: const InputDecoration(
+                    labelText: "Font Weight (e.g., bold, normal)",
+                  ),
                 ),
                 TextField(
                   controller: colorController,
@@ -585,7 +800,9 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                 ),
                 TextField(
                   controller: lineHeightController,
-                  decoration: const InputDecoration(labelText: "Line Height (e.g., 1.5)"),
+                  decoration: const InputDecoration(
+                    labelText: "Line Height (e.g., 1.5)",
+                  ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
                 const SizedBox(height: 10),
@@ -620,9 +837,15 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
                   id: font?.id,
                   name: nameController.text,
                   fontSize: double.tryParse(sizeController.text),
-                  fontFamily: familyController.text.isEmpty ? null : familyController.text,
-                  fontWeight: weightController.text.isEmpty ? null : weightController.text,
-                  color: colorController.text.isEmpty ? null : colorController.text,
+                  fontFamily: familyController.text.isEmpty
+                      ? null
+                      : familyController.text,
+                  fontWeight: weightController.text.isEmpty
+                      ? null
+                      : weightController.text,
+                  color: colorController.text.isEmpty
+                      ? null
+                      : colorController.text,
                   lineHeight: double.tryParse(lineHeightController.text),
                   headerLevel: selectedHeaderLevel,
                 );
@@ -638,7 +861,11 @@ class _DocumentationSettingsState extends State<DocumentationSettings> {
     );
   }
 
-  Widget _buildInputRow(String label, String value, Function(String) onChanged) {
+  Widget _buildInputRow(
+    String label,
+    String value,
+    Function(String) onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

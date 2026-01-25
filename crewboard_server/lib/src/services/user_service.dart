@@ -77,7 +77,6 @@ class UserService {
 
       stdout.writeln('Auth sync completed for: ${user.userName}');
 
-
       // 7. Create default resources (Buckets in all existing apps)
       {
         final apps = await PlannerApp.db.find(

@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '../../../../widgets/glass_morph.dart';
 import '../../../../widgets/button.dart';
 import '../../../../widgets/text_box.dart';
-import '../../../../config/palette.dart'; 
+import '../../../../config/palette.dart';
 
 import 'types.dart';
 import 'flows_controller.dart';
@@ -88,7 +88,7 @@ class _EditFlowState extends State<EditFlow> {
 
   @override
   Widget build(BuildContext context) {
-    // Attempt to find controller, handle if not registered yet safely? 
+    // Attempt to find controller, handle if not registered yet safely?
     // Usually Get.find throws if not found, but assuming usage within context where it exists.
     final FlowsController controller = Get.find<FlowsController>();
 
@@ -270,8 +270,12 @@ class _EditFlowState extends State<EditFlow> {
                 SmallTextBox(
                   controller: _widthController,
                   onType: (value) async {
-                    if (!(controller.systemVariables.value?.allowEdit ?? true)) {
-                      Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                    if (!(controller.systemVariables.value?.allowEdit ??
+                        true)) {
+                      Get.snackbar(
+                        "Permission Denied",
+                        "Editing is disabled in settings",
+                      );
                       _widthController.text = selectedFlow.width.toString();
                       return;
                     }
@@ -299,8 +303,12 @@ class _EditFlowState extends State<EditFlow> {
                   controller: _valueController,
                   maxLines: 5,
                   onType: (value) {
-                    if (!(controller.systemVariables.value?.allowEdit ?? true)) {
-                      Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                    if (!(controller.systemVariables.value?.allowEdit ??
+                        true)) {
+                      Get.snackbar(
+                        "Permission Denied",
+                        "Editing is disabled in settings",
+                      );
                       _valueController.text = selectedFlow.value;
                       return;
                     }
@@ -336,9 +344,19 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _downController,
                             onType: (value) {
-                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
-                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
-                                _downController.text = selectedFlow.down.lineHeight.toString();
+                              if (!(controller
+                                      .systemVariables
+                                      .value
+                                      ?.allowEdit ??
+                                  true)) {
+                                Get.snackbar(
+                                  "Permission Denied",
+                                  "Editing is disabled in settings",
+                                );
+                                _downController.text = selectedFlow
+                                    .down
+                                    .lineHeight
+                                    .toString();
                                 return;
                               }
                               if (value.isNotEmpty &&
@@ -369,9 +387,19 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _leftController,
                             onType: (value) {
-                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
-                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
-                                _leftController.text = selectedFlow.left.lineHeight.toString();
+                              if (!(controller
+                                      .systemVariables
+                                      .value
+                                      ?.allowEdit ??
+                                  true)) {
+                                Get.snackbar(
+                                  "Permission Denied",
+                                  "Editing is disabled in settings",
+                                );
+                                _leftController.text = selectedFlow
+                                    .left
+                                    .lineHeight
+                                    .toString();
                                 return;
                               }
                               if (value.isNotEmpty &&
@@ -402,9 +430,19 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _rightController,
                             onType: (value) {
-                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
-                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
-                                _rightController.text = selectedFlow.right.lineHeight.toString();
+                              if (!(controller
+                                      .systemVariables
+                                      .value
+                                      ?.allowEdit ??
+                                  true)) {
+                                Get.snackbar(
+                                  "Permission Denied",
+                                  "Editing is disabled in settings",
+                                );
+                                _rightController.text = selectedFlow
+                                    .right
+                                    .lineHeight
+                                    .toString();
                                 return;
                               }
                               if (value.isNotEmpty &&
@@ -425,8 +463,12 @@ class _EditFlowState extends State<EditFlow> {
                 if (controller.systemVariables.value?.showDelete ?? true)
                   InkWell(
                     onTap: () {
-                      if (!(controller.systemVariables.value?.allowDelete ?? true)) {
-                        Get.snackbar("Permission Denied", "Deleting is disabled in settings");
+                      if (!(controller.systemVariables.value?.allowDelete ??
+                          true)) {
+                        Get.snackbar(
+                          "Permission Denied",
+                          "Deleting is disabled in settings",
+                        );
                         return;
                       }
                       if ((controller.isSelectingLoop.value ||
@@ -455,7 +497,10 @@ class _EditFlowState extends State<EditFlow> {
                         color: Pallet.inside1,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

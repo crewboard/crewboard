@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 // ignore_for_file: public_member_api_docs
 
 import 'dart:collection';
@@ -60,7 +60,9 @@ class _DeferPointerRenderObjectWidget extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, DeferPointerRenderObject renderObject) {
+    BuildContext context,
+    DeferPointerRenderObject renderObject,
+  ) {
     renderObject
       ..link = link
       ..deferPaint = deferPaint;

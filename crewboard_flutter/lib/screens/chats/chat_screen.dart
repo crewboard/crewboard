@@ -104,7 +104,10 @@ class Messages extends StatelessWidget {
                           name: selectedRoom.roomName ?? "",
                           size: 32,
                           fontSize: 14,
-                          color: Pallet.getRoomColor(selectedRoom, sessionManager.authInfo?.authUserId),
+                          color: Pallet.getRoomColor(
+                            selectedRoom,
+                            sessionManager.authInfo?.authUserId,
+                          ),
                           style: ProfileIconStyle.outlined,
                         ),
                         const SizedBox(width: 12),
@@ -204,17 +207,21 @@ class Messages extends StatelessWidget {
                                   reverse: true,
                                   itemCount: messagesController.messages.length,
                                   itemBuilder: (context, index) {
-                                    final msg = messagesController.messages[index];
+                                    final msg =
+                                        messagesController.messages[index];
                                     bool sameUser = false;
-                                    if (index + 1 < messagesController.messages.length) {
-                                      final olderMsg = messagesController.messages[index + 1];
+                                    if (index + 1 <
+                                        messagesController.messages.length) {
+                                      final olderMsg = messagesController
+                                          .messages[index + 1];
                                       if (olderMsg.userId == msg.userId) {
                                         sameUser = true;
                                       }
                                     }
                                     return MessageBubble(
                                       message: msg.message,
-                                      isMe: msg.isMe, // Use the extension method to determine the sender
+                                      isMe: msg
+                                          .isMe, // Use the extension method to determine the sender
                                       userId: msg.userId,
                                       sameUser: sameUser,
                                       createdAt: msg.createdAt,
@@ -226,7 +233,6 @@ class Messages extends StatelessWidget {
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -284,7 +290,6 @@ class Messages extends StatelessWidget {
   }
 }
 
-
 class Keyboard extends StatefulWidget {
   const Keyboard({super.key});
 
@@ -324,11 +329,15 @@ class _KeyboardState extends State<Keyboard> {
       return ChatInputKeyboard(
         controller: messagesController.messageController,
         focusNode: _messageFocusNode,
-        typingUserNames: messagesController.typingUsers.map((e) => e.userName).toList(),
+        typingUserNames: messagesController.typingUsers
+            .map((e) => e.userName)
+            .toList(),
         showAutocomplete: messagesController.showAutocomplete.value,
         autocompleteEmojis: messagesController.autocompleteEmojis,
-        selectedAutocompleteIndex: messagesController.selectedAutocompleteIndex.value,
-        onAutocompleteSelected: (emoji) => messagesController.selectEmojiFromAutocomplete(emoji),
+        selectedAutocompleteIndex:
+            messagesController.selectedAutocompleteIndex.value,
+        onAutocompleteSelected: (emoji) =>
+            messagesController.selectEmojiFromAutocomplete(emoji),
         onChanged: (text) => messagesController.onTextChanged(text),
         onSubmitted: (value) {
           if (messagesController.attachedFiles.isNotEmpty) {
@@ -355,9 +364,23 @@ class _KeyboardState extends State<Keyboard> {
             allowMultiple: true,
             type: FileType.custom,
             allowedExtensions: [
-              'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp',
-              'mp4', 'mov', 'avi', 'mkv', 'webm',
-              'mp3', 'wav', 'm4a', 'flac', 'aac', 'ogg',
+              'jpg',
+              'jpeg',
+              'png',
+              'gif',
+              'webp',
+              'bmp',
+              'mp4',
+              'mov',
+              'avi',
+              'mkv',
+              'webm',
+              'mp3',
+              'wav',
+              'm4a',
+              'flac',
+              'aac',
+              'ogg',
             ],
           );
 
@@ -373,5 +396,3 @@ class _KeyboardState extends State<Keyboard> {
     });
   }
 }
-
-

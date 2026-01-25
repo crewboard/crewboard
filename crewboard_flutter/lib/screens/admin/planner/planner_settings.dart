@@ -19,7 +19,7 @@ class _PlannerSettingsState extends State<PlannerSettings> {
   void initState() {
     super.initState();
     _fetchData();
-    
+
     // Listen for refreshes
     refreshStream.listen((event) {
       if (event == "get_admin_planner_data") {
@@ -52,7 +52,7 @@ class _PlannerSettingsState extends State<PlannerSettings> {
           style: TextStyle(fontSize: 16, color: Pallet.font3),
         ),
         const SizedBox(height: 10),
-        
+
         Expanded(
           child: SingleChildScrollView(
             child: Wrap(
@@ -67,7 +67,7 @@ class _PlannerSettingsState extends State<PlannerSettings> {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -88,7 +88,11 @@ class _PlannerSettingsState extends State<PlannerSettings> {
             children: [
               _buildOsScriptRow("windows", type, null),
               const SizedBox(height: 10),
-              _buildOsScriptRow("ubuntu", type, type == "push" ? "push.bat" : null),
+              _buildOsScriptRow(
+                "ubuntu",
+                type,
+                type == "push" ? "push.bat" : null,
+              ),
               const SizedBox(height: 10),
               _buildOsScriptRow("mac", type, null),
             ],
@@ -106,7 +110,13 @@ class _PlannerSettingsState extends State<PlannerSettings> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(os, style: const TextStyle(fontSize: 13)),
-            Text(type, style: TextStyle(color: Pallet.font3.withValues(alpha: 0.5), fontSize: 12)),
+            Text(
+              type,
+              style: TextStyle(
+                color: Pallet.font3.withValues(alpha: 0.5),
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 5),
@@ -168,7 +178,10 @@ class _StatusesSectionState extends State<StatusesSection> {
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: GlassMorph(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
                         borderRadius: 5,
                         color: Pallet.inside1,
                         child: Row(
@@ -176,25 +189,40 @@ class _StatusesSectionState extends State<StatusesSection> {
                             if (editIdx == i)
                               Expanded(
                                 child: SmallTextBox(
-                                  controller: TextEditingController(text: item.statusName),
+                                  controller: TextEditingController(
+                                    text: item.statusName,
+                                  ),
                                   onEnter: (val) async {
-                                    await client.planner.addStatus(item.statusId, val);
+                                    await client.planner.addStatus(
+                                      item.statusId,
+                                      val,
+                                    );
                                     refreshSink.add("get_admin_planner_data");
                                     setState(() => editIdx = null);
                                   },
                                 ),
                               )
                             else
-                              Expanded(child: Text(item.statusName, style: const TextStyle(fontSize: 13))),
-                            
+                              Expanded(
+                                child: Text(
+                                  item.statusName,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+
                             InkWell(
-                              onTap: () => setState(() => editIdx = (editIdx == i ? null : i)),
+                              onTap: () => setState(
+                                () => editIdx = (editIdx == i ? null : i),
+                              ),
                               child: const Icon(Icons.edit, size: 16),
                             ),
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () async {
-                                await client.planner.deletePlannerVariable('status', item.statusId);
+                                await client.planner.deletePlannerVariable(
+                                  'status',
+                                  item.statusId,
+                                );
                                 refreshSink.add("get_admin_planner_data");
                               },
                               child: const Icon(Icons.delete, size: 16),
@@ -254,7 +282,10 @@ class _TicketTypesSectionState extends State<TicketTypesSection> {
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: GlassMorph(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
                         borderRadius: 5,
                         color: Pallet.inside1,
                         child: Row(
@@ -262,34 +293,54 @@ class _TicketTypesSectionState extends State<TicketTypesSection> {
                             if (editIdx == i)
                               Expanded(
                                 child: SmallTextBox(
-                                  controller: TextEditingController(text: item.typeName),
+                                  controller: TextEditingController(
+                                    text: item.typeName,
+                                  ),
                                   onEnter: (val) async {
-                                    await client.planner.addTicketType(item.typeId, val, item.colorId); 
+                                    await client.planner.addTicketType(
+                                      item.typeId,
+                                      val,
+                                      item.colorId,
+                                    );
                                     refreshSink.add("get_admin_planner_data");
                                     setState(() => editIdx = null);
                                   },
                                 ),
                               )
                             else
-                              Expanded(child: Text(item.typeName, style: const TextStyle(fontSize: 13))),
+                              Expanded(
+                                child: Text(
+                                  item.typeName,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
 
                             const SizedBox(width: 5),
                             ColorPicker(
                               selectedColorId: item.colorId,
                               onColorSelected: (sysColor) async {
-                                await client.planner.addTicketType(item.typeId, item.typeName, sysColor.id!);
+                                await client.planner.addTicketType(
+                                  item.typeId,
+                                  item.typeName,
+                                  sysColor.id!,
+                                );
                                 refreshSink.add("get_admin_planner_data");
                               },
                             ),
                             const SizedBox(width: 5),
                             InkWell(
-                              onTap: () => setState(() => editIdx = (editIdx == i ? null : i)),
+                              onTap: () => setState(
+                                () => editIdx = (editIdx == i ? null : i),
+                              ),
                               child: const Icon(Icons.edit, size: 16),
                             ),
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () async {
-                                await client.planner.deletePlannerVariable('type', item.typeId);
+                                await client.planner.deletePlannerVariable(
+                                  'type',
+                                  item.typeId,
+                                );
                                 refreshSink.add("get_admin_planner_data");
                               },
                               child: const Icon(Icons.delete, size: 16),
@@ -356,36 +407,68 @@ class _PrioritiesSectionState extends State<PrioritiesSection> {
                             child: InkWell(
                               onTap: () => setState(() => selectedIdx = i),
                               child: GlassMorph(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 8,
+                                ),
                                 borderRadius: 5,
-                                color: isSelected ? Colors.white.withOpacity(0.15) : Pallet.inside1,
+                                color: isSelected
+                                    ? Colors.white.withOpacity(0.15)
+                                    : Pallet.inside1,
                                 child: Row(
                                   children: [
-                                    Text("${item.priority}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                    Text(
+                                      "${item.priority}",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
                                     const SizedBox(width: 5),
                                     if (editIdx == i)
                                       Expanded(
                                         child: SmallTextBox(
-                                          controller: TextEditingController(text: item.priorityName),
+                                          controller: TextEditingController(
+                                            text: item.priorityName,
+                                          ),
                                           onEnter: (val) async {
-                                            await client.planner.addPriority(item.priorityId, val);
-                                            refreshSink.add("get_admin_planner_data");
+                                            await client.planner.addPriority(
+                                              item.priorityId,
+                                              val,
+                                            );
+                                            refreshSink.add(
+                                              "get_admin_planner_data",
+                                            );
                                             setState(() => editIdx = null);
                                           },
                                         ),
                                       )
                                     else
-                                      Expanded(child: Text(item.priorityName, style: const TextStyle(fontSize: 13))),
-                                    
+                                      Expanded(
+                                        child: Text(
+                                          item.priorityName,
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      ),
+
                                     InkWell(
-                                      onTap: () => setState(() => editIdx = (editIdx == i ? null : i)),
+                                      onTap: () => setState(
+                                        () =>
+                                            editIdx = (editIdx == i ? null : i),
+                                      ),
                                       child: const Icon(Icons.edit, size: 16),
                                     ),
                                     const SizedBox(width: 8),
                                     InkWell(
                                       onTap: () async {
-                                        await client.planner.deletePlannerVariable('priority', item.priorityId);
-                                        refreshSink.add("get_admin_planner_data");
+                                        await client.planner
+                                            .deletePlannerVariable(
+                                              'priority',
+                                              item.priorityId,
+                                            );
+                                        refreshSink.add(
+                                          "get_admin_planner_data",
+                                        );
                                       },
                                       child: const Icon(Icons.delete, size: 16),
                                     ),
@@ -404,15 +487,24 @@ class _PrioritiesSectionState extends State<PrioritiesSection> {
                         _buildArrowButton(Icons.arrow_drop_up, () async {
                           if (selectedIdx != null && selectedIdx! > 0) {
                             final item = widget.items[selectedIdx!];
-                            await client.planner.changePriority(item.priorityId, item.priority, 'up');
+                            await client.planner.changePriority(
+                              item.priorityId,
+                              item.priority,
+                              'up',
+                            );
                             setState(() => selectedIdx = selectedIdx! - 1);
                             refreshSink.add("get_admin_planner_data");
                           }
                         }),
                         _buildArrowButton(Icons.arrow_drop_down, () async {
-                          if (selectedIdx != null && selectedIdx! < widget.items.length - 1) {
+                          if (selectedIdx != null &&
+                              selectedIdx! < widget.items.length - 1) {
                             final item = widget.items[selectedIdx!];
-                            await client.planner.changePriority(item.priorityId, item.priority, 'down');
+                            await client.planner.changePriority(
+                              item.priorityId,
+                              item.priority,
+                              'down',
+                            );
                             setState(() => selectedIdx = selectedIdx! + 1);
                             refreshSink.add("get_admin_planner_data");
                           }

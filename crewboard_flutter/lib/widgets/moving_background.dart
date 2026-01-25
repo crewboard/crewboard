@@ -15,14 +15,16 @@ class MovingBackground extends StatelessWidget {
 
     return Obx(() {
       final currentTheme = themeController.currentTheme;
-      
+
       // Determine if it's a glass theme
-      final isGlass = currentTheme == AppTheme.glassDark || 
-                      currentTheme == AppTheme.glassLight;
-      
+      final isGlass =
+          currentTheme == AppTheme.glassDark ||
+          currentTheme == AppTheme.glassLight;
+
       // Determine if it's a light theme
-      final isLight = currentTheme == AppTheme.glassLight || 
-                      currentTheme == AppTheme.classicLight;
+      final isLight =
+          currentTheme == AppTheme.glassLight ||
+          currentTheme == AppTheme.classicLight;
 
       if (isGlass) {
         // Glass themes with moving particles
@@ -62,7 +64,7 @@ class MovingBackground extends StatelessWidget {
                 sigmaY: 80,
               ),
               child: Container(
-                color: isLight 
+                color: isLight
                     ? Colors.white.withOpacity(0.5)
                     : Colors.black.withOpacity(0.5),
               ),

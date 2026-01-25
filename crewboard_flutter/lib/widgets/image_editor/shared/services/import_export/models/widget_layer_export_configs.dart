@@ -1,4 +1,4 @@
-﻿/// A class that represents the export configurations for a widget layer.
+/// A class that represents the export configurations for a widget layer.
 class WidgetLayerExportConfigs {
   /// Creates a [WidgetLayerExportConfigs] instance with the provided
   /// configuration values.
@@ -19,13 +19,13 @@ class WidgetLayerExportConfigs {
     this.fileUrl,
     this.meta,
   }) : assert(
-          (id != null ? 1 : 0) +
-                  (networkUrl != null ? 1 : 0) +
-                  (assetPath != null ? 1 : 0) +
-                  (fileUrl != null ? 1 : 0) <=
-              1,
-          'Only one parameter can be non-null',
-        );
+         (id != null ? 1 : 0) +
+                 (networkUrl != null ? 1 : 0) +
+                 (assetPath != null ? 1 : 0) +
+                 (fileUrl != null ? 1 : 0) <=
+             1,
+         'Only one parameter can be non-null',
+       );
 
   /// Creates a [WidgetLayerExportConfigs] instance from a [Map].
   ///

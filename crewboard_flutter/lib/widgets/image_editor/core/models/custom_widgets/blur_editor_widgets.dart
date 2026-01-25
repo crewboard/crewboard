@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/features/blur_editor/blur_editor.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_appbar.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/reactive_widgets/reactive_custom_widget.dart';
@@ -44,11 +44,15 @@ class BlurEditorWidgets extends CustomWidgetsStandaloneEditor<BlurEditorState> {
   @override
   BlurEditorWidgets copyWith({
     ReactiveAppbar? Function(
-            BlurEditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      BlurEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            BlurEditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      BlurEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<BlurEditorState>? bodyItems,
     CustomBodyItems<BlurEditorState>? bodyItemsRecorded,
     CustomSlider<BlurEditorState>? slider,

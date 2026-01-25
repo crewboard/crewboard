@@ -38,7 +38,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
         while (playing) {
           print("started");
           await Future.delayed(const Duration(milliseconds: 200));
-          RenderBox renderBox = screenKey.currentContext!.findRenderObject() as RenderBox;
+          RenderBox renderBox =
+              screenKey.currentContext!.findRenderObject() as RenderBox;
           Window.stageWidth = renderBox.size.width;
 
           if (!playing) {
@@ -308,7 +309,9 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
   }
 
   selectRightNode(int idx) {
-    mouseX = flowie.flows[idx].x + flowie.flows[idx].width + flowie.flows[idx].right.lineHeight;
+    mouseX = flowie.flows[idx].x +
+        flowie.flows[idx].width +
+        flowie.flows[idx].right.lineHeight;
     mouseY = flowie.flows[idx].y + flowie.flows[idx].height / 2;
     mouseX -= 23;
     mouseY -= 8;
@@ -390,7 +393,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
           }
         }
 
-        debugPrint('Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
+        debugPrint(
+            'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
       },
       child: SizedBox(
         width: Window.fullWidth,
@@ -409,7 +413,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
                       return an.Animate(
                         controller: _controller,
                         effects: const [
-                          an.ScaleEffect(duration: Duration(milliseconds: 1000)),
+                          an.ScaleEffect(
+                              duration: Duration(milliseconds: 1000)),
                           an.FadeEffect(duration: Duration(milliseconds: 1000))
                         ],
                         child: Container(
@@ -478,7 +483,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
                                       width: 50,
                                       height: 30,
                                       // color: Colors.red,
-                                      child: Lottie.asset('assets/white_select.json')))
+                                      child: Lottie.asset(
+                                          'assets/white_select.json')))
                             ],
                           ),
                         ),
@@ -512,19 +518,24 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
                                     height: 15,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(color: Colors.red, width: 3)),
+                                        border: Border.all(
+                                            color: Colors.red, width: 3)),
                                   ),
                                   SizedBox(height: 15),
                                   Container(
                                     width: 15,
                                     height: 15,
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.yellow, width: 3)),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.yellow, width: 3)),
                                   ),
                                   SizedBox(height: 15),
                                   Container(
                                     width: 15,
                                     height: 15,
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 3)),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.blue, width: 3)),
                                   ),
                                 ],
                               ),
@@ -537,9 +548,11 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   SizedBox(height: 8),
-                                  Text("condition", style: TextStyle(fontSize: 16)),
+                                  Text("condition",
+                                      style: TextStyle(fontSize: 16)),
                                   SizedBox(height: 8),
-                                  Text("process", style: TextStyle(fontSize: 16)),
+                                  Text("process",
+                                      style: TextStyle(fontSize: 16)),
                                 ],
                               )
                             ],
@@ -642,9 +655,12 @@ class LinePainter2 extends CustomPainter {
     flowie.update();
 
     for (var flow in flowie.flows) {
-      if (!(flow.type == FlowType.condition && flow.left.hasChild && flow.right.hasChild)) {
+      if (!(flow.type == FlowType.condition &&
+          flow.left.hasChild &&
+          flow.right.hasChild)) {
         start = Offset(flow.x + flow.width / 2, flow.y + flow.height);
-        end = Offset(flow.x + flow.width / 2, flow.y + flow.height + flow.down.lineHeight);
+        end = Offset(flow.x + flow.width / 2,
+            flow.y + flow.height + flow.down.lineHeight);
         canvas.drawLine(start, end, paint);
         if (!flow.down.hasChild) {
           myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
@@ -660,9 +676,11 @@ class LinePainter2 extends CustomPainter {
       if (flow.type == FlowType.condition) {
         // right
 
-        if (flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
+        if (flow.direction != Direction.left &&
+            !(flow.down.hasChild && flow.left.hasChild)) {
           start = Offset(flow.x + flow.width, flow.y + flow.height / 2);
-          end = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
+          end = Offset(flow.x + flow.width + flow.right.lineHeight,
+              flow.y + flow.height / 2);
           canvas.drawLine(start, end, paint);
           if (!flow.right.hasChild) {
             myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
@@ -676,7 +694,8 @@ class LinePainter2 extends CustomPainter {
         }
 
         // left
-        if (flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
+        if (flow.direction != Direction.right &&
+            !(flow.down.hasChild && flow.right.hasChild)) {
           start = Offset(flow.x, flow.y + flow.height / 2);
           end = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
           canvas.drawLine(start, end, paint);
@@ -690,15 +709,21 @@ class LinePainter2 extends CustomPainter {
             });
           }
         }
-        Offset down = Offset((flow.x + flow.width / 2) + 20, (flow.y + flow.height + flow.down.lineHeight / 2) - 10);
-        Offset left = Offset((flow.x - flow.left.lineHeight / 2) - 2, (flow.y + flow.height / 2) - 20);
-        Offset right = Offset((flow.x + flow.width + flow.right.lineHeight / 2) - 10, (flow.y + flow.height / 2) - 20);
+        Offset down = Offset((flow.x + flow.width / 2) + 20,
+            (flow.y + flow.height + flow.down.lineHeight / 2) - 10);
+        Offset left = Offset((flow.x - flow.left.lineHeight / 2) - 2,
+            (flow.y + flow.height / 2) - 20);
+        Offset right = Offset(
+            (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
+            (flow.y + flow.height / 2) - 20);
         // yes
         if (flow.yes == Direction.down) {
           paintText('yes', down, true);
           // right
           if (flow.right.hasChild) {
-            start = Offset((flow.x + flow.width + flow.right.lineHeight / 2) - 10, (flow.y + flow.height / 2) - 20);
+            start = Offset(
+                (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
+                (flow.y + flow.height / 2) - 20);
             paintText('no', right, false);
           }
           // left
@@ -780,7 +805,11 @@ class LinePainter extends CustomPainter {
 }
 
 class Condition extends StatelessWidget {
-  const Condition({super.key, required this.label, required this.width, required this.height});
+  const Condition(
+      {super.key,
+      required this.label,
+      required this.width,
+      required this.height});
   final String label;
   final double width;
   final double height;
@@ -799,7 +828,11 @@ class Condition extends StatelessWidget {
 }
 
 class Terminal extends StatelessWidget {
-  const Terminal({super.key, required this.label, required this.width, required this.height});
+  const Terminal(
+      {super.key,
+      required this.label,
+      required this.width,
+      required this.height});
   final String label;
   final double width;
   final double height;
@@ -810,14 +843,20 @@ class Terminal extends StatelessWidget {
       width: width,
       height: height,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(border: Border.all(color: Colors.red), borderRadius: BorderRadius.circular(40)),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.red),
+          borderRadius: BorderRadius.circular(40)),
       child: Center(child: Text(label, style: TextStyle(fontSize: 10))),
     );
   }
 }
 
 class Process extends StatelessWidget {
-  const Process({super.key, required this.label, required this.width, required this.height});
+  const Process(
+      {super.key,
+      required this.label,
+      required this.width,
+      required this.height});
   final String label;
   final double width;
   final double height;
@@ -847,7 +886,8 @@ class _EditFlowState extends State<EditFlow> {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         width: 150,
-        decoration: BoxDecoration(color: Pallet.inner2, borderRadius: BorderRadius.circular(5)),
+        decoration: BoxDecoration(
+            color: Pallet.inner2, borderRadius: BorderRadius.circular(5)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1045,7 +1085,14 @@ class SmallButton extends StatelessWidget {
 
 class TextBox extends StatelessWidget {
   const TextBox(
-      {super.key, this.controller, this.maxLines, this.onType, this.onEnter, this.hintText, this.focus, this.radius});
+      {super.key,
+      this.controller,
+      this.maxLines,
+      this.onType,
+      this.onEnter,
+      this.hintText,
+      this.focus,
+      this.radius});
   final TextEditingController? controller;
   final int? maxLines;
   final Function(String)? onType;
@@ -1087,7 +1134,8 @@ class AddFlow extends StatelessWidget {
         // margin: EdgeInsets.only(top: 10, right: 10),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         width: 150,
-        decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+            color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1124,7 +1172,9 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: label.toLowerCase().contains("loop") ? 5 : 8, horizontal: 10),
+      padding: EdgeInsets.symmetric(
+          vertical: label.toLowerCase().contains("loop") ? 5 : 8,
+          horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Pallet.inner2,
@@ -1142,21 +1192,24 @@ class Button extends StatelessWidget {
               child: Container(
                 width: 10,
                 height: 10,
-                decoration: BoxDecoration(border: Border.all(color: Colors.yellow, width: 2)),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.yellow, width: 2)),
               ),
             )
           else if (label.toLowerCase().contains("process"))
             Container(
               width: 12,
               height: 12,
-              decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 2)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue, width: 2)),
             )
           else if (label.toLowerCase().contains("terminal"))
             Container(
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.red, width: 2)),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.red, width: 2)),
             )
           else
             SizedBox(

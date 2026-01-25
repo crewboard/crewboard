@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/pro_image_editor.dart';
@@ -76,7 +76,9 @@ class FrostedGlassLoadingDialog extends StatelessWidget {
                         child: Text(
                           message,
                           style: const TextStyle(
-                              fontSize: 16, color: Colors.white),
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                           textAlign: TextAlign.start,
                         ),
                       ),

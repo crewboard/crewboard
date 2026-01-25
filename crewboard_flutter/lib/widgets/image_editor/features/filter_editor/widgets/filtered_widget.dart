@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:ui';
 
 // Flutter imports:
@@ -30,8 +30,10 @@ class FilteredWidget extends StatelessWidget {
     this.blankSize,
     this.videoPlayer,
     this.enableCachedSize = false,
-  }) : assert(image != null || videoPlayer != null || blankSize != null,
-            'Image or videoPlayer or blankSize cannot be null');
+  }) : assert(
+         image != null || videoPlayer != null || blankSize != null,
+         'Image or videoPlayer or blankSize cannot be null',
+       );
 
   /// A key that uniquely identifies the [ColorFilterGeneratorState] widget and
   /// allows access to its state. This can be used to manipulate the state of
@@ -131,14 +133,28 @@ class FilteredWidget extends StatelessWidget {
       ..add(DoubleProperty('width', width))
       ..add(DoubleProperty('height', height))
       ..add(DiagnosticsProperty<FilterMatrix>('filters', filters))
-      ..add(IterableProperty<TuneAdjustmentMatrix>(
-          'tuneAdjustments', tuneAdjustments))
+      ..add(
+        IterableProperty<TuneAdjustmentMatrix>(
+          'tuneAdjustments',
+          tuneAdjustments,
+        ),
+      )
       ..add(DoubleProperty('blurFactor', blurFactor))
       ..add(EnumProperty<BoxFit>('fit', fit))
-      ..add(FlagProperty('enableCachedSize',
-          value: enableCachedSize, ifTrue: 'cached size enabled'))
+      ..add(
+        FlagProperty(
+          'enableCachedSize',
+          value: enableCachedSize,
+          ifTrue: 'cached size enabled',
+        ),
+      )
       ..add(DiagnosticsProperty<EditorImage?>('image', image))
-      ..add(FlagProperty('hasVideoPlayer',
-          value: videoPlayer != null, ifTrue: 'video player set'));
+      ..add(
+        FlagProperty(
+          'hasVideoPlayer',
+          value: videoPlayer != null,
+          ifTrue: 'video player set',
+        ),
+      );
   }
 }

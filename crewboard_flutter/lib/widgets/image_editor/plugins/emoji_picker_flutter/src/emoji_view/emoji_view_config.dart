@@ -1,4 +1,4 @@
-﻿// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names
 
 import 'dart:math';
 
@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// Callback function for custom view
-typedef EmojiViewBuilder = Widget Function(
-  Config config,
-  EmojiViewState state,
-  VoidCallback showSearchBar,
-);
+typedef EmojiViewBuilder =
+    Widget Function(
+      Config config,
+      EmojiViewState state,
+      VoidCallback showSearchBar,
+    );
 
 /// Default Widget if no recent is available
 const DefaultNoRecentsWidget = Text(

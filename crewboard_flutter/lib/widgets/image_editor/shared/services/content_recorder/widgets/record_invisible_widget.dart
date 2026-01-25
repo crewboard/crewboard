@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/extended/repaint/extended_repaint_boundary.dart';
 import '../controllers/content_recorder_controller.dart';
 
@@ -28,22 +28,23 @@ class _RecordInvisibleWidgetState extends State<RecordInvisibleWidget> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Widget?>(
-        stream: widget.controller.recorderStream.stream,
-        builder: (context, snapshot) {
-          if (!widget.controller.recordReadyHelper.isCompleted) {
-            widget.controller.recordReadyHelper.complete(true);
-          }
+      stream: widget.controller.recorderStream.stream,
+      builder: (context, snapshot) {
+        if (!widget.controller.recordReadyHelper.isCompleted) {
+          widget.controller.recordReadyHelper.complete(true);
+        }
 
-          return Stack(
-            children: [
-              if (snapshot.data != null)
-                ExtendedRepaintBoundary(
-                  key: widget.controller.recorderKey,
-                  child: snapshot.data,
-                ),
-              widget.child,
-            ],
-          );
-        });
+        return Stack(
+          children: [
+            if (snapshot.data != null)
+              ExtendedRepaintBoundary(
+                key: widget.controller.recorderKey,
+                child: snapshot.data,
+              ),
+            widget.child,
+          ],
+        );
+      },
+    );
   }
 }

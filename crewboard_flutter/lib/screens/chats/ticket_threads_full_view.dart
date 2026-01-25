@@ -281,35 +281,35 @@ class _ThreadContent extends StatelessWidget {
         ),
         // Divider with label
         Stack(
-            alignment: Alignment.center,
-            children: [
-              Divider(color: Colors.white.withValues(alpha: 0.1)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                color: const Color(
-                  0xff121212,
-                ), // Matching typical glass backdrop or app background
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 16,
+          alignment: Alignment.center,
+          children: [
+            Divider(color: Colors.white.withValues(alpha: 0.1)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              color: const Color(
+                0xff121212,
+              ), // Matching typical glass backdrop or app background
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 16,
+                    color: Pallet.font3,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    "Messages in this thread",
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
                       color: Pallet.font3,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Messages in this thread",
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Pallet.font3,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
+          ],
         ),
         // Thread Items
         Expanded(
@@ -484,4 +484,3 @@ class ThreadCommentItem extends StatelessWidget {
     );
   }
 }
-

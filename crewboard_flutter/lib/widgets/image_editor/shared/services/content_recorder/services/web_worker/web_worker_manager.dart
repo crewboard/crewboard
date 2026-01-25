@@ -1,4 +1,4 @@
-﻿import 'dart:js_interop' as js;
+import 'dart:js_interop' as js;
 
 import 'package:web/web.dart' as web;
 
@@ -30,13 +30,15 @@ class WebWorkerManager extends ThreadManager<WebWorkerThread> {
     );
 
     for (var i = 0; i < processors && !isDestroyed; i++) {
-      threads.add(WebWorkerThread(
-        coreNumber: i + 1,
-        onMessage: (message) {
-          int i = tasks.indexWhere((el) => el.taskId == message.id);
-          if (i >= 0) tasks[i].bytes$.complete(message.bytes);
-        },
-      ));
+      threads.add(
+        WebWorkerThread(
+          coreNumber: i + 1,
+          onMessage: (message) {
+            int i = tasks.indexWhere((el) => el.taskId == message.id);
+            if (i >= 0) tasks[i].bytes$.complete(message.bytes);
+          },
+        ),
+      );
     }
   }
 

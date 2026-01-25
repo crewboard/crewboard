@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -49,8 +49,8 @@ class WhatsappTextColorpicker extends StatelessWidget {
           configs: textEditor.configs,
           borderWidth:
               textEditor.configs.designMode == ImageEditorDesignMode.material
-                  ? 0
-                  : 2,
+              ? 0
+              : 2,
           showThumb:
               textEditor.configs.designMode == ImageEditorDesignMode.material,
           length: min(

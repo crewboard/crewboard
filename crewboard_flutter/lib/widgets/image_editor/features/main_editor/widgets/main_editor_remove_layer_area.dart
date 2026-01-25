@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/layer_interaction_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/main_editor_configs.dart';
@@ -85,8 +85,9 @@ class MainEditorRemoveLayerArea extends StatelessWidget {
                 color: layerInteractionManager.hoverRemoveBtn
                     ? layerInteraction.style.removeAreaBackgroundActive
                     : layerInteraction.style.removeAreaBackgroundInactive,
-                borderRadius:
-                    const BorderRadius.only(bottomRight: Radius.circular(100)),
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(100),
+                ),
               ),
               padding: const EdgeInsets.only(right: 12, bottom: 7),
               child: Center(

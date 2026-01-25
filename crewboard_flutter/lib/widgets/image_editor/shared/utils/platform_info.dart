@@ -1,19 +1,22 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/enums/design_mode.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/platform/io/io_helper.dart';
 
 /// Checks if the app is running on a desktop platform.
-final isDesktop = !isWebMobile &&
+final isDesktop =
+    !isWebMobile &&
     (kIsWeb || Platform.isMacOS || Platform.isWindows || Platform.isLinux);
 
 /// Checks if the current platform is a web mobile device.
-final isWebMobile = kIsWeb &&
+final isWebMobile =
+    kIsWeb &&
     (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.android);
 
 /// Determines if the platform uses Material Design.
-final platformIsMaterialDesign = kIsWeb ||
+final platformIsMaterialDesign =
+    kIsWeb ||
     (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS);
 

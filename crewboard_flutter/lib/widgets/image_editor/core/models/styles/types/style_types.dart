@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
@@ -6,7 +6,8 @@ import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_config
 
 /// Creates custom [BoxConstraints] to use when displaying
 /// editors in modal bottom sheets.
-typedef EditorBoxConstraintsBuilder = BoxConstraints? Function(
-  BuildContext context,
-  ProImageEditorConfigs configs,
-);
+typedef EditorBoxConstraintsBuilder =
+    BoxConstraints? Function(
+      BuildContext context,
+      ProImageEditorConfigs configs,
+    );

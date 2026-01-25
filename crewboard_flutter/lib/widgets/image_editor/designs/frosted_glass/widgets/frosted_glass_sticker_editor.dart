@@ -1,4 +1,4 @@
-﻿// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Flutter imports:
@@ -60,7 +60,7 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
 
   late final bool _isStickerEditorEnabled =
       widget.configs.stickerEditor.enabled &&
-          widget.configs.mainEditor.tools.contains(SubEditorMode.sticker);
+      widget.configs.mainEditor.tools.contains(SubEditorMode.sticker);
 
   @override
   void initState() {
@@ -104,7 +104,8 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
                     ),
                     if (_isStickerEditorEnabled)
                       Offstage(
-                        offstage: temporaryStickerMode !=
+                        offstage:
+                            temporaryStickerMode !=
                             FrostedGlassStickerMode.sticker,
                         child: StickerEditor(
                           configs: widget.configs,
@@ -205,7 +206,10 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
                             ButtonSegment(
                               value: FrostedGlassStickerMode.sticker,
                               label: Text(
-                                widget.configs.i18n.stickerEditor
+                                widget
+                                    .configs
+                                    .i18n
+                                    .stickerEditor
                                     .bottomNavigationBarText,
                                 style: const TextStyle(
                                   fontSize: 13,
@@ -215,7 +219,10 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
                             ButtonSegment(
                               value: FrostedGlassStickerMode.emoji,
                               label: Text(
-                                widget.configs.i18n.emojiEditor
+                                widget
+                                    .configs
+                                    .i18n
+                                    .emojiEditor
                                     .bottomNavigationBarText,
                                 style: const TextStyle(
                                   fontSize: 13,
@@ -230,7 +237,7 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
                             });
                           },
                         ),
-                      )
+                      ),
                   ],
                 ),
         ),
@@ -254,10 +261,11 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
                   widget.callbacks.stickerEditorCallbacks?.onSearchChanged
                       ?.call(value);
                   _searchFocus.requestFocus();
-                  Future.delayed(const Duration(milliseconds: 1))
-                      .whenComplete(() {
-                    _searchFocus.requestFocus();
-                  });
+                  Future.delayed(const Duration(milliseconds: 1)).whenComplete(
+                    () {
+                      _searchFocus.requestFocus();
+                    },
+                  );
                 },
                 itemColor: const Color.fromARGB(255, 243, 243, 243),
                 style: const TextStyle(
@@ -279,7 +287,9 @@ class _FrostedGlassStickerPageState extends State<FrostedGlassStickerPage> {
     } else {
       return Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(100)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

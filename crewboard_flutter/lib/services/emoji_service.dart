@@ -55,7 +55,7 @@ class EmojiService {
       _db!,
       finder: Finder(sortOrders: [SortOrder('id')]),
     );
-    
+
     return snapshots.map((snapshot) {
       return Emoji.fromJson(snapshot.value as Map<String, dynamic>);
     }).toList();
@@ -69,9 +69,15 @@ class EmojiService {
         filter: Filter.or([
           Filter.custom((record) {
             final emoji = Emoji.fromJson(record.value as Map<String, dynamic>);
-            return emoji.annotation.toLowerCase().contains(query.toLowerCase()) ||
-                   emoji.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase())) ||
-                   emoji.shortcodes.any((s) => s.toLowerCase().contains(query.toLowerCase()));
+            return emoji.annotation.toLowerCase().contains(
+                  query.toLowerCase(),
+                ) ||
+                emoji.tags.any(
+                  (tag) => tag.toLowerCase().contains(query.toLowerCase()),
+                ) ||
+                emoji.shortcodes.any(
+                  (s) => s.toLowerCase().contains(query.toLowerCase()),
+                );
           }),
         ]),
         sortOrders: [SortOrder('id')],
@@ -108,7 +114,7 @@ class EmojiService {
       return Emoji.fromJson(snapshot.value as Map<String, dynamic>);
     }).toList();
   }
-  
+
   Future<void> clear() async {
     await init();
     await _store.delete(_db!);

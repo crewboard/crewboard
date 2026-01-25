@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import '../../exif/exif_tag.dart';
 import '../../exif/ifd_value.dart';
@@ -283,7 +283,7 @@ enum TiffPhotometricType {
   colorFilterArray, // = 32803
   linearRaw, // = 34892
   depth, // = 51177
-  unknown
+  unknown,
 }
 
 enum TiffImageType {
@@ -296,7 +296,7 @@ enum TiffImageType {
   rgba,
   yCbCrSub,
   generic,
-  invalid
+  invalid,
 }
 
 class TiffCompression {

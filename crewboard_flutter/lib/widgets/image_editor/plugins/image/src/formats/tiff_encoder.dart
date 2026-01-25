@@ -1,4 +1,4 @@
-﻿import 'dart:typed_data';
+import 'dart:typed_data';
 
 import '../color/format.dart';
 import '../exif/exif_data.dart';
@@ -29,8 +29,8 @@ class TiffEncoder extends Encoder {
     final type = image.numChannels == 1
         ? TiffPhotometricType.blackIsZero.index
         : image.hasPalette
-            ? TiffPhotometricType.palette.index
-            : TiffPhotometricType.rgb.index;
+        ? TiffPhotometricType.palette.index
+        : TiffPhotometricType.rgb.index;
 
     final nc = image.numChannels;
 

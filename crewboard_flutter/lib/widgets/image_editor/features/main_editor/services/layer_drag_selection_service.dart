@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -157,15 +157,16 @@ class LayerDragSelectionService {
       Offset fractionalOffset = layer.isTextLayer
           ? textOffset
           : layer.isPaintLayer
-              ? paintOffset
-              : layer.isEmojiLayer
-                  ? emojiOffset
-                  : layer.isWidgetLayer
-                      ? widgetOffset
-                      : const Offset(-0.5, -0.5);
+          ? paintOffset
+          : layer.isEmojiLayer
+          ? emojiOffset
+          : layer.isWidgetLayer
+          ? widgetOffset
+          : const Offset(-0.5, -0.5);
       fractionalOffset += const Offset(0.5, 0.5);
 
-      final center = layer.offset +
+      final center =
+          layer.offset +
           Offset(
             size.width * fractionalOffset.dx,
             size.height * fractionalOffset.dy,

@@ -18,7 +18,8 @@ class FontFamilySearchDropdown extends StatefulWidget {
   final String? fontFamily;
 
   @override
-  State<FontFamilySearchDropdown> createState() => _FontFamilySearchDropdownState();
+  State<FontFamilySearchDropdown> createState() =>
+      _FontFamilySearchDropdownState();
 }
 
 class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
@@ -45,7 +46,8 @@ class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
   }
 
   void findDropDownData() {
-    RenderBox renderBox = actionKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox =
+        actionKey.currentContext!.findRenderObject() as RenderBox;
     height = renderBox.size.height;
     width = renderBox.size.width;
     Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -98,7 +100,11 @@ class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
                                   onType: (val) {
                                     setOverlayState(() {
                                       filteredItems = widget.items
-                                          .where((f) => f.toLowerCase().contains(val.toLowerCase()))
+                                          .where(
+                                            (f) => f.toLowerCase().contains(
+                                              val.toLowerCase(),
+                                            ),
+                                          )
                                           .toList();
                                     });
                                   },
@@ -118,8 +124,10 @@ class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
                                         itemBuilder: (context, i) {
                                           final font = filteredItems[i];
                                           return MouseRegion(
-                                            onEnter: (details) => hoveredIdx.value = i,
-                                            onExit: (details) => hoveredIdx.value = null,
+                                            onEnter: (details) =>
+                                                hoveredIdx.value = i,
+                                            onExit: (details) =>
+                                                hoveredIdx.value = null,
                                             child: InkWell(
                                               onTap: () {
                                                 widget.onChanged(font);
@@ -127,13 +135,17 @@ class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(10),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                   color: (i == _hoveredIdx)
                                                       ? Pallet.inside1
                                                       : Colors.transparent,
                                                 ),
                                                 height: 40,
-                                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                    ),
                                                 child: Row(
                                                   children: [
                                                     Expanded(
@@ -142,7 +154,8 @@ class _FontFamilySearchDropdownState extends State<FontFamilySearchDropdown> {
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           color: Pallet.font2,
-                                                          fontFamily: font, // Sample style
+                                                          fontFamily:
+                                                              font, // Sample style
                                                         ),
                                                       ),
                                                     ),

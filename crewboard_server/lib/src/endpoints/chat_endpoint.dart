@@ -48,16 +48,20 @@ class ChatEndpoint extends Endpoint {
 
     // Group users by roomId and assign to transcript field
     for (var room in rooms) {
-      final memberMapForRoom =
-          allRoomMembersMap.where((m) => m.roomId == room.id);
+      final memberMapForRoom = allRoomMembersMap.where(
+        (m) => m.roomId == room.id,
+      );
       final memberIds = memberMapForRoom.map((m) => m.userId).toSet();
-      room.roomUsers =
-          allMemberUsers.where((u) => memberIds.contains(u.id)).toList();
+      room.roomUsers = allMemberUsers
+          .where((u) => memberIds.contains(u.id))
+          .toList();
 
       // Handle Direct Room naming
       if (room.roomType == 'direct') {
         try {
-          final otherUser = room.roomUsers?.firstWhereOrNull((u) => u.id != userId);
+          final otherUser = room.roomUsers?.firstWhereOrNull(
+            (u) => u.id != userId,
+          );
           if (otherUser != null) {
             final oldName = room.roomName;
             final newName = otherUser.userName;
@@ -65,10 +69,11 @@ class ChatEndpoint extends Endpoint {
               room.roomName = newName;
               // Update in database if it was the generic name
               if (oldName == 'Direct Message' || oldName == null) {
-                 unawaited(ChatRoom.db.updateRow(session, room));
+                unawaited(ChatRoom.db.updateRow(session, room));
               }
             }
-          } else if (room.roomName == null || room.roomName == 'Direct Message') {
+          } else if (room.roomName == null ||
+              room.roomName == 'Direct Message') {
             room.roomName = 'Unknown User';
           }
         } catch (e) {
@@ -218,7 +223,10 @@ class ChatEndpoint extends Endpoint {
     );
   }
 
-  Stream<ChatStreamEvent> subscribeToRoom(Session session, UuidValue roomId) async* {
+  Stream<ChatStreamEvent> subscribeToRoom(
+    Session session,
+    UuidValue roomId,
+  ) async* {
     var stream = session.messages.createStream<ChatStreamEvent>('chat_$roomId');
     yield* stream;
   }
@@ -241,8 +249,6 @@ class ChatEndpoint extends Endpoint {
       ChatStreamEvent(typing: indicator),
     );
   }
-
-
 
   Future<void> markAsRead(Session session, UuidValue roomId) async {
     final user = await AuthHelper.getAuthenticatedUser(session);

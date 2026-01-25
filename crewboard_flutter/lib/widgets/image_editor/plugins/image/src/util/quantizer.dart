@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import '../color/color.dart';
 import '../image/image.dart';
@@ -22,10 +22,11 @@ abstract class Quantizer {
   /// Convert the [image] to a palette image.
   Image getIndexImage(Image image) {
     final target = Image(
-        width: image.width,
-        height: image.height,
-        numChannels: 1,
-        palette: palette);
+      width: image.width,
+      height: image.height,
+      numChannels: 1,
+      palette: palette,
+    );
 
     final ti = target.iterator..moveNext();
     target

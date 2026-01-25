@@ -1,4 +1,4 @@
-﻿// Project imports:
+// Project imports:
 import 'package:crewboard_flutter/widgets/image_editor/features/crop_rotate_editor/models/transform_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/utils/decode_image.dart';
 import 'editor_init_configs.dart';
@@ -15,11 +15,12 @@ import 'editor_init_configs.dart';
 /// - [imageInfos]: The optional image information, which will only be provided
 ///   if the `provideImageInfos` flag in the [CropRotateEditorConfigs] is set
 ///   to true.
-typedef CropRotateEditorDone = Function(
-  TransformConfigs transformations,
-  double fitToScreenFactor,
-  ImageInfos? imageInfos,
-);
+typedef CropRotateEditorDone =
+    Function(
+      TransformConfigs transformations,
+      double fitToScreenFactor,
+      ImageInfos? imageInfos,
+    );
 
 /// Configuration settings for initializing the Crop and Rotate Editor.
 ///

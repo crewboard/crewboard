@@ -141,7 +141,9 @@ class _MultiSelectState extends State<MultiSelect> {
                                             border: Border.all(
                                               color: _isSelected(item)
                                                   ? Pallet.inside3
-                                                  : Pallet.font1.withValues(alpha: 0.3),
+                                                  : Pallet.font1.withValues(
+                                                      alpha: 0.3,
+                                                    ),
                                             ),
                                           ),
                                           child: _isSelected(item)

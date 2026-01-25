@@ -107,7 +107,12 @@ class Condition extends StatelessWidget {
             padding: EdgeInsets.all(width / 4),
             width: width,
             height: width,
-            child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(fontSize: 13, color: Pallet.font1),
+              ),
+            ),
           ),
         ),
       ),
@@ -153,7 +158,12 @@ class Terminal extends StatelessWidget {
             borderRadius: BorderRadius.circular(40),
             // color: Pallet.inside2,
           ),
-          child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 13, color: Pallet.font1),
+            ),
+          ),
         ),
       ),
     );
@@ -204,7 +214,12 @@ class Process extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             // color: Pallet.inside2,
           ),
-          child: Center(child: Text(label, style: TextStyle(fontSize: 13, color: Pallet.font1))),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 13, color: Pallet.font1),
+            ),
+          ),
         ),
       ),
     );

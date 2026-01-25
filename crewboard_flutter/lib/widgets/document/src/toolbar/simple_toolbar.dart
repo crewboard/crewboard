@@ -50,12 +50,13 @@ class QuillSimpleToolbar extends StatelessWidget
       final axis = config.axis;
 
       final divider = SizedBox(
-          height: _toolbarSize,
-          child: QuillToolbarDivider(
-            axis,
-            color: config.sectionDividerColor,
-            space: config.sectionDividerSpace,
-          ));
+        height: _toolbarSize,
+        child: QuillToolbarDivider(
+          axis,
+          color: config.sectionDividerColor,
+          space: config.sectionDividerSpace,
+        ),
+      );
 
       final groups = [
         [
@@ -348,7 +349,8 @@ class QuillSimpleToolbar extends StatelessWidget
           );
         }
         return Container(
-          decoration: config.decoration ??
+          decoration:
+              config.decoration ??
               BoxDecoration(
                 color: config.color ?? Theme.of(context).canvasColor,
               ),
@@ -385,11 +387,11 @@ class QuillToolbarDivider extends StatelessWidget {
 
   /// Provides a horizontal divider for vertical toolbar.
   const QuillToolbarDivider.horizontal({Key? key, Color? color, double? space})
-      : this(Axis.horizontal, color: color, space: space, key: key);
+    : this(Axis.horizontal, color: color, space: space, key: key);
 
   /// Provides a horizontal divider for horizontal toolbar.
   const QuillToolbarDivider.vertical({Key? key, Color? color, double? space})
-      : this(Axis.vertical, color: color, space: space, key: key);
+    : this(Axis.vertical, color: color, space: space, key: key);
 
   /// The axis along which the toolbar is.
   final Axis axis;

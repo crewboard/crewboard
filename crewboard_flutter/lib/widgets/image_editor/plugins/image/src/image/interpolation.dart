@@ -1,4 +1,4 @@
-﻿/// Interpolation method to use when resizing images.
+/// Interpolation method to use when resizing images.
 enum Interpolation {
   /// Select the closest pixel. Fastest, lowest quality.
   nearest,
@@ -10,5 +10,5 @@ enum Interpolation {
   cubic,
 
   /// Average the colors of the neighboring pixels.
-  average
+  average,
 }

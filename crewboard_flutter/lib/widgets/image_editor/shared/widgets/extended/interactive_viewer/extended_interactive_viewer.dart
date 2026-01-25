@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/utils/zoom_configs.dart';
 import 'extended_raw_interactive_viewer.dart';
 
@@ -211,10 +211,12 @@ class ExtendedInteractiveViewerState extends State<ExtendedInteractiveViewer>
       ..duration = duration
       ..reset();
 
-    final animation = tween.animate(CurvedAnimation(
-      parent: _animationCtrl,
-      curve: curve,
-    ));
+    final animation = tween.animate(
+      CurvedAnimation(
+        parent: _animationCtrl,
+        curve: curve,
+      ),
+    );
 
     void listener() {
       _transformCtrl.value = animation.value;

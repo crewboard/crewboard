@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 /// A custom painter for drawing the crop layer background and overlay.
@@ -81,7 +81,8 @@ class CropLayerPainter extends CustomPainter {
     required Size rawSize,
   }) {
     Size size = rawSize * interactiveViewerScale;
-    var center = Offset(
+    var center =
+        Offset(
           size.width / 2,
           size.height / 2,
         ) +
@@ -90,11 +91,13 @@ class CropLayerPainter extends CustomPainter {
     Path path = Path()
       // FillType "evenOdd" is important for the canvas web renderer
       ..fillType = PathFillType.evenOdd
-      ..addRect(Rect.fromCenter(
-        center: center,
-        width: size.width,
-        height: size.height,
-      ));
+      ..addRect(
+        Rect.fromCenter(
+          center: center,
+          width: size.width,
+          height: size.height,
+        ),
+      );
 
     double ratio = is90DegRotated ? 1 / imgRatio : imgRatio;
 

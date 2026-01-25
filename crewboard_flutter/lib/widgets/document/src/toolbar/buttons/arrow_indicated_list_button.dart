@@ -125,7 +125,7 @@ class QuillToolbarArrowIndicatedButtonListState
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: widget.buttons,
                     ),
-            )
+            ),
           ],
         ),
       ),

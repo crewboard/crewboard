@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/palette.dart';
 
-
 class FontSizeEditor extends StatelessWidget {
   final double initialSize;
   final Function(double) onSizeChanged;
@@ -20,7 +19,10 @@ class FontSizeEditor extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (showLabel) ...[
-          const Text("Size: ", style: TextStyle(fontSize: 11, color: Colors.grey)),
+          const Text(
+            "Size: ",
+            style: TextStyle(fontSize: 11, color: Colors.grey),
+          ),
           const SizedBox(width: 4),
         ],
         Container(
@@ -49,7 +51,12 @@ class FontSizeEditor extends StatelessWidget {
               SizedBox(
                 width: 30,
                 child: TextField(
-                  controller: TextEditingController(text: initialSize.toString().replaceAll(RegExp(r'\.0$'), '')),
+                  controller: TextEditingController(
+                    text: initialSize.toString().replaceAll(
+                      RegExp(r'\.0$'),
+                      '',
+                    ),
+                  ),
                   style: TextStyle(fontSize: 12, color: Pallet.font1),
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(

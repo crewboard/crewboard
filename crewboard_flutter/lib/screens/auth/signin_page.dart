@@ -207,13 +207,15 @@ class _SignInPageState extends State<SignInPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Obx(() => Row(
-              children: [
-                MinimizeWindowButton(colors: Pallet.windowButtonColors),
-                MaximizeWindowButton(colors: Pallet.windowButtonColors),
-                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
-              ],
-            )),
+            child: Obx(
+              () => Row(
+                children: [
+                  MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                  MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                  CloseWindowButton(colors: Pallet.closeWindowButtonColors),
+                ],
+              ),
+            ),
           ),
         ],
       ),

@@ -1,4 +1,4 @@
-﻿import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer_interaction.dart';
+import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer_interaction.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/utils/key_minifier.dart';
 import '../../constants/export_import_version.dart';
 
@@ -23,15 +23,15 @@ void historyCompatibilityLayerInteraction({
   required EditorKeyMinifier minifier,
 }) {
   final importVersion = version.toVersionNumber();
-  final latestIncompatibleVersion =
-      ExportImportVersion.version_5_0_0.toVersionNumber();
+  final latestIncompatibleVersion = ExportImportVersion.version_5_0_0
+      .toVersionNumber();
 
   if (importVersion <= latestIncompatibleVersion) {
     var keyConverter = minifier.convertLayerKey;
     if (layerMap[keyConverter('enableInteraction')] != null) {
       var interactionMap = LayerInteraction.fromDefaultValue(
-              layerMap[keyConverter('enableInteraction')] == true)
-          .toMap();
+        layerMap[keyConverter('enableInteraction')] == true,
+      ).toMap();
       layerMap[keyConverter('interaction')] = interactionMap.map(
         (itemKey, itemValue) =>
             MapEntry(minifier.convertLayerInteractionKey(itemKey), itemValue),

@@ -34,6 +34,7 @@ class QuillToolbarSearchButtonOptions extends QuillToolbarBaseButtonOptions {
   final AlignmentGeometry? searchBarAlignment;
 }
 
-typedef QuillToolbarSearchButtonOnPressedCallback = Future<void> Function(
-  QuillController controller,
-);
+typedef QuillToolbarSearchButtonOnPressedCallback =
+    Future<void> Function(
+      QuillController controller,
+    );

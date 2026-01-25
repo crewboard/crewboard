@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/services.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_style_constants.dart';
 
@@ -62,14 +62,15 @@ class MainEditorStyle {
     SubEditorPageStyle? subEditorPage,
   }) {
     return MainEditorStyle(
-        background: background ?? this.background,
-        bottomBarColor: bottomBarColor ?? this.bottomBarColor,
-        bottomBarBackground: bottomBarBackground ?? this.bottomBarBackground,
-        appBarColor: appBarColor ?? this.appBarColor,
-        appBarBackground: appBarBackground ?? this.appBarBackground,
-        uiOverlayStyle: uiOverlayStyle ?? this.uiOverlayStyle,
-        subEditorPage: subEditorPage ?? this.subEditorPage,
-        outsideCaptureAreaLayerOpacity: outsideCaptureAreaLayerOpacity ??
-            this.outsideCaptureAreaLayerOpacity);
+      background: background ?? this.background,
+      bottomBarColor: bottomBarColor ?? this.bottomBarColor,
+      bottomBarBackground: bottomBarBackground ?? this.bottomBarBackground,
+      appBarColor: appBarColor ?? this.appBarColor,
+      appBarBackground: appBarBackground ?? this.appBarBackground,
+      uiOverlayStyle: uiOverlayStyle ?? this.uiOverlayStyle,
+      subEditorPage: subEditorPage ?? this.subEditorPage,
+      outsideCaptureAreaLayerOpacity:
+          outsideCaptureAreaLayerOpacity ?? this.outsideCaptureAreaLayerOpacity,
+    );
   }
 }

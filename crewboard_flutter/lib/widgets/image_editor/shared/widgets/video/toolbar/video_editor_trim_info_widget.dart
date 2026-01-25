@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/duration_extension.dart';
 
 import '../video_editor_configurable.dart';
@@ -14,28 +14,31 @@ class VideoEditorTrimInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var player = VideoEditorConfigurable.of(context);
     return ValueListenableBuilder(
-        valueListenable: player.showTrimTimeSpanNotifier,
-        builder: (_, showTrimTimeSpan, __) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) {
-              final scaleAnimation =
-                  Tween<double>(begin: 0.7, end: 1.0).animate(animation);
-              return ScaleTransition(
-                scale: scaleAnimation,
-                child: FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-              );
-            },
-            switchInCurve: Curves.easeInOut,
-            switchOutCurve: Curves.easeInOut,
-            child: showTrimTimeSpan
-                ? _buildTimeSpanText(player)
-                : const SizedBox.shrink(),
-          );
-        });
+      valueListenable: player.showTrimTimeSpanNotifier,
+      builder: (_, showTrimTimeSpan, __) {
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) {
+            final scaleAnimation = Tween<double>(
+              begin: 0.7,
+              end: 1.0,
+            ).animate(animation);
+            return ScaleTransition(
+              scale: scaleAnimation,
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          child: showTrimTimeSpan
+              ? _buildTimeSpanText(player)
+              : const SizedBox.shrink(),
+        );
+      },
+    );
   }
 
   Widget _buildTimeSpanText(VideoEditorConfigurable player) {
@@ -57,7 +60,8 @@ class VideoEditorTrimInfoWidget extends StatelessWidget {
               child: Text(
                 '${value.start.toTimeString()} - '
                 '${(value.end.toTimeString())}',
-                style: player.style.trimDurationTextStyle ??
+                style:
+                    player.style.trimDurationTextStyle ??
                     TextStyle(
                       fontSize: 14,
                       height: 1.2,

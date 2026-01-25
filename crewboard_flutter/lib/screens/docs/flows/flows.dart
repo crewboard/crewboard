@@ -18,13 +18,16 @@ class Flows extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get the controller instance
     final FlowsController controller = Get.put(FlowsController());
-    
+
     return Obx(() {
       return Focus(
         autofocus: true,
         onKeyEvent: (node, event) {
-          if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.escape) {
-            if (controller.isSelectingLoop.value || controller.isPickingLoopFrom.value || controller.isPickingLoopTo.value) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.escape) {
+            if (controller.isSelectingLoop.value ||
+                controller.isPickingLoopFrom.value ||
+                controller.isPickingLoopTo.value) {
               controller.cancelLoopSelection();
               return KeyEventResult.handled;
             }
@@ -32,47 +35,51 @@ class Flows extends StatelessWidget {
           return KeyEventResult.ignored;
         },
         child: Stack(
-        children: [
-          if (controller.selectedType.value == FlowType.condition)
-            Container(
-              key: Key(controller.widgetKey.value),
-              constraints: BoxConstraints(maxWidth: controller.stageWidth.value - 100),
-              // decoration: BoxDecoration(color: Colors.red),
-              child: Text(
-                controller.valueText.value,
-                style: TextStyle(color: Colors.transparent),
-              ),
-            )
-          else
-            Column(children: [
+          children: [
+            if (controller.selectedType.value == FlowType.condition)
               Container(
                 key: Key(controller.widgetKey.value),
-                width: controller.widthText.value.isEmpty ? 0 : double.parse(controller.widthText.value),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                // decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(40)),
-                child: Center(
-                    child: Text(
+                constraints: BoxConstraints(
+                  maxWidth: controller.stageWidth.value - 100,
+                ),
+                // decoration: BoxDecoration(color: Colors.red),
+                child: Text(
                   controller.valueText.value,
                   style: TextStyle(color: Colors.transparent),
-                )),
+                ),
+              )
+            else
+              Column(
+                children: [
+                  Container(
+                    key: Key(controller.widgetKey.value),
+                    width: controller.widthText.value.isEmpty
+                        ? 0
+                        : double.parse(controller.widthText.value),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    // decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(40)),
+                    child: Center(
+                      child: Text(
+                        controller.valueText.value,
+                        style: TextStyle(color: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ]),
-          FlowCanvas(),
-          if (
-            controller.window.value == "add" &&
-            (
-              (controller.currentFlowId.value != null && controller.flows.isEmpty) ||
-              (controller.selectedId.value >= 0)
-            )
-          )
-            Align(alignment: Alignment.topRight, child: AddFlow())
-          else if (controller.window.value == "edit")
-            Align(alignment: Alignment.topRight, child: EditFlow())
-        ],
-      ));
+            FlowCanvas(),
+            if (controller.window.value == "add" &&
+                ((controller.currentFlowId.value != null &&
+                        controller.flows.isEmpty) ||
+                    (controller.selectedId.value >= 0)))
+              Align(alignment: Alignment.topRight, child: AddFlow())
+            else if (controller.window.value == "edit")
+              Align(alignment: Alignment.topRight, child: EditFlow()),
+          ],
+        ),
+      );
     });
   }
-  
 }
 
 class FlowCanvas extends StatelessWidget {
@@ -91,7 +98,7 @@ class FlowCanvas extends StatelessWidget {
           // Set stage dimensions based on available space
           controller.stageWidth.value = constraints.maxWidth;
           controller.windowHeight.value = constraints.maxHeight;
-          
+
           // Update flow positions based on new stage width BEFORE building children
           controller.updateFlows();
 
@@ -113,96 +120,154 @@ class FlowCanvas extends StatelessWidget {
                 Lines(),
                 // Selection overlay dimming only
                 Obx(() {
-                  if (!controller.isSelectingLoop.value || (!controller.isPickingLoopFrom.value && !controller.isPickingLoopTo.value)) {
+                  if (!controller.isSelectingLoop.value ||
+                      (!controller.isPickingLoopFrom.value &&
+                          !controller.isPickingLoopTo.value)) {
                     return SizedBox.shrink();
                   }
-                  return Positioned.fill(child: Container(color: Colors.black.withOpacity(0.3)));
+                  return Positioned.fill(
+                    child: Container(color: Colors.black.withOpacity(0.3)),
+                  );
                 }),
                 for (var flow in controller.flows)
                   if (flow.type == FlowType.terminal)
                     Positioned(
-                        left: flow.x,
-                        top: flow.y,
-                        child: InkWell(
-                          onTap: () {
-                            controller.selectFlow(flow.id, flow.direction, flow.type);
+                      left: flow.x,
+                      top: flow.y,
+                      child: InkWell(
+                        onTap: () {
+                          controller.selectFlow(
+                            flow.id,
+                            flow.direction,
+                            flow.type,
+                          );
+                        },
+                        onHover: (h) {
+                          controller.setLoopHover(h ? flow.id : -1);
+                        },
+                        child: flow_widgets.Terminal(
+                          width: flow.width,
+                          height: flow.height,
+                          label: flow.value,
+                          highlight:
+                              controller.isSelectingLoop.value &&
+                              (controller.isPickingLoopFrom.value ||
+                                  controller.isPickingLoopTo.value) &&
+                              controller.loopHoverId.value == flow.id,
+                          mouseCursor: controller.isPanning.value
+                              ? SystemMouseCursors.grabbing
+                              : SystemMouseCursors.move,
+                          onPanStart: (details) {
+                            controller.startLineHeightDrag(
+                              flow.id,
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          onHover: (h) {
-                            controller.setLoopHover(h ? flow.id : -1);
+                          onPanUpdate: (details) {
+                            controller.updateLineHeightDrag(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          child: flow_widgets.Terminal(
-                            width: flow.width,
-                            height: flow.height,
-                            label: flow.value,
-                            highlight: controller.isSelectingLoop.value && (controller.isPickingLoopFrom.value || controller.isPickingLoopTo.value) && controller.loopHoverId.value == flow.id,
-                            mouseCursor: controller.isPanning.value ? SystemMouseCursors.grabbing : SystemMouseCursors.move,
-                            onPanStart: (details) {
-                              controller.startLineHeightDrag(flow.id, details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanUpdate: (details) {
-                              controller.updateLineHeightDrag(details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanEnd: (details) {
-                              controller.endLineHeightDrag();
-                            },
-                          ),
-                        ))
+                          onPanEnd: (details) {
+                            controller.endLineHeightDrag();
+                          },
+                        ),
+                      ),
+                    )
                   else if (flow.type == FlowType.process)
                     Positioned(
-                        left: flow.x,
-                        top: flow.y,
-                        child: InkWell(
-                          onTap: () {
-                            controller.selectFlow(flow.id, flow.direction, flow.type);
+                      left: flow.x,
+                      top: flow.y,
+                      child: InkWell(
+                        onTap: () {
+                          controller.selectFlow(
+                            flow.id,
+                            flow.direction,
+                            flow.type,
+                          );
+                        },
+                        onHover: (h) {
+                          controller.setLoopHover(h ? flow.id : -1);
+                        },
+                        child: flow_widgets.Process(
+                          width: flow.width,
+                          height: flow.height,
+                          label: flow.value,
+                          highlight:
+                              controller.isSelectingLoop.value &&
+                              (controller.isPickingLoopFrom.value ||
+                                  controller.isPickingLoopTo.value) &&
+                              controller.loopHoverId.value == flow.id,
+                          mouseCursor: controller.isPanning.value
+                              ? SystemMouseCursors.grabbing
+                              : SystemMouseCursors.move,
+                          onPanStart: (details) {
+                            controller.startLineHeightDrag(
+                              flow.id,
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          onHover: (h) {
-                            controller.setLoopHover(h ? flow.id : -1);
+                          onPanUpdate: (details) {
+                            controller.updateLineHeightDrag(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          child: flow_widgets.Process(
-                            width: flow.width,
-                            height: flow.height,
-                            label: flow.value,
-                            highlight: controller.isSelectingLoop.value && (controller.isPickingLoopFrom.value || controller.isPickingLoopTo.value) && controller.loopHoverId.value == flow.id,
-                            mouseCursor: controller.isPanning.value ? SystemMouseCursors.grabbing : SystemMouseCursors.move,
-                            onPanStart: (details) {
-                              controller.startLineHeightDrag(flow.id, details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanUpdate: (details) {
-                              controller.updateLineHeightDrag(details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanEnd: (details) {
-                              controller.endLineHeightDrag();
-                            },
-                          ),
-                        ))
+                          onPanEnd: (details) {
+                            controller.endLineHeightDrag();
+                          },
+                        ),
+                      ),
+                    )
                   else if (flow.type == FlowType.condition)
                     Positioned(
-                        left: flow.x,
-                        top: flow.y,
-                        child: InkWell(
-                          onTap: () {
-                            controller.selectFlow(flow.id, flow.direction, flow.type);
+                      left: flow.x,
+                      top: flow.y,
+                      child: InkWell(
+                        onTap: () {
+                          controller.selectFlow(
+                            flow.id,
+                            flow.direction,
+                            flow.type,
+                          );
+                        },
+                        onHover: (h) {
+                          controller.setLoopHover(h ? flow.id : -1);
+                        },
+                        child: flow_widgets.Condition(
+                          width: flow.width,
+                          height: flow.width,
+                          label: flow.value,
+                          highlight:
+                              controller.isSelectingLoop.value &&
+                              (controller.isPickingLoopFrom.value ||
+                                  controller.isPickingLoopTo.value) &&
+                              controller.loopHoverId.value == flow.id,
+                          mouseCursor: controller.isPanning.value
+                              ? SystemMouseCursors.grabbing
+                              : SystemMouseCursors.move,
+                          onPanStart: (details) {
+                            controller.startLineHeightDrag(
+                              flow.id,
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          onHover: (h) {
-                            controller.setLoopHover(h ? flow.id : -1);
+                          onPanUpdate: (details) {
+                            controller.updateLineHeightDrag(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            );
                           },
-                          child: flow_widgets.Condition(
-                            width: flow.width,
-                            height: flow.width,
-                            label: flow.value,
-                            highlight: controller.isSelectingLoop.value && (controller.isPickingLoopFrom.value || controller.isPickingLoopTo.value) && controller.loopHoverId.value == flow.id,
-                            mouseCursor: controller.isPanning.value ? SystemMouseCursors.grabbing : SystemMouseCursors.move,
-                            onPanStart: (details) {
-                              controller.startLineHeightDrag(flow.id, details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanUpdate: (details) {
-                              controller.updateLineHeightDrag(details.globalPosition.dx, details.globalPosition.dy);
-                            },
-                            onPanEnd: (details) {
-                              controller.endLineHeightDrag();
-                            },
-                          ),
-                        )),
+                          onPanEnd: (details) {
+                            controller.endLineHeightDrag();
+                          },
+                        ),
+                      ),
+                    ),
               ],
             ),
           );
@@ -227,21 +292,23 @@ class Lines extends StatelessWidget {
           cursor: controller.isPanning.value
               ? SystemMouseCursors.grabbing
               : controller.isDraggingLineHeight.value
-                  ? SystemMouseCursors.resizeUpDown
-                  : controller.isDraggingLoopPad.value
-                      ? (controller.hoveredLoopPadAxis.value == "horizontal"
-                          ? SystemMouseCursors.resizeLeftRight
-                          : SystemMouseCursors.resizeUpDown)
-                      : controller.hoveredLoopPadAxis.value == "horizontal"
-                          ? SystemMouseCursors.resizeLeftRight
-                          : controller.hoveredLoopPadAxis.value == "vertical"
-                              ? SystemMouseCursors.resizeUpDown
-                              : controller.isMouseOverDot.value
-                                  ? SystemMouseCursors.click
-                                  : SystemMouseCursors.basic,
+              ? SystemMouseCursors.resizeUpDown
+              : controller.isDraggingLoopPad.value
+              ? (controller.hoveredLoopPadAxis.value == "horizontal"
+                    ? SystemMouseCursors.resizeLeftRight
+                    : SystemMouseCursors.resizeUpDown)
+              : controller.hoveredLoopPadAxis.value == "horizontal"
+              ? SystemMouseCursors.resizeLeftRight
+              : controller.hoveredLoopPadAxis.value == "vertical"
+              ? SystemMouseCursors.resizeUpDown
+              : controller.isMouseOverDot.value
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
           onHover: (event) {
             // Check if mouse is over any interactive dot
-            bool isOverDot = controller.showAddHandles.value && _isMouseOverDot(event.localPosition, controller);
+            bool isOverDot =
+                controller.showAddHandles.value &&
+                _isMouseOverDot(event.localPosition, controller);
             // This will be handled by the controller to update cursor
             controller.updateMouseOverDot(isOverDot);
 
@@ -255,7 +322,8 @@ class Lines extends StatelessWidget {
           onExit: (event) {
             // Clear hover states when mouse leaves the canvas, but keep process hover if in add mode
             controller.updateMouseOverDot(false);
-            if (controller.window.value != "add" || controller.selectedId.value < 0) {
+            if (controller.window.value != "add" ||
+                controller.selectedId.value < 0) {
               controller.onProcessUnhover();
             }
             controller.setHoveredLoopPadAxis("");
@@ -263,12 +331,18 @@ class Lines extends StatelessWidget {
           child: Listener(
             onPointerDown: (event) {
               if (controller.hoveredLoopPadAxis.value.isNotEmpty) {
-                controller.startLoopPadDrag(event.position.dx, event.position.dy);
+                controller.startLoopPadDrag(
+                  event.position.dx,
+                  event.position.dy,
+                );
               }
             },
             onPointerMove: (event) {
               if (controller.isDraggingLoopPad.value) {
-                controller.updateLoopPadDrag(event.position.dx, event.position.dy);
+                controller.updateLoopPadDrag(
+                  event.position.dx,
+                  event.position.dy,
+                );
               }
             },
             onPointerUp: (event) {
@@ -283,8 +357,12 @@ class Lines extends StatelessWidget {
               ],
               builder: (context1) {
                 return CustomPaint(
-                    size: Size(controller.stageWidth.value, controller.windowHeight.value),
-                    painter: LinePainter2(context1, controller));
+                  size: Size(
+                    controller.stageWidth.value,
+                    controller.windowHeight.value,
+                  ),
+                  painter: LinePainter2(context1, controller),
+                );
               },
             ),
           ),
@@ -299,10 +377,18 @@ class Lines extends StatelessWidget {
       controller.setHoveredLoopPadAxis("");
       return;
     }
-    double minY = controller.flows.map((FlowClass f) => f.y).reduce((a, b) => a < b ? a : b);
-    double maxY = controller.flows.map((FlowClass f) => f.y + f.height).reduce((a, b) => a > b ? a : b);
-    double minX = controller.flows.map((FlowClass f) => f.x).reduce((a, b) => a < b ? a : b);
-    double maxX = controller.flows.map((FlowClass f) => f.x + f.width).reduce((a, b) => a > b ? a : b);
+    double minY = controller.flows
+        .map((FlowClass f) => f.y)
+        .reduce((a, b) => a < b ? a : b);
+    double maxY = controller.flows
+        .map((FlowClass f) => f.y + f.height)
+        .reduce((a, b) => a > b ? a : b);
+    double minX = controller.flows
+        .map((FlowClass f) => f.x)
+        .reduce((a, b) => a < b ? a : b);
+    double maxX = controller.flows
+        .map((FlowClass f) => f.x + f.width)
+        .reduce((a, b) => a > b ? a : b);
     final double pad = controller.loopPad.value;
     final double topCorridorY = minY - pad;
     final double bottomCorridorY = maxY + pad;
@@ -310,9 +396,11 @@ class Lines extends StatelessWidget {
     final double rightLaneX = maxX + pad;
     const double tol = 6.0;
 
-    final bool nearVertical = (mousePosition.dy - topCorridorY).abs() <= tol ||
+    final bool nearVertical =
+        (mousePosition.dy - topCorridorY).abs() <= tol ||
         (mousePosition.dy - bottomCorridorY).abs() <= tol;
-    final bool nearHorizontal = (mousePosition.dx - leftLaneX).abs() <= tol ||
+    final bool nearHorizontal =
+        (mousePosition.dx - leftLaneX).abs() <= tol ||
         (mousePosition.dx - rightLaneX).abs() <= tol;
 
     if (nearVertical) {
@@ -327,14 +415,16 @@ class Lines extends StatelessWidget {
   // Check if mouse position is over any interactive dot
   bool _isMouseOverDot(Offset mousePosition, FlowsController controller) {
     const double dotRadius = 6.0; // 3px dot + 3px padding
-    
+
     for (var flow in controller.flows) {
       // Down direction dot
-      if (!(flow.type == FlowType.condition && flow.left.hasChild && flow.right.hasChild)) {
+      if (!(flow.type == FlowType.condition &&
+          flow.left.hasChild &&
+          flow.right.hasChild)) {
         if (!flow.down.hasChild) {
           Offset dotPosition = Offset(
             flow.x + flow.width / 2,
-            flow.y + flow.height + flow.down.lineHeight
+            flow.y + flow.height + flow.down.lineHeight,
           );
           if ((mousePosition - dotPosition).distance <= dotRadius) {
             return true;
@@ -345,11 +435,12 @@ class Lines extends StatelessWidget {
       // Condition flow side dots
       if (flow.type == FlowType.condition) {
         // Right side dot
-        if (flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
+        if (flow.direction != Direction.left &&
+            !(flow.down.hasChild && flow.left.hasChild)) {
           if (!flow.right.hasChild) {
             Offset dotPosition = Offset(
               flow.x + flow.width + flow.right.lineHeight,
-              flow.y + flow.height / 2
+              flow.y + flow.height / 2,
             );
             if ((mousePosition - dotPosition).distance <= dotRadius) {
               return true;
@@ -358,11 +449,12 @@ class Lines extends StatelessWidget {
         }
 
         // Left side dot
-        if (flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
+        if (flow.direction != Direction.right &&
+            !(flow.down.hasChild && flow.right.hasChild)) {
           if (!flow.left.hasChild) {
             Offset dotPosition = Offset(
               flow.x - flow.left.lineHeight,
-              flow.y + flow.height / 2
+              flow.y + flow.height / 2,
             );
             if ((mousePosition - dotPosition).distance <= dotRadius) {
               return true;
@@ -370,19 +462,23 @@ class Lines extends StatelessWidget {
           }
         }
       }
-      
+
       // Process flow side dots (only when hovering)
       if (flow.type == FlowType.process) {
         // Only check for dots when hovering over this specific flow
-        bool isHovered = controller.hoveredProcessId.value == flow.id && controller.hoveredSide.value.isNotEmpty;
-        
+        bool isHovered =
+            controller.hoveredProcessId.value == flow.id &&
+            controller.hoveredSide.value.isNotEmpty;
+
         if (isHovered) {
           // Right side dot
-          if (flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
-            if (!flow.right.hasChild && controller.hoveredSide.value == "right") {
+          if (flow.direction != Direction.left &&
+              !(flow.down.hasChild && flow.left.hasChild)) {
+            if (!flow.right.hasChild &&
+                controller.hoveredSide.value == "right") {
               Offset dotPosition = Offset(
                 flow.x + flow.width + flow.right.lineHeight,
-                flow.y + flow.height / 2
+                flow.y + flow.height / 2,
               );
               if ((mousePosition - dotPosition).distance <= dotRadius) {
                 return true;
@@ -391,11 +487,12 @@ class Lines extends StatelessWidget {
           }
 
           // Left side dot
-          if (flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
+          if (flow.direction != Direction.right &&
+              !(flow.down.hasChild && flow.right.hasChild)) {
             if (!flow.left.hasChild && controller.hoveredSide.value == "left") {
               Offset dotPosition = Offset(
                 flow.x - flow.left.lineHeight,
-                flow.y + flow.height / 2
+                flow.y + flow.height / 2,
               );
               if ((mousePosition - dotPosition).distance <= dotRadius) {
                 return true;
@@ -405,34 +502,38 @@ class Lines extends StatelessWidget {
         }
       }
     }
-    
-    
+
     return false;
   }
-  
+
   // Check for process flow hover and update controller state
-  void _checkProcessFlowHover(Offset mousePosition, FlowsController controller) {
+  void _checkProcessFlowHover(
+    Offset mousePosition,
+    FlowsController controller,
+  ) {
     const double hoverRadius = 15.0; // Hover detection radius
-    
+
     for (var flow in controller.flows) {
       if (flow.type == FlowType.process) {
         // Check left side hover
-        if (flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
+        if (flow.direction != Direction.right &&
+            !(flow.down.hasChild && flow.right.hasChild)) {
           Offset leftCenter = Offset(
             flow.x - flow.left.lineHeight / 2,
-            flow.y + flow.height / 2
+            flow.y + flow.height / 2,
           );
           if ((mousePosition - leftCenter).distance <= hoverRadius) {
             controller.onProcessHover(flow.id, "left");
             return;
           }
         }
-        
+
         // Check right side hover
-        if (flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
+        if (flow.direction != Direction.left &&
+            !(flow.down.hasChild && flow.left.hasChild)) {
           Offset rightCenter = Offset(
             flow.x + flow.width + flow.right.lineHeight / 2,
-            flow.y + flow.height / 2
+            flow.y + flow.height / 2,
           );
           if ((mousePosition - rightCenter).distance <= hoverRadius) {
             controller.onProcessHover(flow.id, "right");
@@ -441,7 +542,7 @@ class Lines extends StatelessWidget {
         }
       }
     }
-    
+
     // No hover detected, clear hover state only if not in add mode
     if (controller.window.value != "add" || controller.selectedId.value < 0) {
       controller.onProcessUnhover();
@@ -452,8 +553,11 @@ class Lines extends StatelessWidget {
 class LinePainter2 extends CustomPainter {
   final BuildContext context;
   final FlowsController controller;
-  
-  LinePainter2(this.context, this.controller); // context from CanvasTouchDetector
+
+  LinePainter2(
+    this.context,
+    this.controller,
+  ); // context from CanvasTouchDetector
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -461,7 +565,7 @@ class LinePainter2 extends CustomPainter {
     var paint = Paint()
       ..color = Pallet.font2
       ..strokeWidth = 1;
-    
+
     // Highlight paint for dragging line height
     var highlightPaint = Paint()
       ..color = Colors.orange
@@ -541,7 +645,7 @@ class LinePainter2 extends CustomPainter {
       );
       final Offset ortho = Offset(
         (arrowWidth / 2) * -math.sin(angle),
-        (arrowWidth / 2) *  math.cos(angle),
+        (arrowWidth / 2) * math.cos(angle),
       );
       final Offset p1 = base + ortho;
       final Offset p2 = base - ortho;
@@ -557,96 +661,141 @@ class LinePainter2 extends CustomPainter {
     }
 
     for (var flow in controller.flows) {
-      if (!(flow.type == FlowType.condition && flow.left.hasChild && flow.right.hasChild)) {
+      if (!(flow.type == FlowType.condition &&
+          flow.left.hasChild &&
+          flow.right.hasChild)) {
         start = Offset(flow.x + flow.width / 2, flow.y + flow.height);
-        end = Offset(flow.x + flow.width / 2, flow.y + flow.height + flow.down.lineHeight);
-        
+        end = Offset(
+          flow.x + flow.width / 2,
+          flow.y + flow.height + flow.down.lineHeight,
+        );
+
         // Check if this line is being dragged
-        bool isHighlighted = controller.isDraggingLineHeight.value && 
-                            controller.draggedFlowId.value >= 0 &&
-                            controller.flows[controller.draggedFlowId.value].pid == flow.id &&
-                            controller.flows[controller.draggedFlowId.value].direction == Direction.down;
-        
+        bool isHighlighted =
+            controller.isDraggingLineHeight.value &&
+            controller.draggedFlowId.value >= 0 &&
+            controller.flows[controller.draggedFlowId.value].pid == flow.id &&
+            controller.flows[controller.draggedFlowId.value].direction ==
+                Direction.down;
+
         if (flow.down.hasChild || controller.showAddHandles.value) {
           canvas.drawLine(start, end, isHighlighted ? highlightPaint : paint);
         }
         if (controller.showAddHandles.value && !flow.down.hasChild) {
-          myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-            print("Down dot tapped for flow ${flow.id}");
-            controller.window.value = "add";
-            controller.selectedId.value = flow.id;
-            controller.selectedDirection.value = Direction.down;
-            controller.refreshUI();
-          });
+          myCanvas.drawCircle(
+            end,
+            3,
+            paint,
+            onTapDown: (tapdetail) {
+              print("Down dot tapped for flow ${flow.id}");
+              controller.window.value = "add";
+              controller.selectedId.value = flow.id;
+              controller.selectedDirection.value = Direction.down;
+              controller.refreshUI();
+            },
+          );
         }
       }
 
       if (flow.type == FlowType.condition) {
         // right
         // Hide add handles if this node participates in any loop (as from or to)
-        bool hasLoopWithThis = controller.loopLinks.any((LoopLink l) => l.toId == flow.id || l.fromId == flow.id);
+        bool hasLoopWithThis = controller.loopLinks.any(
+          (LoopLink l) => l.toId == flow.id || l.fromId == flow.id,
+        );
 
-        if (!hasLoopWithThis && flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
+        if (!hasLoopWithThis &&
+            flow.direction != Direction.left &&
+            !(flow.down.hasChild && flow.left.hasChild)) {
           start = Offset(flow.x + flow.width, flow.y + flow.height / 2);
-          end = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
-          
+          end = Offset(
+            flow.x + flow.width + flow.right.lineHeight,
+            flow.y + flow.height / 2,
+          );
+
           // Check if this line is being dragged
-          bool isHighlighted = controller.isDraggingLineHeight.value && 
-                              controller.draggedFlowId.value >= 0 &&
-                              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
-                              controller.flows[controller.draggedFlowId.value].direction == Direction.right;
-          
+          bool isHighlighted =
+              controller.isDraggingLineHeight.value &&
+              controller.draggedFlowId.value >= 0 &&
+              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
+              controller.flows[controller.draggedFlowId.value].direction ==
+                  Direction.right;
+
           // Draw side line only if permanent (has child) or when showing add handles
           if (flow.right.hasChild || controller.showAddHandles.value) {
             canvas.drawLine(start, end, isHighlighted ? highlightPaint : paint);
           }
           if (controller.showAddHandles.value && !flow.right.hasChild) {
-            myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-              print("Right dot tapped for flow ${flow.id}");
-              controller.window.value = "add";
-              controller.selectedId.value = flow.id;
-              controller.selectedDirection.value = Direction.right;
-              controller.refreshUI();
-            });
+            myCanvas.drawCircle(
+              end,
+              3,
+              paint,
+              onTapDown: (tapdetail) {
+                print("Right dot tapped for flow ${flow.id}");
+                controller.window.value = "add";
+                controller.selectedId.value = flow.id;
+                controller.selectedDirection.value = Direction.right;
+                controller.refreshUI();
+              },
+            );
           }
-          
         }
 
         // left
-        if (!hasLoopWithThis && flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
+        if (!hasLoopWithThis &&
+            flow.direction != Direction.right &&
+            !(flow.down.hasChild && flow.right.hasChild)) {
           start = Offset(flow.x, flow.y + flow.height / 2);
           end = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
-          
+
           // Check if this line is being dragged
-          bool isHighlighted = controller.isDraggingLineHeight.value && 
-                              controller.draggedFlowId.value >= 0 &&
-                              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
-                              controller.flows[controller.draggedFlowId.value].direction == Direction.left;
-          
+          bool isHighlighted =
+              controller.isDraggingLineHeight.value &&
+              controller.draggedFlowId.value >= 0 &&
+              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
+              controller.flows[controller.draggedFlowId.value].direction ==
+                  Direction.left;
+
           // Draw side line only if permanent (has child) or when showing add handles
           if (flow.left.hasChild || controller.showAddHandles.value) {
             canvas.drawLine(start, end, isHighlighted ? highlightPaint : paint);
           }
           if (controller.showAddHandles.value && !flow.left.hasChild) {
-            myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-              print("Left dot tapped for flow ${flow.id}");
-              controller.window.value = "add";
-              controller.selectedId.value = flow.id;
-              controller.selectedDirection.value = Direction.left;
-              controller.refreshUI();
-            });
+            myCanvas.drawCircle(
+              end,
+              3,
+              paint,
+              onTapDown: (tapdetail) {
+                print("Left dot tapped for flow ${flow.id}");
+                controller.window.value = "add";
+                controller.selectedId.value = flow.id;
+                controller.selectedDirection.value = Direction.left;
+                controller.refreshUI();
+              },
+            );
           }
-          
         }
-        Offset down = Offset((flow.x + flow.width / 2) + 20, (flow.y + flow.height + flow.down.lineHeight / 2) - 10);
-        Offset left = Offset((flow.x - flow.left.lineHeight / 2) - 2, (flow.y + flow.height / 2) - 20);
-        Offset right = Offset((flow.x + flow.width + flow.right.lineHeight / 2) - 10, (flow.y + flow.height / 2) - 20);
+        Offset down = Offset(
+          (flow.x + flow.width / 2) + 20,
+          (flow.y + flow.height + flow.down.lineHeight / 2) - 10,
+        );
+        Offset left = Offset(
+          (flow.x - flow.left.lineHeight / 2) - 2,
+          (flow.y + flow.height / 2) - 20,
+        );
+        Offset right = Offset(
+          (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
+          (flow.y + flow.height / 2) - 20,
+        );
         // yes
         if (flow.yes == Direction.down) {
           paintText('yes', down, true);
           // right
           if (flow.right.hasChild) {
-            start = Offset((flow.x + flow.width + flow.right.lineHeight / 2) - 10, (flow.y + flow.height / 2) - 20);
+            start = Offset(
+              (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
+              (flow.y + flow.height / 2) - 20,
+            );
             paintText('no', right, false);
           }
           // left
@@ -675,112 +824,167 @@ class LinePainter2 extends CustomPainter {
           }
         }
       }
-      
+
       // Process flow side dots (clickable) - only shown on hover
       if (flow.type == FlowType.process) {
         // Only draw dots when hovering over this specific flow
-        bool isHovered = controller.showAddHandles.value && controller.hoveredProcessId.value == flow.id && controller.hoveredSide.value.isNotEmpty;
-        
+        bool isHovered =
+            controller.showAddHandles.value &&
+            controller.hoveredProcessId.value == flow.id &&
+            controller.hoveredSide.value.isNotEmpty;
+
         if (isHovered) {
           // Right side dot
-          if (flow.direction != Direction.left && !(flow.down.hasChild && flow.left.hasChild)) {
-            if (controller.showAddHandles.value && !flow.right.hasChild && controller.hoveredSide.value == "right") {
-              end = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
-              myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-                print("Process right dot tapped for flow ${flow.id}");
-                controller.window.value = "add";
-                controller.selectedId.value = flow.id;
-                controller.selectedDirection.value = Direction.right;
-                controller.refreshUI();
-              });
+          if (flow.direction != Direction.left &&
+              !(flow.down.hasChild && flow.left.hasChild)) {
+            if (controller.showAddHandles.value &&
+                !flow.right.hasChild &&
+                controller.hoveredSide.value == "right") {
+              end = Offset(
+                flow.x + flow.width + flow.right.lineHeight,
+                flow.y + flow.height / 2,
+              );
+              myCanvas.drawCircle(
+                end,
+                3,
+                paint,
+                onTapDown: (tapdetail) {
+                  print("Process right dot tapped for flow ${flow.id}");
+                  controller.window.value = "add";
+                  controller.selectedId.value = flow.id;
+                  controller.selectedDirection.value = Direction.right;
+                  controller.refreshUI();
+                },
+              );
             }
           }
-          
+
           // Left side dot
-          if (flow.direction != Direction.right && !(flow.down.hasChild && flow.right.hasChild)) {
-            if (controller.showAddHandles.value && !flow.left.hasChild && controller.hoveredSide.value == "left") {
-              end = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
-              myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-                print("Process left dot tapped for flow ${flow.id}");
-                controller.window.value = "add";
-                controller.selectedId.value = flow.id;
-                controller.selectedDirection.value = Direction.left;
-                controller.refreshUI();
-              });
+          if (flow.direction != Direction.right &&
+              !(flow.down.hasChild && flow.right.hasChild)) {
+            if (controller.showAddHandles.value &&
+                !flow.left.hasChild &&
+                controller.hoveredSide.value == "left") {
+              end = Offset(
+                flow.x - flow.left.lineHeight,
+                flow.y + flow.height / 2,
+              );
+              myCanvas.drawCircle(
+                end,
+                3,
+                paint,
+                onTapDown: (tapdetail) {
+                  print("Process left dot tapped for flow ${flow.id}");
+                  controller.window.value = "add";
+                  controller.selectedId.value = flow.id;
+                  controller.selectedDirection.value = Direction.left;
+                  controller.refreshUI();
+                },
+              );
             }
           }
         }
       }
-      
+
       // Draw permanent lines for process flows with side children
       if (flow.type == FlowType.process) {
         // Right side line (if has right child)
         if (flow.right.hasChild) {
           start = Offset(flow.x + flow.width, flow.y + flow.height / 2);
-          end = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
-          
+          end = Offset(
+            flow.x + flow.width + flow.right.lineHeight,
+            flow.y + flow.height / 2,
+          );
+
           // Check if this line is being dragged
-          bool isHighlighted = controller.isDraggingLineHeight.value && 
-                              controller.draggedFlowId.value >= 0 &&
-                              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
-                              controller.flows[controller.draggedFlowId.value].direction == Direction.right;
-          
+          bool isHighlighted =
+              controller.isDraggingLineHeight.value &&
+              controller.draggedFlowId.value >= 0 &&
+              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
+              controller.flows[controller.draggedFlowId.value].direction ==
+                  Direction.right;
+
           canvas.drawLine(start, end, isHighlighted ? highlightPaint : paint);
         }
-        
+
         // Left side line (if has left child)
         if (flow.left.hasChild) {
           start = Offset(flow.x, flow.y + flow.height / 2);
           end = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
-          
+
           // Check if this line is being dragged
-          bool isHighlighted = controller.isDraggingLineHeight.value && 
-                              controller.draggedFlowId.value >= 0 &&
-                              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
-                              controller.flows[controller.draggedFlowId.value].direction == Direction.left;
-          
+          bool isHighlighted =
+              controller.isDraggingLineHeight.value &&
+              controller.draggedFlowId.value >= 0 &&
+              controller.flows[controller.draggedFlowId.value].pid == flow.id &&
+              controller.flows[controller.draggedFlowId.value].direction ==
+                  Direction.left;
+
           canvas.drawLine(start, end, isHighlighted ? highlightPaint : paint);
         }
       }
     }
-    
+
     // Draw hover lines for process flows (only when no children are attached) - using regular canvas, not TouchyCanvas
-    if (controller.showAddHandles.value && controller.hoveredProcessId.value >= 0 && controller.hoveredProcessId.value < controller.flows.length) {
+    if (controller.showAddHandles.value &&
+        controller.hoveredProcessId.value >= 0 &&
+        controller.hoveredProcessId.value < controller.flows.length) {
       final hoveredFlow = controller.flows[controller.hoveredProcessId.value];
-      if (hoveredFlow.type == FlowType.process && controller.hoveredSide.value.isNotEmpty) {
+      if (hoveredFlow.type == FlowType.process &&
+          controller.hoveredSide.value.isNotEmpty) {
         // Draw visible hover lines only if no children are attached to that side
         final hoverPaint = Paint()
-          ..color = Pallet.font2.withOpacity(0.7) // More visible
+          ..color = Pallet.font2
+              .withOpacity(0.7) // More visible
           ..strokeWidth = 2
           ..style = PaintingStyle.stroke;
-        
+
         // Draw only the hovered side (lines connect to the clickable dots) if no children attached
-        if (controller.hoveredSide.value == "left" && !hoveredFlow.left.hasChild) {
+        if (controller.hoveredSide.value == "left" &&
+            !hoveredFlow.left.hasChild) {
           // Draw left line
           start = Offset(hoveredFlow.x, hoveredFlow.y + hoveredFlow.height / 2);
-          end = Offset(hoveredFlow.x - hoveredFlow.left.lineHeight, hoveredFlow.y + hoveredFlow.height / 2);
+          end = Offset(
+            hoveredFlow.x - hoveredFlow.left.lineHeight,
+            hoveredFlow.y + hoveredFlow.height / 2,
+          );
           canvas.drawLine(start, end, hoverPaint);
-        } else if (controller.hoveredSide.value == "right" && !hoveredFlow.right.hasChild) {
+        } else if (controller.hoveredSide.value == "right" &&
+            !hoveredFlow.right.hasChild) {
           // Draw right line
-          start = Offset(hoveredFlow.x + hoveredFlow.width, hoveredFlow.y + hoveredFlow.height / 2);
-          end = Offset(hoveredFlow.x + hoveredFlow.width + hoveredFlow.right.lineHeight, hoveredFlow.y + hoveredFlow.height / 2);
+          start = Offset(
+            hoveredFlow.x + hoveredFlow.width,
+            hoveredFlow.y + hoveredFlow.height / 2,
+          );
+          end = Offset(
+            hoveredFlow.x + hoveredFlow.width + hoveredFlow.right.lineHeight,
+            hoveredFlow.y + hoveredFlow.height / 2,
+          );
           canvas.drawLine(start, end, hoverPaint);
         }
       }
     }
-    
+
     // Draw loop links routed via a top/bottom corridor outside all nodes to avoid crossing
     if (controller.flows.isNotEmpty) {
-      double minY = controller.flows.map((FlowClass f) => f.y).reduce((a, b) => a < b ? a : b);
-      double maxY = controller.flows.map((FlowClass f) => f.y + f.height).reduce((a, b) => a > b ? a : b);
-      double minX = controller.flows.map((FlowClass f) => f.x).reduce((a, b) => a < b ? a : b);
-      double maxX = controller.flows.map((FlowClass f) => f.x + f.width).reduce((a, b) => a > b ? a : b);
+      double minY = controller.flows
+          .map((FlowClass f) => f.y)
+          .reduce((a, b) => a < b ? a : b);
+      double maxY = controller.flows
+          .map((FlowClass f) => f.y + f.height)
+          .reduce((a, b) => a > b ? a : b);
+      double minX = controller.flows
+          .map((FlowClass f) => f.x)
+          .reduce((a, b) => a < b ? a : b);
+      double maxX = controller.flows
+          .map((FlowClass f) => f.x + f.width)
+          .reduce((a, b) => a > b ? a : b);
       double pad = controller.loopPad.value;
       double topCorridorY = minY - pad; // outside above
       double bottomCorridorY = maxY + pad; // outside below
       double leftLaneX = minX - pad; // outside left
       double rightLaneX = maxX + pad; // outside right
-      
+
       Offset edgePointVertical(FlowClass f, double targetY) {
         final cx = f.x + f.width / 2;
         if (targetY < f.y + f.height / 2) {
@@ -789,7 +993,7 @@ class LinePainter2 extends CustomPainter {
           return Offset(cx, f.y + f.height); // from bottom edge
         }
       }
-      
+
       Offset edgePointHorizontal(FlowClass f, double targetX) {
         final cy = f.y + f.height / 2;
         if (targetX < f.x + f.width / 2) {
@@ -798,7 +1002,7 @@ class LinePainter2 extends CustomPainter {
           return Offset(f.x + f.width, cy); // from right edge
         }
       }
-      
+
       bool verticalBlocked(double x, double y1, double y2, int ignoreId) {
         final top = y1 < y2 ? y1 : y2;
         final bottom = y1 < y2 ? y2 : y1;
@@ -816,21 +1020,38 @@ class LinePainter2 extends CustomPainter {
         }
         return false;
       }
-      
+
       // horizontalBlocked removed (unused)
       for (var link in controller.loopLinks) {
-        final from = controller.flows.firstWhereOrNull((f) => f.id == link.fromId);
+        final from = controller.flows.firstWhereOrNull(
+          (f) => f.id == link.fromId,
+        );
         final to = controller.flows.firstWhereOrNull((f) => f.id == link.toId);
         if (from == null || to == null) continue;
-        final fromCenter = Offset(from.x + from.width / 2, from.y + from.height / 2);
+        final fromCenter = Offset(
+          from.x + from.width / 2,
+          from.y + from.height / 2,
+        );
         final toCenter = Offset(to.x + to.width / 2, to.y + to.height / 2);
         final bool goesLeft = toCenter.dx < fromCenter.dx;
-        
+
         // Try top corridor first if verticals are clear
-        bool useTop = !verticalBlocked(fromCenter.dx, fromCenter.dy, topCorridorY, from.id) &&
-                      !verticalBlocked(toCenter.dx, toCenter.dy, topCorridorY, to.id);
-        bool useBottom = !verticalBlocked(fromCenter.dx, fromCenter.dy, bottomCorridorY, from.id) &&
-                         !verticalBlocked(toCenter.dx, toCenter.dy, bottomCorridorY, to.id);
+        bool useTop =
+            !verticalBlocked(
+              fromCenter.dx,
+              fromCenter.dy,
+              topCorridorY,
+              from.id,
+            ) &&
+            !verticalBlocked(toCenter.dx, toCenter.dy, topCorridorY, to.id);
+        bool useBottom =
+            !verticalBlocked(
+              fromCenter.dx,
+              fromCenter.dy,
+              bottomCorridorY,
+              from.id,
+            ) &&
+            !verticalBlocked(toCenter.dx, toCenter.dy, bottomCorridorY, to.id);
         if (useTop || useBottom) {
           double corridorY = useTop ? topCorridorY : bottomCorridorY;
           final p1 = edgePointVertical(from, corridorY);
@@ -846,7 +1067,7 @@ class LinePainter2 extends CustomPainter {
           loopp.paint(canvas, Offset(labelHX, midH.dy - 12));
           continue;
         }
-        
+
         // Fallback: route via side lane (left or right) choosing the side with fewer flows
         final midX = (fromCenter.dx + toCenter.dx) / 2;
         int leftCount = 0;
@@ -861,7 +1082,8 @@ class LinePainter2 extends CustomPainter {
         }
         // Prefer the side with fewer nodes, but also ensure it's inside the canvas
         bool preferRight = rightCount < leftCount;
-        double laneX = preferRight && rightLaneX + 10 < controller.stageWidth.value
+        double laneX =
+            preferRight && rightLaneX + 10 < controller.stageWidth.value
             ? rightLaneX
             : leftLaneX;
         final p1 = edgePointHorizontal(from, laneX);
@@ -877,19 +1099,24 @@ class LinePainter2 extends CustomPainter {
         loopp.paint(canvas, Offset(labelVX, midV.dy - 6));
       }
     }
-
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     if (oldDelegate is LinePainter2) {
-      return oldDelegate.controller.hoveredProcessId.value != controller.hoveredProcessId.value ||
-             oldDelegate.controller.hoveredSide.value != controller.hoveredSide.value ||
-             oldDelegate.controller.isDraggingLineHeight.value != controller.isDraggingLineHeight.value ||
-             oldDelegate.controller.draggedFlowId.value != controller.draggedFlowId.value ||
-             oldDelegate.controller.loopLinks.length != controller.loopLinks.length ||
-             oldDelegate.controller.loopPad.value != controller.loopPad.value ||
-             oldDelegate.controller.flowCanvasRefreshCounter.value != controller.flowCanvasRefreshCounter.value;
+      return oldDelegate.controller.hoveredProcessId.value !=
+              controller.hoveredProcessId.value ||
+          oldDelegate.controller.hoveredSide.value !=
+              controller.hoveredSide.value ||
+          oldDelegate.controller.isDraggingLineHeight.value !=
+              controller.isDraggingLineHeight.value ||
+          oldDelegate.controller.draggedFlowId.value !=
+              controller.draggedFlowId.value ||
+          oldDelegate.controller.loopLinks.length !=
+              controller.loopLinks.length ||
+          oldDelegate.controller.loopPad.value != controller.loopPad.value ||
+          oldDelegate.controller.flowCanvasRefreshCounter.value !=
+              controller.flowCanvasRefreshCounter.value;
     }
     return true;
   }

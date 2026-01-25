@@ -1,12 +1,16 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// Default Bottom Action Bar implementation
 class DefaultBottomActionBar extends BottomActionBar {
   /// Constructor
-  const DefaultBottomActionBar(super.config, super.state, super.showSearchView,
-      {super.key});
+  const DefaultBottomActionBar(
+    super.config,
+    super.state,
+    super.showSearchView, {
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _DefaultBottomActionBarState();

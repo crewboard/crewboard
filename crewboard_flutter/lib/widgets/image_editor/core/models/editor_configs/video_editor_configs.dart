@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/video_editor_widgets.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/icons/video_editor_icons.dart';
@@ -34,11 +34,11 @@ class VideoEditorConfigs {
     this.trimBarMinScale = 1,
     this.trimBarMaxScale = 3,
     this.playTimeSmoothingDuration = Duration.zero,
-  })  : assert(trimBarMinScale > 0, 'trimBarMinScale must be greater than 0'),
-        assert(
-          trimBarMaxScale > trimBarMinScale,
-          'trimBarMaxScale must be greater than trimBarMinScale',
-        );
+  }) : assert(trimBarMinScale > 0, 'trimBarMinScale must be greater than 0'),
+       assert(
+         trimBarMaxScale > trimBarMinScale,
+         'trimBarMaxScale must be greater than trimBarMinScale',
+       );
 
   /// Configurable icons for the video editor.
   final VideoEditorIcons icons;
@@ -150,7 +150,8 @@ class VideoEditorConfigs {
           animatedIndicatorDuration ?? this.animatedIndicatorDuration,
       animatedIndicatorSwitchInCurve:
           animatedIndicatorSwitchInCurve ?? this.animatedIndicatorSwitchInCurve,
-      animatedIndicatorSwitchOutCurve: animatedIndicatorSwitchOutCurve ??
+      animatedIndicatorSwitchOutCurve:
+          animatedIndicatorSwitchOutCurve ??
           this.animatedIndicatorSwitchOutCurve,
     );
   }
@@ -211,5 +212,5 @@ enum VideoEditorControlPosition {
   top,
 
   /// Place the controls on the bottom of the screen.
-  bottom
+  bottom,
 }

@@ -9,7 +9,7 @@ class EmojiPickerWidget extends StatefulWidget {
   final String searchQuery;
 
   const EmojiPickerWidget({
-    super.key, 
+    super.key,
     required this.onEmojiSelected,
     this.searchQuery = "",
   });

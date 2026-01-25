@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/platform/platform_popup_menu.dart';
@@ -114,7 +114,7 @@ class PaintEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
     // Taking into account the back button
     final expandedIconButtonsSize =
         (1 + configButtons.length + actionButtons.length) *
-            defaultIconButtonSize;
+        defaultIconButtonSize;
 
     return [
       IconButton(
@@ -203,75 +203,75 @@ class PaintEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 onTap: onRedo,
               ),
-          ]
+          ],
         ],
-      )
+      ),
     ];
   }
 
   /// Builds and returns a list of IconButton to change the line width /
   /// toggle fill or un-fill / change the opacity.
   List<Widget> _getConfigButtons() => [
-        if (paintEditorConfigs.showLineWidthAdjustmentButton)
-          IconButton(
-            tooltip: i18n.lineWidth,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: Icon(
-              paintEditorConfigs.icons.lineWeight,
-              color: paintEditorConfigs.style.appBarColor,
-            ),
-            onPressed: onOpenLineWeightBottomSheet,
-          ),
-        if (paintEditorConfigs.showToggleFillButton)
-          IconButton(
-            tooltip: i18n.toggleFill,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: Icon(
-              !isFillMode
-                  ? paintEditorConfigs.icons.noFill
-                  : paintEditorConfigs.icons.fill,
-              color: paintEditorConfigs.style.appBarColor,
-            ),
-            onPressed: onToggleFill,
-          ),
-        if (paintEditorConfigs.showOpacityAdjustmentButton)
-          IconButton(
-            tooltip: i18n.changeOpacity,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: Icon(
-              paintEditorConfigs.icons.changeOpacity,
-              color: paintEditorConfigs.style.appBarColor,
-            ),
-            onPressed: onOpenOpacityBottomSheet,
-          ),
-      ];
+    if (paintEditorConfigs.showLineWidthAdjustmentButton)
+      IconButton(
+        tooltip: i18n.lineWidth,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        icon: Icon(
+          paintEditorConfigs.icons.lineWeight,
+          color: paintEditorConfigs.style.appBarColor,
+        ),
+        onPressed: onOpenLineWeightBottomSheet,
+      ),
+    if (paintEditorConfigs.showToggleFillButton)
+      IconButton(
+        tooltip: i18n.toggleFill,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        icon: Icon(
+          !isFillMode
+              ? paintEditorConfigs.icons.noFill
+              : paintEditorConfigs.icons.fill,
+          color: paintEditorConfigs.style.appBarColor,
+        ),
+        onPressed: onToggleFill,
+      ),
+    if (paintEditorConfigs.showOpacityAdjustmentButton)
+      IconButton(
+        tooltip: i18n.changeOpacity,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        icon: Icon(
+          paintEditorConfigs.icons.changeOpacity,
+          color: paintEditorConfigs.style.appBarColor,
+        ),
+        onPressed: onOpenOpacityBottomSheet,
+      ),
+  ];
 
   /// Builds and returns a list of IconButton to undo / redo / apply changes.
   List<Widget> _getActionButtons() => [
-        IconButton(
-          tooltip: i18n.undo,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          icon: Icon(
-            paintEditorConfigs.icons.undoAction,
-            color: canUndo
-                ? paintEditorConfigs.style.appBarColor
-                : paintEditorConfigs.style.appBarColor.withAlpha(80),
-          ),
-          onPressed: onUndo,
-        ),
-        IconButton(
-          tooltip: i18n.redo,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          icon: Icon(
-            paintEditorConfigs.icons.redoAction,
-            color: canRedo
-                ? paintEditorConfigs.style.appBarColor
-                : paintEditorConfigs.style.appBarColor.withAlpha(80),
-          ),
-          onPressed: onRedo,
-        ),
-        _buildDoneBtn(),
-      ];
+    IconButton(
+      tooltip: i18n.undo,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      icon: Icon(
+        paintEditorConfigs.icons.undoAction,
+        color: canUndo
+            ? paintEditorConfigs.style.appBarColor
+            : paintEditorConfigs.style.appBarColor.withAlpha(80),
+      ),
+      onPressed: onUndo,
+    ),
+    IconButton(
+      tooltip: i18n.redo,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      icon: Icon(
+        paintEditorConfigs.icons.redoAction,
+        color: canRedo
+            ? paintEditorConfigs.style.appBarColor
+            : paintEditorConfigs.style.appBarColor.withAlpha(80),
+      ),
+      onPressed: onRedo,
+    ),
+    _buildDoneBtn(),
+  ];
 
   /// Builds and returns an IconButton for applying changes.
   Widget _buildDoneBtn() {

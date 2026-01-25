@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/blur_editor_configs.dart';
@@ -66,24 +66,25 @@ class BlurEditorBottombar extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 800),
             child: RepaintBoundary(
               child: ValueListenableBuilder(
-                  valueListenable: blurFactor,
-                  builder: (_, value, __) {
-                    return blurEditorConfigs.widgets.slider?.call(
-                          blurEditorState,
-                          rebuildController.stream,
-                          value,
-                          onChanged,
-                          onChangedEnd,
-                        ) ??
-                        Slider(
-                          min: 0,
-                          max: blurEditorConfigs.maxBlur,
-                          divisions: 100,
-                          value: value,
-                          onChanged: onChanged,
-                          onChangeEnd: onChangedEnd,
-                        );
-                  }),
+                valueListenable: blurFactor,
+                builder: (_, value, __) {
+                  return blurEditorConfigs.widgets.slider?.call(
+                        blurEditorState,
+                        rebuildController.stream,
+                        value,
+                        onChanged,
+                        onChangedEnd,
+                      ) ??
+                      Slider(
+                        min: 0,
+                        max: blurEditorConfigs.maxBlur,
+                        divisions: 100,
+                        value: value,
+                        onChanged: onChanged,
+                        onChangeEnd: onChangedEnd,
+                      );
+                },
+              ),
             ),
           ),
         ),

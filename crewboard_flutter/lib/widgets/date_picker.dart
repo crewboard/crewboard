@@ -29,8 +29,18 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
   late int selectedYear;
 
   final List<String> months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   late int daysInMonth;
@@ -45,8 +55,12 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
 
     // Controllers initial items (zero-based index)
     _dayController = FixedExtentScrollController(initialItem: selectedDay - 1);
-    _monthController = FixedExtentScrollController(initialItem: selectedMonth - 1);
-    _yearController = FixedExtentScrollController(initialItem: selectedYear - 2000);
+    _monthController = FixedExtentScrollController(
+      initialItem: selectedMonth - 1,
+    );
+    _yearController = FixedExtentScrollController(
+      initialItem: selectedYear - 2000,
+    );
 
     // initial days count (works for December as well)
     daysInMonth = DateTime(selectedYear, selectedMonth + 1, 0).day;
@@ -143,7 +157,10 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                       children: [
                         // Day wheel built from daysInMonth (dynamic)
                         _buildWheel(
-                          items: List.generate(daysInMonth, (i) => (i + 1).toString()),
+                          items: List.generate(
+                            daysInMonth,
+                            (i) => (i + 1).toString(),
+                          ),
                           controller: _dayController,
                           onChanged: _onDayChanged,
                           offAxisFraction: -0.5,
@@ -155,7 +172,10 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                           flex: 2,
                         ),
                         _buildWheel(
-                          items: List.generate(100, (i) => (2000 + i).toString()),
+                          items: List.generate(
+                            100,
+                            (i) => (2000 + i).toString(),
+                          ),
                           controller: _yearController,
                           onChanged: _onYearChanged,
                           offAxisFraction: 0.5,
@@ -179,11 +199,16 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                       label: "Done",
                       onPress: () {
                         // Ensure final day is inside valid range
-                        final int finalDay = math.max(1, math.min(selectedDay, daysInMonth));
+                        final int finalDay = math.max(
+                          1,
+                          math.min(selectedDay, daysInMonth),
+                        );
                         final int finalMonth = selectedMonth;
                         final int finalYear = selectedYear;
 
-                        widget.onDateSelected(DateTime(finalYear, finalMonth, finalDay));
+                        widget.onDateSelected(
+                          DateTime(finalYear, finalMonth, finalDay),
+                        );
                         Navigator.pop(context);
                       },
                     ),
@@ -219,8 +244,8 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
           builder: (context, index) {
             if (index < 0 || index >= items.length) return null;
 
-            final bool isSelected = controller.hasClients &&
-                controller.selectedItem == index;
+            final bool isSelected =
+                controller.hasClients && controller.selectedItem == index;
 
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -241,8 +266,9 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                         ? Pallet.font1
                         : Pallet.font1.withOpacity(0.6),
                     fontSize: isSelected ? 18 : 15,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                   child: Text(items[index]),
                 ),

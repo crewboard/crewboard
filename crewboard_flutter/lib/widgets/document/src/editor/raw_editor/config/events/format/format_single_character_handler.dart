@@ -58,8 +58,10 @@ bool handleFormatByWrappingWithSingleCharacter({
     return false;
   }
 
-  final textAfterLastChar =
-      plainText.substring(lastCharIndex + 1, selection.end);
+  final textAfterLastChar = plainText.substring(
+    lastCharIndex + 1,
+    selection.end,
+  );
   final textAfterLastCharIsEmpty = textAfterLastChar.trim().isEmpty;
 
   // The following conditions won't trigger the single character formatting:
@@ -92,12 +94,9 @@ bool handleFormatByWrappingWithSingleCharacter({
     ..retain(lastCharIndex) // get all text before chars
     ..delete(1) // delete both start char
     ..retain(
-        (selection.end - 2) - (lastCharIndex - 1),
-        style == null
-            ? null
-            : {
-                style.key: style.value
-              }); // retain the text before that the new char that we type on keyboard
+      (selection.end - 2) - (lastCharIndex - 1),
+      style == null ? null : {style.key: style.value},
+    ); // retain the text before that the new char that we type on keyboard
 
   controller
     ..compose(

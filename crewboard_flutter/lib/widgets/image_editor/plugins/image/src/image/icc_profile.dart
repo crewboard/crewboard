@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import 'dart:typed_data';
 
@@ -11,9 +11,9 @@ class IccProfile {
   IccProfile(this.name, this.compression, this.data);
 
   IccProfile.from(IccProfile other)
-      : name = other.name,
-        compression = other.compression,
-        data = other.data.sublist(0);
+    : name = other.name,
+      compression = other.compression,
+      data = other.data.sublist(0);
   String name = '';
   IccProfileCompression compression;
   Uint8List data;

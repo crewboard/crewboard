@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -114,11 +114,12 @@ class CropEditorBottombar extends StatelessWidget {
                   maxWidth: 500,
                 ),
                 child: Wrap(
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.spaceAround,
-                    children: tools
-                        .map((tool) => _buildTool(_getItem(tool)))
-                        .toList()),
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.spaceAround,
+                  children: tools
+                      .map((tool) => _buildTool(_getItem(tool)))
+                      .toList(),
+                ),
               ),
             ),
           ),

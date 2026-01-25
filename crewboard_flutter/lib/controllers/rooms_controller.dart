@@ -127,7 +127,9 @@ class RoomsController extends GetxController {
 
     int backupIndex = _backup.indexWhere((r) => r.id == roomId);
     if (backupIndex != -1) {
-      var updatedBackupRoom = _backup[backupIndex].copyWith(lastMessage: message);
+      var updatedBackupRoom = _backup[backupIndex].copyWith(
+        lastMessage: message,
+      );
       _backup.removeAt(backupIndex);
       _backup.insert(0, updatedBackupRoom);
     }

@@ -24,13 +24,15 @@ class _AttributeHandler {
     Attribute<Object?> attribute,
     Node node,
     StringSink output,
-  )? beforeContent;
+  )?
+  beforeContent;
 
   final void Function(
     Attribute<Object?> attribute,
     Node node,
     StringSink output,
-  )? afterContent;
+  )?
+  afterContent;
 }
 
 /// Outputs [Embed] element as markdown.
@@ -77,8 +79,9 @@ class DeltaToMarkdown extends Converter<Delta, String>
           );
         }
         if (infoString.isEmpty) {
-          final linesWithLang = (node as Block).children.where((child) =>
-              child.containsAttr(CodeBlockLanguageAttribute.attrKey));
+          final linesWithLang = (node as Block).children.where(
+            (child) => child.containsAttr(CodeBlockLanguageAttribute.attrKey),
+          );
           if (linesWithLang.isNotEmpty) {
             infoString = linesWithLang.first.getAttrValueOr(
               CodeBlockLanguageAttribute.attrKey,
@@ -244,9 +247,11 @@ class DeltaToMarkdown extends Converter<Delta, String>
             (text.parent?.style.containsKey(Attribute.codeBlock.key) ??
                 false))) {
           content = content.replaceAllMapped(
-              RegExp(r'[\\\`\*\_\{\}\[\]\(\)\#\+\-\.\!\>\<]'), (match) {
-            return '\\${match[0]}';
-          });
+            RegExp(r'[\\\`\*\_\{\}\[\]\(\)\#\+\-\.\!\>\<]'),
+            (match) {
+              return '\\${match[0]}';
+            },
+          );
         }
         out.write(content);
       },
@@ -360,7 +365,8 @@ extension _NodeX on Node {
     }
 
     final attrs = style.attributes.values.sorted(
-        (attr1, attr2) => attrCount[attr2]!.compareTo(attrCount[attr1]!));
+      (attr1, attr2) => attrCount[attr2]!.compareTo(attrCount[attr1]!),
+    );
 
     return attrs;
   }

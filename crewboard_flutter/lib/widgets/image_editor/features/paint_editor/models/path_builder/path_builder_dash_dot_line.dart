@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'path_builder_base.dart';
 
@@ -62,10 +62,12 @@ class PathBuilderDashDotLine extends PathBuilderBase {
         if (dotCenter < metric.length) {
           final tangent = metric.getTangentForOffset(dotCenter);
           if (tangent != null) {
-            dotPath.addOval(Rect.fromCircle(
-              center: tangent.position,
-              radius: dotRadius,
-            ));
+            dotPath.addOval(
+              Rect.fromCircle(
+                center: tangent.position,
+                radius: dotRadius,
+              ),
+            );
           }
         }
 

@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -91,8 +91,9 @@ class DesktopInteractionManager {
 
     final key = event.logicalKey.keyLabel;
 
-    bool? stopPropagate =
-        callbacks.mainEditorCallbacks?.onKeyboardEvent?.call(event);
+    bool? stopPropagate = callbacks.mainEditorCallbacks?.onKeyboardEvent?.call(
+      event,
+    );
 
     if (stopPropagate == true) return true;
 

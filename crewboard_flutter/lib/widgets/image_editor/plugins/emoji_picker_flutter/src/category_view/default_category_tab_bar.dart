@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -48,7 +48,8 @@ class DefaultCategoryTabBar extends StatelessWidget {
             .asMap()
             .entries
             .map<Widget>(
-                (item) => _buildCategoryTab(item.key, item.value.category))
+              (item) => _buildCategoryTab(item.key, item.value.category),
+            )
             .toList(),
       ),
     );

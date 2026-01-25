@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import 'dart:typed_data';
 
@@ -30,7 +30,6 @@ abstract class WinEncoder extends Encoder {
     final count = images.length;
 
     final out = OutputBuffer()
-
       // header
       ..writeUint16(0) // reserved
       ..writeUint16(type) // type: ICO => 1; CUR => 2

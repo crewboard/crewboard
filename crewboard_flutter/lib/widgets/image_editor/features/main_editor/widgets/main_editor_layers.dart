@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -123,13 +123,15 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
         // Render an empty container when resetting layers
         if (resetLayerSnapshot.data!) return const SizedBox.shrink();
 
-        return LayoutBuilder(builder: (context, constraints) {
-          _editorBodySize = getValidSizeOrDefault(
-            widget.sizesManager.bodySize,
-            constraints.biggest,
-          );
-          return _buildLayerRepaintBoundary();
-        });
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            _editorBodySize = getValidSizeOrDefault(
+              widget.sizesManager.bodySize,
+              constraints.biggest,
+            );
+            return _buildLayerRepaintBoundary();
+          },
+        );
       },
     );
   }
@@ -140,32 +142,33 @@ class _MainEditorLayersState extends State<MainEditorLayers> {
       key: _layersService.mouseCursorsKey,
       onHover: isDesktop ? _layersService.handleMouseHover : null,
       child: ValueListenableBuilder(
-          valueListenable: _layersService.deferId,
-          builder: (_, deferId, __) {
-            return DeferredPointerHandler(
-              id: deferId,
-              selectedLayerId: _layerInteractionManager.selectedLayerId,
-              child: StreamBuilder(
-                stream: widget.controllers.uiLayerCtrl.stream,
-                builder: (context, snapshot) {
-                  return GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      _layerInteractionManager.clearSelectedLayers();
-                      widget.onCheckInteractiveViewer();
-                      setState(() {});
-                    },
-                    child: Stack(
-                      children: [
-                        for (Layer layer in widget.activeLayers)
-                          _buildLayerWidget(layer)
-                      ],
-                    ),
-                  );
-                },
-              ),
-            );
-          }),
+        valueListenable: _layersService.deferId,
+        builder: (_, deferId, __) {
+          return DeferredPointerHandler(
+            id: deferId,
+            selectedLayerId: _layerInteractionManager.selectedLayerId,
+            child: StreamBuilder(
+              stream: widget.controllers.uiLayerCtrl.stream,
+              builder: (context, snapshot) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _layerInteractionManager.clearSelectedLayers();
+                    widget.onCheckInteractiveViewer();
+                    setState(() {});
+                  },
+                  child: Stack(
+                    children: [
+                      for (Layer layer in widget.activeLayers)
+                        _buildLayerWidget(layer),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

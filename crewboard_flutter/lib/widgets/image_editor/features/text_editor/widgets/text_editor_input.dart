@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/text_editor_callbacks.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -117,8 +117,10 @@ class _TextEditorInputState extends State<TextEditorInput> {
       animation.addStatusListener(animationStatusListener);
     }
 
-    final shuttleChild =
-        InheritedTheme.captureAll(fromHeroContext, toHero.child);
+    final shuttleChild = InheritedTheme.captureAll(
+      fromHeroContext,
+      toHero.child,
+    );
 
     return isOpening
         ? SingleChildScrollView(
@@ -174,8 +176,9 @@ class _TextEditorInputState extends State<TextEditorInput> {
           },
           onEditingComplete: widget.callbacks?.handleEditingComplete,
           onSubmitted: widget.callbacks?.handleSubmitted,
-          textAlign:
-              widget.textCtrl.text.isEmpty ? TextAlign.center : widget.align,
+          textAlign: widget.textCtrl.text.isEmpty
+              ? TextAlign.center
+              : widget.align,
           configs: widget.configs,
           cursorHeight: widget.textFontSize,
           cursorWidth: widget.cursorWidth,

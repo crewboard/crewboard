@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import '../../constants/editor_style_constants.dart';
@@ -53,8 +53,9 @@ class TextEditorStyle {
   /// style properties.
   const TextEditorStyle({
     this.fontSizeBottomSheetTitle,
-    this.textFieldMargin =
-        const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+    this.textFieldMargin = const EdgeInsets.only(
+      bottom: kBottomNavigationBarHeight,
+    ),
     this.appBarBackground = kImageEditorAppBarBackground,
     this.appBarColor = kImageEditorAppBarColor,
     this.bottomBarBackground = kImageEditorBottomBarBackground,

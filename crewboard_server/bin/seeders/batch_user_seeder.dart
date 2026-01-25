@@ -57,7 +57,7 @@ void main(List<String> args) async {
 
   try {
     final session = await pod.createSession();
-    
+
     print('\n--- Batch User Seeder ---');
 
     final userList = [
@@ -70,20 +70,20 @@ void main(List<String> args) async {
     ];
 
     final password = '0007!Asd';
-    
+
     print('Fetching userType...');
     final userType = await UserTypes.db.findFirstRow(
       session,
       where: (t) => t.userType.equals('user'),
     );
     print('userType: $userType');
-    
+
     print('Fetching organization...');
     var organization = await Organization.db.findFirstRow(
       session,
       where: (t) => t.name.equals('test'),
     );
-    
+
     if (organization == null) {
       print('Creating "test" organization...');
       organization = await Organization.db.insertRow(
@@ -101,7 +101,9 @@ void main(List<String> args) async {
     final defaultLeaveConfig = await LeaveConfig.db.findFirstRow(session);
     print('defaultLeaveConfig: $defaultLeaveConfig');
 
-    if (userType == null || systemColors.isEmpty || defaultLeaveConfig == null) {
+    if (userType == null ||
+        systemColors.isEmpty ||
+        defaultLeaveConfig == null) {
       print('Error: Missing default resources.');
       print('userType: $userType');
       print('colors count: ${systemColors.length}');
@@ -118,17 +120,19 @@ void main(List<String> args) async {
         final userColor = systemColors[colorIndex % systemColors.length];
         colorIndex++;
 
-        print('Creating $username ($email) with color ${userColor.colorName}...');
+        print(
+          'Creating $username ($email) with color ${userColor.colorName}...',
+        );
 
         // Check if exists
         final existingUser = await User.db.findFirstRow(
-            session,
-            where: (t) => t.userName.equals(username),
+          session,
+          where: (t) => t.userName.equals(username),
         );
 
         if (existingUser != null) {
-            print(' - Skipped: Username already exists.');
-            continue;
+          print(' - Skipped: Username already exists.');
+          continue;
         }
 
         final newUser = User(
@@ -138,7 +142,7 @@ void main(List<String> args) async {
           colorId: userColor.id!,
           userTypeId: userType.id!,
           leaveConfigId: defaultLeaveConfig.id!,
-          firstName: username, 
+          firstName: username,
           lastName: '',
           gender: 'unspecified',
           phone: '',
@@ -154,7 +158,6 @@ void main(List<String> args) async {
           password,
         );
         print(' - Success');
-
       } catch (e) {
         print(' - Failed: $e');
       }

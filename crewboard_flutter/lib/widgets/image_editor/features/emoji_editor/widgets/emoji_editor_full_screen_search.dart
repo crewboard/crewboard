@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -44,7 +44,9 @@ class EmojiEditorFullScreenSearchViewState
   void onTextInputChanged(String text) {
     links.clear();
     results.clear();
-    utils.searchEmoji(text, widget.config.emojiSet!(widget.config.locale)).then(
+    utils
+        .searchEmoji(text, widget.config.emojiSet!(widget.config.locale))
+        .then(
           (value) => setState(
             () => _updateResults(value),
           ),
@@ -64,29 +66,33 @@ class EmojiEditorFullScreenSearchViewState
   /// Builds the widget tree for the full-screen search view.
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final emojiSize =
-          widget.config.emojiViewConfig.getEmojiSize(constraints.maxWidth);
-      final emojiBoxSize =
-          widget.config.emojiViewConfig.getEmojiBoxSize(constraints.maxWidth);
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: 1,
-          crossAxisCount: widget.config.emojiViewConfig.columns,
-          mainAxisSpacing: widget.config.emojiViewConfig.verticalSpacing,
-          crossAxisSpacing: widget.config.emojiViewConfig.horizontalSpacing,
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        itemCount: results.length,
-        itemBuilder: (context, index) {
-          return buildEmoji(
-            results[index],
-            emojiSize,
-            emojiBoxSize,
-          );
-        },
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final emojiSize = widget.config.emojiViewConfig.getEmojiSize(
+          constraints.maxWidth,
+        );
+        final emojiBoxSize = widget.config.emojiViewConfig.getEmojiBoxSize(
+          constraints.maxWidth,
+        );
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 1,
+            crossAxisCount: widget.config.emojiViewConfig.columns,
+            mainAxisSpacing: widget.config.emojiViewConfig.verticalSpacing,
+            crossAxisSpacing: widget.config.emojiViewConfig.horizontalSpacing,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          itemCount: results.length,
+          itemBuilder: (context, index) {
+            return buildEmoji(
+              results[index],
+              emojiSize,
+              emojiBoxSize,
+            );
+          },
+        );
+      },
+    );
   }
 
   /// Builds an emoji cell widget.
@@ -102,20 +108,20 @@ class EmojiEditorFullScreenSearchViewState
         config: widget.config,
         onSkinToneDialogRequested:
             (emojiBoxPosition, emoji, emojiSize, category) {
-          closeSkinToneOverlay();
-          if (!emoji.hasSkinTone || !widget.config.skinToneConfig.enabled) {
-            return;
-          }
-          showSkinToneOverlay(
-            emojiBoxPosition,
-            emoji,
-            emojiSize,
-            null,
-            widget.config,
-            _onSkinTonedEmojiSelected,
-            links[emoji.emoji]!,
-          );
-        },
+              closeSkinToneOverlay();
+              if (!emoji.hasSkinTone || !widget.config.skinToneConfig.enabled) {
+                return;
+              }
+              showSkinToneOverlay(
+                emojiBoxPosition,
+                emoji,
+                emojiSize,
+                null,
+                widget.config,
+                _onSkinTonedEmojiSelected,
+                links[emoji.emoji]!,
+              );
+            },
       ),
     );
   }

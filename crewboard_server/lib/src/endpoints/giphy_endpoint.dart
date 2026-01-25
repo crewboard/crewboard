@@ -8,7 +8,12 @@ class GiphyEndpoint extends Endpoint {
     return session.server.passwords['giphy_api_key'];
   }
 
-  Future<List<Gif>> getGifs(Session session, {String? query, int limit = 20, int offset = 0}) async {
+  Future<List<Gif>> getGifs(
+    Session session, {
+    String? query,
+    int limit = 20,
+    int offset = 0,
+  }) async {
     final apiKey = await getApiKey(session);
     if (apiKey == null || apiKey == 'YOUR_GIPHY_API_KEY_HERE') return [];
 
@@ -16,13 +21,15 @@ class GiphyEndpoint extends Endpoint {
         ? 'https://api.giphy.com/v1/gifs/trending'
         : 'https://api.giphy.com/v1/gifs/search';
 
-    final url = Uri.parse(baseUrl).replace(queryParameters: {
-      'api_key': apiKey,
-      if (query != null && query.isNotEmpty) 'q': query,
-      'limit': limit.toString(),
-      'offset': offset.toString(),
-      'rating': 'g',
-    });
+    final url = Uri.parse(baseUrl).replace(
+      queryParameters: {
+        'api_key': apiKey,
+        if (query != null && query.isNotEmpty) 'q': query,
+        'limit': limit.toString(),
+        'offset': offset.toString(),
+        'rating': 'g',
+      },
+    );
 
     try {
       final response = await http.get(url);

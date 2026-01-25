@@ -1,4 +1,4 @@
-﻿// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 import 'package:flutter/widgets.dart';
 
@@ -107,21 +107,35 @@ class PaintEditorConfigs extends ZoomConfigs
     this.style = const PaintEditorStyle(),
     this.icons = const PaintEditorIcons(),
     this.widgets = const PaintEditorWidgets(),
-  })  : assert(maxScale >= minScale,
-            'maxScale must be greater than or equal to minScale'),
-        assert(editorMaxScale > editorMinScale,
-            'editorMaxScale must be greater than editorMinScale'),
-        assert(editorMinScale >= 0,
-            'editorMinScale must be greater than or equal to 0'),
-        assert(maxOpacity >= minOpacity,
-            'maxOpacity must be greater than or equal to minOpacity'),
-        assert(minOpacity >= 0 && minOpacity <= 1,
-            'minOpacity must be between 0 and 1'),
-        assert(maxOpacity <= 1, 'maxOpacity must be less than or equal to 1'),
-        assert(maxStrokeWidth >= minStrokeWidth,
-            'maxStrokeWidth must be greater than or equal to minStrokeWidth'),
-        assert(minStrokeWidth >= 0,
-            'minStrokeWidth must be greater than or equal to 0');
+  }) : assert(
+         maxScale >= minScale,
+         'maxScale must be greater than or equal to minScale',
+       ),
+       assert(
+         editorMaxScale > editorMinScale,
+         'editorMaxScale must be greater than editorMinScale',
+       ),
+       assert(
+         editorMinScale >= 0,
+         'editorMinScale must be greater than or equal to 0',
+       ),
+       assert(
+         maxOpacity >= minOpacity,
+         'maxOpacity must be greater than or equal to minOpacity',
+       ),
+       assert(
+         minOpacity >= 0 && minOpacity <= 1,
+         'minOpacity must be between 0 and 1',
+       ),
+       assert(maxOpacity <= 1, 'maxOpacity must be less than or equal to 1'),
+       assert(
+         maxStrokeWidth >= minStrokeWidth,
+         'maxStrokeWidth must be greater than or equal to minStrokeWidth',
+       ),
+       assert(
+         minStrokeWidth >= 0,
+         'minStrokeWidth must be greater than or equal to 0',
+       );
 
   /// {@macro layerFractionalOffset}
   @override

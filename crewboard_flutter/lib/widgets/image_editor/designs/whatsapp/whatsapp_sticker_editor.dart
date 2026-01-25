@@ -1,4 +1,4 @@
-﻿// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 // Dart imports:
@@ -48,7 +48,7 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
 
   late final bool _isStickerEditorEnabled =
       widget.configs.stickerEditor.enabled &&
-          widget.configs.mainEditor.tools.contains(SubEditorMode.sticker);
+      widget.configs.mainEditor.tools.contains(SubEditorMode.sticker);
 
   @override
   void initState() {
@@ -86,7 +86,8 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                   fit: StackFit.expand,
                   children: [
                     Offstage(
-                      offstage: whatsAppTemporaryStickerMode !=
+                      offstage:
+                          whatsAppTemporaryStickerMode !=
                           WhatsAppStickerMode.emoji,
                       child: EmojiEditor(
                         key: _emojiEditorKey,
@@ -95,7 +96,8 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                     ),
                     if (_isStickerEditorEnabled)
                       Offstage(
-                        offstage: whatsAppTemporaryStickerMode !=
+                        offstage:
+                            whatsAppTemporaryStickerMode !=
                             WhatsAppStickerMode.sticker,
                         child: StickerEditor(
                           configs: widget.configs,
@@ -196,7 +198,10 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                             ButtonSegment(
                               value: WhatsAppStickerMode.sticker,
                               label: Text(
-                                widget.configs.i18n.stickerEditor
+                                widget
+                                    .configs
+                                    .i18n
+                                    .stickerEditor
                                     .bottomNavigationBarText,
                                 style: const TextStyle(
                                   fontSize: 13,
@@ -206,7 +211,10 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                             ButtonSegment(
                               value: WhatsAppStickerMode.emoji,
                               label: Text(
-                                widget.configs.i18n.emojiEditor
+                                widget
+                                    .configs
+                                    .i18n
+                                    .emojiEditor
                                     .bottomNavigationBarText,
                                 style: const TextStyle(
                                   fontSize: 13,
@@ -221,7 +229,7 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                             });
                           },
                         ),
-                      )
+                      ),
                   ],
                 ),
         ),
@@ -271,14 +279,14 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
           ),
           child: _activeSearch
               ? (_isStickerEditorEnabled
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: _buildCupertinoSegments(),
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink())
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: _buildCupertinoSegments(),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink())
               : AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: Row(
@@ -356,10 +364,11 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
                   widget.callbacks.stickerEditorCallbacks?.onSearchChanged
                       ?.call(value);
                   _searchFocus.requestFocus();
-                  Future.delayed(const Duration(milliseconds: 1))
-                      .whenComplete(() {
-                    _searchFocus.requestFocus();
-                  });
+                  Future.delayed(const Duration(milliseconds: 1)).whenComplete(
+                    () {
+                      _searchFocus.requestFocus();
+                    },
+                  );
                 },
                 itemColor: const Color.fromARGB(255, 243, 243, 243),
                 style: const TextStyle(
@@ -381,7 +390,9 @@ class _WhatsAppStickerPageState extends State<WhatsAppStickerPage> {
     } else {
       return Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(100)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

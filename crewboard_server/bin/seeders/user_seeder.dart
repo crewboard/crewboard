@@ -57,9 +57,9 @@ void main(List<String> args) async {
 
   try {
     final session = await pod.createSession();
-    
+
     print('\n--- User Seeder ---');
-    
+
     // Get inputs
     stdout.write('Enter Username: ');
     final username = stdin.readLineSync()?.trim();
@@ -89,25 +89,31 @@ void main(List<String> args) async {
       where: (t) => t.userType.equals('user'),
     );
     if (userType == null) {
-      print('Error: "user" UserType not found in database. Run migrations/seeds first.');
+      print(
+        'Error: "user" UserType not found in database. Run migrations/seeds first.',
+      );
       exit(1);
     }
 
     // Optional: Select Organization (default to first/main one for now)
-     final organization = await Organization.db.findFirstRow(session);
+    final organization = await Organization.db.findFirstRow(session);
     if (organization == null) {
       print('Error: No organizations found. Run migrations/seeds first.');
       exit(1);
     }
-    
+
     // Default Color/LeaveConfig
-    final defaultColor = await SystemColor.db.findFirstRow(session, where: (t) => t.isDefault.equals(true)) 
-        ?? await SystemColor.db.findFirstRow(session);
+    final defaultColor =
+        await SystemColor.db.findFirstRow(
+          session,
+          where: (t) => t.isDefault.equals(true),
+        ) ??
+        await SystemColor.db.findFirstRow(session);
     final defaultLeaveConfig = await LeaveConfig.db.findFirstRow(session);
 
     if (defaultColor == null || defaultLeaveConfig == null) {
-        print('Error: Missing default SystemColor or LeaveConfig.');
-         exit(1);
+      print('Error: Missing default SystemColor or LeaveConfig.');
+      exit(1);
     }
 
     print('\nCreating user...');

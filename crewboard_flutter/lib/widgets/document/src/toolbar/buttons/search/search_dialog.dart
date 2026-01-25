@@ -37,9 +37,10 @@ class QuillToolbarSearchDialogChildBuilderExtraOptions {
   final bool wholeWord;
 }
 
-typedef QuillToolbarSearchDialogChildBuilder = Widget Function(
-  QuillToolbarSearchDialogChildBuilderExtraOptions extraOptions,
-);
+typedef QuillToolbarSearchDialogChildBuilder =
+    Widget Function(
+      QuillToolbarSearchDialogChildBuilderExtraOptions extraOptions,
+    );
 
 class QuillToolbarSearchDialog extends StatefulWidget {
   const QuillToolbarSearchDialog({
@@ -108,7 +109,8 @@ class QuillToolbarSearchDialogState extends State<QuillToolbarSearchDialog> {
 
     final searchBarAlignment =
         widget.searchBarAlignment ?? Alignment.bottomCenter;
-    final searchBarAtBottom = (searchBarAlignment == Alignment.bottomCenter) ||
+    final searchBarAtBottom =
+        (searchBarAlignment == Alignment.bottomCenter) ||
         (searchBarAlignment == Alignment.bottomLeft) ||
         (searchBarAlignment == Alignment.bottomRight);
     final addBottomPadding = searchBarAtBottom && isMobile;

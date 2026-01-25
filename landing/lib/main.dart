@@ -198,7 +198,11 @@ class _ParalaxBlockState extends State<ParalaxBlock> {
                   maxParticleSize: 300,
                   isRandSize: true,
                   isRandomColor: true,
-                  randColorList: const [Color(0xFF49b3a7), Color(0xFFd865d8), Color(0xFF4de436)],
+                  randColorList: const [
+                    Color(0xFF49b3a7),
+                    Color(0xFFd865d8),
+                    Color(0xFF4de436)
+                  ],
                   enableHover: false,
                 ),
               ),
@@ -354,14 +358,16 @@ class Intro extends StatelessWidget {
                               RichText(
                                 text: TextSpan(
                                   text: '',
-                                  style: TextStyle(fontSize: 50, color: Pallet.font1),
+                                  style: TextStyle(
+                                      fontSize: 50, color: Pallet.font1),
                                   children: const <TextSpan>[
                                     TextSpan(
                                         text: 'Kolab ',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         )),
-                                    TextSpan(text: 'is currently in beta stage'),
+                                    TextSpan(
+                                        text: 'is currently in beta stage'),
                                   ],
                                 ),
                               ),
@@ -371,7 +377,9 @@ class Intro extends StatelessWidget {
                               Text(
                                 "Kolab is designed to protect ur data, own your data in your own servers. get the installation files and instructions right now!",
                                 style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                    textStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
                               ),
                               SizedBox(
                                 height: 10,
@@ -386,7 +394,9 @@ class Intro extends StatelessWidget {
                               Text(
                                 "Maintaining this project is however difficult without funds, we appriciate ur contribution in advance",
                                 style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                    textStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
                               ),
                               SizedBox(
                                 height: 10,
@@ -401,7 +411,9 @@ class Intro extends StatelessWidget {
                               Text(
                                 "Kolab is an all in one solution for, planning, managing and coordinating. Befriend Kolab through out the whole process of project managment",
                                 style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                    textStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
                               ),
                               SizedBox(
                                 height: 10,
@@ -409,7 +421,8 @@ class Intro extends StatelessWidget {
                               Button(
                                 label: "see whats kolab",
                                 onPress: () async {
-                                  await Future.delayed(const Duration(milliseconds: 500));
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 500));
                                   eventSink.add("open_mail");
                                 },
                               ),
@@ -420,7 +433,8 @@ class Intro extends StatelessWidget {
                   Expanded(
                       flex: 3,
                       child: Container(
-                        constraints: BoxConstraints(maxHeight: Window.fullHeight * 0.8),
+                        constraints:
+                            BoxConstraints(maxHeight: Window.fullHeight * 0.8),
                         child: Image.asset("assets/kollab_landing.png"),
                       )),
                 ],
@@ -444,13 +458,17 @@ class Link extends StatelessWidget {
       child: InkWell(
           onTap: () {
             // if (name == "home") {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LandingPage()));
             // } else if (name == "developer") {
             //   Navigator.push(context, MaterialPageRoute(builder: (context) => Developer()));
             // }
           },
           child: Opacity(opacity: 0.5, child: Text(name))),
-    ).animate().slideX(duration: Duration(seconds: 2), begin: 1, end: 0).fade(duration: Duration(seconds: 2));
+    )
+        .animate()
+        .slideX(duration: Duration(seconds: 2), begin: 1, end: 0)
+        .fade(duration: Duration(seconds: 2));
   }
 }
 
@@ -466,7 +484,9 @@ class Button extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-        decoration: BoxDecoration(color: Colors.grey.withOpacity(0.25), borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.25),
+            borderRadius: BorderRadius.circular(15)),
         // decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
         child: Text(
           label,

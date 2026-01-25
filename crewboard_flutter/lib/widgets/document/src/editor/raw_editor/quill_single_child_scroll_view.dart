@@ -10,7 +10,8 @@ import 'package:flutter/widgets.dart';
 /// Useful when child needs [ViewportOffset] ([RenderEditor] no longer uses this class!)
 /// see: [SingleChildScrollView]
 @Deprecated(
-    'This class is no longer being used and will be removed in future versions. If you disagree, please open an issue.')
+  'This class is no longer being used and will be removed in future versions. If you disagree, please open an issue.',
+)
 class QuillSingleChildScrollView extends StatelessWidget {
   /// Creates a box in which a single widget can be scrolled.
   const QuillSingleChildScrollView({
@@ -93,7 +94,9 @@ class _SingleChildViewport extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, _RenderSingleChildViewport renderObject) {
+    BuildContext context,
+    _RenderSingleChildViewport renderObject,
+  ) {
     // Order dependency: The offset setter reads the axis direction.
     renderObject.offset = offset;
   }
@@ -106,8 +109,8 @@ class _RenderSingleChildViewport extends RenderBox
     required ViewportOffset offset,
     double cacheExtent = RenderAbstractViewport.defaultCacheExtent,
     RenderBox? child,
-  })  : _offset = offset,
-        _cacheExtent = cacheExtent {
+  }) : _offset = offset,
+       _cacheExtent = cacheExtent {
     this.child = child;
   }
 
@@ -313,7 +316,8 @@ class _RenderSingleChildViewport extends RenderBox
     leadingScrollOffset = bounds.top;
     targetMainAxisExtent = bounds.height;
 
-    final targetOffset = leadingScrollOffset -
+    final targetOffset =
+        leadingScrollOffset -
         (mainAxisExtent - targetMainAxisExtent) * alignment;
     final targetRect = bounds.shift(_paintOffsetForPosition(targetOffset));
     return RevealedOffset(offset: targetOffset, rect: targetRect);

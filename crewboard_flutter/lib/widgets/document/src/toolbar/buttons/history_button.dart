@@ -5,12 +5,20 @@ import '../base_button/base_value_button.dart';
 import '../config/buttons/history_options.dart';
 import 'quill_icon_button.dart';
 
-typedef QuillToolbarHistoryBaseButton = QuillToolbarBaseButton<
-    QuillToolbarHistoryButtonOptions, QuillToolbarHistoryButtonExtraOptions>;
+typedef QuillToolbarHistoryBaseButton =
+    QuillToolbarBaseButton<
+      QuillToolbarHistoryButtonOptions,
+      QuillToolbarHistoryButtonExtraOptions
+    >;
 
-typedef QuillToolbarHistoryBaseButtonState<W extends QuillToolbarHistoryButton>
-    = QuillToolbarCommonButtonState<W, QuillToolbarHistoryButtonOptions,
-        QuillToolbarHistoryButtonExtraOptions>;
+typedef QuillToolbarHistoryBaseButtonState<
+  W extends QuillToolbarHistoryButton
+> =
+    QuillToolbarCommonButtonState<
+      W,
+      QuillToolbarHistoryButtonOptions,
+      QuillToolbarHistoryButtonExtraOptions
+    >;
 
 class QuillToolbarHistoryButton extends QuillToolbarHistoryBaseButton {
   const QuillToolbarHistoryButton({

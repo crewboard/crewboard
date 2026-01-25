@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 import 'dart:ui';
 
@@ -159,7 +159,8 @@ class LayerTransformGenerator {
         ..offset /= activeTransformConfigs.scaleRotation
         ..scale /= activeTransformConfigs.scaleRotation;
     } else {
-      double scaleRotation = newTransformConfigs.scaleRotation /
+      double scaleRotation =
+          newTransformConfigs.scaleRotation /
           activeTransformConfigs.scaleRotation;
 
       layer
@@ -215,7 +216,8 @@ class LayerTransformGenerator {
     Offset newOffset =
         newTransformConfigs.offset * newTransformConfigs.scaleUser;
 
-    Offset oldOffset = activeTransformConfigs.offset *
+    Offset oldOffset =
+        activeTransformConfigs.offset *
         (undoChanges
             ? activeTransformConfigs.scaleUser
             : newTransformConfigs.scaleUser);

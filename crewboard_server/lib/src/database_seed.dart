@@ -68,7 +68,7 @@ Future<void> seedDatabase(Session session) async {
     );
   } else {
     // Should unlikely happen as we just inserted if empty
-    defaultColor = defaultColors.first; 
+    defaultColor = defaultColors.first;
   }
 
   // 2. Seed UserTypes
@@ -209,7 +209,9 @@ Future<void> seedDatabase(Session session) async {
   } else {
     bool updated = false;
     if (systemVars.googleFonts == null || systemVars.googleFonts!.isEmpty) {
-      stdout.writeln('Updating existing SystemVariables with default googleFonts...');
+      stdout.writeln(
+        'Updating existing SystemVariables with default googleFonts...',
+      );
       systemVars.googleFonts = defaultGoogleFonts;
       updated = true;
     }
@@ -287,19 +289,21 @@ Future<void> seedDatabase(Session session) async {
     bool anyUpdated = false;
     for (var existing in existingFonts) {
       bool localUpdated = false;
-      
+
       // Normalize names and fix legacy/typos
       final oldName = existing.name;
       final normalized = existing.name.toLowerCase().trim();
-      
+
       String newName = normalized;
       if (normalized == 'sub title' || normalized == 'sub titile') {
-          newName = 'sub heading';
+        newName = 'sub heading';
       }
 
       if (oldName != newName) {
         existing.name = newName;
-        stdout.writeln('Normalizing FontSetting name: $oldName -> ${existing.name}');
+        stdout.writeln(
+          'Normalizing FontSetting name: $oldName -> ${existing.name}',
+        );
         localUpdated = true;
       }
 
@@ -327,31 +331,47 @@ Future<void> seedDatabase(Session session) async {
   if (emojiCount == 0) {
     stdout.writeln('Seeding emojis from external API...');
     try {
-      final response = await http.get(Uri.parse('https://www.emoji.family/api/emojis'));
+      final response = await http.get(
+        Uri.parse('https://www.emoji.family/api/emojis'),
+      );
       if (response.statusCode == 200) {
         final List<dynamic> emojiList = jsonDecode(response.body);
-        stdout.writeln('Fetched ${emojiList.length} emojis. Inserting into database...');
+        stdout.writeln(
+          'Fetched ${emojiList.length} emojis. Inserting into database...',
+        );
 
         var batch = <Emoji>[];
         for (var item in emojiList) {
-          batch.add(Emoji(
-            emoji: item['emoji'] ?? '',
-            hexcode: item['hexcode'] ?? '',
-            group: item['group'] ?? '',
-            subgroup: item['subgroup'] ?? '',
-            annotation: item['annotation'] ?? '',
-            tags: (item['tags'] as List?)?.map((e) => e.toString()).toList() ?? [],
-            shortcodes: (item['shortcodes'] as List?)?.map((e) => e.toString()).toList() ?? [],
-            emoticons: (item['emoticons'] as List?)?.map((e) => e.toString()).toList() ?? [],
-          ));
+          batch.add(
+            Emoji(
+              emoji: item['emoji'] ?? '',
+              hexcode: item['hexcode'] ?? '',
+              group: item['group'] ?? '',
+              subgroup: item['subgroup'] ?? '',
+              annotation: item['annotation'] ?? '',
+              tags:
+                  (item['tags'] as List?)?.map((e) => e.toString()).toList() ??
+                  [],
+              shortcodes:
+                  (item['shortcodes'] as List?)
+                      ?.map((e) => e.toString())
+                      .toList() ??
+                  [],
+              emoticons:
+                  (item['emoticons'] as List?)
+                      ?.map((e) => e.toString())
+                      .toList() ??
+                  [],
+            ),
+          );
 
           if (batch.length >= 100) {
-             await Emoji.db.insert(session, batch);
-             batch.clear();
+            await Emoji.db.insert(session, batch);
+            batch.clear();
           }
         }
         if (batch.isNotEmpty) {
-           await Emoji.db.insert(session, batch);
+          await Emoji.db.insert(session, batch);
         }
         stdout.writeln('Emoji seeding completed.');
       } else {

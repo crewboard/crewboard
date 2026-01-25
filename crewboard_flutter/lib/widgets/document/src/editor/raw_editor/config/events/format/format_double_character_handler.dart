@@ -85,14 +85,11 @@ bool handleFormatByWrappingWithDoubleCharacter({
     ..retain(thirdLastCharIndex) // get all text before double chars
     ..delete(2) // delete both start double char
     ..retain(
-        lastCharIndex -
-            (thirdLastCharIndex +
-                (secondLastCharIndex - (thirdLastCharIndex - 1))),
-        style == null
-            ? null
-            : {
-                style.key: style.value
-              }) // retain the text before last double chars and apply the styles
+      lastCharIndex -
+          (thirdLastCharIndex +
+              (secondLastCharIndex - (thirdLastCharIndex - 1))),
+      style == null ? null : {style.key: style.value},
+    ) // retain the text before last double chars and apply the styles
     ..delete(1); // delete last char
 
   controller

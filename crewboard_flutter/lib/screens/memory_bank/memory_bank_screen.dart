@@ -12,9 +12,19 @@ class MemoryBankScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Mock data for memories
     final memories = [
-      {'title': 'Meeting Notes', 'body': 'Discussed the project timeline and milestones.'},
-      {'title': 'Idea for UI', 'body': 'Use glassmorphism for the memory bank to match the chat theme.'},
-      {'title': 'Todo', 'body': 'Implement the addMemory functionality in the next session.'},
+      {
+        'title': 'Meeting Notes',
+        'body': 'Discussed the project timeline and milestones.',
+      },
+      {
+        'title': 'Idea for UI',
+        'body':
+            'Use glassmorphism for the memory bank to match the chat theme.',
+      },
+      {
+        'title': 'Todo',
+        'body': 'Implement the addMemory functionality in the next session.',
+      },
     ].obs;
 
     return GlassMorph(
@@ -38,7 +48,10 @@ class MemoryBankScreen extends StatelessWidget {
                 Text(
                   "Memory Bank",
                   style: GoogleFonts.poppins(
-                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const Expanded(child: SizedBox()),
@@ -52,17 +65,19 @@ class MemoryBankScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Obx(() => ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: memories.length,
-              itemBuilder: (context, index) {
-                final memory = memories[index];
-                return MemoryListItem(
-                  title: memory['title'] ?? '',
-                  body: memory['body'] ?? '',
-                );
-              },
-            )),
+            child: Obx(
+              () => ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: memories.length,
+                itemBuilder: (context, index) {
+                  final memory = memories[index];
+                  return MemoryListItem(
+                    title: memory['title'] ?? '',
+                    body: memory['body'] ?? '',
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),

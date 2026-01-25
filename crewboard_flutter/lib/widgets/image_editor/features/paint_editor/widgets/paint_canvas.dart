@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
@@ -250,7 +250,8 @@ class PaintCanvasState extends State<PaintCanvas> {
     List<String> removeIds = [];
     final Offset focalPoint = details.localFocalPoint;
     final double stackScale = widget.layerStackScaleFactor;
-    final Offset editorHalfSize = Offset(
+    final Offset editorHalfSize =
+        Offset(
           widget.editorBodySize.width,
           widget.editorBodySize.height,
         ) /
@@ -274,14 +275,19 @@ class PaintCanvasState extends State<PaintCanvas> {
         final double rotation = paintLayer.rotation;
         final Offset center =
             Offset(scaledRawSize.width, scaledRawSize.height) / 2;
-        final Offset rotatedPosition =
-            _rotatePoint(position, center, -rotation);
+        final Offset rotatedPosition = _rotatePoint(
+          position,
+          center,
+          -rotation,
+        );
 
         layer.item.erasedOffsets
-          ..add(ErasedOffset(
-            offset: rotatedPosition / layerScale,
-            radius: widget.eraserRadius,
-          ))
+          ..add(
+            ErasedOffset(
+              offset: rotatedPosition / layerScale,
+              radius: widget.eraserRadius,
+            ),
+          )
           ..toSet()
           ..toList();
         layer.item = layer.item.copy();
@@ -385,18 +391,23 @@ class PaintCanvasState extends State<PaintCanvas> {
               _checkPolygonIsComplete();
             } else if (_paintCtrl.mode == PaintMode.freeStyle ||
                 _paintCtrl.mode == PaintMode.eraser) {
-              _onScaleStart(ScaleStartDetails(
+              _onScaleStart(
+                ScaleStartDetails(
                   focalPoint: details.localPosition,
-                  localFocalPoint: details.localPosition));
+                  localFocalPoint: details.localPosition,
+                ),
+              );
             }
           },
           onTapUp: (details) {
             if (_paintCtrl.mode == PaintMode.freeStyle ||
                 _paintCtrl.mode == PaintMode.eraser) {
-              _onScaleUpdate(ScaleUpdateDetails(
-                focalPoint: details.localPosition,
-                localFocalPoint: details.localPosition,
-              ));
+              _onScaleUpdate(
+                ScaleUpdateDetails(
+                  focalPoint: details.localPosition,
+                  localFocalPoint: details.localPosition,
+                ),
+              );
               _onScaleEnd(ScaleEndDetails());
             }
             _tapDownDetails = null;
@@ -406,25 +417,25 @@ class PaintCanvasState extends State<PaintCanvas> {
           },
           child: _paintCtrl.busy
               ? _paintCtrl.mode == PaintMode.blur ||
-                      _paintCtrl.mode == PaintMode.pixelate
-                  ? Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        _buildCensorItem(_paintCtrl.paintedModel),
-                      ],
-                    )
-                  : Opacity(
-                      opacity: _paintCtrl.opacity,
-                      child: CustomPaint(
-                        size: widget.drawAreaSize,
-                        willChange: true,
-                        isComplex: true,
-                        painter: DrawPaintItem(
-                          item: _paintCtrl.paintedModel,
-                          paintEditorConfigs: widget.paintEditorConfigs,
+                        _paintCtrl.mode == PaintMode.pixelate
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          _buildCensorItem(_paintCtrl.paintedModel),
+                        ],
+                      )
+                    : Opacity(
+                        opacity: _paintCtrl.opacity,
+                        child: CustomPaint(
+                          size: widget.drawAreaSize,
+                          willChange: true,
+                          isComplex: true,
+                          painter: DrawPaintItem(
+                            item: _paintCtrl.paintedModel,
+                            paintEditorConfigs: widget.paintEditorConfigs,
+                          ),
                         ),
-                      ),
-                    )
+                      )
               : const SizedBox.expand(),
         );
       },

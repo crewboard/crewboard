@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../config/palette.dart';
 
-
 class SignInButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
@@ -25,7 +24,7 @@ class SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Button(
       label: text,
-      onPress: (){},
+      onPress: () {},
     );
   }
 }
@@ -52,7 +51,7 @@ class SignUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Button(
       label: text,
-      onPress: (){},
+      onPress: () {},
       // isLoading: isLoading,
       // isActive: isActive,
       // backgroundColor: backgroundColor ?? Colors.green,
@@ -97,7 +96,6 @@ class SmallButton extends StatelessWidget {
   }
 }
 
-
 class Button extends StatelessWidget {
   const Button({super.key, required this.label, required this.onPress});
   final String label;
@@ -105,19 +103,22 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.all(0),
-          minimumSize: Size(30, 30),
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(0),
+        minimumSize: Size(30, 30),
+      ),
+      onPressed: () {
+        onPress();
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Pallet.inside1,
+          border: Border.all(color: Pallet.font3),
+          borderRadius: BorderRadius.circular(5),
         ),
-        onPressed: () {
-          onPress();
-        },
-        child: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Pallet.inside1, border: Border.all(color: Pallet.font3), borderRadius: BorderRadius.circular(5)),
-          child: Center(
-              child: Row(
+        child: Center(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -131,9 +132,11 @@ class Button extends StatelessWidget {
                 Icons.add,
                 color: Pallet.font3,
                 size: 18,
-              )
+              ),
             ],
-          )),
-        ));
+          ),
+        ),
+      ),
+    );
   }
 }

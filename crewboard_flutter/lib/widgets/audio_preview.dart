@@ -33,7 +33,7 @@ class _AudioPreviewState extends State<AudioPreview> {
   void initState() {
     super.initState();
     // Initialize visualization
-    // Calculate target item count based on width 200 and item width 2 + gap 1 = 3px unit? 
+    // Calculate target item count based on width 200 and item width 2 + gap 1 = 3px unit?
     // Or width 2 and gap determined by spaceBetween.
     // Let's aim for ~60 items.
     int targetCount = (noiseWidth / 3).floor(); // 200 / 3 = 66
@@ -43,68 +43,68 @@ class _AudioPreviewState extends State<AudioPreview> {
       // Resample to targetCount
       noises = [];
       if (raw.length <= targetCount) {
-         noises = List.from(raw);
-         // Pad if necessary? Or just let it be short.
-         // Let's stretch? Or just show what we have.
-         // Common behavior: linear interpolation or nearest neighbor if too small?
-         // For now just use what we have, maybe it's enough.
-         // But if it is huge, we must downsample.
+        noises = List.from(raw);
+        // Pad if necessary? Or just let it be short.
+        // Let's stretch? Or just show what we have.
+        // Common behavior: linear interpolation or nearest neighbor if too small?
+        // For now just use what we have, maybe it's enough.
+        // But if it is huge, we must downsample.
       } else {
-         // Downsample
-         int chunkSize = (raw.length / targetCount).ceil();
-         for (int i = 0; i < targetCount; i++) {
-             int start = i * chunkSize;
-             if (start >= raw.length) break;
-             int end = math.min(start + chunkSize, raw.length);
-             // Take average or max
-             double chunkMax = 0;
-             for (int j = start; j < end; j++) {
-                 chunkMax = math.max(chunkMax, raw[j]);
-             }
-             noises.add(chunkMax);
-         }
+        // Downsample
+        int chunkSize = (raw.length / targetCount).ceil();
+        for (int i = 0; i < targetCount; i++) {
+          int start = i * chunkSize;
+          if (start >= raw.length) break;
+          int end = math.min(start + chunkSize, raw.length);
+          // Take average or max
+          double chunkMax = 0;
+          for (int j = start; j < end; j++) {
+            chunkMax = math.max(chunkMax, raw[j]);
+          }
+          noises.add(chunkMax);
+        }
       }
 
       // Normalize
       if (noises.isNotEmpty) {
-         final max = noises.reduce(math.max);
-         if (max > 0) {
-            noises = noises.map((e) => 10 + ((e / max) * 20)).toList();
-         }
+        final max = noises.reduce(math.max);
+        if (max > 0) {
+          noises = noises.map((e) => 10 + ((e / max) * 20)).toList();
+        }
       }
     } else {
-        // Fallback to random noise
-        noises = [];
-        for (int i = 0; i < targetCount; i++) {
-            noises.add(10 + ((30 - 10) * math.Random().nextDouble()));
-        }
+      // Fallback to random noise
+      noises = [];
+      for (int i = 0; i < targetCount; i++) {
+        noises.add(10 + ((30 - 10) * math.Random().nextDouble()));
+      }
     }
     _init();
 
     // Listen to player state to update playing notifier
     _player.onPlayerStateChanged.listen((state) {
-        if(mounted){
-            playing.value = (state == PlayerState.playing);
-        }
+      if (mounted) {
+        playing.value = (state == PlayerState.playing);
+      }
     });
 
     _player.onPlayerComplete.listen((event) {
-        if(mounted){
-            playing.value = false;
-        }
+      if (mounted) {
+        playing.value = false;
+      }
     });
   }
 
   Future<void> _init() async {
     try {
       bool isLocal = widget.localUrl == true;
-      
+
       if (!isLocal && !widget.url.startsWith(RegExp(r'https?://'))) {
-         isLocal = true;
+        isLocal = true;
       }
 
       if (isLocal) {
-         // Assuming URL is a file path for local
+        // Assuming URL is a file path for local
         await _player.setSourceDeviceFile(widget.url);
       } else {
         await _player.setSourceUrl(widget.url);
@@ -123,9 +123,9 @@ class _AudioPreviewState extends State<AudioPreview> {
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         _player.onPositionChanged,
-        // audioplayers doesn't have a direct buffered position stream like just_audio, 
+        // audioplayers doesn't have a direct buffered position stream like just_audio,
         // passing position as buffered for now to satisfy UI or Stream.value(Duration.zero)
-        Stream.value(Duration.zero), 
+        Stream.value(Duration.zero),
         _player.onDurationChanged,
         (position, bufferedPosition, duration) =>
             PositionData(position, bufferedPosition, duration ?? Duration.zero),
@@ -154,14 +154,21 @@ class _AudioPreviewState extends State<AudioPreview> {
                     await _player.resume();
                   }
                 },
-                child: Icon((isPlaying) ? Icons.pause : Icons.play_arrow, color: Pallet.font3),
+                child: Icon(
+                  (isPlaying) ? Icons.pause : Icons.play_arrow,
+                  color: Pallet.font3,
+                ),
               );
             },
           ),
           const SizedBox(width: 10),
           StreamBuilder<PositionData>(
             stream: _positionDataStream,
-            initialData: PositionData(Duration.zero, Duration.zero, Duration.zero),
+            initialData: PositionData(
+              Duration.zero,
+              Duration.zero,
+              Duration.zero,
+            ),
             builder: (context, snapshot) {
               final positionData = snapshot.data;
               if (positionData != null) {
@@ -221,25 +228,25 @@ class SeekBarState extends State<SeekBar> {
     super.initState();
     _calcPassed();
   }
-  
+
   void _calcPassed() {
-      if (widget.duration.inSeconds > 0) {
-          int totalSegments = (widget.width / 10).toInt();
-          int segmentDuration = (widget.duration.inSeconds / totalSegments).toInt();
-          if(segmentDuration > 0) {
-               passed = (widget.position.inSeconds / segmentDuration).toInt();
-          } else {
-              passed = 0;
-          }
+    if (widget.duration.inSeconds > 0) {
+      int totalSegments = (widget.width / 10).toInt();
+      int segmentDuration = (widget.duration.inSeconds / totalSegments).toInt();
+      if (segmentDuration > 0) {
+        passed = (widget.position.inSeconds / segmentDuration).toInt();
       } else {
-          passed = 0;
+        passed = 0;
       }
+    } else {
+      passed = 0;
+    }
   }
 
   @override
   void didUpdateWidget(covariant SeekBar oldWidget) {
-      super.didUpdateWidget(oldWidget);
-       _calcPassed();
+    super.didUpdateWidget(oldWidget);
+    _calcPassed();
   }
 
   @override
@@ -317,11 +324,11 @@ class SeekBarState extends State<SeekBar> {
   }
 
   String get _remainingString {
-      Duration remaining = widget.duration - widget.position;
-      String twoDigits(int n) => n.toString().padLeft(2, "0");
-      String twoDigitMinutes = twoDigits(remaining.inMinutes.remainder(60));
-      String twoDigitSeconds = twoDigits(remaining.inSeconds.remainder(60));
-      return "$twoDigitMinutes:$twoDigitSeconds";
+    Duration remaining = widget.duration - widget.position;
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(remaining.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(remaining.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 }
 

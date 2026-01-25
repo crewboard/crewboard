@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
@@ -90,7 +90,9 @@ class OutsideListener extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, OutsideRenderPointerListener renderObject) {
+    BuildContext context,
+    OutsideRenderPointerListener renderObject,
+  ) {
     renderObject
       ..onPointerDown = onPointerDown
       ..onPointerMove = onPointerMove
@@ -215,20 +217,22 @@ class OutsideRenderPointerListener
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagsSummary<Function?>(
-      'listeners',
-      <String, Function?>{
-        'down': onPointerDown,
-        'move': onPointerMove,
-        'up': onPointerUp,
-        'hover': onPointerHover,
-        'cancel': onPointerCancel,
-        'panZoomStart': onPointerPanZoomStart,
-        'panZoomUpdate': onPointerPanZoomUpdate,
-        'panZoomEnd': onPointerPanZoomEnd,
-        'signal': onPointerSignal,
-      },
-      ifEmpty: '<none>',
-    ));
+    properties.add(
+      FlagsSummary<Function?>(
+        'listeners',
+        <String, Function?>{
+          'down': onPointerDown,
+          'move': onPointerMove,
+          'up': onPointerUp,
+          'hover': onPointerHover,
+          'cancel': onPointerCancel,
+          'panZoomStart': onPointerPanZoomStart,
+          'panZoomUpdate': onPointerPanZoomUpdate,
+          'panZoomEnd': onPointerPanZoomEnd,
+          'signal': onPointerSignal,
+        },
+        ifEmpty: '<none>',
+      ),
+    );
   }
 }

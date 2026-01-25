@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 /// An abstract base widget that applies a fade-in and slide-in animation
@@ -98,13 +98,15 @@ abstract class FadeInBaseState<T extends FadeInBase> extends State<T>
     // Configure the offset animation to slide in from the initial offset to
     //the final position (Offset.zero).
     offsetAnimation =
-        Tween<Offset>(begin: buildInitialOffsetPosition(), end: Offset.zero)
-            .animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+        Tween<Offset>(
+          begin: buildInitialOffsetPosition(),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Curves.easeInOut,
+          ),
+        );
 
     // Start the animation after the specified delay.
     WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -45,8 +45,9 @@ class _TextEditorBottomBarState extends State<TextEditorBottomBar> {
         padding: const EdgeInsets.symmetric(horizontal: 14),
         scrollDirection: Axis.horizontal,
         child: ConstrainedBox(
-          constraints:
-              BoxConstraints(minWidth: MediaQuery.sizeOf(context).width),
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.sizeOf(context).width,
+          ),
           child: Row(
             mainAxisAlignment:
                 widget.configs.textEditor.style.bottomBarMainAxisAlignment,

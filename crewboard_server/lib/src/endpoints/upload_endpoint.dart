@@ -24,7 +24,7 @@ class UploadEndpoint extends Endpoint {
         '.webp',
         '.mp4',
         '.mov',
-        '.pdf'
+        '.pdf',
       };
       if (!allowedExtensions.contains(ext)) {
         throw Exception('File type not allowed: $ext');
@@ -41,7 +41,9 @@ class UploadEndpoint extends Endpoint {
       // Ideally read from config, but for now hardcode or infer
 
       // Ensure directory exists
-      final uploadDir = Directory(p.join(Directory.current.path, 'web', 'public', 'uploads'));
+      final uploadDir = Directory(
+        p.join(Directory.current.path, 'web', 'public', 'uploads'),
+      );
       if (!await uploadDir.exists()) {
         await uploadDir.create(recursive: true);
       }
@@ -53,7 +55,12 @@ class UploadEndpoint extends Endpoint {
 
       return publicUrl;
     } catch (e, stack) {
-      session.log('Upload failed: $e', level: LogLevel.error, exception: e, stackTrace: stack);
+      session.log(
+        'Upload failed: $e',
+        level: LogLevel.error,
+        exception: e,
+        stackTrace: stack,
+      );
       return null;
     }
   }

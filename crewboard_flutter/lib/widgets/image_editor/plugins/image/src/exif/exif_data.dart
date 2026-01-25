@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import '../util/input_buffer.dart';
 import '../util/output_buffer.dart';
@@ -205,13 +205,13 @@ class ExifData extends IfdContainer {
       // be translated to the StripOffsets long type.
       final tagType =
           tag == stripOffsetTag && value.type == IfdValueType.undefined
-              ? IfdValueType.long
-              : value.type;
+          ? IfdValueType.long
+          : value.type;
 
       final tagLength =
           tag == stripOffsetTag && value.type == IfdValueType.undefined
-              ? 1
-              : value.length;
+          ? 1
+          : value.length;
 
       out
         ..writeUint16(tag)
@@ -281,7 +281,9 @@ class ExifData extends IfdContainer {
       final directory = IfdDirectory();
       final numEntries = block.readUint16();
       final dir = List<_ExifEntry>.generate(
-          numEntries, (i) => _readEntry(block, blockOffset));
+        numEntries,
+        (i) => _readEntry(block, blockOffset),
+      );
 
       for (final entry in dir) {
         if (entry.value != null) {
@@ -314,7 +316,9 @@ class ExifData extends IfdContainer {
           final directory = IfdDirectory();
           final numEntries = block.readUint16();
           final dir = List<_ExifEntry>.generate(
-              numEntries, (i) => _readEntry(block, blockOffset));
+            numEntries,
+            (i) => _readEntry(block, blockOffset),
+          );
 
           for (final entry in dir) {
             if (entry.value != null) {

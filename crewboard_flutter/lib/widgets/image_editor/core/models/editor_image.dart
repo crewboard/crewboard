@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -89,15 +89,15 @@ class EditorImage {
     this.networkHeaders,
     this.assetPath,
     dynamic file,
-  })  : file = file == null ? null : ensureFileInstance(file),
-        assert(
-          byteArray != null ||
-              file != null ||
-              networkUrl != null ||
-              assetPath != null,
-          'At least one of bytes, file, networkUrl, or assetPath must not '
-          'be null.',
-        );
+  }) : file = file == null ? null : ensureFileInstance(file),
+       assert(
+         byteArray != null ||
+             file != null ||
+             networkUrl != null ||
+             assetPath != null,
+         'At least one of bytes, file, networkUrl, or assetPath must not '
+         'be null.',
+       );
 
   /// A byte array representing the image data.
   Uint8List? byteArray;
@@ -325,5 +325,5 @@ enum EditorImageType {
   memory,
 
   /// Represents an image loaded from an asset path.
-  asset
+  asset,
 }

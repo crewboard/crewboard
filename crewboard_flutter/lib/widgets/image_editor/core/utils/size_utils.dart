@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 /// Gets the minimum size between two sizes.
 ///
@@ -11,7 +11,7 @@
 Size getValidSizeOrDefault(Size? a, Size b) {
   return a == null || a.isEmpty
       ? b.isEmpty
-          ? const Size(1, 1)
-          : b
+            ? const Size(1, 1)
+            : b
       : a;
 }

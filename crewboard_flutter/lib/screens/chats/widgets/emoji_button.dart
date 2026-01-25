@@ -23,7 +23,8 @@ class _EmojiButtonState extends State<EmojiButton> {
   }
 
   void _openDropdown() {
-    final renderBox = _actionKey.currentContext!.findRenderObject() as RenderBox;
+    final renderBox =
+        _actionKey.currentContext!.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
 

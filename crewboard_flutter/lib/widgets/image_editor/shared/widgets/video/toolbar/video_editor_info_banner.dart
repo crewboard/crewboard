@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/video/trim_duration_span_model.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/controllers/video_controller.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/duration_extension.dart';
@@ -45,7 +45,8 @@ class VideoEditorInfoBanner extends StatelessWidget {
             ),
             child: RichText(
               text: TextSpan(
-                style: player.style.infoBannerTextStyle ??
+                style:
+                    player.style.infoBannerTextStyle ??
                     TextStyle(
                       fontSize: 14,
                       height: 1.2,
@@ -70,8 +71,10 @@ class VideoEditorInfoBanner extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: _estimatedFileSize(controller, durationSpan)
-                          .toBytesString(1),
+                      text: _estimatedFileSize(
+                        controller,
+                        durationSpan,
+                      ).toBytesString(1),
                     ),
                   ],
                 ],

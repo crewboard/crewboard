@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/rendering.dart';
 
 // Project imports:
@@ -49,7 +49,12 @@ abstract class OutsideRenderProxyBoxWithHitTestBehavior extends RenderProxyBox {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<OutsideHitTestBehavior>('behavior', behavior,
-        defaultValue: null));
+    properties.add(
+      EnumProperty<OutsideHitTestBehavior>(
+        'behavior',
+        behavior,
+        defaultValue: null,
+      ),
+    );
   }
 }

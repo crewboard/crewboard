@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -34,9 +34,11 @@ class PaintEditorStyle {
     this.editSheetColor = kImageEditorAppBarColor,
     this.editSheetPreviewAreaColor = const Color(0xFF1E2D3C),
     this.editSheetPreviewAreaRadius = 7.0,
-  })  : assert(initialStrokeWidth > 0, 'initialStrokeWidth must be positive'),
-        assert(initialOpacity >= 0 && initialOpacity <= 1,
-            'initialOpacity must be between 0 and 1');
+  }) : assert(initialStrokeWidth > 0, 'initialStrokeWidth must be positive'),
+       assert(
+         initialOpacity >= 0 && initialOpacity <= 1,
+         'initialOpacity must be between 0 and 1',
+       );
 
   /// Background color of the paint editor.
   final Color background;

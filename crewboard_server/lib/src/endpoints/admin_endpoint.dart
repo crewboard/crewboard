@@ -20,7 +20,10 @@ class AdminEndpoint extends Endpoint {
     return await SystemVariables.db.findFirstRow(session);
   }
 
-  Future<void> updateSystemVariables(Session session, SystemVariables variables) async {
+  Future<void> updateSystemVariables(
+    Session session,
+    SystemVariables variables,
+  ) async {
     final existing = await SystemVariables.db.findFirstRow(session);
     if (existing == null) {
       await SystemVariables.db.insertRow(session, variables);
@@ -42,7 +45,7 @@ class AdminEndpoint extends Endpoint {
       organizationId: user.organizationId,
     );
     final newApp = await PlannerApp.db.insertRow(session, app);
-    
+
     // Create initial shared bucket for the organization
     await Bucket.db.insertRow(
       session,

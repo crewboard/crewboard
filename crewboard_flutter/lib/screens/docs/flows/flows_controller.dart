@@ -98,7 +98,7 @@ class FlowsController extends GetxController {
   final RxBool isDraggingLoopPad = false.obs;
   final RxDouble initialLoopPadDragPos = 0.0.obs;
   final RxDouble initialLoopPadValue = 40.0.obs;
-  
+
   // Observable system variables for settings
   final Rx<SystemVariables?> systemVariables = Rx<SystemVariables?>(null);
   final RxBool isLoadingSettings = false.obs;
@@ -118,7 +118,7 @@ class FlowsController extends GetxController {
       isLoadingSettings.value = true;
       final result = await client.admin.getSystemVariables();
       systemVariables.value = result;
-      
+
       // Update Defaults
       if (result != null) {
         if (result.lineHeight != null) Defaults.lineHeight = result.lineHeight!;
@@ -242,7 +242,9 @@ class FlowsController extends GetxController {
               final loops = item["_loops"] as List?;
               if (loops != null) {
                 for (var l in loops) {
-                  if (l is Map && l.containsKey("fromId") && l.containsKey("toId")) {
+                  if (l is Map &&
+                      l.containsKey("fromId") &&
+                      l.containsKey("toId")) {
                     final fromId = l["fromId"];
                     final toId = l["toId"];
                     if (fromId is int && toId is int) {
@@ -261,7 +263,7 @@ class FlowsController extends GetxController {
               }
               continue;
             }
-            
+
             flows.add(FlowClass.fromJson(item));
           }
         }
@@ -285,7 +287,7 @@ class FlowsController extends GetxController {
     _saveDebounce = Timer(const Duration(milliseconds: 500), () async {
       try {
         final List<dynamic> flowData = flows.map((e) => e.toJson()).toList();
-        
+
         // Append loops payload
         if (loopLinks.isNotEmpty) {
           final List<Map<String, int>> loops = loopLinks
@@ -339,7 +341,7 @@ class FlowsController extends GetxController {
   // Update flow positions (canvas paint helper)
   void updateFlows() {
     if (flows.isEmpty) return;
-    
+
     // 1. Reset hasChild flags
     for (var flow in flows) {
       flow.down.hasChild = false;
@@ -355,9 +357,12 @@ class FlowsController extends GetxController {
       if (flow.pid != null) {
         final parent = nodeMap[flow.pid];
         if (parent != null) {
-          if (flow.direction == Direction.down) parent.down.hasChild = true;
-          else if (flow.direction == Direction.right) parent.right.hasChild = true;
-          else if (flow.direction == Direction.left) parent.left.hasChild = true;
+          if (flow.direction == Direction.down)
+            parent.down.hasChild = true;
+          else if (flow.direction == Direction.right)
+            parent.right.hasChild = true;
+          else if (flow.direction == Direction.left)
+            parent.left.hasChild = true;
         }
       }
     }
@@ -372,10 +377,10 @@ class FlowsController extends GetxController {
     for (var root in roots) {
       root.x = currentRootX - root.width / 2;
       root.y = 20; // Default top padding
-      
+
       // 6. Recursively position children
       _positionChildren(nodeMap, root, currentRootX);
-      
+
       // If we had multiple roots, we'd shift currentRootX here
     }
 
@@ -383,10 +388,14 @@ class FlowsController extends GetxController {
     _centerFlows();
   }
 
-  void _positionChildren(Map<int, FlowClass> nodeMap, FlowClass parent, double x) {
+  void _positionChildren(
+    Map<int, FlowClass> nodeMap,
+    FlowClass parent,
+    double x,
+  ) {
     // Collect children mapping to their directions
     final children = flows.where((f) => f.pid == parent.id).toList();
-    
+
     for (var child in children) {
       if (child.direction == Direction.down) {
         child.y = parent.y + parent.height + parent.down.lineHeight;
@@ -440,32 +449,40 @@ class FlowsController extends GetxController {
     updateFlowsReactive();
   }
 
-
   void addFlow(FlowType type) {
     double y = 20;
     FlowClass flow = FlowClass(
       id: flows.length,
-      width: (type == FlowType.process) 
+      width: (type == FlowType.process)
           ? (systemVariables.value?.processWidth ?? Defaults.flowWidth)
           : (type == FlowType.condition)
-              ? (systemVariables.value?.conditionWidth ?? Defaults.flowWidth)
-              : (type == FlowType.terminal)
-                  ? (systemVariables.value?.terminalWidth ?? Defaults.flowWidth)
-                  : Defaults.flowWidth,
-      height: (type == FlowType.condition || type == FlowType.user) ? Defaults.flowWidth : 40,
+          ? (systemVariables.value?.conditionWidth ?? Defaults.flowWidth)
+          : (type == FlowType.terminal)
+          ? (systemVariables.value?.terminalWidth ?? Defaults.flowWidth)
+          : Defaults.flowWidth,
+      height: (type == FlowType.condition || type == FlowType.user)
+          ? Defaults.flowWidth
+          : 40,
       x: stageWidth.value / 2 - Defaults.flowWidth / 2,
       y: y,
       type: type,
       value: "start",
-      down: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
-      left: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
-      right: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
+      down: Line(
+        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
+      ),
+      left: Line(
+        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
+      ),
+      right: Line(
+        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
+      ),
       pid: selectedId.value >= 0 ? selectedId.value : null,
       direction: selectedDirection.value,
     );
 
     if (selectedId.value >= 0 && selectedId.value < flows.length) {
-      if (flows[selectedId.value].type == FlowType.condition && flows[selectedId.value].yes == null) {
+      if (flows[selectedId.value].type == FlowType.condition &&
+          flows[selectedId.value].yes == null) {
         flows[selectedId.value].yes = selectedDirection.value;
       }
     }
@@ -487,7 +504,9 @@ class FlowsController extends GetxController {
         loopFrom.value = id;
         isPickingLoopFrom.value = false;
         Future.delayed(Duration(milliseconds: 500), () {
-          if (isSelectingLoop.value && loopFrom.value >= 0 && loopTo.value < 0) {
+          if (isSelectingLoop.value &&
+              loopFrom.value >= 0 &&
+              loopTo.value < 0) {
             isPickingLoopTo.value = true;
           }
         });
@@ -501,7 +520,9 @@ class FlowsController extends GetxController {
         if (loopFrom.value < 0) {
           loopFrom.value = id;
           Future.delayed(Duration(milliseconds: 500), () {
-            if (isSelectingLoop.value && loopFrom.value >= 0 && loopTo.value < 0) {
+            if (isSelectingLoop.value &&
+                loopFrom.value >= 0 &&
+                loopTo.value < 0) {
               isPickingLoopTo.value = true;
             }
           });
@@ -554,28 +575,30 @@ class FlowsController extends GetxController {
     // Remove children recursively
     // Note: Iterating backwards or collecting indices is safer when removing
     for (var child in children) {
-       flows.removeWhere((f) => f.id == child);
+      flows.removeWhere((f) => f.id == child);
     }
 
     // Fix IDs
     for (var i = 0; i < flows.length; i++) {
-        int oldId = flows[i].id;
-        flows[i].id = i;
-        for (var flow in flows) {
-            if (flow.pid == oldId) {
-                flow.pid = i;
-            }
+      int oldId = flows[i].id;
+      flows[i].id = i;
+      for (var flow in flows) {
+        if (flow.pid == oldId) {
+          flow.pid = i;
         }
-        // Also fix loop links
-        for (var link in loopLinks) {
-            if (link.fromId == oldId) link.fromId = i;
-            if (link.toId == oldId) link.toId = i;
-        }
+      }
+      // Also fix loop links
+      for (var link in loopLinks) {
+        if (link.fromId == oldId) link.fromId = i;
+        if (link.toId == oldId) link.toId = i;
+      }
     }
 
-    deleteAllLoopsForFlow(id); // Actually old ID is gone, but we might need to cleanup by index if logic wasn't perfect
+    deleteAllLoopsForFlow(
+      id,
+    ); // Actually old ID is gone, but we might need to cleanup by index if logic wasn't perfect
     // In this basic re-index logic, we should probably clear loops for removed items first.
-    
+
     updateFlowsReactive();
     save();
     window.value = "none";
@@ -639,15 +662,24 @@ class FlowsController extends GetxController {
     // Calculate new line height (minimum 10px, maximum 500px)
     double newLineHeight = initialLineHeight.value;
     if (flow.direction == Direction.down) {
-      newLineHeight = (initialLineHeight.value + adjustedDeltaY).clamp(10.0, 500.0);
+      newLineHeight = (initialLineHeight.value + adjustedDeltaY).clamp(
+        10.0,
+        500.0,
+      );
       parentFlow.down.lineHeight = newLineHeight;
     } else if (flow.direction == Direction.left) {
       // Moving left (decreasing X) should increase line height
-      newLineHeight = (initialLineHeight.value + (-adjustedDeltaX)).clamp(10.0, 500.0);
+      newLineHeight = (initialLineHeight.value + (-adjustedDeltaX)).clamp(
+        10.0,
+        500.0,
+      );
       parentFlow.left.lineHeight = newLineHeight;
     } else if (flow.direction == Direction.right) {
       // Moving right (increasing X) should increase line height
-      newLineHeight = (initialLineHeight.value + adjustedDeltaX).clamp(10.0, 500.0);
+      newLineHeight = (initialLineHeight.value + adjustedDeltaX).clamp(
+        10.0,
+        500.0,
+      );
       parentFlow.right.lineHeight = newLineHeight;
     }
 
@@ -808,6 +840,4 @@ class FlowsController extends GetxController {
     update();
     save();
   }
-
-
 }

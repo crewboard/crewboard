@@ -80,7 +80,7 @@ class AddTicketDialog extends StatelessWidget {
                                       for (var file in result.files) {
                                         // Add to pendingFiles for upload
                                         controller.pendingFiles.add(file);
-                                        
+
                                         // Add placeholder to attachments for UI display
                                         controller.attachments.add(
                                           AttachmentModel(
@@ -327,10 +327,10 @@ class AddTicketDialog extends StatelessWidget {
                                   builder: (context) => WheelDatePicker(
                                     initialDate:
                                         controller.deadline.value == null
-                                            ? DateTime.now()
-                                            : DateTime.parse(
-                                                controller.deadline.value!,
-                                              ),
+                                        ? DateTime.now()
+                                        : DateTime.parse(
+                                            controller.deadline.value!,
+                                          ),
                                     onDateSelected: (date) {
                                       controller.deadline.value = DateFormat(
                                         'yyyy-MM-dd',

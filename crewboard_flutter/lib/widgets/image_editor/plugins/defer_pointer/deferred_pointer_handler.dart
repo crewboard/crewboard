@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 part of 'defer_pointer.dart';
 
@@ -26,8 +26,10 @@ class DeferredPointerHandler extends StatefulWidget {
   static DeferredPointerHandlerState of(BuildContext context) {
     final inherited = context
         .dependOnInheritedWidgetOfExactType<_InheritedDeferredPaintSurface>();
-    assert(inherited != null,
-        'DeferredPaintSurface was not found on this context.');
+    assert(
+      inherited != null,
+      'DeferredPaintSurface was not found on this context.',
+    );
     return inherited!.state;
   }
 }
@@ -94,16 +96,18 @@ class _DeferredHitTargetRenderObjectWidget
 
   @override
   void updateRenderObject(
-          BuildContext context, _DeferredHitTargetRenderObject renderObject) =>
-      renderObject.link = link;
+    BuildContext context,
+    _DeferredHitTargetRenderObject renderObject,
+  ) => renderObject.link = link;
 }
 
 ////////////////////////////////
 // RENDER OBJECT PAINTER
 class _DeferredHitTargetRenderObject extends RenderProxyBox {
-  _DeferredHitTargetRenderObject(DeferredPointerHandlerLink link,
-      [RenderBox? child])
-      : super(child) {
+  _DeferredHitTargetRenderObject(
+    DeferredPointerHandlerLink link, [
+    RenderBox? child,
+  ]) : super(child) {
     this.link = link;
   }
 
@@ -152,8 +156,10 @@ class _DeferredHitTargetRenderObject extends RenderProxyBox {
 ////////////////////////////////
 // INHERITED WIDGET
 class _InheritedDeferredPaintSurface extends InheritedWidget {
-  const _InheritedDeferredPaintSurface(
-      {required super.child, required this.state});
+  const _InheritedDeferredPaintSurface({
+    required super.child,
+    required this.state,
+  });
 
   final DeferredPointerHandlerState state;
   @override

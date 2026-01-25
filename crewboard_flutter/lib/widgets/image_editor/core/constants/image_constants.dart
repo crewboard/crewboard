@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:typed_data';
 
 /// Transparent image
@@ -69,5 +69,5 @@ final kImageEditorTransparentBytes = Uint8List.fromList([
   0xAE,
   0x42,
   0x60,
-  0x82
+  0x82,
 ]);

@@ -23,8 +23,9 @@ class _FullScreenImagePreviewState extends State<FullScreenImagePreview> {
 
     try {
       // 1. Fetch image data
-      final ByteData data =
-          await NetworkAssetBundle(Uri.parse(widget.imageUrl)).load("");
+      final ByteData data = await NetworkAssetBundle(
+        Uri.parse(widget.imageUrl),
+      ).load("");
       final Uint8List bytes = data.buffer.asUint8List();
 
       // 2. Determine file name
@@ -36,10 +37,10 @@ class _FullScreenImagePreviewState extends State<FullScreenImagePreview> {
           fileName = segments.last;
         }
       } catch (_) {}
-      
+
       // Ensure extension
       if (!p.extension(fileName).isNotEmpty) {
-           fileName += ".png";
+        fileName += ".png";
       }
 
       // 3. User picks location
@@ -94,7 +95,7 @@ class _FullScreenImagePreviewState extends State<FullScreenImagePreview> {
                     child: CircularProgressIndicator(
                       value: loadingProgress.expectedTotalBytes != null
                           ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
+                                loadingProgress.expectedTotalBytes!
                           : null,
                       color: Colors.white,
                     ),
@@ -102,8 +103,11 @@ class _FullScreenImagePreviewState extends State<FullScreenImagePreview> {
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(
-                    child: Icon(Icons.broken_image,
-                        color: Colors.white, size: 50),
+                    child: Icon(
+                      Icons.broken_image,
+                      color: Colors.white,
+                      size: 50,
+                    ),
                   );
                 },
               ),
@@ -125,8 +129,11 @@ class _FullScreenImagePreviewState extends State<FullScreenImagePreview> {
                   )
                 else
                   IconButton(
-                    icon: const Icon(Icons.download,
-                        color: Colors.white, size: 30),
+                    icon: const Icon(
+                      Icons.download,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                     onPressed: _downloadImage,
                     tooltip: 'Download',
                   ),

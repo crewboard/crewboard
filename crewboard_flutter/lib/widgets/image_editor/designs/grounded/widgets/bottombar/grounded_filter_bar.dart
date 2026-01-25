@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
@@ -96,18 +96,20 @@ class _GroundedFilterBarState extends State<GroundedFilterBar>
               ),
             ),
             child: widget.editor.selectedFilter.filters.isNotEmpty
-                ? StatefulBuilder(builder: (context, setState) {
-                    return Slider(
-                      min: 0,
-                      max: 1,
-                      divisions: 100,
-                      value: widget.editor.filterOpacity,
-                      onChanged: (value) {
-                        widget.editor.setFilterOpacity(value);
-                        setState(() {});
-                      },
-                    );
-                  })
+                ? StatefulBuilder(
+                    builder: (context, setState) {
+                      return Slider(
+                        min: 0,
+                        max: 1,
+                        divisions: 100,
+                        value: widget.editor.filterOpacity,
+                        onChanged: (value) {
+                          widget.editor.setFilterOpacity(value);
+                          setState(() {});
+                        },
+                      );
+                    },
+                  )
                 : const SizedBox(height: 8),
           ),
           SingleChildScrollView(
@@ -120,9 +122,13 @@ class _GroundedFilterBarState extends State<GroundedFilterBar>
               previewImageSize: const Size(48, 48),
               borderRadius: BorderRadius.circular(2),
               mainBodySize: getValidSizeOrDefault(
-                  widget.editor.mainBodySize, widget.editor.editorBodySize),
+                widget.editor.mainBodySize,
+                widget.editor.editorBodySize,
+              ),
               mainImageSize: getValidSizeOrDefault(
-                  widget.editor.mainImageSize, widget.editor.editorBodySize),
+                widget.editor.mainImageSize,
+                widget.editor.editorBodySize,
+              ),
               editorImage: widget.editor.editorImage,
               image: widget.image,
               activeFilters: widget.editor.appliedFilters,

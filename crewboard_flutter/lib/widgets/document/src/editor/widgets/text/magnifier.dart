@@ -23,8 +23,9 @@ class QuillMagnifier extends StatelessWidget {
         child: RawMagnifier(
           clipBehavior: Clip.hardEdge,
           decoration: MagnifierDecoration(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             shadows: const [
               BoxShadow(
                 color: Colors.black26,

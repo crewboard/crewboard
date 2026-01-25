@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/shared/services/import_export/constants/minified_keys.dart';
 
@@ -116,13 +116,17 @@ class EditorKeyMinifier {
           var value = entry.value;
 
           if (entry.key == 'interaction') {
-            value = Map.from(entry.value).map((itemKey, itemValue) =>
-                MapEntry(convertLayerInteractionKey(itemKey), itemValue));
+            value = Map.from(entry.value).map(
+              (itemKey, itemValue) =>
+                  MapEntry(convertLayerInteractionKey(itemKey), itemValue),
+            );
           }
 
           if (entry.key == 'item') {
-            value = Map.from(entry.value).map((itemKey, itemValue) =>
-                MapEntry(convertPaintKey(itemKey), itemValue));
+            value = Map.from(entry.value).map(
+              (itemKey, itemValue) =>
+                  MapEntry(convertPaintKey(itemKey), itemValue),
+            );
           }
 
           return MapEntry(newKey, value);
@@ -149,13 +153,17 @@ class EditorKeyMinifier {
         Map.from(value).map(
           (entryKey, entryValue) {
             if (entryKey == 'interaction') {
-              entryValue = Map.from(entryValue).map((itemKey, itemValue) =>
-                  MapEntry(convertLayerInteractionKey(itemKey), itemValue));
+              entryValue = Map.from(entryValue).map(
+                (itemKey, itemValue) =>
+                    MapEntry(convertLayerInteractionKey(itemKey), itemValue),
+              );
             }
 
             if (entryKey == 'item') {
-              entryValue = Map.from(entryValue).map((itemKey, itemValue) =>
-                  MapEntry(convertPaintKey(itemKey), itemValue));
+              entryValue = Map.from(entryValue).map(
+                (itemKey, itemValue) =>
+                    MapEntry(convertPaintKey(itemKey), itemValue),
+              );
             }
 
             return MapEntry(

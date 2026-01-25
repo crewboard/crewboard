@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/services/gesture_manager.dart';
 
@@ -52,12 +52,15 @@ class GestureInterceptor extends StatelessWidget {
       behavior: behavior,
       onPointerDown: interceptPointerDown ? (_) => _intercept() : null,
       onPointerUp: interceptPointerUp ? (_) => _intercept() : null,
-      onPointerPanZoomStart:
-          interceptPointerPanZoomStart ? (_) => _intercept() : null,
-      onPointerPanZoomUpdate:
-          interceptPointerPanZoomUpdate ? (_) => _intercept() : null,
-      onPointerPanZoomEnd:
-          interceptPointerPanZoomEnd ? (_) => _intercept() : null,
+      onPointerPanZoomStart: interceptPointerPanZoomStart
+          ? (_) => _intercept()
+          : null,
+      onPointerPanZoomUpdate: interceptPointerPanZoomUpdate
+          ? (_) => _intercept()
+          : null,
+      onPointerPanZoomEnd: interceptPointerPanZoomEnd
+          ? (_) => _intercept()
+          : null,
       child: child,
     );
   }

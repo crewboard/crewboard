@@ -11,7 +11,13 @@ import 'types.dart';
 import 'dart:math' as math;
 
 class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key, this.image, this.name, this.color, required this.size, this.fontSize});
+  const ProfileIcon(
+      {super.key,
+      this.image,
+      this.name,
+      this.color,
+      required this.size,
+      this.fontSize});
   final String? image;
   final String? name;
   final Color? color;
@@ -22,9 +28,13 @@ class ProfileIcon extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(size)),
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.circular(size)),
       child: Center(
-        child: Text(name![0].toString().toUpperCase(), style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500))),
+        child: Text(name![0].toString().toUpperCase(),
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                    fontSize: fontSize, fontWeight: FontWeight.w500))),
       ),
     );
   }
@@ -41,7 +51,9 @@ class AddButton extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(border: Border.all(color: Pallet.font1), borderRadius: BorderRadius.circular(5)),
+        decoration: BoxDecoration(
+            border: Border.all(color: Pallet.font1),
+            borderRadius: BorderRadius.circular(5)),
         child: Icon(
           Icons.add,
           size: 12,
@@ -75,7 +87,15 @@ class CustomBadge extends StatelessWidget {
 }
 
 class TextBox extends StatelessWidget {
-  const TextBox({super.key, this.controller, this.maxLines, this.onType, this.onEnter, this.hintText, this.focus, this.radius});
+  const TextBox(
+      {super.key,
+      this.controller,
+      this.maxLines,
+      this.onType,
+      this.onEnter,
+      this.hintText,
+      this.focus,
+      this.radius});
   final TextEditingController? controller;
   final int? maxLines;
   final Function(String)? onType;
@@ -125,7 +145,10 @@ class Button extends StatelessWidget {
         },
         child: Container(
           padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(color: Pallet.inner1, border: Border.all(color: Pallet.font3), borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Pallet.inner1,
+              border: Border.all(color: Pallet.font3),
+              borderRadius: BorderRadius.circular(5)),
           child: Center(
               child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -210,7 +233,8 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   void getDropDownData() {
-    RenderBox renderBox = actionKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox =
+        actionKey.currentContext!.findRenderObject() as RenderBox;
     height = 200;
     width = 200;
     Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -271,10 +295,13 @@ class _ColorPickerState extends State<ColorPicker> {
                       behavior: HitTestBehavior.opaque,
                       child: ValueListenableBuilder<bool>(
                           valueListenable: adding,
-                          builder: (BuildContext context, bool _, Widget? child) {
+                          builder:
+                              (BuildContext context, bool _, Widget? child) {
                             return Container(
                               padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(color: Pallet.inner2, borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(
+                                  color: Pallet.inner2,
+                                  borderRadius: BorderRadius.circular(10)),
                               width: 160,
                               height: 160,
                               child: ListView(
@@ -287,10 +314,12 @@ class _ColorPickerState extends State<ColorPicker> {
                                         Expanded(
                                           child: Container(
                                             // eddited for mobile
-                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
                                             decoration: BoxDecoration(
                                               color: Pallet.inner3,
-                                              borderRadius: BorderRadius.circular(5),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
                                             ),
                                             child: Row(
                                               children: [
@@ -301,13 +330,19 @@ class _ColorPickerState extends State<ColorPicker> {
                                                       // onSubmitted: onEnter,
                                                       // onChanged: onType,
                                                       // controller: controller,
-                                                      style: TextStyle(fontSize: 12),
+                                                      style: TextStyle(
+                                                          fontSize: 12),
                                                       // maxLines: maxLines ?? 1,
-                                                      decoration: InputDecoration(
+                                                      decoration:
+                                                          InputDecoration(
                                                         // hintText: hintText,
-                                                        hintStyle: TextStyle(fontSize: 12, color: Pallet.font3),
+                                                        hintStyle: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Pallet.font3),
                                                         isDense: true,
-                                                        border: InputBorder.none,
+                                                        border:
+                                                            InputBorder.none,
                                                       )),
                                                 ),
                                                 InkWell(
@@ -330,7 +365,8 @@ class _ColorPickerState extends State<ColorPicker> {
                                       AddButton(
                                         onPress: () {
                                           if (adding.value) {
-                                            String hash = color.text.replaceAll("#", "");
+                                            String hash =
+                                                color.text.replaceAll("#", "");
                                             if (hash.length == 6) {
                                               hash = "0xFF" + hash;
                                             }
@@ -378,7 +414,8 @@ class _ColorPickerState extends State<ColorPicker> {
                                       for (var color in defaultColors)
                                         InkWell(
                                           onTap: () {
-                                            selectedColor = Color(int.parse(color["color"]));
+                                            selectedColor = Color(
+                                                int.parse(color["color"]));
                                             widget.onSelect(color);
                                             close();
                                             setState(() {});
@@ -388,9 +425,11 @@ class _ColorPickerState extends State<ColorPicker> {
                                             width: 26,
                                             height: 26,
                                             decoration: BoxDecoration(
-                                                color: Color(int.parse(color["color"])),
+                                                color: Color(
+                                                    int.parse(color["color"])),
                                                 // color: Colors.red,
-                                                borderRadius: BorderRadius.circular(5)),
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                           ),
                                         )
                                     ],
@@ -400,7 +439,8 @@ class _ColorPickerState extends State<ColorPicker> {
                                   ),
                                   if (customColors.isNotEmpty)
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "colors",
@@ -414,7 +454,9 @@ class _ColorPickerState extends State<ColorPicker> {
                                             for (var color in customColors)
                                               InkWell(
                                                 onTap: () {
-                                                  selectedColor = Color(int.parse(color["color"]));
+                                                  selectedColor = Color(
+                                                      int.parse(
+                                                          color["color"]));
                                                   widget.onSelect(color);
                                                   close();
                                                 },
@@ -423,9 +465,12 @@ class _ColorPickerState extends State<ColorPicker> {
                                                   width: 26,
                                                   height: 26,
                                                   decoration: BoxDecoration(
-                                                      color: Color(int.parse(color["color"])),
+                                                      color: Color(int.parse(
+                                                          color["color"])),
                                                       // color: Colors.red,
-                                                      borderRadius: BorderRadius.circular(5)),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
                                                 ),
                                               )
                                           ],
@@ -466,7 +511,8 @@ class _ColorPickerState extends State<ColorPicker> {
         key: actionKey,
         width: 20,
         height: 20,
-        decoration: BoxDecoration(color: selectedColor, borderRadius: BorderRadius.circular(5)),
+        decoration: BoxDecoration(
+            color: selectedColor, borderRadius: BorderRadius.circular(5)),
       ),
     );
   }
@@ -500,7 +546,8 @@ class _MultiSelectState extends State<MultiSelect> {
   final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
 
   void findDropDownData() {
-    RenderBox renderBox = actionKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox =
+        actionKey.currentContext!.findRenderObject() as RenderBox;
     height = renderBox.size.height;
     width = renderBox.size.width;
     Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -539,7 +586,8 @@ class _MultiSelectState extends State<MultiSelect> {
                   color: Colors.transparent,
                   child: ValueListenableBuilder<int?>(
                       valueListenable: hoveredIdx,
-                      builder: (BuildContext context, int? _hoveredIdx, Widget? child) {
+                      builder: (BuildContext context, int? _hoveredIdx,
+                          Widget? child) {
                         return Container(
                             decoration: widget.menuDecoration,
                             child: ListView(children: [
@@ -553,7 +601,8 @@ class _MultiSelectState extends State<MultiSelect> {
                                   },
                                   child: InkWell(
                                     onTap: () {
-                                      widget.items[i]["selected"] = !widget.items[i]["selected"];
+                                      widget.items[i]["selected"] =
+                                          !widget.items[i]["selected"];
                                       hoveredIdx.notifyListeners();
 
                                       widget.onChanged(widget.items[i]);
@@ -573,7 +622,9 @@ class _MultiSelectState extends State<MultiSelect> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: (i == _hoveredIdx) ? Pallet.inner3 : Colors.transparent,
+                                        color: (i == _hoveredIdx)
+                                            ? Pallet.inner3
+                                            : Colors.transparent,
                                       ),
                                       height: widget.itemHeight,
                                       child: Row(
@@ -584,11 +635,13 @@ class _MultiSelectState extends State<MultiSelect> {
                                           ProfileIcon(
                                             size: 25,
                                             name: widget.items[i]["userName"],
-                                            color: Color(int.parse(widget.items[i]["color"])),
+                                            color: Color(int.parse(
+                                                widget.items[i]["color"])),
                                             // color: Color(int.parse(item["color"].toString(), radix: 16)),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(left: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
                                             child: Text(
                                               widget.items[i]["userName"],
                                               style: TextStyle(fontSize: 12),
@@ -601,11 +654,14 @@ class _MultiSelectState extends State<MultiSelect> {
                                           ),
                                           Checkbox(
                                               activeColor: Pallet.inner2,
-                                              value: widget.items[i]["selected"],
+                                              value: widget.items[i]
+                                                  ["selected"],
                                               onChanged: (value) {
-                                                widget.items[i]["selected"] = value;
+                                                widget.items[i]["selected"] =
+                                                    value;
                                                 hoveredIdx.notifyListeners();
-                                                widget.onChanged(widget.items[i]);
+                                                widget
+                                                    .onChanged(widget.items[i]);
 
                                                 // if (item["selected"] == true) {
                                                 //   item["selected"] = false;
@@ -675,7 +731,14 @@ class _MultiSelectState extends State<MultiSelect> {
 }
 
 class DropDown extends StatefulWidget {
-  const DropDown({super.key, required this.label, required this.items, required this.itemKey, required this.onPress, this.itemHeight = 40, this.menuDecoration});
+  const DropDown(
+      {super.key,
+      required this.label,
+      required this.items,
+      required this.itemKey,
+      required this.onPress,
+      this.itemHeight = 40,
+      this.menuDecoration});
 
   final String label;
   final List<Map> items;
@@ -695,7 +758,8 @@ class _DropDownState extends State<DropDown> {
   final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
 
   void findDropDownData() {
-    RenderBox renderBox = actionKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox =
+        actionKey.currentContext!.findRenderObject() as RenderBox;
     height = renderBox.size.height;
     width = renderBox.size.width;
     // Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -736,7 +800,8 @@ class _DropDownState extends State<DropDown> {
                       color: Colors.transparent,
                       child: ValueListenableBuilder<int?>(
                           valueListenable: hoveredIdx,
-                          builder: (BuildContext context, int? _hoveredIdx, Widget? child) {
+                          builder: (BuildContext context, int? _hoveredIdx,
+                              Widget? child) {
                             return Container(
                                 // decoration: BoxDecoration(color: Colors.blue),
                                 decoration: widget.menuDecoration,
@@ -757,15 +822,20 @@ class _DropDownState extends State<DropDown> {
                                           close();
                                         },
                                         child: Container(
-                                          color: (i == _hoveredIdx) ? Pallet.inner3 : Colors.transparent,
+                                          color: (i == _hoveredIdx)
+                                              ? Pallet.inner3
+                                              : Colors.transparent,
                                           height: widget.itemHeight,
                                           child: Row(
                                             children: [
                                               Padding(
-                                                padding: const EdgeInsets.only(left: 8.0),
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
                                                 child: Text(
-                                                  widget.items[i][widget.itemKey],
-                                                  style: TextStyle(fontSize: 12),
+                                                  widget.items[i]
+                                                      [widget.itemKey],
+                                                  style:
+                                                      TextStyle(fontSize: 12),
                                                 ),
                                               ),
                                             ],
@@ -820,14 +890,18 @@ class _DropDownState extends State<DropDown> {
 }
 
 class FilePreview extends StatelessWidget {
-  const FilePreview({super.key, required this.name, required this.size, this.url});
+  const FilePreview(
+      {super.key, required this.name, required this.size, this.url});
   final String name;
   final int size;
   final String? url;
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Pallet.inner3, borderRadius: BorderRadius.circular(10), border: Border.all(color: Pallet.font3.withOpacity(0.5))),
+      decoration: BoxDecoration(
+          color: Pallet.inner3,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Pallet.font3.withOpacity(0.5))),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       constraints: BoxConstraints(maxWidth: 200),
       child: Row(
@@ -930,7 +1004,10 @@ class ChipButton extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(20), border: Border.all(color: Pallet.font3)),
+        decoration: BoxDecoration(
+            color: Pallet.inner1,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Pallet.font3)),
         child: Center(
           child: Text(
             name,
@@ -942,16 +1019,12 @@ class ChipButton extends StatelessWidget {
   }
 }
 
-
-
-
 class ParallaxFlowDelegate extends FlowDelegate {
   ParallaxFlowDelegate({
     required this.scrollable,
     required this.listItemContext,
     required this.backgroundImageKey,
   }) : super(repaint: scrollable.position);
-
 
   final ScrollableState scrollable;
   final BuildContext listItemContext;

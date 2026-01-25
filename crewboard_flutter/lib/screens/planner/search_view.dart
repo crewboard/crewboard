@@ -199,10 +199,10 @@ class _SearchViewState extends State<SearchView> {
     // Create a regex that matches either valid names (prioritized) or standard hashtags
     final uniqueNames = names.where((n) => n.isNotEmpty).toSet().toList();
     uniqueNames.sort((a, b) => b.length.compareTo(a.length));
-    
+
     final escapedNames = uniqueNames.map(RegExp.escape).join('|');
-    final pattern = escapedNames.isNotEmpty 
-        ? "#($escapedNames|\\w+)" 
+    final pattern = escapedNames.isNotEmpty
+        ? "#($escapedNames|\\w+)"
         : r"#(\w+)";
     final RegExp exp = RegExp(pattern, caseSensitive: false);
 
@@ -218,11 +218,10 @@ class _SearchViewState extends State<SearchView> {
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
             ),
-            recognizer:
-                TapGestureRecognizer()
-                  ..onTap = () {
-                    plannerController.openLinkedFlow(flowName);
-                  },
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                plannerController.openLinkedFlow(flowName);
+              },
           ),
         );
         return match;
@@ -339,7 +338,9 @@ class _SearchViewState extends State<SearchView> {
                                       const SizedBox(height: 5),
                                       Text.rich(
                                         TextSpan(
-                                          children: _parseBody(ticket.ticketBody),
+                                          children: _parseBody(
+                                            ticket.ticketBody,
+                                          ),
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: Pallet.font3,
@@ -479,7 +480,9 @@ class _SearchViewState extends State<SearchView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("property", style: TextStyle(
+                                    Text(
+                                      "property",
+                                      style: TextStyle(
                                         fontSize: 12,
                                         color: Pallet.font1,
                                       ),
@@ -522,7 +525,9 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("value", style: TextStyle(
+                                      Text(
+                                        "value",
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -550,7 +555,9 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("value", style: TextStyle(
+                                      Text(
+                                        "value",
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -578,7 +585,9 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("type", style: TextStyle(
+                                      Text(
+                                        "type",
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -622,7 +631,9 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("value", style: TextStyle(
+                                      Text(
+                                        "value",
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -651,7 +662,9 @@ class _SearchViewState extends State<SearchView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("type", style: TextStyle(
+                                      Text(
+                                        "type",
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: Pallet.font1,
                                         ),
@@ -691,5 +704,3 @@ class _SearchViewState extends State<SearchView> {
     });
   }
 }
-
-

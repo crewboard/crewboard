@@ -52,7 +52,7 @@ class ThemeController extends GetxController {
         break;
     }
   }
-  
+
   String getThemeName(AppTheme theme) {
     switch (theme) {
       case AppTheme.glassDark:

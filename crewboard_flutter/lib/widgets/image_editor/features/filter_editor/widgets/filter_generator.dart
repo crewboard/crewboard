@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -66,8 +66,9 @@ class ColorFilterGeneratorState extends State<ColorFilterGenerator> {
   void _recomputeMatrix() {
     _combinedMatrix = mergeColorMatrices(
       filterList: widget.filters,
-      tuneAdjustmentList:
-          widget.tuneAdjustments.map((item) => item.matrix).toList(),
+      tuneAdjustmentList: widget.tuneAdjustments
+          .map((item) => item.matrix)
+          .toList(),
     );
   }
 
@@ -85,9 +86,14 @@ class ColorFilterGeneratorState extends State<ColorFilterGenerator> {
 
     properties
       ..add(DiagnosticsProperty<FilterMatrix>('filters', widget.filters))
-      ..add(IterableProperty<TuneAdjustmentMatrix>(
-          'tuneAdjustments', widget.tuneAdjustments))
       ..add(
-          DiagnosticsProperty<List<double>>('combinedMatrix', _combinedMatrix));
+        IterableProperty<TuneAdjustmentMatrix>(
+          'tuneAdjustments',
+          widget.tuneAdjustments,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<List<double>>('combinedMatrix', _combinedMatrix),
+      );
   }
 }

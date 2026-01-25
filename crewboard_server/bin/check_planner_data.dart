@@ -78,7 +78,9 @@ void main(List<String> args) async {
     final buckets = await Bucket.db.find(session);
     print('\nBuckets: ${buckets.length}');
     for (var bucket in buckets) {
-      print('  - ${bucket.bucketName} (App: ${bucket.appId}, User: ${bucket.userId})');
+      print(
+        '  - ${bucket.bucketName} (App: ${bucket.appId}, User: ${bucket.userId})',
+      );
     }
 
     // Check Tickets

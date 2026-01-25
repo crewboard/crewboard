@@ -74,13 +74,13 @@ class GeneralSettings extends StatelessWidget {
               runSpacing: 15,
               children: AppTheme.values.map((theme) {
                 final isSelected = controller.currentTheme == theme;
-                
+
                 // Define preview colors based on theme
                 Color previewBg;
                 Color previewAccent;
                 Color textColor;
                 bool isGlass;
-                
+
                 switch (theme) {
                   case AppTheme.glassDark:
                     previewBg = Colors.black.withOpacity(0.3);
@@ -107,7 +107,7 @@ class GeneralSettings extends StatelessWidget {
                     isGlass = false;
                     break;
                 }
-                
+
                 return GestureDetector(
                   onTap: () => controller.setTheme(theme),
                   child: ClipRRect(
@@ -117,11 +117,11 @@ class GeneralSettings extends StatelessWidget {
                       height: 120,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: isSelected 
-                              ? Colors.blueAccent 
-                              : (isGlass 
-                                  ? Colors.white.withOpacity(0.2)
-                                  : Colors.grey.withOpacity(0.3)),
+                          color: isSelected
+                              ? Colors.blueAccent
+                              : (isGlass
+                                    ? Colors.white.withOpacity(0.2)
+                                    : Colors.grey.withOpacity(0.3)),
                           width: isSelected ? 3 : 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -244,7 +244,7 @@ class GeneralSettings extends StatelessWidget {
                               style: TextStyle(
                                 color: textColor,
                                 fontSize: 11,
-                                fontWeight:  FontWeight.bold 
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -253,11 +253,11 @@ class GeneralSettings extends StatelessWidget {
                             top: 8,
                             right: 8,
                             child: Icon(
-                              isSelected 
-                                  ? Icons.check_circle 
+                              isSelected
+                                  ? Icons.check_circle
                                   : Icons.circle_outlined,
-                              color: isSelected 
-                                  ? Colors.blueAccent 
+                              color: isSelected
+                                  ? Colors.blueAccent
                                   : textColor.withOpacity(0.4),
                               size: 20,
                             ),

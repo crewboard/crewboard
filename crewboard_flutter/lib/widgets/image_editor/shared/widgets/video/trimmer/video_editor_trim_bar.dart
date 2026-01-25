@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -68,11 +68,13 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
   }
 
   void _updateTrimSpan({TrimDurationSpan? timeSpan}) {
-    final startTime =
-        Duration(microseconds: (_trimStart * _videoDuration).round());
+    final startTime = Duration(
+      microseconds: (_trimStart * _videoDuration).round(),
+    );
     final endTime = Duration(microseconds: (_trimEnd * _videoDuration).round());
 
-    final span = timeSpan ??
+    final span =
+        timeSpan ??
         TrimDurationSpan(
           start: Duration(seconds: startTime.inSeconds),
           end: Duration(seconds: endTime.inSeconds),
@@ -160,7 +162,8 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
     // Define zoom factor dynamically based on scroll speed
     double factor = 0.05 * (event.scrollDelta.dy / 50).abs().clamp(0.5, 2);
 
-    double deltaY = event.scrollDelta.dy *
+    double deltaY =
+        event.scrollDelta.dy *
         (_player.configs.trimBarInvertMouseScroll ? -1 : 1);
 
     double startZoom = _scale;
@@ -211,88 +214,95 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
     var handlerButtonSize = style.trimBarHandlerButtonSize;
 
     return RepaintBoundary(
-      child: LayoutBuilder(builder: (_, constraints) {
-        double trimBarWidth = constraints.maxWidth - 16;
-        double scaledWidth = trimBarWidth * _scale;
-        double trimWidth = (_trimEnd - _trimStart) * scaledWidth;
-        double offsetLeftHandler = _trimStart * scaledWidth;
-        double offsetRightHandler =
-            _trimEnd * scaledWidth - _player.style.trimBarHandlerWidth;
+      child: LayoutBuilder(
+        builder: (_, constraints) {
+          double trimBarWidth = constraints.maxWidth - 16;
+          double scaledWidth = trimBarWidth * _scale;
+          double trimWidth = (_trimEnd - _trimStart) * scaledWidth;
+          double offsetLeftHandler = _trimStart * scaledWidth;
+          double offsetRightHandler =
+              _trimEnd * scaledWidth - _player.style.trimBarHandlerWidth;
 
-        /// Ensure there is always a small gap between the handlers
-        if (offsetLeftHandler + _player.style.trimBarHandlerWidth + 4 >=
-            offsetRightHandler) {
-          offsetRightHandler = offsetLeftHandler + 4;
-        }
+          /// Ensure there is always a small gap between the handlers
+          if (offsetLeftHandler + _player.style.trimBarHandlerWidth + 4 >=
+              offsetRightHandler) {
+            offsetRightHandler = offsetLeftHandler + 4;
+          }
 
-        return SingleChildScrollView(
-          controller: _scrollCtrl,
-          scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.none,
-          child: Listener(
-            onPointerSignal: (ev) => _handleMouseScroll(ev, trimBarWidth),
-            child: GestureDetector(
-              onScaleStart: (ScaleStartDetails details) {
-                _baseScale = _scale;
-              },
-              onScaleUpdate: (ScaleUpdateDetails details) {
-                _scale = (_baseScale * details.scale).clamp(
-                  _player.configs.trimBarMinScale,
-                  _player.configs.trimBarMaxScale,
-                );
-                setState(() {});
-              },
-              child: Container(
-                clipBehavior: Clip.none,
-                width: scaledWidth,
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Stack(
+          return SingleChildScrollView(
+            controller: _scrollCtrl,
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            child: Listener(
+              onPointerSignal: (ev) => _handleMouseScroll(ev, trimBarWidth),
+              child: GestureDetector(
+                onScaleStart: (ScaleStartDetails details) {
+                  _baseScale = _scale;
+                },
+                onScaleUpdate: (ScaleUpdateDetails details) {
+                  _scale = (_baseScale * details.scale).clamp(
+                    _player.configs.trimBarMinScale,
+                    _player.configs.trimBarMaxScale,
+                  );
+                  setState(() {});
+                },
+                child: Container(
                   clipBehavior: Clip.none,
-                  children: [
-                    /// Trimmer background
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: handlerButtonSize,
+                  width: scaledWidth,
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      /// Trimmer background
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: handlerButtonSize,
+                        ),
+                        child: GestureDetector(
+                          onHorizontalDragEnd: !isDesktop
+                              ? null
+                              : (_) => _triggerTrimSpanEnd(),
+                          onHorizontalDragUpdate: !isDesktop
+                              ? null
+                              : (details) {
+                                  _updateScrollbar(details.delta.dx);
+                                },
+                          child: const VideoEditorTrimThumbnailBar(),
+                        ),
                       ),
-                      child: GestureDetector(
-                        onHorizontalDragEnd:
-                            !isDesktop ? null : (_) => _triggerTrimSpanEnd(),
-                        onHorizontalDragUpdate: !isDesktop
-                            ? null
-                            : (details) {
-                                _updateScrollbar(details.delta.dx);
-                              },
-                        child: const VideoEditorTrimThumbnailBar(),
+
+                      /// Outside shadows
+                      ..._buildOutsideShadows(
+                        offsetLeftHandler,
+                        offsetRightHandler,
+                        scaledWidth,
                       ),
-                    ),
 
-                    /// Outside shadows
-                    ..._buildOutsideShadows(
-                      offsetLeftHandler,
-                      offsetRightHandler,
-                      scaledWidth,
-                    ),
+                      /// Trim body area
+                      _buildTrimBodyArea(
+                        offsetLeftHandler + handlerButtonSize,
+                        offsetRightHandler - handlerButtonSize,
+                        scaledWidth,
+                        trimWidth,
+                      ),
 
-                    /// Trim body area
-                    _buildTrimBodyArea(
-                      offsetLeftHandler + handlerButtonSize,
-                      offsetRightHandler - handlerButtonSize,
-                      scaledWidth,
-                      trimWidth,
-                    ),
+                      /// Trim handler left
+                      _buildResizeHandler(true, offsetLeftHandler, scaledWidth),
 
-                    /// Trim handler left
-                    _buildResizeHandler(true, offsetLeftHandler, scaledWidth),
-
-                    /// Trim handler right
-                    _buildResizeHandler(false, offsetRightHandler, scaledWidth),
-                  ],
+                      /// Trim handler right
+                      _buildResizeHandler(
+                        false,
+                        offsetRightHandler,
+                        scaledWidth,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 
@@ -346,7 +356,8 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
   ) {
     return Positioned(
       left: offsetLeftHandler,
-      width: offsetRightHandler -
+      width:
+          offsetRightHandler -
           offsetLeftHandler +
           _player.style.trimBarHandlerWidth,
       child: Stack(
@@ -383,8 +394,9 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
   }
 
   Widget _buildResizeHandler(bool isLeft, double offset, double scaledWidth) {
-    var notifier =
-        isLeft ? _leftHandlerActiveNotifier : _rightHandlerActiveNotifier;
+    var notifier = isLeft
+        ? _leftHandlerActiveNotifier
+        : _rightHandlerActiveNotifier;
     return Positioned(
       left: offset,
       child: GestureDetector(
@@ -406,13 +418,14 @@ class _VideoEditorTrimBarState extends State<VideoEditorTrimBar> {
           notifier.value = false;
         },
         child: ValueListenableBuilder(
-            valueListenable: notifier,
-            builder: (_, value, __) {
-              return VideoEditorTrimHandle(
-                isSelected: value,
-                isLeft: isLeft,
-              );
-            }),
+          valueListenable: notifier,
+          builder: (_, value, __) {
+            return VideoEditorTrimHandle(
+              isSelected: value,
+              isLeft: isLeft,
+            );
+          },
+        ),
       ),
     );
   }

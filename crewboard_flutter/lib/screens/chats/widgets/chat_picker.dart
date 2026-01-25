@@ -84,19 +84,23 @@ class _ChatPickerState extends State<ChatPicker> {
 
   Widget _buildGiphyBody() {
     return Obx(() {
-      if (giphyController.isLoading.value && 
-          (giphyController.isSearching.value ? giphyController.searchResults.isEmpty : giphyController.trendingGifs.isEmpty)) {
+      if (giphyController.isLoading.value &&
+          (giphyController.isSearching.value
+              ? giphyController.searchResults.isEmpty
+              : giphyController.trendingGifs.isEmpty)) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      final List<Gif> gifs = giphyController.isSearching.value 
-          ? giphyController.searchResults 
+      final List<Gif> gifs = giphyController.isSearching.value
+          ? giphyController.searchResults
           : giphyController.trendingGifs;
 
       if (gifs.isEmpty) {
         return Center(
           child: Text(
-            giphyController.isSearching.value ? "No GIFs found." : "No trending GIFs.",
+            giphyController.isSearching.value
+                ? "No GIFs found."
+                : "No trending GIFs.",
             style: TextStyle(color: Pallet.font2),
           ),
         );
@@ -125,7 +129,8 @@ class _ChatPickerState extends State<ChatPicker> {
                   return Center(
                     child: CircularProgressIndicator(
                       value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
                           : null,
                     ),
                   );

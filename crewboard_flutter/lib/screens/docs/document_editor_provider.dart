@@ -168,7 +168,8 @@ class DocumentEditorProvider extends GetxController {
   final RxBool isNumberedList = false.obs;
 
   // Centralized editor-style definitions keyed by preset name.
-  final RxMap<String, FontSettings> editorFontSettings = <String, FontSettings>{}.obs;
+  final RxMap<String, FontSettings> editorFontSettings =
+      <String, FontSettings>{}.obs;
 
   final RxList<SystemColor> systemColors = <SystemColor>[].obs;
 
@@ -182,7 +183,7 @@ class DocumentEditorProvider extends GetxController {
   final RxList<FlowModel> overlayFlows = <FlowModel>[].obs;
   final Rx<Offset> overlayPosition = Offset.zero.obs;
   final RxString flowQuery = ''.obs;
-  
+
   // Observable system variables for settings
   final Rx<SystemVariables?> systemVariables = Rx<SystemVariables?>(null);
   final RxBool isLoadingSettings = false.obs;
@@ -200,12 +201,17 @@ class DocumentEditorProvider extends GetxController {
       final result = await client.admin.getSystemVariables();
       if (result != null) {
         // Normalize tab presets to lowercase for consistent comparison
-        if (result.tabPreset1 != null) result.tabPreset1 = result.tabPreset1!.toLowerCase();
-        if (result.tabPreset2 != null) result.tabPreset2 = result.tabPreset2!.toLowerCase();
-        if (result.titleFont != null) result.titleFont = result.titleFont!.toLowerCase();
-        if (result.headingFont != null) result.headingFont = result.headingFont!.toLowerCase();
-        if (result.subHeadingFont != null) result.subHeadingFont = result.subHeadingFont!.toLowerCase();
-        
+        if (result.tabPreset1 != null)
+          result.tabPreset1 = result.tabPreset1!.toLowerCase();
+        if (result.tabPreset2 != null)
+          result.tabPreset2 = result.tabPreset2!.toLowerCase();
+        if (result.titleFont != null)
+          result.titleFont = result.titleFont!.toLowerCase();
+        if (result.headingFont != null)
+          result.headingFont = result.headingFont!.toLowerCase();
+        if (result.subHeadingFont != null)
+          result.subHeadingFont = result.subHeadingFont!.toLowerCase();
+
         systemVariables.value = result;
         quillController.readOnly = !(result.allowEdit ?? true);
         if (result.googleFonts != null && result.googleFonts!.isNotEmpty) {
@@ -224,11 +230,11 @@ class DocumentEditorProvider extends GetxController {
 
       for (var f in fonts) {
         final name = f.name.toLowerCase();
-        
+
         // Determine header level from SystemVariables, fallback to legacy definition
         Attribute? headerAttr;
         int level = f.headerLevel ?? 0;
-        
+
         if (systemVariables.value?.titleFont == name) {
           headerAttr = Attribute.h1;
           level = 1;
@@ -238,9 +244,12 @@ class DocumentEditorProvider extends GetxController {
         } else if (systemVariables.value?.subHeadingFont == name) {
           headerAttr = Attribute.h3;
           level = 3;
-        } else if (level == 1) headerAttr = Attribute.h1;
-          else if (level == 2) headerAttr = Attribute.h2;
-          else if (level == 3) headerAttr = Attribute.h3;
+        } else if (level == 1)
+          headerAttr = Attribute.h1;
+        else if (level == 2)
+          headerAttr = Attribute.h2;
+        else if (level == 3)
+          headerAttr = Attribute.h3;
 
         newSettings[name] = FontSettings(
           name: name,
@@ -261,8 +270,8 @@ class DocumentEditorProvider extends GetxController {
 
       // Ensure at least a 'body' fallback if not present
       if (!editorFontSettings.containsKey('body')) {
-         editorFontSettings['body'] = FontSettings(name: 'body', preset: 'body');
-         dynamicPresets.insert(0, 'body');
+        editorFontSettings['body'] = FontSettings(name: 'body', preset: 'body');
+        dynamicPresets.insert(0, 'body');
       }
     } catch (e) {
       print('Error loading settings: $e');
@@ -320,6 +329,7 @@ class DocumentEditorProvider extends GetxController {
             ? editorFontSettings.values.first
             : FontSettings());
   }
+
   @override
   void onClose() {
     quillController.dispose();
@@ -591,10 +601,13 @@ class DocumentEditorProvider extends GetxController {
     final currentFs = editorFontSettings[currentPreset.toLowerCase().trim()];
     if (currentFs != null) {
       int currentLevel = 0;
-      if (currentFs.headerAttribute == Attribute.h1) currentLevel = 1;
-      else if (currentFs.headerAttribute == Attribute.h2) currentLevel = 2;
-      else if (currentFs.headerAttribute == Attribute.h3) currentLevel = 3;
-      
+      if (currentFs.headerAttribute == Attribute.h1)
+        currentLevel = 1;
+      else if (currentFs.headerAttribute == Attribute.h2)
+        currentLevel = 2;
+      else if (currentFs.headerAttribute == Attribute.h3)
+        currentLevel = 3;
+
       if (currentLevel == level) {
         foundPreset = currentPreset;
       }
@@ -606,9 +619,12 @@ class DocumentEditorProvider extends GetxController {
         final fs = editorFontSettings[pName.toLowerCase().trim()];
         if (fs != null) {
           int fsLevel = 0;
-          if (fs.headerAttribute == Attribute.h1) fsLevel = 1;
-          else if (fs.headerAttribute == Attribute.h2) fsLevel = 2;
-          else if (fs.headerAttribute == Attribute.h3) fsLevel = 3;
+          if (fs.headerAttribute == Attribute.h1)
+            fsLevel = 1;
+          else if (fs.headerAttribute == Attribute.h2)
+            fsLevel = 2;
+          else if (fs.headerAttribute == Attribute.h3)
+            fsLevel = 3;
           if (fsLevel == level) {
             foundPreset = pName;
             break;
@@ -616,8 +632,10 @@ class DocumentEditorProvider extends GetxController {
         }
       }
     }
-    
-    final resolvedPreset = foundPreset ?? (dynamicPresets.isNotEmpty ? dynamicPresets.first : 'body');
+
+    final resolvedPreset =
+        foundPreset ??
+        (dynamicPresets.isNotEmpty ? dynamicPresets.first : 'body');
 
     final colorRaw = attributes[Attribute.color.key];
     final colorVal = attrValue(colorRaw);
@@ -626,7 +644,7 @@ class DocumentEditorProvider extends GetxController {
 
     if (colorHex != null && systemColors.isNotEmpty) {
       final match = systemColors.firstWhereOrNull(
-            (c) => c.color.toLowerCase() == colorHex.toLowerCase(),
+        (c) => c.color.toLowerCase() == colorHex.toLowerCase(),
       );
       colorId = match?.id;
     }
@@ -763,7 +781,9 @@ class DocumentEditorProvider extends GetxController {
         vars.tabPreset2 != null &&
         vars.tabPreset2!.isNotEmpty) {
       // If tab switching presets are configured, toggle between them
-      final target = (current == vars.tabPreset1) ? vars.tabPreset2! : vars.tabPreset1!;
+      final target = (current == vars.tabPreset1)
+          ? vars.tabPreset2!
+          : vars.tabPreset1!;
       _applyFontPreset(target);
       return;
     }
@@ -774,8 +794,7 @@ class DocumentEditorProvider extends GetxController {
     final currentIndex = dynamicPresets.indexOf(
       fontSettings.value.preset,
     );
-    final nextIndex =
-        (currentIndex + 1) % dynamicPresets.length;
+    final nextIndex = (currentIndex + 1) % dynamicPresets.length;
     _applyFontPreset(dynamicPresets[nextIndex]);
   }
 
@@ -794,7 +813,7 @@ class DocumentEditorProvider extends GetxController {
     UuidValue? colorId;
     if (systemColors.isNotEmpty) {
       final match = systemColors.firstWhereOrNull(
-            (c) => c.color.toLowerCase() == hex.toLowerCase(),
+        (c) => c.color.toLowerCase() == hex.toLowerCase(),
       );
       colorId = match?.id;
     }
@@ -820,23 +839,31 @@ class DocumentEditorProvider extends GetxController {
 
   void _applyFontPreset(String presetName) {
     String lookup = presetName.toLowerCase().trim();
-    
+
     // Fuzzy match: if "heading" is requested but only "heading 1" exists, use it.
     if (!editorFontSettings.containsKey(lookup)) {
       final match = dynamicPresets.firstWhereOrNull(
-        (p) => p.toLowerCase().trim() == lookup || p.toLowerCase().trim().startsWith(lookup)
+        (p) =>
+            p.toLowerCase().trim() == lookup ||
+            p.toLowerCase().trim().startsWith(lookup),
       );
       if (match != null) {
         lookup = match.toLowerCase().trim();
       }
     }
 
-    final fs = editorFontSettings[lookup] ??
+    final fs =
+        editorFontSettings[lookup] ??
         editorFontSettings['body'] ??
-        (editorFontSettings.isNotEmpty ? editorFontSettings.values.first : FontSettings());
-    
-    final finalPresetName = editorFontSettings.containsKey(lookup) 
-        ? dynamicPresets.firstWhere((p) => p.toLowerCase().trim() == lookup, orElse: () => presetName)
+        (editorFontSettings.isNotEmpty
+            ? editorFontSettings.values.first
+            : FontSettings());
+
+    final finalPresetName = editorFontSettings.containsKey(lookup)
+        ? dynamicPresets.firstWhere(
+            (p) => p.toLowerCase().trim() == lookup,
+            orElse: () => presetName,
+          )
         : presetName;
 
     String fontSize;
@@ -863,54 +890,83 @@ class DocumentEditorProvider extends GetxController {
     // 3. Apply formatting
     final selection = quillController.selection;
     if (selection.isCollapsed) {
-       final plainText = quillController.document.toPlainText();
-       final len = plainText.length;
-       int start = selection.baseOffset;
-       int end = selection.baseOffset;
+      final plainText = quillController.document.toPlainText();
+      final len = plainText.length;
+      int start = selection.baseOffset;
+      int end = selection.baseOffset;
 
-       // Find start of line
-       while (start > 0 && plainText[start - 1] != '\n') {
-         start--;
-       }
+      // Find start of line
+      while (start > 0 && plainText[start - 1] != '\n') {
+        start--;
+      }
 
-       // Find end of line
-       while (end < len && plainText[end] != '\n') {
-         end++;
-       }
+      // Find end of line
+      while (end < len && plainText[end] != '\n') {
+        end++;
+      }
 
-       final length = end - start;
+      final length = end - start;
 
-       if (length > 0) {
-          if (fs.headerAttribute != null) {
-            quillController.formatText(start, length, fs.headerAttribute!);
-          } else {
-            quillController.formatText(start, length, Attribute.clone(Attribute.header, null));
-          }
-          quillController.formatText(start, length, Attribute.fromKeyValue(Attribute.size.key, fontSize));
-          quillController.formatText(start, length, Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily));
-       } else {
-          // Empty line, format selection (cursor)
-          if (fs.headerAttribute != null) {
-            quillController.formatSelection(fs.headerAttribute!);
-          } else {
-            quillController.formatSelection(Attribute.clone(Attribute.header, null));
-          }
-          quillController.formatSelection(Attribute.fromKeyValue(Attribute.size.key, fontSize));
-          quillController.formatSelection(Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily));
-       }
+      if (length > 0) {
+        if (fs.headerAttribute != null) {
+          quillController.formatText(start, length, fs.headerAttribute!);
+        } else {
+          quillController.formatText(
+            start,
+            length,
+            Attribute.clone(Attribute.header, null),
+          );
+        }
+        quillController.formatText(
+          start,
+          length,
+          Attribute.fromKeyValue(Attribute.size.key, fontSize),
+        );
+        quillController.formatText(
+          start,
+          length,
+          Attribute.fromKeyValue(
+            Attribute.font.key,
+            fontSettings.value.fontFamily,
+          ),
+        );
+      } else {
+        // Empty line, format selection (cursor)
+        if (fs.headerAttribute != null) {
+          quillController.formatSelection(fs.headerAttribute!);
+        } else {
+          quillController.formatSelection(
+            Attribute.clone(Attribute.header, null),
+          );
+        }
+        quillController.formatSelection(
+          Attribute.fromKeyValue(Attribute.size.key, fontSize),
+        );
+        quillController.formatSelection(
+          Attribute.fromKeyValue(
+            Attribute.font.key,
+            fontSettings.value.fontFamily,
+          ),
+        );
+      }
     } else {
       // Normal selection
       if (fs.headerAttribute != null) {
         quillController.formatSelection(fs.headerAttribute!);
       } else {
-        quillController.formatSelection(Attribute.clone(Attribute.header, null));
+        quillController.formatSelection(
+          Attribute.clone(Attribute.header, null),
+        );
       }
 
       quillController.formatSelection(
         Attribute.fromKeyValue(Attribute.size.key, fontSize),
       );
       quillController.formatSelection(
-        Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily),
+        Attribute.fromKeyValue(
+          Attribute.font.key,
+          fontSettings.value.fontFamily,
+        ),
       );
     }
   }
@@ -1135,9 +1191,12 @@ class DocumentEditorProvider extends GetxController {
 
       // Insert Flow Embed
       final index = wordStart;
-      quillController.document.insert(index, BlockEmbed.custom(
-        CustomBlockEmbed('flow', flow.name),
-      ));
+      quillController.document.insert(
+        index,
+        BlockEmbed.custom(
+          CustomBlockEmbed('flow', flow.name),
+        ),
+      );
 
       // Move cursor after embed
       quillController.updateSelection(

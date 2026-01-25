@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/extensions/num_extension.dart';
@@ -49,8 +49,9 @@ class TuneAdjustmentMatrix {
     return {
       'id': id,
       'value': value.roundSmart(maxDecimalPlaces),
-      'matrix':
-          matrix.map((value) => value.roundSmart(maxDecimalPlaces)).toList(),
+      'matrix': matrix
+          .map((value) => value.roundSmart(maxDecimalPlaces))
+          .toList(),
     };
   }
 

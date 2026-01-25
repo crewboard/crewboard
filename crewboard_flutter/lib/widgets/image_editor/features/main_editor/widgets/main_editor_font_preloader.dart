@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/emoji_editor_configs.dart';
@@ -36,11 +36,13 @@ class MainEditorFontPreloader extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
 
-    properties.add(FlagProperty(
-      'isFontPreloaded',
-      value: kIsWeb && emojiEditorConfigs.enablePreloadWebFont,
-      ifTrue: 'enabled',
-      ifFalse: 'disabled',
-    ));
+    properties.add(
+      FlagProperty(
+        'isFontPreloaded',
+        value: kIsWeb && emojiEditorConfigs.enablePreloadWebFont,
+        ifTrue: 'enabled',
+        ifFalse: 'disabled',
+      ),
+    );
   }
 }

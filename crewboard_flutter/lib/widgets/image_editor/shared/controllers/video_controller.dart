@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_callbacks/video_editor_callbacks.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/video_editor_configs.dart';
@@ -84,7 +84,8 @@ class ProVideoController {
   late final trimDurationSpanNotifier = ValueNotifier<TrimDurationSpan>(
     TrimDurationSpan(
       start: Duration.zero,
-      end: configs.maxTrimDuration == null ||
+      end:
+          configs.maxTrimDuration == null ||
               configs.maxTrimDuration! > videoDuration
           ? videoDuration
           : configs.maxTrimDuration!,

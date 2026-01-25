@@ -1,4 +1,4 @@
-﻿/// Enumeration of image output formats.
+/// Enumeration of image output formats.
 enum OutputFormat {
   /// JPG (JPEG)
   ///
@@ -72,5 +72,5 @@ enum OutputFormat {
   /// - `Quality`: Varies; can include multiple sizes and bit depths.
   /// - `File Size`: Small, optimized for icons.
   /// - `Use Case`: Icons for software applications and operating systems.
-  ico
+  ico,
 }

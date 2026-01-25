@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/layer_interaction_widgets.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/layers/layer.dart';
@@ -54,7 +54,8 @@ class FloatSelectToolbar extends StatelessWidget {
           maxWidth: MediaQuery.sizeOf(context).width,
         ),
         child: Wrap(
-          children: _widgets.toolbarChildren ??
+          children:
+              _widgets.toolbarChildren ??
               [
                 if (configs.enableEditButton && layer.isTextLayer)
                   FloatSelectToolbarButton(

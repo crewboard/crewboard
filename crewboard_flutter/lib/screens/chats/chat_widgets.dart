@@ -32,6 +32,7 @@ extension ChatMessageUI on ChatMessage {
     if (currentUserId == null) return false;
     return userId == currentUserId;
   }
+
   bool get selected => false; // Placeholder for selection state
 }
 
@@ -128,7 +129,7 @@ addMemory(context, {String? text}) async {
                 label: "save",
                 onPress: () async {
                   // TODO: Implement save logic
-                   Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -164,20 +165,20 @@ class MessageBubble extends StatelessWidget {
     // Reconstruct a temporary ChatMessage object to work with new widgets
     // This is a bridge. ideally ChatScreen should pass ChatMessage object.
     final msgObj = ChatMessage(
-        roomId: UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-        userId: userId,
-        message: message,
-        messageType: type ?? MessageType.text,
-        seenUserList: [],
-        sameUser: sameUser, // Passed from parent list
-        deleted: false,
-        createdAt: createdAt,
+      roomId: UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
+      userId: userId,
+      message: message,
+      messageType: type ?? MessageType.text,
+      seenUserList: [],
+      sameUser: sameUser, // Passed from parent list
+      deleted: false,
+      createdAt: createdAt,
     );
-    
+
     // Lookup user profile from RoomsController
     String senderName = isMe ? "Me" : "Other";
     Color senderColor = isMe ? Colors.blue : Colors.grey;
-    
+
     if (!isMe) {
       final roomsController = Get.find<RoomsController>();
       final room = roomsController.selectedRoom.value;
@@ -195,13 +196,17 @@ class MessageBubble extends StatelessWidget {
       if (currentUserId != null) {
         try {
           // Try to find in the users list (search results or loaded users)
-          final me = roomsController.users.firstWhereOrNull((u) => u.id == currentUserId);
+          final me = roomsController.users.firstWhereOrNull(
+            (u) => u.id == currentUserId,
+          );
           if (me != null) {
             senderColor = Pallet.getUserColor(me);
           } else {
             // Also check room users of all rooms
             for (var room in roomsController.rooms) {
-              final meInRoom = room.roomUsers?.firstWhereOrNull((u) => u.id == currentUserId);
+              final meInRoom = room.roomUsers?.firstWhereOrNull(
+                (u) => u.id == currentUserId,
+              );
               if (meInRoom != null) {
                 senderColor = Pallet.getUserColor(meInRoom);
                 break;
@@ -229,7 +234,6 @@ class MessageBubble extends StatelessWidget {
   }
 }
 
-
 class MessageWidget extends StatefulWidget {
   const MessageWidget({
     super.key,
@@ -253,7 +257,7 @@ class _MessageState extends State<MessageWidget> {
   OverlayEntry? dropdown;
   bool isOpen = false;
   final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
-  
+
   void getDropDownData() {
     RenderBox renderBox =
         actionKey.currentContext!.findRenderObject() as RenderBox;
@@ -305,212 +309,283 @@ class _MessageState extends State<MessageWidget> {
                         height: height,
                         child: ValueListenableBuilder<int?>(
                           valueListenable: hoveredIdx,
-                          builder: (BuildContext context, int? _hoveredIdx, Widget? child) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MouseRegion(
-                                  onEnter: (details) {
-                                    hoveredIdx.value = 0;
-                                  },
-                                  onExit: (details) {
-                                    hoveredIdx.value = null;
-                                  },
-                                  child: InkWell(
-                                    onTap: () {
-                                      Get.find<MessagesController>().reply.value =
-                                          widget.message;
-                                      close();
-                                    },
-                                    child: Container(
-                                      color: (_hoveredIdx == 0)
-                                          ? Pallet.inside1
-                                          : Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("reply", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                          Icon(Icons.reply, size: 18, color: Pallet.font1),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                MouseRegion(
-                                  onEnter: (details) {
-                                    hoveredIdx.value = 1;
-                                  },
-                                  onExit: (details) {
-                                    hoveredIdx.value = null;
-                                  },
-                                  child: InkWell(
-                                    onTap: () async {
-                                      // await forwardMessage(
-                                      //   context,
-                                      //   widget.message!,
-                                      // );
-                                      close();
-                                    },
-                                    child: Container(
-                                      color: (_hoveredIdx == 1)
-                                          ? Pallet.inside1
-                                          : Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("forward", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                          Icon(
-                                            Icons.forward_to_inbox,
-                                            size: 18,
-                                            color: Pallet.font1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                MouseRegion(
-                                  onEnter: (details) {
-                                    hoveredIdx.value = 2;
-                                  },
-                                  onExit: (details) {
-                                    hoveredIdx.value = null;
-                                  },
-                                  child: InkWell(
-                                    onTap: () {
-                                      // Logic to extract text and add memory
-                                      String copy = _extractTextFromMessage(widget.message.message);
-                                      addMemory(context, text: copy);
-                                      close();
-                                    },
-                                    child: Container(
-                                      color: (_hoveredIdx == 2)
-                                          ? Pallet.inside1
-                                          : Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("remember", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                          Icon(Icons.lightbulb, size: 18, color: Pallet.font1),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                MouseRegion(
-                                  onEnter: (details) {
-                                    hoveredIdx.value = 3;
-                                  },
-                                  onExit: (details) {
-                                    hoveredIdx.value = null;
-                                  },
-                                  child: InkWell(
-                                    onTap: () {
-                                      String copy = _extractTextFromMessage(widget.message.message);
-                                      Clipboard.setData(
-                                        ClipboardData(text: copy),
-                                      );
-                                      close();
-                                    },
-                                    child: Container(
-                                      color: (_hoveredIdx == 3)
-                                          ? Pallet.inside1
-                                          : Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("copy", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                          Icon(Icons.copy, size: 18, color: Pallet.font1),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (widget.message.sameUser == true)
-                                  MouseRegion(
-                                    onEnter: (details) {
-                                      hoveredIdx.value = 4;
-                                    },
-                                    onExit: (details) {
-                                      hoveredIdx.value = null;
-                                    },
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.find<MessagesController>().edit.value =
-                                            widget.message;
-                                            close();
+                          builder:
+                              (
+                                BuildContext context,
+                                int? _hoveredIdx,
+                                Widget? child,
+                              ) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MouseRegion(
+                                      onEnter: (details) {
+                                        hoveredIdx.value = 0;
                                       },
-                                      child: Container(
-                                        color: (_hoveredIdx == 4)
-                                            ? Pallet.inside1
-                                            : Colors.transparent,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("edit", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                            Icon(Icons.edit, size: 18, color: Pallet.font1),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                if (widget.message.sameUser == true)
-                                  MouseRegion(
-                                    onEnter: (details) {
-                                      hoveredIdx.value = 5;
-                                    },
-                                    onExit: (details) {
-                                      hoveredIdx.value = null;
-                                    },
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        color: (_hoveredIdx == 5)
-                                            ? Pallet.inside1
-                                            : Colors.transparent,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("delete", style: TextStyle(color: Pallet.font1, fontSize: 12)),
-                                            Icon(Icons.delete, size: 18, color: Pallet.font1),
-                                          ],
+                                      onExit: (details) {
+                                        hoveredIdx.value = null;
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.find<MessagesController>()
+                                                  .reply
+                                                  .value =
+                                              widget.message;
+                                          close();
+                                        },
+                                        child: Container(
+                                          color: (_hoveredIdx == 0)
+                                              ? Pallet.inside1
+                                              : Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "reply",
+                                                style: TextStyle(
+                                                  color: Pallet.font1,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.reply,
+                                                size: 18,
+                                                color: Pallet.font1,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            );
-                          },
+                                    MouseRegion(
+                                      onEnter: (details) {
+                                        hoveredIdx.value = 1;
+                                      },
+                                      onExit: (details) {
+                                        hoveredIdx.value = null;
+                                      },
+                                      child: InkWell(
+                                        onTap: () async {
+                                          // await forwardMessage(
+                                          //   context,
+                                          //   widget.message!,
+                                          // );
+                                          close();
+                                        },
+                                        child: Container(
+                                          color: (_hoveredIdx == 1)
+                                              ? Pallet.inside1
+                                              : Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "forward",
+                                                style: TextStyle(
+                                                  color: Pallet.font1,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.forward_to_inbox,
+                                                size: 18,
+                                                color: Pallet.font1,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    MouseRegion(
+                                      onEnter: (details) {
+                                        hoveredIdx.value = 2;
+                                      },
+                                      onExit: (details) {
+                                        hoveredIdx.value = null;
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          // Logic to extract text and add memory
+                                          String copy = _extractTextFromMessage(
+                                            widget.message.message,
+                                          );
+                                          addMemory(context, text: copy);
+                                          close();
+                                        },
+                                        child: Container(
+                                          color: (_hoveredIdx == 2)
+                                              ? Pallet.inside1
+                                              : Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "remember",
+                                                style: TextStyle(
+                                                  color: Pallet.font1,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.lightbulb,
+                                                size: 18,
+                                                color: Pallet.font1,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    MouseRegion(
+                                      onEnter: (details) {
+                                        hoveredIdx.value = 3;
+                                      },
+                                      onExit: (details) {
+                                        hoveredIdx.value = null;
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          String copy = _extractTextFromMessage(
+                                            widget.message.message,
+                                          );
+                                          Clipboard.setData(
+                                            ClipboardData(text: copy),
+                                          );
+                                          close();
+                                        },
+                                        child: Container(
+                                          color: (_hoveredIdx == 3)
+                                              ? Pallet.inside1
+                                              : Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "copy",
+                                                style: TextStyle(
+                                                  color: Pallet.font1,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.copy,
+                                                size: 18,
+                                                color: Pallet.font1,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (widget.message.sameUser == true)
+                                      MouseRegion(
+                                        onEnter: (details) {
+                                          hoveredIdx.value = 4;
+                                        },
+                                        onExit: (details) {
+                                          hoveredIdx.value = null;
+                                        },
+                                        child: InkWell(
+                                          onTap: () {
+                                            Get.find<MessagesController>()
+                                                    .edit
+                                                    .value =
+                                                widget.message;
+                                            close();
+                                          },
+                                          child: Container(
+                                            color: (_hoveredIdx == 4)
+                                                ? Pallet.inside1
+                                                : Colors.transparent,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 5,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "edit",
+                                                  style: TextStyle(
+                                                    color: Pallet.font1,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.edit,
+                                                  size: 18,
+                                                  color: Pallet.font1,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (widget.message.sameUser == true)
+                                      MouseRegion(
+                                        onEnter: (details) {
+                                          hoveredIdx.value = 5;
+                                        },
+                                        onExit: (details) {
+                                          hoveredIdx.value = null;
+                                        },
+                                        child: InkWell(
+                                          onTap: () {},
+                                          child: Container(
+                                            color: (_hoveredIdx == 5)
+                                                ? Pallet.inside1
+                                                : Colors.transparent,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 5,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "delete",
+                                                  style: TextStyle(
+                                                    color: Pallet.font1,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.delete,
+                                                  size: 18,
+                                                  color: Pallet.font1,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                         ),
                       ),
                     ),
@@ -525,23 +600,23 @@ class _MessageState extends State<MessageWidget> {
   }
 
   String _extractTextFromMessage(String message) {
-     try {
-        dynamic decoded = jsonDecode(message);
-        if (decoded is List) {
-          String copy = "";
-          for (var text in decoded) {
-            if (text["type"] == "text") {
-              copy += text["value"];
-            } else {
-              copy += text["value"]["emoji"];
-            }
+    try {
+      dynamic decoded = jsonDecode(message);
+      if (decoded is List) {
+        String copy = "";
+        for (var text in decoded) {
+          if (text["type"] == "text") {
+            copy += text["value"];
+          } else {
+            copy += text["value"]["emoji"];
           }
-          return copy;
         }
-      } catch (e) {
-        // Not JSON or List
+        return copy;
       }
-      return message;
+    } catch (e) {
+      // Not JSON or List
+    }
+    return message;
   }
 
   void close() {
@@ -606,8 +681,8 @@ class _MessageState extends State<MessageWidget> {
                   behavior: HitTestBehavior.translucent,
                   key: actionKey,
                   onLongPress: () {
-                     // Platform check simulation
-                      openMenu();
+                    // Platform check simulation
+                    openMenu();
                   },
                   onSecondaryTap: () {
                     openMenu();
@@ -667,11 +742,15 @@ class ImageMessage extends StatelessWidget {
         images = decoded;
       } else {
         // Handle non-list JSON (single object?) or primitives
-        images = [{"value": message.message}];
+        images = [
+          {"value": message.message},
+        ];
       }
     } catch (e) {
       // Fallback if not JSON or generic error
-      images = [{"value": message.message}];
+      images = [
+        {"value": message.message},
+      ];
     }
 
     return MessageWidget(
@@ -684,18 +763,20 @@ class ImageMessage extends StatelessWidget {
               children: [
                 for (var image in images)
                   Padding(
-                    padding: const EdgeInsets.only(top: 4), // Small padding between images
+                    padding: const EdgeInsets.only(
+                      top: 4,
+                    ), // Small padding between images
                     child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImagePreview(
-                                imageUrl: image["value"] ?? "",
-                              ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FullScreenImagePreview(
+                              imageUrl: image["value"] ?? "",
                             ),
-                          );
-                        },
+                          ),
+                        );
+                      },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.network(
@@ -705,18 +786,28 @@ class ImageMessage extends StatelessWidget {
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                              return Container(
-                                width: 280,
-                                height: 187,
-                                color: Pallet.inside2,
-                                child: Center(child: CircularProgressIndicator(color: Pallet.font1)));
-                          },
-                           errorBuilder: (context, error, stackTrace) {
                             return Container(
                               width: 280,
                               height: 187,
                               color: Pallet.inside2,
-                              child: Center(child: Icon(Icons.broken_image, color: Pallet.font3)),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Pallet.font1,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 280,
+                              height: 187,
+                              color: Pallet.inside2,
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Pallet.font3,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -727,7 +818,7 @@ class ImageMessage extends StatelessWidget {
             )
           else
             InkWell(
-               onTap: () {
+              onTap: () {
                 // For the grid view, we might want to open a gallery view
                 // For now, let's open the first image or do nothing?
                 // Or maybe the user tapped a specific one in the grid?
@@ -756,24 +847,36 @@ class ImageMessage extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Image.network(
-                             images[i]["value"] ?? "",
+                            images[i]["value"] ?? "",
                             width: 139,
                             height: 139,
                             fit: BoxFit.cover,
-                             loadingBuilder: (context, child, loadingProgress) {
+                            loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
-                                return Container(
-                                  width: 139,
-                                  height: 139,
-                                  color: Pallet.inside2,
-                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: Pallet.font1)));
+                              return Container(
+                                width: 139,
+                                height: 139,
+                                color: Pallet.inside2,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Pallet.font1,
+                                  ),
+                                ),
+                              );
                             },
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 width: 139,
                                 height: 139,
                                 color: Pallet.inside2,
-                                child: Center(child: Icon(Icons.broken_image, size: 20, color: Pallet.font3)),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 20,
+                                    color: Pallet.font3,
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -823,7 +926,7 @@ class AudioMessage extends StatelessWidget {
   final RoomProfile user;
   @override
   Widget build(BuildContext context) {
-     return MessageWidget(
+    return MessageWidget(
       user: user,
       message: message,
       child: AudioPreview(
@@ -831,10 +934,9 @@ class AudioMessage extends StatelessWidget {
         color: Pallet.inside2,
         waveform: message.waveform,
       ),
-     );
+    );
   }
 }
-
 
 class TextPreview extends StatelessWidget {
   const TextPreview({super.key, required this.message});
@@ -846,12 +948,16 @@ class TextPreview extends StatelessWidget {
       parsedMessage = jsonDecode(message);
     } catch (e) {
       // Not JSON, treat as single text block
-      parsedMessage = [{"type": "text", "value": message}];
+      parsedMessage = [
+        {"type": "text", "value": message},
+      ];
     }
-    
+
     // Ensure it's a list
     if (parsedMessage is! List) {
-       parsedMessage = [{"type": "text", "value": message}];
+      parsedMessage = [
+        {"type": "text", "value": message},
+      ];
     }
 
     return SelectionArea(
@@ -868,14 +974,16 @@ class TextPreview extends StatelessWidget {
               else if (text is Map)
                 WidgetSpan(
                   child: EmojiText(
-                    size: (double.tryParse(
-                      (text["size"] ?? '18').toString(),
-                    ) ?? 18.0),
+                    size:
+                        (double.tryParse(
+                          (text["size"] ?? '18').toString(),
+                        ) ??
+                        18.0),
                     emoji: text["value"] ?? "",
                   ),
                 )
-               else 
-                 TextSpan(text: text.toString())
+              else
+                TextSpan(text: text.toString()),
           ],
         ),
       ),

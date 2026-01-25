@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/video_editor_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/shared/widgets/video/toolbar/video_editor_trim_info_widget.dart';
@@ -32,8 +32,9 @@ class VideoEditorControlsWidget extends StatelessWidget {
         player.widgets.headerToolbar ??
             Column(
               spacing: 10,
-              verticalDirection:
-                  alignTop ? VerticalDirection.down : VerticalDirection.up,
+              verticalDirection: alignTop
+                  ? VerticalDirection.down
+                  : VerticalDirection.up,
               children: [
                 Padding(
                   padding: EdgeInsets.only(
@@ -46,19 +47,21 @@ class VideoEditorControlsWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: toolbarPadding.copyWith(top: 0),
-                  child: LayoutBuilder(builder: (_, constraints) {
-                    return Row(
-                      spacing: constraints.maxWidth < 340 ? 6 : 12,
-                      children: [
-                        if (enablePlayButton) const VideoEditorPlayButton(),
-                        if (isAudioSupported) const VideoEditorMuteButton(),
-                        const Spacer(),
-                        if (constraints.maxWidth >= 300)
-                          const VideoEditorTrimInfoWidget(),
-                        const VideoEditorInfoBanner(),
-                      ],
-                    );
-                  }),
+                  child: LayoutBuilder(
+                    builder: (_, constraints) {
+                      return Row(
+                        spacing: constraints.maxWidth < 340 ? 6 : 12,
+                        children: [
+                          if (enablePlayButton) const VideoEditorPlayButton(),
+                          if (isAudioSupported) const VideoEditorMuteButton(),
+                          const Spacer(),
+                          if (constraints.maxWidth >= 300)
+                            const VideoEditorTrimInfoWidget(),
+                          const VideoEditorInfoBanner(),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

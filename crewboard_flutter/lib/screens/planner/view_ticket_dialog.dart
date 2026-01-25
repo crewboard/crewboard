@@ -156,10 +156,10 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                     allowMultiple: true,
                                   );
                               if (result != null) {
-                               for (var file in result.files) {
+                                for (var file in result.files) {
                                   // Add to pendingFiles for upload
                                   controller.pendingFiles.add(file);
-                                  
+
                                   // Add placeholder to attachments for UI display
                                   controller.attachments.add(
                                     AttachmentModel(
@@ -275,8 +275,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                 child: Stack(
                                   children: [
                                     FilePreview(
-                                      name:
-                                          controller.attachments[i].name,
+                                      name: controller.attachments[i].name,
                                       size: controller.attachments[i].size
                                           .toInt(),
                                     ),
@@ -407,8 +406,9 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                   ? DateTime.now()
                                   : DateTime.parse(controller.deadline.value!),
                               onDateSelected: (date) {
-                                controller.deadline.value =
-                                    DateFormat('yyyy-MM-dd').format(date);
+                                controller.deadline.value = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(date);
                                 controller.addToEditStack(
                                   "deadline",
                                   controller.deadline.value!,
@@ -495,7 +495,8 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                   label: "done",
                   onPress: () async {
                     // Update ticket if there are edits OR pending files to upload
-                    if (controller.editStack.isNotEmpty || controller.pendingFiles.isNotEmpty) {
+                    if (controller.editStack.isNotEmpty ||
+                        controller.pendingFiles.isNotEmpty) {
                       await controller.updateTicket(widget.ticketId);
                     }
                     Get.back();
@@ -709,13 +710,12 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
             ),
-            recognizer:
-                TapGestureRecognizer()
-                  ..onTap = () {
-                    final PlannerController controller =
-                        Get.find<PlannerController>();
-                    controller.openLinkedFlow(flowName);
-                  },
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                final PlannerController controller =
+                    Get.find<PlannerController>();
+                controller.openLinkedFlow(flowName);
+              },
           ),
         );
         return match;

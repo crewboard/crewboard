@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/features/filter_editor/utils/combine_color_matrix_utils.dart';
 import 'layers/layer.dart';
@@ -38,9 +38,9 @@ class CompleteParameters {
 
   /// All active color filters including both tuning and filter matrices.
   List<List<double>> get colorFilters => [
-        ...matrixTuneAdjustmentsList,
-        ...matrixFilterList,
-      ];
+    ...matrixTuneAdjustmentsList,
+    ...matrixFilterList,
+  ];
 
   /// Combined color filter matrix from all filters and adjustments.
   List<double> get colorFiltersCombined {

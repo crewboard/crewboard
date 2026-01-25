@@ -1,13 +1,13 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import 'pixel.dart';
 
 class PixelRangeIterator implements Iterator<Pixel> {
   PixelRangeIterator(this.pixel, int x, int y, int width, int height)
-      : x1 = x,
-        y1 = y,
-        x2 = x + width - 1,
-        y2 = y + height - 1 {
+    : x1 = x,
+      y1 = y,
+      x2 = x + width - 1,
+      y2 = y + height - 1 {
     pixel.setPosition(x - 1, y);
   }
   Pixel pixel;

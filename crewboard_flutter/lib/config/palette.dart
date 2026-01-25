@@ -43,9 +43,10 @@ class Pallet {
   static Color get divider {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
-      return isLight 
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
+      return isLight
           ? const Color(0xFF728b99).withOpacity(0.3)
           : const Color(0xFF728b99).withOpacity(0.3);
     } catch (e) {
@@ -56,8 +57,9 @@ class Pallet {
   static Color get font1 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
       return isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
     } catch (e) {
       return const Color(0xFFe6e8ed);
@@ -67,8 +69,9 @@ class Pallet {
   static Color get font2 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
       return isLight ? const Color(0xFF4B5563) : const Color(0xFFc9ccd3);
     } catch (e) {
       return const Color(0xFFc9ccd3);
@@ -78,8 +81,9 @@ class Pallet {
   static Color get font3 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
       return isLight ? const Color(0xFF6B7280) : const Color(0xFF728b99);
     } catch (e) {
       return const Color(0xFF728b99);
@@ -89,9 +93,10 @@ class Pallet {
   static Color get inside1 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
-      return isLight 
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
+      return isLight
           ? Colors.black.withOpacity(0.05)
           : Colors.white.withOpacity(0.1);
     } catch (e) {
@@ -102,9 +107,10 @@ class Pallet {
   static Color get inside2 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
-      return isLight 
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
+      return isLight
           ? Colors.black.withOpacity(0.08)
           : Colors.white.withOpacity(0.15);
     } catch (e) {
@@ -115,9 +121,10 @@ class Pallet {
   static Color get inside3 {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
-      return isLight 
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
+      return isLight
           ? Colors.black.withOpacity(0.1)
           : Colors.white.withOpacity(0.2);
     } catch (e) {
@@ -128,17 +135,24 @@ class Pallet {
   static WindowButtonColors get windowButtonColors {
     try {
       final themeController = Get.find<ThemeController>();
-      final isLight = themeController.currentTheme == AppTheme.glassLight || 
-                      themeController.currentTheme == AppTheme.classicLight;
-      
+      final isLight =
+          themeController.currentTheme == AppTheme.glassLight ||
+          themeController.currentTheme == AppTheme.classicLight;
+
       // Use theme colors
-      final iconColor = isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
+      final iconColor = isLight
+          ? const Color(0xFF1F2937)
+          : const Color(0xFFe6e8ed);
       // Amber for hover/pressed as originally requested or consistent with theme?
       // User said: "currently it is amber when i hover ... make the task bar also according to the theme"
       // So they want to REMOVE the amber if it doesn't match, or make it theme consistent.
       // I will use a subtle hover color based on theme.
-      final hoverColor = isLight ? Colors.black.withOpacity(0.1) : Colors.white.withOpacity(0.1);
-      final mouseDownColor = isLight ? Colors.black.withOpacity(0.2) : Colors.white.withOpacity(0.2);
+      final hoverColor = isLight
+          ? Colors.black.withOpacity(0.1)
+          : Colors.white.withOpacity(0.1);
+      final mouseDownColor = isLight
+          ? Colors.black.withOpacity(0.2)
+          : Colors.white.withOpacity(0.2);
 
       return WindowButtonColors(
         iconNormal: iconColor,
@@ -160,12 +174,12 @@ class Pallet {
   }
 
   static WindowButtonColors get closeWindowButtonColors {
-      return WindowButtonColors(
-        mouseOver: const Color(0xFFD32F2F),
-        mouseDown: const Color(0xFFB71C1C),
-        iconNormal: windowButtonColors.iconNormal,
-        iconMouseOver: Colors.white,
-      );
+    return WindowButtonColors(
+      mouseOver: const Color(0xFFD32F2F),
+      mouseDown: const Color(0xFFB71C1C),
+      iconNormal: windowButtonColors.iconNormal,
+      iconMouseOver: Colors.white,
+    );
   }
 
   static Color getUserColor(User user) {
@@ -176,8 +190,12 @@ class Pallet {
   }
 
   static Color getRoomColor(ChatRoom room, UuidValue? currentUserId) {
-    if (room.roomType == 'direct' && room.roomUsers != null && currentUserId != null) {
-      final otherUser = room.roomUsers!.firstWhereOrNull((u) => u.id != currentUserId);
+    if (room.roomType == 'direct' &&
+        room.roomUsers != null &&
+        currentUserId != null) {
+      final otherUser = room.roomUsers!.firstWhereOrNull(
+        (u) => u.id != currentUserId,
+      );
       if (otherUser != null) {
         return getUserColor(otherUser);
       }

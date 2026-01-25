@@ -1,4 +1,4 @@
-﻿// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'dart:ui';
@@ -62,9 +62,11 @@ class EmojiEditorConfigs
     this.emojiSet,
     this.style = const EmojiEditorStyle(),
     this.icons = const EmojiEditorIcons(),
-  })  : assert(initScale > 0, 'initScale must be positive'),
-        assert(maxScale >= minScale,
-            'maxScale must be greater than or equal to minScale');
+  }) : assert(initScale > 0, 'initScale must be positive'),
+       assert(
+         maxScale >= minScale,
+         'maxScale must be greater than or equal to minScale',
+       );
 
   /// {@macro layerFractionalOffset}
   @override

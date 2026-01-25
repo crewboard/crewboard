@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart' as color_picker
+import 'package:flutter_colorpicker/flutter_colorpicker.dart'
+    as color_picker
     show ColorPicker, MaterialPicker, colorToHex;
 
 import '../../../document/style.dart';
@@ -44,8 +45,9 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
           ? hexToColor(widget.selectionStyle.attributes['background']?.value)
           : hexToColor(widget.selectionStyle.attributes['color']?.value);
     }
-    hexController =
-        TextEditingController(text: color_picker.colorToHex(selectedColor));
+    hexController = TextEditingController(
+      text: color_picker.colorToHex(selectedColor),
+    );
   }
 
   @override
@@ -54,11 +56,12 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
       title: Text(context.loc.selectColor),
       actions: [
         TextButton(
-            onPressed: () {
-              widget.onRequestChangeColor(context, selectedColor);
-              Navigator.of(context).pop();
-            },
-            child: Text(context.loc.ok)),
+          onPressed: () {
+            widget.onRequestChangeColor(context, selectedColor);
+            Navigator.of(context).pop();
+          },
+          child: Text(context.loc.ok),
+        ),
       ],
       backgroundColor: Theme.of(context).canvasColor,
       content: SingleChildScrollView(
@@ -155,7 +158,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                   ],
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

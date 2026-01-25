@@ -1,4 +1,4 @@
-﻿// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 abstract class PvrColorRgbCore<T> {
   T copy();
@@ -11,10 +11,7 @@ abstract class PvrColorRgbCore<T> {
 class PvrColorRgb extends PvrColorRgbCore<PvrColorRgb> {
   PvrColorRgb([this.r = 0, this.g = 0, this.b = 0]);
 
-  PvrColorRgb.from(PvrColorRgb other)
-      : r = other.r,
-        g = other.g,
-        b = other.b;
+  PvrColorRgb.from(PvrColorRgb other) : r = other.r, g = other.g, b = other.b;
   int r;
   int g;
   int b;
@@ -63,10 +60,10 @@ class PvrColorRgba extends PvrColorRgbCore<PvrColorRgba> {
   PvrColorRgba([this.r = 0, this.g = 0, this.b = 0, this.a = 0]);
 
   PvrColorRgba.from(PvrColorRgba other)
-      : r = other.r,
-        g = other.g,
-        b = other.b,
-        a = other.a;
+    : r = other.r,
+      g = other.g,
+      b = other.b,
+      a = other.a;
   int r;
   int g;
   int b;

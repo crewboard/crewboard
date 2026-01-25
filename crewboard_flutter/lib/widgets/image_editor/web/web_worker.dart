@@ -1,4 +1,4 @@
-﻿// dart compile js -o lib/web/web_worker.dart.js lib/web/web_worker.dart
+// dart compile js -o lib/web/web_worker.dart.js lib/web/web_worker.dart
 // dart compile wasm -o lib/web/web_worker.dart.wasm lib/web/web_worker.dart
 
 // ignore_for_file: argument_type_not_assignable
@@ -46,8 +46,10 @@ class WebWorkerManager {
           _handleEncode(data);
           break;
         case 'destroyActiveTasks':
-          final jsIgnoreTaskId =
-              jsGetProperty(event.data as js.JSObject, 'ignoreTaskId');
+          final jsIgnoreTaskId = jsGetProperty(
+            event.data as js.JSObject,
+            'ignoreTaskId',
+          );
           String? ignoreTaskId = (jsIgnoreTaskId as js.JSString).toDart;
           _handleDestroyActiveTasks(ignoreTaskId);
           break;
@@ -70,19 +72,23 @@ class WebWorkerManager {
     tasks[id] = destroy$;
 
     await convertRawImage(
-      data.toConvertThreadRequest(),
-      destroy$: destroy$,
-    ).then((res) {
-      workerScope.postMessage(jsify({
-        'bytes': res.bytes,
-        'id': res.id,
-      }));
-    }).whenComplete(() {
-      if (tasks[id]?.isCompleted != true) {
-        tasks[id]?.complete(null);
-      }
-      tasks.remove(id);
-    });
+          data.toConvertThreadRequest(),
+          destroy$: destroy$,
+        )
+        .then((res) {
+          workerScope.postMessage(
+            jsify({
+              'bytes': res.bytes,
+              'id': res.id,
+            }),
+          );
+        })
+        .whenComplete(() {
+          if (tasks[id]?.isCompleted != true) {
+            tasks[id]?.complete(null);
+          }
+          tasks.remove(id);
+        });
   }
 
   Future<void> _handleEncode(ThreadWebRequest data) async {
@@ -100,10 +106,12 @@ class WebWorkerManager {
       image: imageData,
     );
 
-    workerScope.postMessage(jsify({
-      'bytes': bytes,
-      'id': id,
-    }));
+    workerScope.postMessage(
+      jsify({
+        'bytes': bytes,
+        'id': id,
+      }),
+    );
   }
 
   void _handleDestroyActiveTasks(String ignoreTaskId) {

@@ -8,16 +8,20 @@ import '../../base_button/base_value_button.dart';
 import '../../config/buttons/select_header_style_buttons_options.dart';
 import '../quill_icon_button.dart';
 
-typedef QuillToolbarSelectHeaderStyleBaseButtons = QuillToolbarBaseButton<
-    QuillToolbarSelectHeaderStyleButtonsOptions,
-    QuillToolbarSelectHeaderStyleButtonsExtraOptions>;
+typedef QuillToolbarSelectHeaderStyleBaseButtons =
+    QuillToolbarBaseButton<
+      QuillToolbarSelectHeaderStyleButtonsOptions,
+      QuillToolbarSelectHeaderStyleButtonsExtraOptions
+    >;
 
 typedef QuillToolbarSelectHeaderStyleBaseButtonsState<
-        W extends QuillToolbarSelectHeaderStyleBaseButtons>
-    = QuillToolbarCommonButtonState<
-        W,
-        QuillToolbarSelectHeaderStyleButtonsOptions,
-        QuillToolbarSelectHeaderStyleButtonsExtraOptions>;
+  W extends QuillToolbarSelectHeaderStyleBaseButtons
+> =
+    QuillToolbarCommonButtonState<
+      W,
+      QuillToolbarSelectHeaderStyleButtonsOptions,
+      QuillToolbarSelectHeaderStyleButtonsExtraOptions
+    >;
 
 class QuillToolbarSelectHeaderStyleButtons
     extends QuillToolbarSelectHeaderStyleBaseButtons {
@@ -69,8 +73,9 @@ class QuillToolbarSelectHeaderStyleButtonsState
   }
 
   void _sharedOnPressed(Attribute attribute) {
-    final attribute0 =
-        _selectedAttribute == attribute ? Attribute.header : attribute;
+    final attribute0 = _selectedAttribute == attribute
+        ? Attribute.header
+        : attribute;
     controller.formatSelection(attribute0);
     afterButtonPressed?.call();
   }
@@ -165,7 +170,8 @@ class QuillToolbarSelectHeaderStyleButtonsState
 
   @override
   void didUpdateWidget(
-      covariant QuillToolbarSelectHeaderStyleButtons oldWidget) {
+    covariant QuillToolbarSelectHeaderStyleButtons oldWidget,
+  ) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != controller) {
       oldWidget.controller.removeListener(_didChangeEditingValue);

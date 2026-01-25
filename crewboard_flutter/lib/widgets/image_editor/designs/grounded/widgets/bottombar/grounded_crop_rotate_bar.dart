@@ -1,4 +1,4 @@
-﻿// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package
 // TODO: Remove the deprecated values when releasing version 12.0.0.
 
 import 'package:flutter/material.dart';
@@ -113,8 +113,9 @@ class _GroundedCropRotateBarState extends State<GroundedCropRotateBar>
                 ..._buildConfigs(),
                 if (cropRotateEditorConfigs.aspectRatios.isNotEmpty &&
                     cropRotateEditorConfigs.showAspectRatioButton &&
-                    cropRotateEditorConfigs.tools
-                        .contains(CropRotateTool.aspectRatio)) ...[
+                    cropRotateEditorConfigs.tools.contains(
+                      CropRotateTool.aspectRatio,
+                    )) ...[
                   const SizedBox(width: 5),
                   _buildDivider(),
                   ...List.generate(

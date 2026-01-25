@@ -1,10 +1,10 @@
-﻿// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// List of categories of emojis
 const List<CategoryEmoji> defaultEmojiSet = [
-// ======================================================= Category.SMILEYS
+  // ======================================================= Category.SMILEYS
   CategoryEmoji(Category.SMILEYS, [
     Emoji('ðŸ˜€', 'Grinning Face'),
     Emoji('ðŸ˜ƒ', 'Grinning Face With Big Eyes'),
@@ -137,7 +137,11 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸ«³', 'Palm Down Hand', hasSkinTone: true),
     Emoji('ðŸ«´', 'Palm Up Hand', hasSkinTone: true),
     Emoji('âœŒï¸', 'Victory Hand', hasSkinTone: true),
-    Emoji('ðŸ«°', 'Hand with Index Finger and Thumb Crossed', hasSkinTone: true),
+    Emoji(
+      'ðŸ«°',
+      'Hand with Index Finger and Thumb Crossed',
+      hasSkinTone: true,
+    ),
     Emoji('ðŸ¤ž', 'Crossed Fingers', hasSkinTone: true),
     Emoji('ðŸ¤Ÿ', 'Love-You Gesture', hasSkinTone: true),
     Emoji('ðŸ¤˜', 'Sign of the Horns', hasSkinTone: true),
@@ -385,10 +389,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('â›‘ï¸', 'Rescue Workerâ€™s Helmet'),
     Emoji('ðŸ’„', 'Lipstick'),
     Emoji('ðŸ’', 'Ring'),
-    Emoji('ðŸ’¼', 'Briefcase')
+    Emoji('ðŸ’¼', 'Briefcase'),
   ]),
 
-// ======================================================= Category.ANIMALS
+  // ======================================================= Category.ANIMALS
   CategoryEmoji(Category.ANIMALS, [
     Emoji('ðŸ¶', 'Dog Face'),
     Emoji('ðŸ±', 'Cat Face'),
@@ -576,10 +580,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸŽ„', 'Christmas Tree'),
     Emoji('âœ¨', 'Sparkles'),
     Emoji('ðŸŽ‹', 'Tanabata Tree'),
-    Emoji('ðŸŽ', 'Pine Decoration')
+    Emoji('ðŸŽ', 'Pine Decoration'),
   ]),
 
-// ======================================================= Category.FOODS
+  // ======================================================= Category.FOODS
   CategoryEmoji(Category.FOODS, [
     Emoji('ðŸ‡', 'Grapes'),
     Emoji('ðŸˆ', 'Melon'),
@@ -689,10 +693,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸ¥¢', 'Chopsticks'),
     Emoji('ðŸ½ï¸', 'Fork and Knife With Plate'),
     Emoji('ðŸ´', 'Fork and Knife'),
-    Emoji('ðŸ¥„', 'Spoon')
+    Emoji('ðŸ¥„', 'Spoon'),
   ]),
 
-// ======================================================= Category.TRAVEL
+  // ======================================================= Category.TRAVEL
   CategoryEmoji(Category.TRAVEL, [
     Emoji('ðŸ—¾', 'Map of Japan'),
     Emoji('ðŸ”ï¸', 'Snow-Capped Mountain'),
@@ -815,10 +819,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸ›‚', 'Passport Control'),
     Emoji('ðŸ›ƒ', 'Customs'),
     Emoji('ðŸ›„', 'Baggage Claim'),
-    Emoji('ðŸ›…', 'Left Luggage')
+    Emoji('ðŸ›…', 'Left Luggage'),
   ]),
 
-// ======================================================= Category.ACTIVITIES
+  // ======================================================= Category.ACTIVITIES
   CategoryEmoji(Category.ACTIVITIES, [
     Emoji('ðŸ§—â€â™‚ï¸', 'Man Climbing', hasSkinTone: true),
     Emoji('ðŸ§—â€â™€ï¸', 'Woman Climbing', hasSkinTone: true),
@@ -916,10 +920,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸŽº', 'Trumpet'),
     Emoji('ðŸŽ»', 'Violin'),
     Emoji('ðŸ¥', 'Drum'),
-    Emoji('ðŸŽ¬', 'Clapper Board')
+    Emoji('ðŸŽ¬', 'Clapper Board'),
   ]),
 
-// ======================================================= Category.OBJECTS
+  // ======================================================= Category.OBJECTS
   CategoryEmoji(Category.OBJECTS, [
     Emoji('ðŸ’Œ', 'Love Letter'),
     Emoji('ðŸ•³ï¸', 'Hole'),
@@ -1122,10 +1126,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸš¬', 'Cigarette'),
     Emoji('âš°ï¸', 'Coffin'),
     Emoji('âš±ï¸', 'Funeral Urn'),
-    Emoji('ðŸš°', 'Potable Water')
+    Emoji('ðŸš°', 'Potable Water'),
   ]),
 
-// ======================================================= Category.SYMBOLS
+  // ======================================================= Category.SYMBOLS
   CategoryEmoji(Category.SYMBOLS, [
     Emoji('ðŸ’˜', 'Heart With Arrow'),
     Emoji('ðŸ’', 'Heart With Ribbon'),
@@ -1388,10 +1392,10 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸ”»', 'Red Triangle Pointed Down'),
     Emoji('ðŸ’ ', 'Diamond With a Dot'),
     Emoji('ðŸ”³', 'White Square Button'),
-    Emoji('ðŸ”²', 'Black Square Button')
+    Emoji('ðŸ”²', 'Black Square Button'),
   ]),
 
-// ======================================================= Category.FLAGS
+  // ======================================================= Category.FLAGS
   CategoryEmoji(Category.FLAGS, [
     Emoji('ðŸ', 'Chequered Flag'),
     Emoji('ðŸš©', 'Triangular Flag'),
@@ -1658,6 +1662,6 @@ const List<CategoryEmoji> defaultEmojiSet = [
     Emoji('ðŸ‡¾ðŸ‡¹', 'Flag: Mayotte'),
     Emoji('ðŸ‡¿ðŸ‡¦', 'Flag: South Africa'),
     Emoji('ðŸ‡¿ðŸ‡²', 'Flag: Zambia'),
-    Emoji('ðŸ‡¿ðŸ‡¼', 'Flag: Zimbabwe')
+    Emoji('ðŸ‡¿ðŸ‡¼', 'Flag: Zimbabwe'),
   ]),
 ];

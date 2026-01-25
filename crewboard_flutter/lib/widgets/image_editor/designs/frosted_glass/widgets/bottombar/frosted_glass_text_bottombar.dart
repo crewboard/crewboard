@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -95,8 +95,8 @@ class _FrostedGlassTextBottomBarState extends State<FrostedGlassTextBottomBar> {
                       'Aa',
                       style: widget.configs.textEditor.customTextStyles?.first
                           .copyWith(
-                        color: Colors.white,
-                      ),
+                            color: Colors.white,
+                          ),
                     ),
               style: IconButton.styleFrom(backgroundColor: Colors.black38),
             ),

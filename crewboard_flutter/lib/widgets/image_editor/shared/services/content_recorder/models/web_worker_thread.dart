@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:async';
 import 'dart:js_interop' as js;
 
@@ -58,10 +58,12 @@ class WebWorkerThread extends Thread {
             final dartBytes = (jsBytes as js.JSArrayBuffer?)?.toDart;
 
             activeTasks--;
-            onMessage(ThreadResponse(
-              bytes: dartBytes?.asUint8List(),
-              id: dartId,
-            ));
+            onMessage(
+              ThreadResponse(
+                bytes: dartBytes?.asUint8List(),
+                id: dartId,
+              ),
+            );
           } catch (e) {
             debugPrint(e.toString());
           }
@@ -89,10 +91,12 @@ class WebWorkerThread extends Thread {
 
   @override
   void destroyActiveTasks(String ignoreTaskId) async {
-    worker.postMessage(jsify({
-      'mode': 'destroyActiveTasks',
-      'ignoreTaskId': ignoreTaskId,
-    }));
+    worker.postMessage(
+      jsify({
+        'mode': 'destroyActiveTasks',
+        'ignoreTaskId': ignoreTaskId,
+      }),
+    );
   }
 
   @override

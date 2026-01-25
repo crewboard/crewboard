@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/paint_editor/paint_editor_configs.dart';
 import '../../enums/paint_editor_enum.dart';
@@ -20,9 +20,9 @@ abstract class PathBuilderBase {
     required this.item,
     required this.scale,
   }) : painter = Paint()
-          ..color = item.paint.color
-          ..style = item.paint.style
-          ..strokeWidth = item.paint.strokeWidth * scale;
+         ..color = item.paint.color
+         ..style = item.paint.style
+         ..strokeWidth = item.paint.strokeWidth * scale;
 
   /// Factory that returns the appropriate PathBuilder for a given PaintMode
   factory PathBuilderBase.fromMode({
@@ -221,8 +221,10 @@ abstract class PathBuilderBase {
   bool hitTestLine(Offset position) {
     final vector = end - start;
     final normalizedVector = vector / vector.distance;
-    final perpendicularVector =
-        Offset(-normalizedVector.dy, normalizedVector.dx);
+    final perpendicularVector = Offset(
+      -normalizedVector.dy,
+      normalizedVector.dx,
+    );
 
     final strokeHalfWidth = painter.strokeWidth / 2;
     double x = perpendicularVector.dx * strokeHalfWidth;

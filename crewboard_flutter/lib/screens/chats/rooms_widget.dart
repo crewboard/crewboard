@@ -108,12 +108,10 @@ class _RoomsState extends State<Rooms> {
             child: ListView(
               children: [
                 if (!search && roomsController.rooms.isNotEmpty) ...[
-                  for (var room in rooms)
-                    _buildRoomItem(room),
+                  for (var room in rooms) _buildRoomItem(room),
                 ],
                 if (search && roomsController.searchQuery.isNotEmpty) ...[
-                  for (var room in rooms)
-                    _buildRoomItem(room),
+                  for (var room in rooms) _buildRoomItem(room),
                   for (var user in roomsController.users)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -129,14 +127,16 @@ class _RoomsState extends State<Rooms> {
                           }
                         },
                         borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: roomsController.selectedRoom.value?.roomName == user.userName 
-                                  ? Pallet.inside1 
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: RoomItem(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                roomsController.selectedRoom.value?.roomName ==
+                                    user.userName
+                                ? Pallet.inside1
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: RoomItem(
                             name: user.userName,
                             color: Pallet.getUserColor(user),
                             message: const {},
@@ -202,7 +202,10 @@ class _RoomsState extends State<Rooms> {
             children: [
               RoomItem(
                 name: room.roomName ?? "",
-                color: Pallet.getRoomColor(room, authController.currentUserId.value),
+                color: Pallet.getRoomColor(
+                  room,
+                  authController.currentUserId.value,
+                ),
                 message: room.lastMessage?.toJson() ?? {},
                 userId: authController.currentUserId.value,
                 messageCount: room.messageCount,

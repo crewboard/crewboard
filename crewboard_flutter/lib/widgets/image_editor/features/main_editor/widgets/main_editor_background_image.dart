@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -34,8 +34,10 @@ class MainEditorBackgroundImage extends StatelessWidget {
     required this.isInitialized,
     required this.heroTag,
     required this.blankSize,
-  }) : assert(editorImage != null || blankSize != null,
-            'Either editorImage or blankSize must be provided');
+  }) : assert(
+         editorImage != null || blankSize != null,
+         'Either editorImage or blankSize must be provided',
+       );
 
   /// The size of the blank canvas when no image is present.
   final Size? blankSize;
@@ -68,12 +70,12 @@ class MainEditorBackgroundImage extends StatelessWidget {
       createRectTween: (begin, end) => RectTween(begin: begin, end: end),
       child: !isInitialized
           ? editorImage != null
-              ? AutoImage(
-                  editorImage!,
-                  fit: BoxFit.contain,
-                  configs: configs,
-                )
-              : SizedBox.fromSize(size: blankSize)
+                ? AutoImage(
+                    editorImage!,
+                    fit: BoxFit.contain,
+                    configs: configs,
+                  )
+                : SizedBox.fromSize(size: blankSize)
           : TransformedContentGenerator(
               transformConfigs: stateManager.transformConfigs,
               configs: configs,
@@ -98,25 +100,33 @@ class MainEditorBackgroundImage extends StatelessWidget {
 
     properties
       ..add(StringProperty('heroTag', heroTag))
-      ..add(FlagProperty(
-        'isInitialized',
-        value: isInitialized,
-        ifTrue: 'initialized',
-        ifFalse: 'not initialized',
-        showName: true,
-      ))
-      ..add(DiagnosticsProperty<bool>(
-        'isTransformed',
-        stateManager.transformConfigs.isEmpty,
-      ))
-      ..add(IntProperty(
-        'activeFiltersCount',
-        stateManager.activeFilters.length,
-      ))
-      ..add(IntProperty(
-        'activeTuneAdjustmentsCount',
-        stateManager.activeTuneAdjustments.length,
-      ))
+      ..add(
+        FlagProperty(
+          'isInitialized',
+          value: isInitialized,
+          ifTrue: 'initialized',
+          ifFalse: 'not initialized',
+          showName: true,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<bool>(
+          'isTransformed',
+          stateManager.transformConfigs.isEmpty,
+        ),
+      )
+      ..add(
+        IntProperty(
+          'activeFiltersCount',
+          stateManager.activeFilters.length,
+        ),
+      )
+      ..add(
+        IntProperty(
+          'activeTuneAdjustmentsCount',
+          stateManager.activeTuneAdjustments.length,
+        ),
+      )
       ..add(DoubleProperty('blurFactor', stateManager.activeBlur))
       ..add(
         DiagnosticsProperty('imageSize', sizesManager.decodedImageSize),
@@ -133,9 +143,11 @@ class MainEditorBackgroundImage extends StatelessWidget {
       ..add(
         DiagnosticsProperty<ProImageEditorConfigs>('configs', configs),
       )
-      ..add(DiagnosticsProperty<GlobalKey<ColorFilterGeneratorState>>(
-        'backgroundImageColorFilterKey',
-        backgroundImageColorFilterKey,
-      ));
+      ..add(
+        DiagnosticsProperty<GlobalKey<ColorFilterGeneratorState>>(
+          'backgroundImageColorFilterKey',
+          backgroundImageColorFilterKey,
+        ),
+      );
   }
 }

@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Project imports:
@@ -59,7 +59,8 @@ class TextEditorWidgets extends CustomWidgetsStandaloneEditor<TextEditorState> {
   final Widget Function(
     TextEditorState editorState,
     Function() tap,
-  )? fontSizeCloseButton;
+  )?
+  fontSizeCloseButton;
 
   /// A custom slider widget for the font-size.
   ///
@@ -69,16 +70,20 @@ class TextEditorWidgets extends CustomWidgetsStandaloneEditor<TextEditorState> {
   @override
   TextEditorWidgets copyWith({
     ReactiveAppbar? Function(
-            TextEditorState editorState, Stream<void> rebuildStream)?
-        appBar,
+      TextEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    appBar,
     ReactiveWidget? Function(
-            TextEditorState editorState, Stream<void> rebuildStream)?
-        bottomBar,
+      TextEditorState editorState,
+      Stream<void> rebuildStream,
+    )?
+    bottomBar,
     CustomBodyItems<TextEditorState>? bodyItems,
     CustomColorPicker<TextEditorState>? colorPicker,
     CustomSlider<TextEditorState>? sliderFontSize,
     Widget Function(TextEditorState editorState, Function() tap)?
-        fontSizeCloseButton,
+    fontSizeCloseButton,
   }) {
     return TextEditorWidgets(
       appBar: appBar ?? this.appBar,

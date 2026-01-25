@@ -14,7 +14,10 @@ class VideoPreview extends StatefulWidget {
     this.file,
     this.url,
     this.height,
-  }) : assert(file != null || url != null, 'Either file or url must be provided');
+  }) : assert(
+         file != null || url != null,
+         'Either file or url must be provided',
+       );
 
   @override
   State<VideoPreview> createState() => _VideoPreviewState();
@@ -44,7 +47,7 @@ class _VideoPreviewState extends State<VideoPreview> {
 
       await _controller.initialize();
       _controller.addListener(_updateState);
-      
+
       if (mounted) {
         setState(() {
           _initialized = true;
@@ -91,7 +94,11 @@ class _VideoPreviewState extends State<VideoPreview> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, color: Colors.redAccent, size: 32),
+              const Icon(
+                Icons.error_outline,
+                color: Colors.redAccent,
+                size: 32,
+              ),
               const SizedBox(height: 8),
               Text(
                 "Error loading video",
@@ -134,7 +141,7 @@ class _VideoPreviewState extends State<VideoPreview> {
                 alignment: Alignment.center,
                 children: [
                   VideoPlayer(_controller),
-                  
+
                   // Gradient Overlay
                   AnimatedOpacity(
                     opacity: (_showControls || _isHovering) ? 1.0 : 0.0,
@@ -158,12 +165,16 @@ class _VideoPreviewState extends State<VideoPreview> {
 
                   // Central Play/Pause
                   AnimatedOpacity(
-                    opacity: (!_controller.value.isPlaying || _isHovering) ? 1.0 : 0.0,
+                    opacity: (!_controller.value.isPlaying || _isHovering)
+                        ? 1.0
+                        : 0.0,
                     duration: const Duration(milliseconds: 200),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
                         });
                       },
                       child: Container(
@@ -171,10 +182,14 @@ class _VideoPreviewState extends State<VideoPreview> {
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Icon(
-                          _controller.value.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                          _controller.value.isPlaying
+                              ? Icons.pause_rounded
+                              : Icons.play_arrow_rounded,
                           color: Colors.white,
                           size: 32,
                         ),
@@ -188,7 +203,9 @@ class _VideoPreviewState extends State<VideoPreview> {
                     left: 0,
                     right: 0,
                     child: AnimatedSlide(
-                      offset: (_showControls || _isHovering) ? Offset.zero : const Offset(0, 1),
+                      offset: (_showControls || _isHovering)
+                          ? Offset.zero
+                          : const Offset(0, 1),
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeOutCubic,
                       child: Container(
@@ -202,8 +219,12 @@ class _VideoPreviewState extends State<VideoPreview> {
                               allowScrubbing: true,
                               colors: VideoProgressColors(
                                 playedColor: const Color(0xFF0084FF),
-                                bufferedColor: Colors.white.withValues(alpha: 0.2),
-                                backgroundColor: Colors.white.withValues(alpha: 0.1),
+                                bufferedColor: Colors.white.withValues(
+                                  alpha: 0.2,
+                                ),
+                                backgroundColor: Colors.white.withValues(
+                                  alpha: 0.1,
+                                ),
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 8),
                             ),
@@ -211,15 +232,22 @@ class _VideoPreviewState extends State<VideoPreview> {
                               children: [
                                 // Volume
                                 MouseRegion(
-                                  onEnter: (_) => setState(() => _volumeOpen = true),
+                                  onEnter: (_) =>
+                                      setState(() => _volumeOpen = true),
                                   child: Row(
                                     children: [
                                       GestureDetector(
                                         onTap: () => setState(() {
-                                          _controller.setVolume(_controller.value.volume > 0 ? 0 : 1);
+                                          _controller.setVolume(
+                                            _controller.value.volume > 0
+                                                ? 0
+                                                : 1,
+                                          );
                                         }),
                                         child: Icon(
-                                          _controller.value.volume > 0 ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                                          _controller.value.volume > 0
+                                              ? Icons.volume_up_rounded
+                                              : Icons.volume_off_rounded,
                                           color: Colors.white,
                                           size: 18,
                                         ),
@@ -231,12 +259,19 @@ class _VideoPreviewState extends State<VideoPreview> {
                                           child: SliderTheme(
                                             data: SliderTheme.of(context).copyWith(
                                               trackHeight: 2,
-                                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 4),
-                                              overlayShape: const RoundSliderOverlayShape(overlayRadius: 10),
+                                              thumbShape:
+                                                  const RoundSliderThumbShape(
+                                                    enabledThumbRadius: 4,
+                                                  ),
+                                              overlayShape:
+                                                  const RoundSliderOverlayShape(
+                                                    overlayRadius: 10,
+                                                  ),
                                             ),
                                             child: Slider(
                                               value: _controller.value.volume,
-                                              onChanged: (v) => _controller.setVolume(v),
+                                              onChanged: (v) =>
+                                                  _controller.setVolume(v),
                                             ),
                                           ),
                                         ),
@@ -247,33 +282,45 @@ class _VideoPreviewState extends State<VideoPreview> {
                                 // Time
                                 Text(
                                   "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
                                 ),
                                 const Spacer(),
                                 // Fullscreen Toggle
                                 GestureDetector(
                                   onTap: () async {
-                                    final bool wasPlaying = _controller.value.isPlaying;
+                                    final bool wasPlaying =
+                                        _controller.value.isPlaying;
                                     if (wasPlaying) await _controller.pause();
-                                    
+
                                     if (!mounted) return;
-                                    
-                                    final dynamic result = await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => FullScreenVideoPreview(
-                                          url: widget.url,
-                                          file: widget.file,
-                                          startPosition: _controller.value.position,
-                                        ),
-                                      ),
-                                    );
+
+                                    final dynamic result =
+                                        await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FullScreenVideoPreview(
+                                                  url: widget.url,
+                                                  file: widget.file,
+                                                  startPosition: _controller
+                                                      .value
+                                                      .position,
+                                                ),
+                                          ),
+                                        );
 
                                     if (result is Duration && mounted) {
                                       await _controller.seekTo(result);
                                       if (wasPlaying) await _controller.play();
                                     }
                                   },
-                                  child: const Icon(Icons.fullscreen_rounded, color: Colors.white, size: 20),
+                                  child: const Icon(
+                                    Icons.fullscreen_rounded,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ],
                             ),

@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -102,21 +102,37 @@ class ExtendedRebuildMouseRegionState
     super.debugFillProperties(properties);
 
     properties
-      ..add(DiagnosticsProperty<PointerEnterEventListener?>(
-          'onEnter', widget.onEnter,
-          defaultValue: null))
-      ..add(DiagnosticsProperty<PointerExitEventListener?>(
-          'onExit', widget.onExit,
-          defaultValue: null))
-      ..add(DiagnosticsProperty<PointerHoverEventListener?>(
-          'onHover', widget.onHover,
-          defaultValue: null))
+      ..add(
+        DiagnosticsProperty<PointerEnterEventListener?>(
+          'onEnter',
+          widget.onEnter,
+          defaultValue: null,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<PointerExitEventListener?>(
+          'onExit',
+          widget.onExit,
+          defaultValue: null,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<PointerHoverEventListener?>(
+          'onHover',
+          widget.onHover,
+          defaultValue: null,
+        ),
+      )
       ..add(DiagnosticsProperty<MouseCursor>('initCursor', widget.initCursor))
       ..add(DiagnosticsProperty<MouseCursor>('currentCursor', currentCursor))
       ..add(FlagProperty('opaque', value: widget.opaque, ifTrue: 'opaque'))
-      ..add(EnumProperty<HitTestBehavior?>(
-          'hitTestBehavior', widget.hitTestBehavior,
-          defaultValue: null))
+      ..add(
+        EnumProperty<HitTestBehavior?>(
+          'hitTestBehavior',
+          widget.hitTestBehavior,
+          defaultValue: null,
+        ),
+      )
       ..add(DiagnosticsProperty<Widget>('child', widget.child));
   }
 }

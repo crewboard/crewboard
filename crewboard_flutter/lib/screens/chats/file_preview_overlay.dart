@@ -189,9 +189,9 @@ class _FilePreviewItem extends StatelessWidget {
           child: VideoPreview(file: file),
         );
       } else if (type == MessageType.audio) {
-         content = Center(
+        content = Center(
           child: AudioPreview(
-            url: file.path, 
+            url: file.path,
             localUrl: true,
             color: Colors.white, // Or generic preview color
           ),

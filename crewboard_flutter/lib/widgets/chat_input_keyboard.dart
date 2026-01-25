@@ -19,10 +19,11 @@ class ChatInputKeyboard extends StatelessWidget {
   final VoidCallback? onAttachPressed;
   final VoidCallback? onSendPressed;
   final List<String> typingUserNames;
-  
+
   // Autocomplete props
   final bool showAutocomplete;
-  final List<dynamic> autocompleteEmojis; // using dynamic to be safe, cast inside
+  final List<dynamic>
+  autocompleteEmojis; // using dynamic to be safe, cast inside
   final Function(dynamic)? onAutocompleteSelected;
   final int selectedAutocompleteIndex;
 
@@ -93,11 +94,11 @@ class ChatInputKeyboard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(width: 8),
-                      // EmojiButton(), // Requires EmojiController look up? Likely Get.find<EmojiController>. 
+                      // EmojiButton(), // Requires EmojiController look up? Likely Get.find<EmojiController>.
                       // If EmojiButton depends on MessagesController it might break.
-                      // Let's assume EmojiButton is independent or widely available. 
+                      // Let's assume EmojiButton is independent or widely available.
                       // Checking imports: import '../../screens/chats/widgets/emoji_button.dart';
-                      const EmojiButton(), 
+                      const EmojiButton(),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
@@ -182,8 +183,10 @@ class ChatInputKeyboard extends StatelessWidget {
             final isSelected = selectedAutocompleteIndex == index;
             // emoji.emoji - Assuming emoji object has .emoji property.
             // If dynamic, check proper usage.
-             final String emojiChar = (emoji is String) ? emoji : (emoji.emoji ?? "");
-             
+            final String emojiChar = (emoji is String)
+                ? emoji
+                : (emoji.emoji ?? "");
+
             return GestureDetector(
               onTap: () {
                 if (onAutocompleteSelected != null) {

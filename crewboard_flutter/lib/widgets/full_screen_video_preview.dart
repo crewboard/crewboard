@@ -46,7 +46,7 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
       await _controller.initialize();
       await _controller.seekTo(widget.startPosition);
       _controller.addListener(_updateState);
-      
+
       if (mounted) {
         setState(() {
           _initialized = true;
@@ -86,11 +86,13 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
 
   Future<void> _downloadVideo() async {
     if (widget.url == null) return;
-    
+
     setState(() => _isDownloading = true);
 
     try {
-      final ByteData data = await NetworkAssetBundle(Uri.parse(widget.url!)).load("");
+      final ByteData data = await NetworkAssetBundle(
+        Uri.parse(widget.url!),
+      ).load("");
       final Uint8List bytes = data.buffer.asUint8List();
 
       String fileName = "video.mp4";
@@ -99,7 +101,7 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
         final segments = uri.pathSegments;
         if (segments.isNotEmpty) fileName = segments.last;
       } catch (_) {}
-      
+
       if (!p.extension(fileName).isNotEmpty) fileName += ".mp4";
 
       String? outputFile = await FilePicker.platform.saveFile(
@@ -167,8 +169,12 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(_controller.value.position),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () =>
+                        Navigator.of(context).pop(_controller.value.position),
                   ),
                   const Spacer(),
                   if (widget.url != null)
@@ -176,15 +182,22 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                         ? const SizedBox(
                             width: 24,
                             height: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
                           )
                         : IconButton(
-                            icon: const Icon(Icons.download_rounded, color: Colors.white),
+                            icon: const Icon(
+                              Icons.download_rounded,
+                              color: Colors.white,
+                            ),
                             onPressed: _downloadVideo,
                           ),
                   IconButton(
                     icon: const Icon(Icons.close_rounded, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(_controller.value.position),
+                    onPressed: () =>
+                        Navigator.of(context).pop(_controller.value.position),
                   ),
                 ],
               ),
@@ -199,7 +212,9 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
                   });
                 },
                 child: Container(
@@ -207,10 +222,14 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Icon(
-                    _controller.value.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    _controller.value.isPlaying
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
                     color: Colors.white,
                     size: 48,
                   ),
@@ -250,10 +269,14 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                             children: [
                               GestureDetector(
                                 onTap: () => setState(() {
-                                  _controller.setVolume(_controller.value.volume > 0 ? 0 : 1);
+                                  _controller.setVolume(
+                                    _controller.value.volume > 0 ? 0 : 1,
+                                  );
                                 }),
                                 child: Icon(
-                                  _controller.value.volume > 0 ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                                  _controller.value.volume > 0
+                                      ? Icons.volume_up_rounded
+                                      : Icons.volume_off_rounded,
                                   color: Colors.white,
                                   size: 24,
                                 ),
@@ -266,12 +289,18 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                                   child: SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
                                       trackHeight: 2,
-                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                                      thumbShape: const RoundSliderThumbShape(
+                                        enabledThumbRadius: 6,
+                                      ),
+                                      overlayShape:
+                                          const RoundSliderOverlayShape(
+                                            overlayRadius: 12,
+                                          ),
                                     ),
                                     child: Slider(
                                       value: _controller.value.volume,
-                                      onChanged: (v) => _controller.setVolume(v),
+                                      onChanged: (v) =>
+                                          _controller.setVolume(v),
                                     ),
                                   ),
                                 ),
@@ -281,12 +310,21 @@ class _FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                         const SizedBox(width: 15),
                         Text(
                           "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
                         ),
                         const Spacer(),
                         IconButton(
-                          icon: const Icon(Icons.fullscreen_exit_rounded, color: Colors.white, size: 28),
-                          onPressed: () => Navigator.of(context).pop(_controller.value.position),
+                          icon: const Icon(
+                            Icons.fullscreen_exit_rounded,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          onPressed: () => Navigator.of(
+                            context,
+                          ).pop(_controller.value.position),
                         ),
                       ],
                     ),

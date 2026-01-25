@@ -43,7 +43,6 @@ void main() async {
   // Open streaming connection for real-time updates
   await client.openStreamingConnection();
 
-
   // Try to initialize session manager, but handle invalid cached data
   try {
     await sessionManager.initialize();

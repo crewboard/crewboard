@@ -1,4 +1,4 @@
-﻿// Dart imports:
+// Dart imports:
 import 'dart:math';
 
 // Flutter imports:
@@ -35,8 +35,10 @@ class FilterEditorItemList extends StatefulWidget {
     this.borderRadius,
     this.listHeight = 104.0,
     this.previewImageSize = const Size(64, 64),
-  }) : assert(editorImage != null || image != null,
-            'Either editorImage or image must be provided.');
+  }) : assert(
+         editorImage != null || image != null,
+         'Either editorImage or image must be provided.',
+       );
 
   /// The EditorImage class represents an image with multiple sources,
   /// including bytes, file, network URL, and asset path.
@@ -137,8 +139,9 @@ class _FilterEditorItemListState extends State<FilterEditorItemList> {
           controller: _scrollCtrl,
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(minWidth: MediaQuery.sizeOf(context).width),
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.sizeOf(context).width,
+            ),
             child: Padding(
               padding: _filterConfigs.style.filterListMargin,
               child: Wrap(
@@ -169,13 +172,14 @@ class _FilterEditorItemListState extends State<FilterEditorItemList> {
   }) {
     bool isSelected =
         widget.selectedFilter.hashCode == filter.filters.hashCode ||
-            (widget.selectedFilter.isEmpty && filter.filters.isEmpty);
+        (widget.selectedFilter.isEmpty && filter.filters.isEmpty);
 
     if (_filterConfigs.widgets.filterButton != null) {
       return _filterConfigs.widgets.filterButton!.call(
         FilterModel(
-          name: widget.configs.i18n.filterEditor.filters
-              .getFilterI18n(filter.name),
+          name: widget.configs.i18n.filterEditor.filters.getFilterI18n(
+            filter.name,
+          ),
           filters: filter.filters,
         ),
         isSelected,
@@ -217,15 +221,19 @@ class _FilterEditorItemListState extends State<FilterEditorItemList> {
                 maxWidth: widget.previewImageSize.width,
               ),
               child: Text(
-                widget.configs.i18n.filterEditor.filters
-                    .getFilterI18n(filter.name),
+                widget.configs.i18n.filterEditor.filters.getFilterI18n(
+                  filter.name,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 11,
                   color: isSelected
                       ? widget
-                          .configs.filterEditor.style.previewSelectedTextColor
+                            .configs
+                            .filterEditor
+                            .style
+                            .previewSelectedTextColor
                       : _filterConfigs.style.previewTextColor,
                 ),
               ),
@@ -252,13 +260,16 @@ class _FilterEditorItemListState extends State<FilterEditorItemList> {
         ? widget.mainImageSize
         : transformConfigs.cropRect.size;
 
-    double offsetFactor =
-        emptyConfigs ? 1 : widget.mainImageSize.longestSide / size.shortestSide;
+    double offsetFactor = emptyConfigs
+        ? 1
+        : widget.mainImageSize.longestSide / size.shortestSide;
     double fitCoverScale = emptyConfigs
         ? 1
         : max(
-            max(widget.mainImageSize.aspectRatio,
-                1 / widget.mainImageSize.aspectRatio),
+            max(
+              widget.mainImageSize.aspectRatio,
+              1 / widget.mainImageSize.aspectRatio,
+            ),
             max(imageSize.aspectRatio, 1 / imageSize.aspectRatio),
           );
 

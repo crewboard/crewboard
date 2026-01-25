@@ -1,5 +1,3 @@
-﻿
-
 import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/models/custom_widgets/layer_interaction_widgets.dart';
@@ -134,7 +132,8 @@ class _FloatSelectionOverlayState extends State<FloatSelectionOverlay> {
             translation: const Offset(-0.5, 0),
             child: SizedBox(
               key: _toolbarKey,
-              child: _widgets.toolbar ??
+              child:
+                  _widgets.toolbar ??
                   FloatSelectToolbar(
                     layer: widget.layer,
                     interactions: widget.interactions,

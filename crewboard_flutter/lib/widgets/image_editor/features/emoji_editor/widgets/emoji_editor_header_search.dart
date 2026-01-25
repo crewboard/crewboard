@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_style_constants.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/models/i18n/i18n_emoji_editor.dart';
@@ -36,65 +36,69 @@ class HeaderSearchViewState extends SearchViewState {
   /// Builds the widget tree for the header search view.
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final emojiSize =
-          widget.config.emojiViewConfig.getEmojiSize(constraints.maxWidth);
-      final emojiBoxSize =
-          widget.config.emojiViewConfig.getEmojiBoxSize(constraints.maxWidth);
-      return Container(
-        color: widget.config.searchViewConfig.backgroundColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: emojiBoxSize + 8.0,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: results.length,
-                itemBuilder: (context, index) {
-                  return buildEmoji(
-                    results[index],
-                    emojiSize,
-                    emojiBoxSize,
-                  );
-                },
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final emojiSize = widget.config.emojiViewConfig.getEmojiSize(
+          constraints.maxWidth,
+        );
+        final emojiBoxSize = widget.config.emojiViewConfig.getEmojiBoxSize(
+          constraints.maxWidth,
+        );
+        return Container(
+          color: widget.config.searchViewConfig.backgroundColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: emojiBoxSize + 8.0,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    return buildEmoji(
+                      results[index],
+                      emojiSize,
+                      emojiBoxSize,
+                    );
+                  },
+                ),
               ),
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: widget.showEmojiView,
-                  color: widget.config.searchViewConfig.buttonIconColor,
-                  icon: Icon(
-                    Icons.arrow_back,
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: widget.showEmojiView,
                     color: widget.config.searchViewConfig.buttonIconColor,
-                    size: 20.0,
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    onChanged: onTextInputChanged,
-                    focusNode: focusNode,
-                    style: const TextStyle(
-                      color: kImageEditorTextColor,
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: widget.config.searchViewConfig.buttonIconColor,
+                      size: 20.0,
                     ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: i18n.search,
-                      hintStyle: const TextStyle(
+                  ),
+                  Expanded(
+                    child: TextField(
+                      onChanged: onTextInputChanged,
+                      focusNode: focusNode,
+                      style: const TextStyle(
                         color: kImageEditorTextColor,
-                        fontWeight: FontWeight.normal,
                       ),
-                      contentPadding: EdgeInsets.zero,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: i18n.search,
+                        hintStyle: const TextStyle(
+                          color: kImageEditorTextColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

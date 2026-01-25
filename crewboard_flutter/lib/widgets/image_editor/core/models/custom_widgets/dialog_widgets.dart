@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import '../editor_configs/pro_image_editor_configs.dart';
 
@@ -71,12 +71,12 @@ class DialogWidgets {
   /// ),
   /// ```
   final Widget Function(String message, ProImageEditorConfigs configs)?
-      loadingDialog;
+  loadingDialog;
 
   /// Creates a copy of this widget configuration with specified overrides.
   DialogWidgets copyWith({
     Widget Function(String message, ProImageEditorConfigs configs)?
-        loadingDialog,
+    loadingDialog,
   }) {
     return DialogWidgets(loadingDialog: loadingDialog ?? this.loadingDialog);
   }

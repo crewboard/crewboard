@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/int_constants.dart';
@@ -61,12 +61,14 @@ class WidgetLayer extends Layer {
 
     /// Determines the position of the widget in the list.
     int widgetPosition = safeParseInt(
-        map[keyConverter('recordPosition')] ?? map['listPosition'],
-        fallback: -1);
+      map[keyConverter('recordPosition')] ?? map['listPosition'],
+      fallback: -1,
+    );
 
     final layerWidth = map[keyConverter('width')];
-    var exportConfigs =
-        WidgetLayerExportConfigs.fromMap(map[keyConverter('exportConfigs')]);
+    var exportConfigs = WidgetLayerExportConfigs.fromMap(
+      map[keyConverter('exportConfigs')],
+    );
 
     /// Widget to display a widget or a placeholder if not found.
     Widget widget = kDebugMode
@@ -233,10 +235,12 @@ class WidgetLayer extends Layer {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<WidgetLayerExportConfigs>(
-        'exportConfigs',
-        exportConfigs,
-      ))
+      ..add(
+        DiagnosticsProperty<WidgetLayerExportConfigs>(
+          'exportConfigs',
+          exportConfigs,
+        ),
+      )
       ..add(DoubleProperty('width', width));
   }
 }

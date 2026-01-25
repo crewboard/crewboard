@@ -1,4 +1,4 @@
-﻿// Flutter imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -106,7 +106,8 @@ class _PlatformPopupBtnState extends State<PlatformPopupBtn> {
             value: option,
             height: kMinInteractiveDimension,
             onTap: option.onTap,
-            child: option.child ??
+            child:
+                option.child ??
                 Row(
                   children: [
                     option.icon,

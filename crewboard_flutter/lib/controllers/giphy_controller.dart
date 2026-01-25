@@ -47,7 +47,11 @@ class GiphyController extends GetxController {
     isSearching.value = true;
     isLoading.value = true;
     try {
-      final gifs = await client.giphy.getGifs(query: query, limit: 20, offset: 0);
+      final gifs = await client.giphy.getGifs(
+        query: query,
+        limit: 20,
+        offset: 0,
+      );
       searchResults.value = gifs;
     } catch (e) {
       print("Error searching GIFs: $e");

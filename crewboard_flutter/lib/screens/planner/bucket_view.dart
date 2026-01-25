@@ -10,7 +10,6 @@ import 'view_ticket_dialog.dart';
 
 import 'package:flutter/gestures.dart';
 
-
 class BucketView extends StatelessWidget {
   const BucketView({super.key});
 
@@ -283,37 +282,40 @@ class TicketWidget extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Pallet.font1),
             ),
             const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text.rich(
-                  TextSpan(
-                    children: _parseBody(ticket.ticketBody),
-                    style: TextStyle(fontSize: 13, color: Pallet.font3),
-                  ),
-                  maxLines: 12,
-                  overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text.rich(
+                TextSpan(
+                  children: _parseBody(ticket.ticketBody),
+                  style: TextStyle(fontSize: 13, color: Pallet.font3),
                 ),
+                maxLines: 12,
+                overflow: TextOverflow.ellipsis,
               ),
+            ),
             const SizedBox(height: 5),
             // Display image attachments
             if (ticket.attachments != null && ticket.attachments!.isNotEmpty)
               Builder(
                 builder: (context) {
-                    // Filter for image attachments only with valid URLs
-                    final imageAttachments = ticket.attachments!.where((attachment) {
-                      final ext = attachment.type.toLowerCase();
-                      final isImage = ext == 'jpg' || 
-                             ext == 'jpeg' || 
-                             ext == 'png' || 
-                             ext == 'gif' || 
-                             ext == 'webp';
-                      final hasValidUrl = attachment.url.isNotEmpty;
-                      
-                      return isImage && hasValidUrl;
-                    }).toList();
+                  // Filter for image attachments only with valid URLs
+                  final imageAttachments = ticket.attachments!.where((
+                    attachment,
+                  ) {
+                    final ext = attachment.type.toLowerCase();
+                    final isImage =
+                        ext == 'jpg' ||
+                        ext == 'jpeg' ||
+                        ext == 'png' ||
+                        ext == 'gif' ||
+                        ext == 'webp';
+                    final hasValidUrl = attachment.url.isNotEmpty;
+
+                    return isImage && hasValidUrl;
+                  }).toList();
 
                   if (imageAttachments.isEmpty) return const SizedBox.shrink();
-                  
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     child: ClipRRect(
@@ -343,9 +345,10 @@ class TicketWidget extends StatelessWidget {
                             color: Pallet.inside1,
                             child: Center(
                               child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
                                     ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
+                                          loadingProgress.expectedTotalBytes!
                                     : null,
                                 color: Pallet.font3,
                               ),
@@ -369,7 +372,10 @@ class TicketWidget extends StatelessWidget {
                 Expanded(child: Container()),
                 SizedBox(
                   height: 28, // constrain height for stack
-                  width: ticket.assignees.isEmpty ? 0 : 12.0 * ticket.assignees.length + 16, // adjusted width for overlap
+                  width: ticket.assignees.isEmpty
+                      ? 0
+                      : 12.0 * ticket.assignees.length +
+                            16, // adjusted width for overlap
                   child: Stack(
                     children: [
                       for (var i = 0; i < ticket.assignees.length; i++)
@@ -404,7 +410,7 @@ class TicketWidget extends StatelessWidget {
     try {
       DateTime dt = DateTime.parse(deadline);
       DateTime now = DateTime.now();
-      
+
       // Calculate difference in days
       Duration diff = dt.difference(now);
       int days = diff.inDays;
@@ -428,7 +434,7 @@ class TicketWidget extends StatelessWidget {
   List<TextSpan> _parseBody(String text) {
     if (text.isEmpty) return [];
     final List<TextSpan> spans = [];
-    
+
     final PlannerController controller = Get.find<PlannerController>();
     final List<String> names = [
       ...controller.allFlows.map((f) => f.name),
@@ -438,10 +444,10 @@ class TicketWidget extends StatelessWidget {
     // Create a regex that matches either valid names (prioritized) or standard hashtags
     final uniqueNames = names.where((n) => n.isNotEmpty).toSet().toList();
     uniqueNames.sort((a, b) => b.length.compareTo(a.length));
-    
+
     final escapedNames = uniqueNames.map(RegExp.escape).join('|');
-    final pattern = escapedNames.isNotEmpty 
-        ? "#($escapedNames|\\w+)" 
+    final pattern = escapedNames.isNotEmpty
+        ? "#($escapedNames|\\w+)"
         : r"#(\w+)";
     final RegExp exp = RegExp(pattern, caseSensitive: false);
 
@@ -457,13 +463,12 @@ class TicketWidget extends StatelessWidget {
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
             ),
-            recognizer:
-                TapGestureRecognizer()
-                  ..onTap = () {
-                    final PlannerController controller =
-                        Get.find<PlannerController>();
-                    controller.openLinkedFlow(flowName);
-                  },
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                final PlannerController controller =
+                    Get.find<PlannerController>();
+                controller.openLinkedFlow(flowName);
+              },
           ),
         );
         return match;

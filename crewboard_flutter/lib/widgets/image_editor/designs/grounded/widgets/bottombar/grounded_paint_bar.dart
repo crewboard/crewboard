@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/converted_configs.dart';
 import 'package:crewboard_flutter/widgets/image_editor/core/mixins/editor_configs_mixin.dart';
@@ -151,7 +151,8 @@ class _GroundedPaintBarState extends State<GroundedPaintBar>
                             fontSize: 10.0,
                             color: widget.editor.paintMode == item.mode
                                 ? paintEditorConfigs
-                                    .style.bottomBarActiveItemColor
+                                      .style
+                                      .bottomBarActiveItemColor
                                 : _foreGroundColorAccent,
                           ),
                         ),
@@ -232,7 +233,8 @@ class _GroundedPaintBarState extends State<GroundedPaintBar>
             child: child,
           ),
         ),
-        child: widget.editor.paintMode == PaintMode.rect ||
+        child:
+            widget.editor.paintMode == PaintMode.rect ||
                 widget.editor.paintMode == PaintMode.circle
             ? Center(
                 child: FlatIconTextButton(

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:crewboard_flutter/widgets/image_editor/plugins/emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -23,9 +23,9 @@ class EmojiTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    assert(!value.composing.isValid ||
-        !withComposing ||
-        value.isComposingRangeValid);
+    assert(
+      !value.composing.isValid || !withComposing || value.isComposingRangeValid,
+    );
     // If the composing range is out of range for the current text, ignore it to
     // preserve the tree integrity, otherwise in release mode a RangeError will
     // be thrown and this EditableText will be built with a broken subtree.
@@ -45,7 +45,7 @@ class EmojiTextEditingController extends TextEditingController {
     // Cursor will automatically highlight current word underlined
     final underlineStyle =
         style?.merge(const TextStyle(decoration: TextDecoration.underline)) ??
-            const TextStyle(decoration: TextDecoration.underline);
+        const TextStyle(decoration: TextDecoration.underline);
 
     return TextSpan(
       style: style,

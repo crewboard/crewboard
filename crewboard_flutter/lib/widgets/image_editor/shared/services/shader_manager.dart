@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 import 'package:crewboard_flutter/widgets/image_editor/core/constants/editor_shader_constants.dart';
 
@@ -59,5 +59,5 @@ class ShaderManager {
 /// Enum representing different shader modes.
 enum ShaderMode {
   /// Applies a pixelation effect to the image.
-  pixelate
+  pixelate,
 }
