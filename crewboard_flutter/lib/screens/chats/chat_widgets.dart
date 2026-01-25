@@ -7,10 +7,12 @@ import 'package:get/get.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 
 import '../../config/palette.dart';
-// import '../../widgets/widgets.dart';
+import '../../main.dart'; // For sessionManager
+import '../../widgets/widgets.dart';
 import '../../widgets/button.dart' as frontend_button;
 import '../../widgets/emoji.dart';
 import '../../controllers/messages_controller.dart';
+import '../../controllers/rooms_controller.dart';
 import '../../widgets/video_preview.dart';
 import '../../widgets/audio_preview.dart';
 import '../../widgets/full_screen_image_preview.dart';
@@ -18,14 +20,18 @@ import '../../widgets/full_screen_image_preview.dart';
 // Placeholder for RoomProfile if not defined elsewhere
 class RoomProfile {
   final String userName;
-  final String color;
+  final Color color;
   const RoomProfile({required this.userName, required this.color});
 }
 
 // Extension to match frontend usage
 extension ChatMessageUI on ChatMessage {
-  // This logic should be replaced with actual user ID check
-  bool get isMe => userId.toString() == '00000000-0000-4000-8000-000000000000';
+  // Check if the message was sent by the currently authenticated user
+  bool get isMe {
+    final currentUserId = sessionManager.authInfo?.authUserId;
+    if (currentUserId == null) return false;
+    return userId == currentUserId;
+  }
   bool get selected => false; // Placeholder for selection state
 }
 
@@ -136,6 +142,7 @@ addMemory(context, {String? text}) async {
 class MessageBubble extends StatelessWidget {
   final String message;
   final bool isMe;
+  final UuidValue userId;
   final bool sameUser;
   final DateTime createdAt;
   final MessageType? type;
@@ -146,6 +153,7 @@ class MessageBubble extends StatelessWidget {
     super.key,
     required this.message,
     required this.isMe, // This might be overridden by internal check if I create ChatMessage
+    required this.userId,
     required this.sameUser,
     required this.createdAt,
     this.type,
@@ -157,7 +165,7 @@ class MessageBubble extends StatelessWidget {
     // This is a bridge. ideally ChatScreen should pass ChatMessage object.
     final msgObj = ChatMessage(
         roomId: UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-        userId: isMe ? UuidValue.fromString('00000000-0000-4000-8000-000000000000') : UuidValue.fromString('11111111-1111-1111-1111-111111111111'), // Dummy IDs
+        userId: userId,
         message: message,
         messageType: type ?? MessageType.text,
         seenUserList: [],
@@ -166,10 +174,47 @@ class MessageBubble extends StatelessWidget {
         createdAt: createdAt,
     );
     
-    // Placeholder user profile
+    // Lookup user profile from RoomsController
+    String senderName = isMe ? "Me" : "Other";
+    Color senderColor = isMe ? Colors.blue : Colors.grey;
+    
+    if (!isMe) {
+      final roomsController = Get.find<RoomsController>();
+      final room = roomsController.selectedRoom.value;
+      if (room != null && room.roomUsers != null) {
+        try {
+          final user = room.roomUsers!.firstWhere((u) => u.id == userId);
+          senderName = user.userName;
+          senderColor = Pallet.getUserColor(user);
+        } catch (_) {}
+      }
+    } else {
+      // For "Me", try to get current user color from RoomsController users list
+      final roomsController = Get.find<RoomsController>();
+      final currentUserId = sessionManager.authInfo?.authUserId;
+      if (currentUserId != null) {
+        try {
+          // Try to find in the users list (search results or loaded users)
+          final me = roomsController.users.firstWhereOrNull((u) => u.id == currentUserId);
+          if (me != null) {
+            senderColor = Pallet.getUserColor(me);
+          } else {
+            // Also check room users of all rooms
+            for (var room in roomsController.rooms) {
+              final meInRoom = room.roomUsers?.firstWhereOrNull((u) => u.id == currentUserId);
+              if (meInRoom != null) {
+                senderColor = Pallet.getUserColor(meInRoom);
+                break;
+              }
+            }
+          }
+        } catch (_) {}
+      }
+    }
+
     final userProfile = RoomProfile(
-      userName: isMe ? "Me" : "Other",
-      color: isMe ? "0xFF2196F3" : "0xFF9E9E9E", // This should also ideally be dynamic
+      userName: senderName,
+      color: senderColor,
     );
 
     if (type == MessageType.image) {
@@ -532,23 +577,13 @@ class _MessageState extends State<MessageWidget> {
           children: [
             if (!widget.message.isMe)
               if (widget.message.sameUser == false)
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: Color(int.tryParse(widget.user.color) ?? 0xFF000000), // Default color if parse fails
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      widget.user.userName.isNotEmpty ? widget.user.userName[0].toUpperCase() : "?",
-                      style: TextStyle(
-                        color: Pallet.font1,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                ProfileIcon(
+                  size: 30,
+                  fontSize: 12,
+                  name: widget.user.userName,
+                  color: widget.user.color,
+                  borderRadius: 10,
+                  style: ProfileIconStyle.outlined,
                 )
               else
                 SizedBox(height: 30, width: 30),

@@ -12,7 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../protocols/planner_assignee.dart' as _i2;
-import 'package:crewboard_client/src/protocol/protocol.dart' as _i3;
+import '../protocols/attachment_model.dart' as _i3;
+import 'package:crewboard_client/src/protocol/protocol.dart' as _i4;
 
 abstract class PlannerTicket implements _i1.SerializableModel {
   PlannerTicket._({
@@ -30,6 +31,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     this.createdAt,
     bool? hasNewActivity,
     this.latestActivity,
+    this.attachments,
   }) : hasNewActivity = hasNewActivity ?? false;
 
   factory PlannerTicket({
@@ -47,6 +49,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    List<_i3.AttachmentModel>? attachments,
   }) = _PlannerTicketImpl;
 
   factory PlannerTicket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -59,7 +62,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
       typeName: jsonSerialization['typeName'] as String,
       typeColor: jsonSerialization['typeColor'] as String,
       deadline: jsonSerialization['deadline'] as String?,
-      assignees: _i3.Protocol().deserialize<List<_i2.PlannerAssignee>>(
+      assignees: _i4.Protocol().deserialize<List<_i2.PlannerAssignee>>(
         jsonSerialization['assignees'],
       ),
       holder: jsonSerialization['holder'] as String,
@@ -69,6 +72,11 @@ abstract class PlannerTicket implements _i1.SerializableModel {
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       hasNewActivity: jsonSerialization['hasNewActivity'] as bool,
       latestActivity: jsonSerialization['latestActivity'] as String?,
+      attachments: jsonSerialization['attachments'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<_i3.AttachmentModel>>(
+              jsonSerialization['attachments'],
+            ),
     );
   }
 
@@ -100,6 +108,8 @@ abstract class PlannerTicket implements _i1.SerializableModel {
 
   String? latestActivity;
 
+  List<_i3.AttachmentModel>? attachments;
+
   /// Returns a shallow copy of this [PlannerTicket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -118,6 +128,7 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    List<_i3.AttachmentModel>? attachments,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -137,6 +148,8 @@ abstract class PlannerTicket implements _i1.SerializableModel {
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
       'hasNewActivity': hasNewActivity,
       if (latestActivity != null) 'latestActivity': latestActivity,
+      if (attachments != null)
+        'attachments': attachments?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -164,6 +177,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    List<_i3.AttachmentModel>? attachments,
   }) : super._(
          id: id,
          ticketName: ticketName,
@@ -179,6 +193,7 @@ class _PlannerTicketImpl extends PlannerTicket {
          createdAt: createdAt,
          hasNewActivity: hasNewActivity,
          latestActivity: latestActivity,
+         attachments: attachments,
        );
 
   /// Returns a shallow copy of this [PlannerTicket]
@@ -200,6 +215,7 @@ class _PlannerTicketImpl extends PlannerTicket {
     Object? createdAt = _Undefined,
     bool? hasNewActivity,
     Object? latestActivity = _Undefined,
+    Object? attachments = _Undefined,
   }) {
     return PlannerTicket(
       id: id ?? this.id,
@@ -219,6 +235,9 @@ class _PlannerTicketImpl extends PlannerTicket {
       latestActivity: latestActivity is String?
           ? latestActivity
           : this.latestActivity,
+      attachments: attachments is List<_i3.AttachmentModel>?
+          ? attachments
+          : this.attachments?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

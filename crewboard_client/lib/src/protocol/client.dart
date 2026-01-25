@@ -32,48 +32,50 @@ import 'package:crewboard_client/src/protocol/protocols/get_attendance_data_resp
     as _i13;
 import 'package:crewboard_client/src/protocol/entities/leave_request.dart'
     as _i14;
-import 'package:crewboard_client/src/protocol/protocols/check_username_response.dart'
+import 'package:crewboard_client/src/protocol/entities/font_setting.dart'
     as _i15;
-import 'package:crewboard_client/src/protocol/protocols/check_organization_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/check_username_response.dart'
     as _i16;
-import 'package:crewboard_client/src/protocol/protocols/sign_in_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/check_organization_response.dart'
     as _i17;
-import 'package:crewboard_client/src/protocol/entities/chat_room.dart' as _i18;
+import 'package:crewboard_client/src/protocol/protocols/sign_in_response.dart'
+    as _i18;
+import 'package:crewboard_client/src/protocol/entities/chat_room.dart' as _i19;
 import 'package:crewboard_client/src/protocol/entities/chat_message.dart'
-    as _i19;
-import 'package:crewboard_client/src/protocol/chat_stream_event.dart' as _i20;
-import 'package:crewboard_client/src/protocol/entities/flow_model.dart' as _i21;
-import 'package:crewboard_client/src/protocol/entities/doc.dart' as _i22;
-import 'package:crewboard_client/src/protocol/entities/emoji.dart' as _i23;
-import 'package:crewboard_client/src/protocol/gif.dart' as _i24;
+    as _i20;
+import 'package:crewboard_client/src/protocol/chat_stream_event.dart' as _i21;
+import 'package:crewboard_client/src/protocol/entities/flow_model.dart' as _i22;
+import 'package:crewboard_client/src/protocol/entities/doc.dart' as _i23;
+import 'package:crewboard_client/src/protocol/entities/emoji.dart' as _i24;
+import 'package:crewboard_client/src/protocol/gif.dart' as _i25;
 import 'package:crewboard_client/src/protocol/protocols/get_planner_data_response.dart'
-    as _i25;
-import 'package:crewboard_client/src/protocol/protocols/get_add_ticket_data_response.dart'
     as _i26;
-import 'package:crewboard_client/src/protocol/protocols/add_ticket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_add_ticket_data_response.dart'
     as _i27;
-import 'package:crewboard_client/src/protocol/protocols/get_all_tickets_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_ticket_request.dart'
     as _i28;
-import 'package:crewboard_client/src/protocol/protocols/get_ticket_data_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_all_tickets_response.dart'
     as _i29;
-import 'package:crewboard_client/src/protocol/protocols/get_ticket_thread_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_data_response.dart'
     as _i30;
-import 'package:crewboard_client/src/protocol/protocols/get_ticket_comments_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_thread_response.dart'
     as _i31;
-import 'package:crewboard_client/src/protocol/protocols/add_comment_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/get_ticket_comments_response.dart'
     as _i32;
-import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_comment_request.dart'
     as _i33;
-import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
+import 'package:crewboard_client/src/protocol/protocols/add_bucket_request.dart'
     as _i34;
-import 'package:crewboard_client/src/protocol/protocols/ticket_model.dart'
+import 'package:crewboard_client/src/protocol/protocols/change_bucket_request.dart'
     as _i35;
-import 'package:crewboard_client/src/protocol/protocols/get_planner_activities_response.dart'
+import 'package:crewboard_client/src/protocol/protocols/ticket_model.dart'
     as _i36;
-import 'dart:typed_data' as _i37;
-import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i38;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i39;
-import 'protocol.dart' as _i40;
+import 'package:crewboard_client/src/protocol/protocols/get_planner_activities_response.dart'
+    as _i37;
+import 'dart:typed_data' as _i38;
+import 'package:crewboard_client/src/protocol/greetings/greeting.dart' as _i39;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i40;
+import 'protocol.dart' as _i41;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -310,6 +312,13 @@ class EndpointAdmin extends _i2.EndpointRef {
         {},
       );
 
+  _i3.Future<void> updateSystemVariables(_i6.SystemVariables variables) =>
+      caller.callServerEndpoint<void>(
+        'admin',
+        'updateSystemVariables',
+        {'variables': variables},
+      );
+
   _i3.Future<_i5.PlannerApp> addApp(
     String name,
     _i2.UuidValue colorId,
@@ -409,6 +418,26 @@ class EndpointAdmin extends _i2.EndpointRef {
         'saveLeaveRequest',
         {'request': request},
       );
+
+  _i3.Future<List<_i15.FontSetting>> getFontSettings() =>
+      caller.callServerEndpoint<List<_i15.FontSetting>>(
+        'admin',
+        'getFontSettings',
+        {},
+      );
+
+  _i3.Future<_i15.FontSetting> saveFontSetting(_i15.FontSetting setting) =>
+      caller.callServerEndpoint<_i15.FontSetting>(
+        'admin',
+        'saveFontSetting',
+        {'setting': setting},
+      );
+
+  _i3.Future<void> deleteFontSetting(int id) => caller.callServerEndpoint<void>(
+    'admin',
+    'deleteFontSetting',
+    {'id': id},
+  );
 }
 
 /// {@category Endpoint}
@@ -418,15 +447,15 @@ class EndpointAuth extends _i2.EndpointRef {
   @override
   String get name => 'auth';
 
-  _i3.Future<_i15.CheckUsernameResponse> checkUsername(String userName) =>
-      caller.callServerEndpoint<_i15.CheckUsernameResponse>(
+  _i3.Future<_i16.CheckUsernameResponse> checkUsername(String userName) =>
+      caller.callServerEndpoint<_i16.CheckUsernameResponse>(
         'auth',
         'checkUsername',
         {'userName': userName},
       );
 
-  _i3.Future<_i16.CheckOrganizationResponse> checkOrganization(String name) =>
-      caller.callServerEndpoint<_i16.CheckOrganizationResponse>(
+  _i3.Future<_i17.CheckOrganizationResponse> checkOrganization(String name) =>
+      caller.callServerEndpoint<_i17.CheckOrganizationResponse>(
         'auth',
         'checkOrganization',
         {'name': name},
@@ -452,10 +481,10 @@ class EndpointAuth extends _i2.EndpointRef {
     },
   );
 
-  _i3.Future<_i17.SignInResponse> simpleLogin(
+  _i3.Future<_i18.SignInResponse> simpleLogin(
     String username,
     String password,
-  ) => caller.callServerEndpoint<_i17.SignInResponse>(
+  ) => caller.callServerEndpoint<_i18.SignInResponse>(
     'auth',
     'simpleLogin',
     {
@@ -472,8 +501,8 @@ class EndpointChat extends _i2.EndpointRef {
   @override
   String get name => 'chat';
 
-  _i3.Future<List<_i18.ChatRoom>> getRooms() =>
-      caller.callServerEndpoint<List<_i18.ChatRoom>>(
+  _i3.Future<List<_i19.ChatRoom>> getRooms() =>
+      caller.callServerEndpoint<List<_i19.ChatRoom>>(
         'chat',
         'getRooms',
         {},
@@ -486,18 +515,18 @@ class EndpointChat extends _i2.EndpointRef {
         {'query': query},
       );
 
-  _i3.Future<_i18.ChatRoom> createDirectRoom(_i2.UuidValue otherUserId) =>
-      caller.callServerEndpoint<_i18.ChatRoom>(
+  _i3.Future<_i19.ChatRoom> createDirectRoom(_i2.UuidValue otherUserId) =>
+      caller.callServerEndpoint<_i19.ChatRoom>(
         'chat',
         'createDirectRoom',
         {'otherUserId': otherUserId},
       );
 
-  _i3.Future<List<_i19.ChatMessage>> getMessages(
+  _i3.Future<List<_i20.ChatMessage>> getMessages(
     _i2.UuidValue roomId, {
     required int limit,
     required int offset,
-  }) => caller.callServerEndpoint<List<_i19.ChatMessage>>(
+  }) => caller.callServerEndpoint<List<_i20.ChatMessage>>(
     'chat',
     'getMessages',
     {
@@ -507,17 +536,17 @@ class EndpointChat extends _i2.EndpointRef {
     },
   );
 
-  _i3.Future<void> sendMessage(_i19.ChatMessage message) =>
+  _i3.Future<void> sendMessage(_i20.ChatMessage message) =>
       caller.callServerEndpoint<void>(
         'chat',
         'sendMessage',
         {'message': message},
       );
 
-  _i3.Stream<_i20.ChatStreamEvent> subscribeToRoom(_i2.UuidValue roomId) =>
+  _i3.Stream<_i21.ChatStreamEvent> subscribeToRoom(_i2.UuidValue roomId) =>
       caller.callStreamingServerEndpoint<
-        _i3.Stream<_i20.ChatStreamEvent>,
-        _i20.ChatStreamEvent
+        _i3.Stream<_i21.ChatStreamEvent>,
+        _i21.ChatStreamEvent
       >(
         'chat',
         'subscribeToRoom',
@@ -552,29 +581,29 @@ class EndpointDocs extends _i2.EndpointRef {
   @override
   String get name => 'docs';
 
-  _i3.Future<bool> createFlow(_i21.FlowModel flow) =>
+  _i3.Future<bool> createFlow(_i22.FlowModel flow) =>
       caller.callServerEndpoint<bool>(
         'docs',
         'createFlow',
         {'flow': flow},
       );
 
-  _i3.Future<bool> updateFlow(_i21.FlowModel flow) =>
+  _i3.Future<bool> updateFlow(_i22.FlowModel flow) =>
       caller.callServerEndpoint<bool>(
         'docs',
         'updateFlow',
         {'flow': flow},
       );
 
-  _i3.Future<List<_i21.FlowModel>> getFlows(_i2.UuidValue appId) =>
-      caller.callServerEndpoint<List<_i21.FlowModel>>(
+  _i3.Future<List<_i22.FlowModel>> getFlows(_i2.UuidValue appId) =>
+      caller.callServerEndpoint<List<_i22.FlowModel>>(
         'docs',
         'getFlows',
         {'appId': appId},
       );
 
-  _i3.Future<_i21.FlowModel?> getFlow(_i2.UuidValue flowId) =>
-      caller.callServerEndpoint<_i21.FlowModel?>(
+  _i3.Future<_i22.FlowModel?> getFlow(_i2.UuidValue flowId) =>
+      caller.callServerEndpoint<_i22.FlowModel?>(
         'docs',
         'getFlow',
         {'flowId': flowId},
@@ -587,8 +616,8 @@ class EndpointDocs extends _i2.EndpointRef {
         {'flowId': flowId},
       );
 
-  _i3.Future<List<_i22.Doc>> getDocs(_i2.UuidValue appId) =>
-      caller.callServerEndpoint<List<_i22.Doc>>(
+  _i3.Future<List<_i23.Doc>> getDocs(_i2.UuidValue appId) =>
+      caller.callServerEndpoint<List<_i23.Doc>>(
         'docs',
         'getDocs',
         {'appId': appId},
@@ -634,10 +663,10 @@ class EndpointEmoji extends _i2.EndpointRef {
     {},
   );
 
-  _i3.Future<List<_i23.Emoji>> getEmojis({
+  _i3.Future<List<_i24.Emoji>> getEmojis({
     int? limit,
     int? offset,
-  }) => caller.callServerEndpoint<List<_i23.Emoji>>(
+  }) => caller.callServerEndpoint<List<_i24.Emoji>>(
     'emoji',
     'getEmojis',
     {
@@ -660,11 +689,11 @@ class EndpointGiphy extends _i2.EndpointRef {
     {},
   );
 
-  _i3.Future<List<_i24.Gif>> getGifs({
+  _i3.Future<List<_i25.Gif>> getGifs({
     String? query,
     required int limit,
     required int offset,
-  }) => caller.callServerEndpoint<List<_i24.Gif>>(
+  }) => caller.callServerEndpoint<List<_i25.Gif>>(
     'giphy',
     'getGifs',
     {
@@ -683,23 +712,23 @@ class EndpointPlanner extends _i2.EndpointRef {
   String get name => 'planner';
 
   /// Get planner data (buckets with tickets) for an app
-  _i3.Future<_i25.GetPlannerDataResponse> getPlannerData(_i2.UuidValue appId) =>
-      caller.callServerEndpoint<_i25.GetPlannerDataResponse>(
+  _i3.Future<_i26.GetPlannerDataResponse> getPlannerData(_i2.UuidValue appId) =>
+      caller.callServerEndpoint<_i26.GetPlannerDataResponse>(
         'planner',
         'getPlannerData',
         {'appId': appId},
       );
 
   /// Fetch initial data for "Add Ticket" form
-  _i3.Future<_i26.GetAddTicketDataResponse> getAddTicketData() =>
-      caller.callServerEndpoint<_i26.GetAddTicketDataResponse>(
+  _i3.Future<_i27.GetAddTicketDataResponse> getAddTicketData() =>
+      caller.callServerEndpoint<_i27.GetAddTicketDataResponse>(
         'planner',
         'getAddTicketData',
         {},
       );
 
   /// Create a new ticket
-  _i3.Future<bool> addTicket(_i27.AddTicketRequest request) =>
+  _i3.Future<bool> addTicket(_i28.AddTicketRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'addTicket',
@@ -707,42 +736,42 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Search/list all tickets in project
-  _i3.Future<_i28.GetAllTicketsResponse> getAllTickets(_i2.UuidValue appId) =>
-      caller.callServerEndpoint<_i28.GetAllTicketsResponse>(
+  _i3.Future<_i29.GetAllTicketsResponse> getAllTickets(_i2.UuidValue appId) =>
+      caller.callServerEndpoint<_i29.GetAllTicketsResponse>(
         'planner',
         'getAllTickets',
         {'appId': appId},
       );
 
   /// Get detailed ticket data
-  _i3.Future<_i29.GetTicketDataResponse> getTicketData(
+  _i3.Future<_i30.GetTicketDataResponse> getTicketData(
     _i2.UuidValue ticketId,
-  ) => caller.callServerEndpoint<_i29.GetTicketDataResponse>(
+  ) => caller.callServerEndpoint<_i30.GetTicketDataResponse>(
     'planner',
     'getTicketData',
     {'ticketId': ticketId},
   );
 
   /// Get thread (comments + status changes) for a ticket
-  _i3.Future<_i30.GetTicketThreadResponse> getTicketThread(
+  _i3.Future<_i31.GetTicketThreadResponse> getTicketThread(
     _i2.UuidValue ticketId,
-  ) => caller.callServerEndpoint<_i30.GetTicketThreadResponse>(
+  ) => caller.callServerEndpoint<_i31.GetTicketThreadResponse>(
     'planner',
     'getTicketThread',
     {'ticketId': ticketId},
   );
 
   /// Get comments for a ticket
-  _i3.Future<_i31.GetTicketCommentsResponse> getTicketComments(
+  _i3.Future<_i32.GetTicketCommentsResponse> getTicketComments(
     _i2.UuidValue ticketId,
-  ) => caller.callServerEndpoint<_i31.GetTicketCommentsResponse>(
+  ) => caller.callServerEndpoint<_i32.GetTicketCommentsResponse>(
     'planner',
     'getTicketComments',
     {'ticketId': ticketId},
   );
 
   /// Add a comment to a ticket
-  _i3.Future<bool> addComment(_i32.AddCommentRequest request) =>
+  _i3.Future<bool> addComment(_i33.AddCommentRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'addComment',
@@ -750,7 +779,7 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Add a new bucket
-  _i3.Future<bool> addBucket(_i33.AddBucketRequest request) =>
+  _i3.Future<bool> addBucket(_i34.AddBucketRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'addBucket',
@@ -758,7 +787,7 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Move ticket between buckets
-  _i3.Future<bool> changeBucket(_i34.ChangeBucketRequest request) =>
+  _i3.Future<bool> changeBucket(_i35.ChangeBucketRequest request) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'changeBucket',
@@ -766,17 +795,86 @@ class EndpointPlanner extends _i2.EndpointRef {
       );
 
   /// Update ticket fields
-  _i3.Future<bool> updateTicket(_i35.TicketModel updatedTicket) =>
+  _i3.Future<bool> updateTicket(_i36.TicketModel updatedTicket) =>
       caller.callServerEndpoint<bool>(
         'planner',
         'updateTicket',
         {'updatedTicket': updatedTicket},
       );
 
+  /// Add or update a status
+  _i3.Future<bool> addStatus(
+    _i2.UuidValue? id,
+    String name,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'addStatus',
+    {
+      'id': id,
+      'name': name,
+    },
+  );
+
+  /// Add or update a priority
+  _i3.Future<bool> addPriority(
+    _i2.UuidValue? id,
+    String name,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'addPriority',
+    {
+      'id': id,
+      'name': name,
+    },
+  );
+
+  /// Add or update a ticket type
+  _i3.Future<bool> addTicketType(
+    _i2.UuidValue? id,
+    String name,
+    _i2.UuidValue colorId,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'addTicketType',
+    {
+      'id': id,
+      'name': name,
+      'colorId': colorId,
+    },
+  );
+
+  /// Delete a planner variable (status, type, priority)
+  _i3.Future<bool> deletePlannerVariable(
+    String type,
+    _i2.UuidValue id,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'deletePlannerVariable',
+    {
+      'type': type,
+      'id': id,
+    },
+  );
+
+  /// Change priority order
+  _i3.Future<bool> changePriority(
+    _i2.UuidValue priorityId,
+    int currentOrder,
+    String direction,
+  ) => caller.callServerEndpoint<bool>(
+    'planner',
+    'changePriority',
+    {
+      'priorityId': priorityId,
+      'currentOrder': currentOrder,
+      'direction': direction,
+    },
+  );
+
   /// Get all planner activities for an app
-  _i3.Future<_i36.GetPlannerActivitiesResponse> getPlannerActivities(
+  _i3.Future<_i37.GetPlannerActivitiesResponse> getPlannerActivities(
     _i2.UuidValue appId,
-  ) => caller.callServerEndpoint<_i36.GetPlannerActivitiesResponse>(
+  ) => caller.callServerEndpoint<_i37.GetPlannerActivitiesResponse>(
     'planner',
     'getPlannerActivities',
     {'appId': appId},
@@ -792,7 +890,7 @@ class EndpointUpload extends _i2.EndpointRef {
 
   _i3.Future<String?> uploadFile(
     String path,
-    _i37.ByteData data,
+    _i38.ByteData data,
   ) => caller.callServerEndpoint<String?>(
     'upload',
     'uploadFile',
@@ -813,8 +911,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i38.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i38.Greeting>(
+  _i3.Future<_i39.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i39.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -824,13 +922,13 @@ class EndpointGreeting extends _i2.EndpointRef {
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
-    auth = _i39.Caller(client);
+    auth = _i40.Caller(client);
     serverpod_auth_core = _i4.Caller(client);
   }
 
   late final _i1.Caller serverpod_auth_idp;
 
-  late final _i39.Caller auth;
+  late final _i40.Caller auth;
 
   late final _i4.Caller serverpod_auth_core;
 }
@@ -855,7 +953,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i40.Protocol(),
+         _i41.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

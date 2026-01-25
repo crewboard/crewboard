@@ -1,0 +1,227 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "createTable",
+      "createTable": {
+        "__className__": "serverpod.TableDefinition",
+        "name": "font_setting",
+        "dartName": "FontSetting",
+        "module": "crewboard",
+        "schema": "public",
+        "columns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('font_setting_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "name",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "fontSize",
+            "columnType": 3,
+            "isNullable": true,
+            "dartType": "double?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "fontFamily",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "fontWeight",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "color",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "__className__": "serverpod.IndexDefinition",
+            "indexName": "font_setting_pkey",
+            "elements": [
+              {
+                "__className__": "serverpod.IndexElementDefinition",
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "system_variables",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "fontSizeBody",
+          "fontSizeTitle",
+          "fontSizeHeading1",
+          "fontSizeHeading2",
+          "fontSizeHeading3",
+          "fontFamily"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontSizeBody\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontSizeBody"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontSizeTitle\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontSizeTitle"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontSizeHeading1\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontSizeHeading1"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontSizeHeading2\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontSizeHeading2"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontSizeHeading3\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontSizeHeading3"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"fontFamily\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "fontFamily"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontSizeBody\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontSizeBody"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontSizeTitle\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontSizeTitle"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontSizeHeading1\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontSizeHeading1"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontSizeHeading2\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontSizeHeading2"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontSizeHeading3\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontSizeHeading3"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"fontFamily\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "fontFamily"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

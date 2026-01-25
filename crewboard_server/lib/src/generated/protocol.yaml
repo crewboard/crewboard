@@ -11,6 +11,7 @@ jwtRefresh:
 admin:
   - getApps:
   - getSystemVariables:
+  - updateSystemVariables:
   - addApp:
   - getUsers:
   - getUserTypes:
@@ -24,6 +25,9 @@ admin:
   - getAttendanceData:
   - saveLeaveConfig:
   - saveLeaveRequest:
+  - getFontSettings:
+  - saveFontSetting:
+  - deleteFontSetting:
 auth:
   - checkUsername:
   - checkOrganization:
@@ -65,6 +69,11 @@ planner:
   - addBucket:
   - changeBucket:
   - updateTicket:
+  - addStatus:
+  - addPriority:
+  - addTicketType:
+  - deletePlannerVariable:
+  - changePriority:
   - getPlannerActivities:
 upload:
   - uploadFile:

@@ -7,6 +7,7 @@ import '../../controllers/rooms_controller.dart';
 import '../../controllers/messages_controller.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
+import '../../main.dart'; // For sessionManager
 import 'chat_widgets.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -85,7 +86,7 @@ class Messages extends StatelessWidget {
           children: [
             GlassMorph(
               borderRadius: 24,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.only(top: 0, bottom: 10),
               margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: Column(
                 children: [
@@ -103,7 +104,7 @@ class Messages extends StatelessWidget {
                           name: selectedRoom.roomName ?? "",
                           size: 32,
                           fontSize: 14,
-                          color: _getRoomColor(selectedRoom),
+                          color: Pallet.getRoomColor(selectedRoom, sessionManager.authInfo?.authUserId),
                           style: ProfileIconStyle.outlined,
                         ),
                         const SizedBox(width: 12),
@@ -191,6 +192,7 @@ class Messages extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Container(height: 1, color: Pallet.divider.withOpacity(0.1)),
                   Expanded(
                     child: Column(
                       children: [
@@ -212,7 +214,8 @@ class Messages extends StatelessWidget {
                                     }
                                     return MessageBubble(
                                       message: msg.message,
-                                      isMe: true, // TODO: Replace with actual logic
+                                      isMe: msg.isMe, // Use the extension method to determine the sender
+                                      userId: msg.userId,
                                       sameUser: sameUser,
                                       createdAt: msg.createdAt,
                                       type: msg.messageType,
@@ -278,11 +281,6 @@ class Messages extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Color _getRoomColor(ChatRoom room) {
-    // If room color is eventually added to the model, use it here.
-    return Colors.blue;
   }
 }
 

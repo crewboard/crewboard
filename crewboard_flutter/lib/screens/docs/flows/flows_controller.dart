@@ -98,14 +98,38 @@ class FlowsController extends GetxController {
   final RxBool isDraggingLoopPad = false.obs;
   final RxDouble initialLoopPadDragPos = 0.0.obs;
   final RxDouble initialLoopPadValue = 40.0.obs;
+  
+  // Observable system variables for settings
+  final Rx<SystemVariables?> systemVariables = Rx<SystemVariables?>(null);
+  final RxBool isLoadingSettings = false.obs;
 
   Timer? _saveDebounce;
 
   @override
   void onInit() {
     super.onInit();
-    // Load apps first
+    // Load settings and apps
+    loadSettings();
     loadApps();
+  }
+
+  Future<void> loadSettings() async {
+    try {
+      isLoadingSettings.value = true;
+      final result = await client.admin.getSystemVariables();
+      systemVariables.value = result;
+      
+      // Update Defaults
+      if (result != null) {
+        if (result.lineHeight != null) Defaults.lineHeight = result.lineHeight!;
+        // Note: flowWidth is a base value, each node can have its own width.
+        // We use processWidth as the default for new nodes if applicable.
+      }
+    } catch (e) {
+      print('Error loading settings: $e');
+    } finally {
+      isLoadingSettings.value = false;
+    }
   }
 
   void refreshUI() {
@@ -314,68 +338,100 @@ class FlowsController extends GetxController {
 
   // Update flow positions (canvas paint helper)
   void updateFlows() {
-    final flowsCopy = List<FlowClass>.from(flows);
-
-    for (var flow in flowsCopy) {
-      for (var child in flowsCopy) {
-        if (child.pid == flow.id) {
-          if (child.direction == Direction.down) {
-            flow.down.hasChild = true;
-          } else if (child.direction == Direction.right) {
-            flow.right.hasChild = true;
-          } else if (child.direction == Direction.left) {
-            flow.left.hasChild = true;
-          }
-        }
-      }
-    }
-
-    if (flowsCopy.isNotEmpty) {
-      flowsCopy[0].x = (stageWidth.value / 2) - flowsCopy[0].width / 2;
-    }
+    if (flows.isEmpty) return;
     
-    // Recalculate positions
-    downLines(flowsCopy, 0, stageWidth.value / 2);
-
-    // Side positioning
-    for (var flow in flowsCopy) {
-      if (flow.left.hasChild || flow.right.hasChild) {
-        sideLines(flowsCopy, flow.id);
-      }
-    }
-  }
-
-  // Reactive methods for state updates
-  void updateFlowsReactive() {
+    // 1. Reset hasChild flags
     for (var flow in flows) {
       flow.down.hasChild = false;
       flow.left.hasChild = false;
       flow.right.hasChild = false;
     }
+
+    // 2. Map for quick lookup
+    final Map<int, FlowClass> nodeMap = {for (var f in flows) f.id: f};
+
+    // 3. Update hasChild based on parent IDs
     for (var flow in flows) {
-      for (var child in flows) {
-        if (child.pid == flow.id) {
-          if (child.direction == Direction.down)
-            flow.down.hasChild = true;
-          else if (child.direction == Direction.right)
-            flow.right.hasChild = true;
-          else if (child.direction == Direction.left)
-            flow.left.hasChild = true;
+      if (flow.pid != null) {
+        final parent = nodeMap[flow.pid];
+        if (parent != null) {
+          if (flow.direction == Direction.down) parent.down.hasChild = true;
+          else if (flow.direction == Direction.right) parent.right.hasChild = true;
+          else if (flow.direction == Direction.left) parent.left.hasChild = true;
         }
       }
     }
 
-    if (flows.isNotEmpty) {
-      flows[0].x = (stageWidth.value / 2) - flows[0].width / 2;
+    // 4. Find root(s)
+    final roots = flows.where((f) => f.pid == null).toList();
+    if (roots.isEmpty) return;
+
+    // 5. Initial horizontal position for roots
+    // For now, let's just use the first root as the main one, or space them out
+    double currentRootX = stageWidth.value / 2;
+    for (var root in roots) {
+      root.x = currentRootX - root.width / 2;
+      root.y = 20; // Default top padding
+      
+      // 6. Recursively position children
+      _positionChildren(nodeMap, root, currentRootX);
+      
+      // If we had multiple roots, we'd shift currentRootX here
     }
 
-    downLinesReactive(0, stageWidth.value / 2);
+    // 7. Calculate bounding box and center
+    _centerFlows();
+  }
 
-    for (var flow in flows) {
-      if (flow.left.hasChild || flow.right.hasChild) {
-        sideLinesReactive(flow.id);
+  void _positionChildren(Map<int, FlowClass> nodeMap, FlowClass parent, double x) {
+    // Collect children mapping to their directions
+    final children = flows.where((f) => f.pid == parent.id).toList();
+    
+    for (var child in children) {
+      if (child.direction == Direction.down) {
+        child.y = parent.y + parent.height + parent.down.lineHeight;
+        child.x = x - child.width / 2;
+        _positionChildren(nodeMap, child, x);
+      } else if (child.direction == Direction.right) {
+        child.y = parent.y + parent.height / 2 - child.height / 2;
+        child.x = parent.x + parent.width + parent.right.lineHeight;
+        _positionChildren(nodeMap, child, child.x + child.width / 2);
+      } else if (child.direction == Direction.left) {
+        child.y = parent.y + parent.height / 2 - child.height / 2;
+        child.x = parent.x - parent.left.lineHeight - child.width;
+        _positionChildren(nodeMap, child, child.x + child.width / 2);
       }
     }
+  }
+
+  void _centerFlows() {
+    if (flows.isEmpty) return;
+
+    double minX = double.infinity, minY = double.infinity;
+    double maxX = -double.infinity, maxY = -double.infinity;
+
+    for (var flow in flows) {
+      if (flow.x < minX) minX = flow.x;
+      if (flow.y < minY) minY = flow.y;
+      if (flow.x + flow.width > maxX) maxX = flow.x + flow.width;
+      if (flow.y + flow.height > maxY) maxY = flow.y + flow.height;
+    }
+
+    final double contentWidth = maxX - minX;
+    final double contentHeight = maxY - minY;
+
+    final double offsetX = (stageWidth.value - contentWidth) / 2 - minX;
+    final double offsetY = (windowHeight.value - contentHeight) / 2 - minY;
+
+    for (var flow in flows) {
+      flow.x += offsetX;
+      flow.y += offsetY;
+    }
+  }
+
+  // Reactive methods for state updates
+  void updateFlowsReactive() {
+    updateFlows();
     refreshUI();
   }
 
@@ -384,83 +440,26 @@ class FlowsController extends GetxController {
     updateFlowsReactive();
   }
 
-  void downLines(List<FlowClass> flowsList, int id, double x) {
-    for (var flow in flowsList) {
-      if (flow.pid == id && flow.direction == Direction.down) {
-        flow.y = flowsList[id].y + flowsList[id].height + flowsList[id].down.lineHeight;
-        flow.x = x - flow.width / 2;
-        sideLines(flowsList, flow.id);
-        downLines(flowsList, flow.id, x);
-      }
-    }
-  }
-
-  void sideLines(List<FlowClass> flowsList, int id) {
-    // Left
-    for (var flow in flowsList) {
-      if (flow.pid == id && flow.direction == Direction.left) {
-        flow.y = flowsList[id].y + flowsList[id].height / 2 - flow.height / 2;
-        flow.x = flowsList[id].x - flowsList[id].left.lineHeight - flow.width;
-        sideLines(flowsList, flow.id);
-        downLines(flowsList, flow.id, flow.x + flow.width / 2);
-      }
-    }
-    // Right
-    for (var flow in flowsList) {
-      if (flow.pid == id && flow.direction == Direction.right) {
-        flow.y = flowsList[id].y + flowsList[id].height / 2 - flow.height / 2;
-        flow.x = flowsList[id].x + flowsList[id].right.lineHeight + flowsList[id].width;
-        sideLines(flowsList, flow.id);
-        downLines(flowsList, flow.id, flow.x + flow.width / 2);
-      }
-    }
-  }
-
-  void downLinesReactive(int id, double x) {
-    for (var flow in flows) {
-      if (flow.pid == id && flow.direction == Direction.down) {
-        flow.y = flows[id].y + flows[id].height + flows[id].down.lineHeight;
-        flow.x = x - flow.width / 2;
-        sideLinesReactive(flow.id);
-        downLinesReactive(flow.id, x);
-      }
-    }
-  }
-
-  void sideLinesReactive(int id) {
-    // Left
-    for (var flow in flows) {
-      if (flow.pid == id && flow.direction == Direction.left) {
-        flow.y = flows[id].y + flows[id].height / 2 - flow.height / 2;
-        flow.x = flows[id].x - flows[id].left.lineHeight - flow.width;
-        sideLinesReactive(flow.id);
-        downLinesReactive(flow.id, flow.x + flow.width / 2);
-      }
-    }
-    // Right
-    for (var flow in flows) {
-      if (flow.pid == id && flow.direction == Direction.right) {
-        flow.y = flows[id].y + flows[id].height / 2 - flow.height / 2;
-        flow.x = flows[id].x + flows[id].right.lineHeight + flows[id].width;
-        sideLinesReactive(flow.id);
-        downLinesReactive(flow.id, flow.x + flow.width / 2);
-      }
-    }
-  }
 
   void addFlow(FlowType type) {
     double y = 20;
     FlowClass flow = FlowClass(
       id: flows.length,
-      width: Defaults.flowWidth,
+      width: (type == FlowType.process) 
+          ? (systemVariables.value?.processWidth ?? Defaults.flowWidth)
+          : (type == FlowType.condition)
+              ? (systemVariables.value?.conditionWidth ?? Defaults.flowWidth)
+              : (type == FlowType.terminal)
+                  ? (systemVariables.value?.terminalWidth ?? Defaults.flowWidth)
+                  : Defaults.flowWidth,
       height: (type == FlowType.condition || type == FlowType.user) ? Defaults.flowWidth : 40,
       x: stageWidth.value / 2 - Defaults.flowWidth / 2,
       y: y,
       type: type,
       value: "start",
-      down: Line(),
-      left: Line(),
-      right: Line(),
+      down: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
+      left: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
+      right: Line(lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight),
       pid: selectedId.value >= 0 ? selectedId.value : null,
       direction: selectedDirection.value,
     );

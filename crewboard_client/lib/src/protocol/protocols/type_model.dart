@@ -17,12 +17,14 @@ abstract class TypeModel implements _i1.SerializableModel {
     required this.typeId,
     required this.typeName,
     required this.color,
+    required this.colorId,
   });
 
   factory TypeModel({
     required _i1.UuidValue typeId,
     required String typeName,
     required String color,
+    required _i1.UuidValue colorId,
   }) = _TypeModelImpl;
 
   factory TypeModel.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -30,6 +32,9 @@ abstract class TypeModel implements _i1.SerializableModel {
       typeId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['typeId']),
       typeName: jsonSerialization['typeName'] as String,
       color: jsonSerialization['color'] as String,
+      colorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['colorId'],
+      ),
     );
   }
 
@@ -39,6 +44,8 @@ abstract class TypeModel implements _i1.SerializableModel {
 
   String color;
 
+  _i1.UuidValue colorId;
+
   /// Returns a shallow copy of this [TypeModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -46,6 +53,7 @@ abstract class TypeModel implements _i1.SerializableModel {
     _i1.UuidValue? typeId,
     String? typeName,
     String? color,
+    _i1.UuidValue? colorId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -54,6 +62,7 @@ abstract class TypeModel implements _i1.SerializableModel {
       'typeId': typeId.toJson(),
       'typeName': typeName,
       'color': color,
+      'colorId': colorId.toJson(),
     };
   }
 
@@ -68,10 +77,12 @@ class _TypeModelImpl extends TypeModel {
     required _i1.UuidValue typeId,
     required String typeName,
     required String color,
+    required _i1.UuidValue colorId,
   }) : super._(
          typeId: typeId,
          typeName: typeName,
          color: color,
+         colorId: colorId,
        );
 
   /// Returns a shallow copy of this [TypeModel]
@@ -82,11 +93,13 @@ class _TypeModelImpl extends TypeModel {
     _i1.UuidValue? typeId,
     String? typeName,
     String? color,
+    _i1.UuidValue? colorId,
   }) {
     return TypeModel(
       typeId: typeId ?? this.typeId,
       typeName: typeName ?? this.typeName,
       color: color ?? this.color,
+      colorId: colorId ?? this.colorId,
     );
   }
 }

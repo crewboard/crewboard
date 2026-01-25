@@ -110,13 +110,13 @@ class SideBar extends StatelessWidget {
                                     ),
                                     subtitle: "Documentation",
                                     onPress: () {
-                                      controller.navigate(CurrentPage.flowie);
+                                      controller.navigate(CurrentPage.documentation);
                                     },
                                   ),
                                 ],
                               );
                             } else if (controller.currentPage.value ==
-                                    CurrentPage.flowie ||
+                                    CurrentPage.documentation ||
                                 controller.currentPage.value ==
                                     CurrentPage.settings) {
                               return Column(
@@ -163,7 +163,7 @@ class SideBar extends StatelessWidget {
                                     ),
                                     subtitle: "Documentation",
                                     onPress: () {
-                                      controller.navigate(CurrentPage.flowie);
+                                      controller.navigate(CurrentPage.documentation);
                                     },
                                   ),
                                 ],
@@ -200,7 +200,7 @@ class SideBar extends StatelessWidget {
                     if (controller.currentPage.value == CurrentPage.planner ||
                         controller.currentPage.value == CurrentPage.chat ||
                         controller.currentPage.value == CurrentPage.settings ||
-                        controller.currentPage.value == CurrentPage.flowie)
+                        controller.currentPage.value == CurrentPage.documentation)
                       Expanded(
                         child: Obx(() {
                           if (controller.currentPage.value ==
@@ -231,7 +231,7 @@ class SideBar extends StatelessWidget {
                               CurrentPage.settings) {
                             return const SettingsSidebar();
                           } else if (controller.currentPage.value ==
-                              CurrentPage.flowie) {
+                              CurrentPage.documentation) {
                             return const DocsSidebar();
                           }
                           return const SizedBox();

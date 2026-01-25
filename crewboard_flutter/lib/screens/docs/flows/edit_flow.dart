@@ -270,6 +270,11 @@ class _EditFlowState extends State<EditFlow> {
                 SmallTextBox(
                   controller: _widthController,
                   onType: (value) async {
+                    if (!(controller.systemVariables.value?.allowEdit ?? true)) {
+                      Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                      _widthController.text = selectedFlow.width.toString();
+                      return;
+                    }
                     if (double.tryParse(value) != null &&
                         double.parse(value) >= Defaults.flowWidth) {
                       selectedFlow.width = double.parse(value);
@@ -294,6 +299,11 @@ class _EditFlowState extends State<EditFlow> {
                   controller: _valueController,
                   maxLines: 5,
                   onType: (value) {
+                    if (!(controller.systemVariables.value?.allowEdit ?? true)) {
+                      Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                      _valueController.text = selectedFlow.value;
+                      return;
+                    }
                     selectedFlow.value = value;
                     controller.valueText.value = value;
                     _recalculateSizeForFlow(selectedFlow, value, controller);
@@ -326,6 +336,11 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _downController,
                             onType: (value) {
+                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
+                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                                _downController.text = selectedFlow.down.lineHeight.toString();
+                                return;
+                              }
                               if (value.isNotEmpty &&
                                   double.tryParse(value) != null) {
                                 selectedFlow.down.lineHeight = double.parse(
@@ -354,6 +369,11 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _leftController,
                             onType: (value) {
+                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
+                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                                _leftController.text = selectedFlow.left.lineHeight.toString();
+                                return;
+                              }
                               if (value.isNotEmpty &&
                                   double.tryParse(value) != null) {
                                 selectedFlow.left.lineHeight = double.parse(
@@ -382,6 +402,11 @@ class _EditFlowState extends State<EditFlow> {
                           child: SmallTextBox(
                             controller: _rightController,
                             onType: (value) {
+                              if (!(controller.systemVariables.value?.allowEdit ?? true)) {
+                                Get.snackbar("Permission Denied", "Editing is disabled in settings");
+                                _rightController.text = selectedFlow.right.lineHeight.toString();
+                                return;
+                              }
                               if (value.isNotEmpty &&
                                   double.tryParse(value) != null) {
                                 selectedFlow.right.lineHeight = double.parse(
@@ -397,45 +422,50 @@ class _EditFlowState extends State<EditFlow> {
                       ],
                     ),
                   ),
-                InkWell(
-                  onTap: () {
-                    if ((controller.isSelectingLoop.value ||
-                            (controller.loopFrom.value >= 0 &&
-                                controller.loopTo.value >= 0)) &&
-                        controller.loopFrom.value >= 0 &&
-                        controller.loopTo.value >= 0) {
-                      controller.deleteLoop(
-                        controller.loopFrom.value,
-                        controller.loopTo.value,
-                      );
-                      controller.loopFrom.value = -1;
-                      controller.loopTo.value = -1;
-                      controller.isPickingLoopFrom.value = false;
-                      controller.isPickingLoopTo.value = false;
-                      controller.window.value = "none";
-                      controller.updateFlowsReactive();
-                    } else {
-                      controller.deleteFlow(controller.selectedId.value);
-                      controller.window.value = "none";
-                      controller.updateFlowsReactive();
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Pallet.inside1,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("delete", style: TextStyle(fontSize: 12)),
-                        SizedBox(width: 10),
-                        Icon(Icons.delete, size: 18),
-                      ],
+                if (controller.systemVariables.value?.showDelete ?? true)
+                  InkWell(
+                    onTap: () {
+                      if (!(controller.systemVariables.value?.allowDelete ?? true)) {
+                        Get.snackbar("Permission Denied", "Deleting is disabled in settings");
+                        return;
+                      }
+                      if ((controller.isSelectingLoop.value ||
+                              (controller.loopFrom.value >= 0 &&
+                                  controller.loopTo.value >= 0)) &&
+                          controller.loopFrom.value >= 0 &&
+                          controller.loopTo.value >= 0) {
+                        controller.deleteLoop(
+                          controller.loopFrom.value,
+                          controller.loopTo.value,
+                        );
+                        controller.loopFrom.value = -1;
+                        controller.loopTo.value = -1;
+                        controller.isPickingLoopFrom.value = false;
+                        controller.isPickingLoopTo.value = false;
+                        controller.window.value = "none";
+                        controller.updateFlowsReactive();
+                      } else {
+                        controller.deleteFlow(controller.selectedId.value);
+                        controller.window.value = "none";
+                        controller.updateFlowsReactive();
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Pallet.inside1,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("delete", style: TextStyle(fontSize: 12)),
+                          SizedBox(width: 10),
+                          Icon(Icons.delete, size: 18),
+                        ],
+                      ),
                     ),
                   ),
-                ),
                 SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,

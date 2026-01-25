@@ -78,10 +78,26 @@ class UserService {
       stdout.writeln('Auth sync completed for: ${user.userName}');
 
 
-      // 7. Create default resources (Planner App & Bucket)
-      // Removed default Planner app creation as per user request
-      // await _createDefaultResources(session, insertedUser);
-      // stdout.writeln('Default resources created for: ${user.userName}');
+      // 7. Create default resources (Buckets in all existing apps)
+      if (user.organizationId != null) {
+        final apps = await PlannerApp.db.find(
+          session,
+          where: (t) => t.organizationId.equals(user.organizationId),
+        );
+
+        for (final app in apps) {
+          await Bucket.db.insertRow(
+            session,
+            Bucket(
+              userId: insertedUser.id!,
+              appId: app.id!,
+              bucketName: 'New',
+              isDefault: true,
+            ),
+          );
+        }
+        stdout.writeln('Default buckets created for user: ${user.userName}');
+      }
 
       return insertedUser;
     } catch (e) {

@@ -1,0 +1,318 @@
+﻿Dart SDK version: 3.10.1 (stable) (Tue Nov 18 11:02:31 2025 -0800) on "windows_x64"
+Flutter 3.38.3 ΓÇó channel stable ΓÇó https://github.com/flutter/flutter.git
+Framework ΓÇó revision 19074d12f7 (9 weeks ago) ΓÇó 2025-11-20 17:53:13 -0500
+Engine ΓÇó hash 8bf2090718fea3655f466049a757f823898f0ad1 (revision 13e658725d) (1 months ago) ΓÇó 2025-11-20 20:19:23.000Z
+Tools ΓÇó Dart 3.10.1 ΓÇó DevTools 2.51.1
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé A new version 3.2.3 of Serverpod is available!                             Γöé
+Γöé                                                                            Γöé
+Γöé To update to the latest version, run "dart pub global activate             Γöé
+Γöé serverpod_cli".                                                            Γöé
+Γöé Also, do not forget to update packages in your server, client, and flutter Γöé
+Γöé projects.                                                                  Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+DEBUG: Found server directory: C:\Users\jerin\Music\crewboard\crewboard_server
+Γáï Generating code...
+
+DEBUG: Analyzing serializable models in the protocol directory.
+DEBUG: Generating files for serializable models.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocol.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\greetings\greeting.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\attendance.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\bucket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\bucket_ticket_map.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\chat_message.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\chat_room.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\doc.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\emoji.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\flow_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\leave_config.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\leave_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\memory.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\organization.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\planner_activity.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\planner_app.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\planner_notification.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\priority.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\status.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\system_color.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\system_variables.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_assignee.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_attachment.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_comment.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_status_change.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\ticket_view.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\user.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\user_break.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\user_device.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\user_room_map.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\entities\user_types.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\enums\device_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\enums\message_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\add_bucket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\add_comment_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\add_ticket_dto.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\add_ticket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\attachment_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\bucket_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\change_bucket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\check_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\check_organization_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\check_username_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\comment_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_add_ticket_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_all_tickets_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_attendance_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_planner_activities_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_planner_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_ticket_comments_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_ticket_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\get_ticket_thread_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\planner_assignee.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\planner_bucket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\planner_ticket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\priority_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\register_admin_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\sign_in_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\status_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\thread_item_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\ticket_attachment_dto.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\ticket_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\type_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocols\user_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\chat_stream_event.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\gif.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\typing_indicator.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\greetings\greeting.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\attendance.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\bucket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\bucket_ticket_map.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\chat_message.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\chat_room.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\doc.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\emoji.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\flow_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\leave_config.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\leave_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\memory.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\organization.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\planner_activity.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\planner_app.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\planner_notification.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\priority.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\status.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\system_color.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\system_variables.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_assignee.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_attachment.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_comment.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_status_change.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\ticket_view.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\user.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\user_break.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\user_device.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\user_room_map.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\entities\user_types.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\enums\device_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\enums\message_type.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\add_bucket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\add_comment_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\add_ticket_dto.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\add_ticket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\attachment_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\bucket_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\change_bucket_request.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\check_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\check_organization_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\check_username_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\comment_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_add_ticket_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_all_tickets_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_attendance_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_planner_activities_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_planner_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_ticket_comments_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_ticket_data_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\get_ticket_thread_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\planner_assignee.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\planner_bucket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\planner_ticket.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\priority_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\register_admin_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\sign_in_response.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\status_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\thread_item_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\ticket_attachment_dto.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\ticket_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\type_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocols\user_model.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\chat_stream_event.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\gif.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\typing_indicator.dart.
+DEBUG: Analyzing the endpoints.
+
+ERROR: Found 1 issue.
+Endpoint analysis skipped due to invalid Dart syntax. Please review and correct the syntax errors.
+File: C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\endpoints\planner_endpoint.dart
+DEBUG: Generating the protocol.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocol.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\endpoints.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\test\integration\test_tools\serverpod_test_tools.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\protocol.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol\client.dart.
+DEBUG: Generating
+C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated\protocol.yaml.
+DEBUG: Cleaning old files.
+DEBUG: Cleaning up old files.
+DEBUG: Remove old files from Directory:
+'C:\Users\jerin\Music\crewboard\crewboard_server\lib\src\generated'
+DEBUG: Remove old files from Directory:
+'C:\Users\jerin\Music\crewboard\crewboard_server\..\crewboard_client\lib\src\protocol'
+[2K
+Γ£ù Generating code (55.0s)

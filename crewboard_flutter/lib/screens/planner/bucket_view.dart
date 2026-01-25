@@ -19,7 +19,7 @@ class BucketView extends StatelessWidget {
     final PlannerController controller = Get.find<PlannerController>();
 
     return Obx(() {
-      if (controller.isLoadingPlanner.value) {
+      if (controller.isLoadingPlanner.value && controller.buckets.isEmpty) {
         return const Center(child: CircularProgressIndicator());
       }
 
@@ -294,6 +294,69 @@ class TicketWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+            const SizedBox(height: 5),
+            // Display image attachments
+            if (ticket.attachments != null && ticket.attachments!.isNotEmpty)
+              Builder(
+                builder: (context) {
+                    // Filter for image attachments only with valid URLs
+                    final imageAttachments = ticket.attachments!.where((attachment) {
+                      final ext = attachment.type.toLowerCase();
+                      final isImage = ext == 'jpg' || 
+                             ext == 'jpeg' || 
+                             ext == 'png' || 
+                             ext == 'gif' || 
+                             ext == 'webp';
+                      final hasValidUrl = attachment.url.isNotEmpty;
+                      
+                      return isImage && hasValidUrl;
+                    }).toList();
+
+                  if (imageAttachments.isEmpty) return const SizedBox.shrink();
+                  
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        imageAttachments.first.url,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 120,
+                            color: Pallet.inside1,
+                            child: Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Pallet.font3,
+                                size: 30,
+                              ),
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 120,
+                            color: Pallet.inside1,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                                color: Pallet.font3,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -305,15 +368,15 @@ class TicketWidget extends StatelessWidget {
                 ),
                 Expanded(child: Container()),
                 SizedBox(
-                  height: 30, // constrain height for stack
-                  width: 30.0 * ticket.assignees.length + 10, // give width
+                  height: 28, // constrain height for stack
+                  width: ticket.assignees.isEmpty ? 0 : 12.0 * ticket.assignees.length + 16, // adjusted width for overlap
                   child: Stack(
                     children: [
                       for (var i = 0; i < ticket.assignees.length; i++)
                         Positioned(
-                          left: i * 20.0, // Overlap effect
+                          left: i * 12.0, // Overlap effect
                           child: ProfileIcon(
-                            size: 30,
+                            size: 28,
                             name: ticket.assignees[i].userName,
                             color: Color(
                               int.parse(

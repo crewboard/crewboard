@@ -53,6 +53,24 @@ class SettingsSidebar extends StatelessWidget {
             icon: Icons.access_time,
           ),
         ),
+        const SizedBox(height: 10),
+        Obx(
+          () => SideBarButton(
+            label: 'Planner',
+            isActive: controller.currentPage.value == AdminPage.planner,
+            onTap: () => controller.navigateTo(AdminPage.planner),
+            icon: Icons.event_note,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Obx(
+          () => SideBarButton(
+            label: 'Documentation',
+            isActive: controller.currentPage.value == AdminPage.documentation,
+            onTap: () => controller.navigateTo(AdminPage.documentation),
+            icon: Icons.description,
+          ),
+        ),
       ],
     );
   }

@@ -11,11 +11,13 @@ class MultiSelect extends StatefulWidget {
     required this.selected,
     this.width = 150,
     this.label = "Assignees",
+    this.onChanged,
   });
   final List<dynamic> items;
   final List<dynamic> selected;
   final double width;
   final String label;
+  final VoidCallback? onChanged;
 
   @override
   State<MultiSelect> createState() => _MultiSelectState();
@@ -26,6 +28,29 @@ class _MultiSelectState extends State<MultiSelect> {
   GlobalKey actionKey = GlobalKey();
   OverlayEntry? dropdown;
   bool isOpen = false;
+
+  bool _isSelected(dynamic item) {
+    if (item is UserModel) {
+      return widget.selected.any(
+        (element) => element is UserModel && element.userId == item.userId,
+      );
+    }
+    return widget.selected.contains(item);
+  }
+
+  void _toggleSelection(dynamic item) {
+    if (_isSelected(item)) {
+      if (item is UserModel) {
+        widget.selected.removeWhere(
+          (element) => element is UserModel && element.userId == item.userId,
+        );
+      } else {
+        widget.selected.remove(item);
+      }
+    } else {
+      widget.selected.add(item);
+    }
+  }
 
   void findDropDownData() {
     RenderBox renderBox =
@@ -69,10 +94,9 @@ class _MultiSelectState extends State<MultiSelect> {
                               for (var item in widget.items)
                                 InkWell(
                                   onTap: () {
-                                    if (widget.selected.contains(item)) {
-                                      widget.selected.remove(item);
-                                    } else {
-                                      widget.selected.add(item);
+                                    _toggleSelection(item);
+                                    if (widget.onChanged != null) {
+                                      widget.onChanged!();
                                     }
                                     setState(() {
                                       dropdown?.markNeedsBuild();
@@ -84,7 +108,7 @@ class _MultiSelectState extends State<MultiSelect> {
                                       vertical: 10,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: widget.selected.contains(item)
+                                      color: _isSelected(item)
                                           ? Pallet.font1.withValues(alpha: 0.1)
                                           : Colors.transparent,
                                     ),
@@ -110,17 +134,17 @@ class _MultiSelectState extends State<MultiSelect> {
                                           height: 16,
                                           width: 16,
                                           decoration: BoxDecoration(
-                                            color: widget.selected.contains(item)
+                                            color: _isSelected(item)
                                                 ? Pallet.inside3
                                                 : Colors.transparent,
                                             shape: BoxShape.circle,
                                             border: Border.all(
-                                              color: widget.selected.contains(item)
+                                              color: _isSelected(item)
                                                   ? Pallet.inside3
                                                   : Pallet.font1.withValues(alpha: 0.3),
                                             ),
                                           ),
-                                          child: widget.selected.contains(item)
+                                          child: _isSelected(item)
                                               ? Icon(
                                                   Icons.check,
                                                   color: Pallet.font1,

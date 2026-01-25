@@ -14,3 +14,4 @@ fields:
   createdAt: DateTime?
   hasNewActivity: bool, default=false
   latestActivity: String?
+  attachments: List<protocol:AttachmentModel>?

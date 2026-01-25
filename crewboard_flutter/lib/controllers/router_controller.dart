@@ -10,7 +10,7 @@ import '../screens/docs/docs_screen.dart';
 class RouterController extends GetxController {
   final SidebarController sidebarController = Get.find();
 
-  Rx<Widget> currentPageWidget = Rx<Widget>(const PlannerScreen());
+  Rx<Widget> currentPageWidget = Rx<Widget>(const ChatScreen());
 
   @override
   void onInit() {
@@ -26,7 +26,7 @@ class RouterController extends GetxController {
         case CurrentPage.planner:
           currentPageWidget.value = const PlannerScreen();
           break;
-        case CurrentPage.flowie:
+        case CurrentPage.documentation:
           currentPageWidget.value = const DocsScreen();
           break;
       }

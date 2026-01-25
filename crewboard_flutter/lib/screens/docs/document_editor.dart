@@ -10,10 +10,12 @@ import '../../widgets/document/src/editor/config/editor_config.dart';
 import '../../widgets/document/src/editor/editor.dart';
 import '../../widgets/document/src/editor/widgets/default_styles.dart';
 import 'document_editor_provider.dart';
-import 'widgets.dart'; // showCustomFontDialog
 import '../../config/palette.dart';
 import '../../widgets/glass_morph.dart';
 import '../../widgets/document_dropdown.dart';
+import '../../widgets/font_family_search_dropdown.dart';
+import '../../../widgets/widgets.dart';
+import '../../widgets/font_size_editor.dart';
 
 
 class DocumentEditor extends StatefulWidget {
@@ -94,7 +96,7 @@ class _DocumentEditorState extends State<DocumentEditor> {
           final double fontSize =
               double.tryParse(provider.fontSettings.value.fontSize) ?? 14.0;
           final String fontFamily = provider.fontSettings.value.fontFamily;
-          final TextStyle style = GoogleFonts.getFont(
+          final TextStyle style = _safeGoogleFont(
             fontFamily,
           ).copyWith(fontSize: fontSize);
 
@@ -245,13 +247,24 @@ class _DocumentEditorState extends State<DocumentEditor> {
   }
 
   // ---------- Styles ----------
+  
+  TextStyle _safeGoogleFont(String fontFamily, {TextStyle? textStyle}) {
+    try {
+      return GoogleFonts.getFont(fontFamily, textStyle: textStyle);
+    } catch (_) {
+      return (textStyle ?? const TextStyle()).copyWith(fontFamily: fontFamily);
+    }
+  }
 
-  DefaultStyles _buildCustomStyles() {
+  DefaultStyles _buildCustomStyles(double? lineHeight) {
     final family = provider.currentFontFamily();
-    final h1 = provider.editorFontSettings['Heading']!;
-    final h2 = provider.editorFontSettings['Title']!;
-    final h3 = provider.editorFontSettings['Subtitle']!;
-    final p = provider.editorFontSettings['Body']!;
+    final h1 = provider.getSettingsForLevel(1);
+    final h2 = provider.getSettingsForLevel(2);
+    final h3 = provider.getSettingsForLevel(3);
+    final p = provider.getSettingsForLevel(0);
+
+    // Use a safe fallback for line height if the provided one is null or anomalous
+    final safeLineHeight = (lineHeight == null || lineHeight > 5.0) ? 1.5 : lineHeight;
 
     return DefaultStyles(
       h1: DefaultTextBlockStyle(
@@ -260,6 +273,8 @@ class _DocumentEditorState extends State<DocumentEditor> {
           fontWeight: h1.weight ?? FontWeight.bold,
           color: Pallet.font2,
           fontFamily: family,
+          height: h1.lineHeight ?? safeLineHeight,
+          leadingDistribution: TextLeadingDistribution.even,
         ),
         const HorizontalSpacing(0.0, 0.0),
         const VerticalSpacing(0.0, 0.0),
@@ -272,6 +287,8 @@ class _DocumentEditorState extends State<DocumentEditor> {
           fontWeight: h2.weight ?? FontWeight.w600,
           color: Pallet.font2,
           fontFamily: family,
+          height: h2.lineHeight ?? safeLineHeight,
+          leadingDistribution: TextLeadingDistribution.even,
         ),
         const HorizontalSpacing(0.0, 0.0),
         const VerticalSpacing(0.0, 0.0),
@@ -284,6 +301,8 @@ class _DocumentEditorState extends State<DocumentEditor> {
           fontWeight: h3.weight ?? FontWeight.w500,
           color: Pallet.font2,
           fontFamily: family,
+          height: h3.lineHeight ?? safeLineHeight,
+          leadingDistribution: TextLeadingDistribution.even,
         ),
         const HorizontalSpacing(0.0, 0.0),
         const VerticalSpacing(0.0, 0.0),
@@ -291,9 +310,14 @@ class _DocumentEditorState extends State<DocumentEditor> {
         null,
       ),
       paragraph: DefaultTextBlockStyle(
-        GoogleFonts.getFont(
+        _safeGoogleFont(
           provider.fontSettings.value.fontFamily,
-        ).copyWith(fontSize: p.styleSize ?? 14.0, color: Pallet.font2),
+        ).copyWith(
+          fontSize: p.styleSize ?? 14.0,
+          color: Pallet.font2,
+          height: p.lineHeight ?? safeLineHeight,
+          leadingDistribution: TextLeadingDistribution.even,
+        ),
         const HorizontalSpacing(0.0, 0.0),
         const VerticalSpacing(0.0, 0.0),
         const VerticalSpacing(0.0, 0.0),
@@ -360,115 +384,178 @@ class _DocumentEditorState extends State<DocumentEditor> {
 
       return GlassMorph(
         margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-        child: Column(
+        child: Obx(() => Column(
           children: [
             // Toolbar
-            Container(
-              height: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Pallet.inside1,
-                border: Border(bottom: BorderSide(color: Pallet.divider)),
-              ),
-              child: Row(
-                children: [
-                  // Font Presets Dropdown
-                  DocumentDropdown(
-                    value: provider.fontSettings.value.preset,
-                    items: const [
-                      'Heading',
-                      'Title',
-                      'Subtitle',
-                      'Body',
-                      'Custom...',
-                    ],
-                    onChanged: (value) {
-                      if (value == 'Custom...') {
-                        showCustomFontDialog(context, provider);
-                      } else {
+            if (provider.systemVariables.value?.showEdit ?? true)
+              Container(
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Pallet.inside1,
+                  border: Border(bottom: BorderSide(color: Pallet.divider)),
+                ),
+                child: Row(
+                  children: [
+                    // Font Presets Dropdown
+                    DocumentDropdown(
+                      value: provider.fontSettings.value.preset,
+                      items: provider.dynamicPresets,
+                      onChanged: (value) {
                         provider.applyFontPreset(value);
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 16),
+                      },
+                    ),
+                    const SizedBox(width: 16),
 
-                  // Font Family Dropdown
-                  DocumentDropdown(
-                    value: provider.fontSettings.value.fontFamily,
-                    items: provider.availableFonts,
-                    onChanged: (value) {
-                      final newFamily = value;
-                      final sizeForFamily =
-                          provider.editorFontSettings[newFamily]?.fontSize ??
-                          provider.fontSettings.value.fontSize;
+                    // Font Family Dropdown
+                    FontFamilySearchDropdown(
+                      value: provider.fontSettings.value.fontFamily,
+                      items: provider.availableFonts,
+                      onChanged: (value) {
+                        final newFamily = value;
 
-                      provider.editorFontSettings[newFamily] =
-                          (provider.editorFontSettings[newFamily] ??
-                                  FontSettings(fontFamily: newFamily))
-                              .copyWith(fontSize: sizeForFamily);
+                        provider.fontSettings.value = provider.fontSettings.value
+                            .copyWith(
+                          fontFamily: newFamily,
+                        );
 
-                      provider.fontSettings.value = provider.fontSettings.value
-                          .copyWith(
-                            fontFamily: newFamily,
-                            fontSize: sizeForFamily,
+                        final selection = provider.quillController.selection;
+                        if (selection.isCollapsed) {
+                          // If nothing is selected, apply to the whole line/paragraph
+                          final plainText = provider.quillController.document.toPlainText();
+                          final len = plainText.length;
+                          int start = selection.baseOffset;
+                          int end = selection.baseOffset;
+
+                          // Find start of line
+                          while (start > 0 && plainText[start - 1] != '\n') {
+                            start--;
+                          }
+
+                          // Find end of line
+                          while (end < len && plainText[end] != '\n') {
+                            end++;
+                          }
+
+                          final length = end - start;
+                          // Format the line
+                          if (length > 0) {
+                            provider.quillController.formatText(
+                              start,
+                              length,
+                              Attribute.fromKeyValue(Attribute.font.key, newFamily),
+                            );
+                          } else {
+                            // If empty line, just format selection (cursor)
+                             provider.quillController.formatSelection(
+                              Attribute.fromKeyValue(Attribute.font.key, newFamily),
+                            );
+                          }
+                        } else {
+                          // Normal selection behavior
+                          provider.quillController.formatSelection(
+                            Attribute.fromKeyValue(Attribute.font.key, newFamily),
                           );
-                      provider.fontSizeController.text = sizeForFamily;
+                        }
+                      },
+                      fontFamily: provider.currentFontFamily(),
+                    ),
+                    const SizedBox(width: 16),
+                    FontSizeEditor(
+                      key: ValueKey('font-size-${provider.fontSettings.value.fontSize}'),
+                      initialSize: double.tryParse(provider.fontSettings.value.fontSize) ?? 14.0,
+                      onSizeChanged: (newSize) {
+                        provider.applyFontSize(newSize);
+                      },
+                      showLabel: false,
+                    ),
+                    const SizedBox(width: 16),
 
-                      provider.quillController.formatSelection(
-                        Attribute.fromKeyValue(Attribute.font.key, newFamily),
-                      );
-                      provider.quillController.formatSelection(
-                        Attribute.fromKeyValue(
-                          Attribute.size.key,
-                          sizeForFamily,
+                    // Line Height Editor
+                    Row(
+                      children: [
+                        Text(
+                          "Line Height:",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Pallet.font3,
+                          ),
                         ),
-                      );
-                    },
-                    fontFamily: provider.currentFontFamily(),
-                  ),
-                  const SizedBox(width: 16),
+                        const SizedBox(width: 8),
+                        FontSizeEditor(
+                          key: ValueKey('line-height-${provider.fontSettings.value.preset}-${() {
+                            final preset = provider.fontSettings.value.preset.toLowerCase();
+                            final fs = provider.editorFontSettings[preset];
+                            return fs?.lineHeight ?? 1.5;
+                          }()}'),
+                          initialSize: () {
+                            final preset = provider.fontSettings.value.preset.toLowerCase();
+                            final fs = provider.editorFontSettings[preset];
+                            return fs?.lineHeight ?? 1.5;
+                          }(),
+                          onSizeChanged: (newLineHeight) {
+                            final preset = provider.fontSettings.value.preset.toLowerCase();
+                            final existing = provider.editorFontSettings[preset];
+                            if (existing != null) {
+                              provider.editorFontSettings[preset] = existing.copyWith(lineHeight: newLineHeight);
+                            }
+                          },
+                          showLabel: false,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 16),
+
+                    AppColorPicker(
+                      initialColor: provider.fontSettings.value.color,
+                      onColorChanged: (hex) {
+                        provider.applyColorHex(hex);
+                      },
+                      title: 'Text Color',
+                    ),
+                    const SizedBox(width: 16),
 
 
-                  // Formatting buttons
-                  IconButton(
-                    icon: Icon(
-                      Icons.format_bold,
-                      color: provider.isBold.value
-                          ? Colors.white
-                          : Pallet.font2,
+                    // Formatting buttons
+                    IconButton(
+                      icon: Icon(
+                        Icons.format_bold,
+                        color: provider.isBold.value
+                            ? Colors.white
+                            : Pallet.font2,
+                      ),
+                      onPressed: provider.toggleBold,
                     ),
-                    onPressed: provider.toggleBold,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.format_italic,
-                      color: provider.isItalic.value
-                          ? Colors.white
-                          : Pallet.font2,
+                    IconButton(
+                      icon: Icon(
+                        Icons.format_italic,
+                        color: provider.isItalic.value
+                            ? Colors.white
+                            : Pallet.font2,
+                      ),
+                      onPressed: provider.toggleItalic,
                     ),
-                    onPressed: provider.toggleItalic,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.format_underline,
-                      color: provider.isUnderline.value
-                          ? Colors.white
-                          : Pallet.font2,
+                    IconButton(
+                      icon: Icon(
+                        Icons.format_underline,
+                        color: provider.isUnderline.value
+                            ? Colors.white
+                            : Pallet.font2,
+                      ),
+                      onPressed: provider.toggleUnderline,
                     ),
-                    onPressed: provider.toggleUnderline,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.format_list_bulleted,
-                      color: provider.isBulletList.value
-                          ? Colors.white
-                          : Pallet.font2,
+                    IconButton(
+                      icon: Icon(
+                        Icons.format_list_bulleted,
+                        color: provider.isBulletList.value
+                            ? Colors.white
+                            : Pallet.font2,
+                      ),
+                      onPressed: provider.insertBulletPoint,
                     ),
-                    onPressed: provider.insertBulletPoint,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
             // Editor content with Outline
             Expanded(
@@ -574,20 +661,20 @@ class _DocumentEditorState extends State<DocumentEditor> {
                                   placeholder:
                                       'Start writing your notes...',
                                   padding: const EdgeInsets.all(16),
-                                  customStyles: _buildCustomStyles(),
+                                  customStyles: _buildCustomStyles(provider.systemVariables.value?.lineHeight),
+                                  customStyleBuilder: _customStyleBuilder,
                                   embedBuilders: [
                                     const LocalImageEmbedBuilder(),
                                     const LocalVideoEmbedBuilder(),
+                                    const FlowEmbedBuilder(),
                                   ],
-                                  onKeyPressed: (event, node) {
-                                    if (event is KeyDownEvent &&
-                                        event.logicalKey ==
-                                            LogicalKeyboardKey.tab) {
-                                      provider.cycleFontPreset();
-                                      return KeyEventResult.handled;
-                                    }
-                                    return null;
-                                  },
+                                    onKeyPressed: (event, node) {
+                                      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.tab) {
+                                        provider.cycleFontPreset();
+                                        return KeyEventResult.handled;
+                                      }
+                                      return null;
+                                    },
                                 ),
                               ),
                             ),
@@ -600,8 +687,23 @@ class _DocumentEditorState extends State<DocumentEditor> {
               ),
             ),
           ],
-        ),
+        )),
       );
     });
+  }
+
+  TextStyle _customStyleBuilder(Attribute attribute) {
+    if (attribute.key == Attribute.font.key) {
+      if (attribute.value == null) return const TextStyle();
+      try {
+        return GoogleFonts.getFont(attribute.value.toString());
+      } catch (_) {
+        return TextStyle(fontFamily: attribute.value.toString());
+      }
+    } else if (attribute.key == Attribute.color.key) {
+       if (attribute.value == null) return const TextStyle();
+       return TextStyle(color: Color(int.parse(attribute.value.toString().replaceFirst('#', '0xff'))));
+    }
+    return const TextStyle();
   }
 }

@@ -4,7 +4,7 @@ import '../config/palette.dart';
 class SidebarController extends GetxController {
   var isOpen = true.obs;
   var closeOnExit = false.obs;
-  var currentPage = CurrentPage.planner.obs;
+  var currentPage = CurrentPage.chat.obs;
 
   void toggleSidebar() {
     isOpen.value = !isOpen.value;

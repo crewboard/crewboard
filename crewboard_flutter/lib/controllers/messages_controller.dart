@@ -10,6 +10,7 @@ import '../../main.dart'; // For client
 import 'package:flutter/services.dart';
 import 'rooms_controller.dart';
 import 'emoji_controller.dart';
+import 'auth_controller.dart';
 import 'package:waveform_extractor/waveform_extractor.dart';
 
 class MessagesController extends GetxController {
@@ -18,6 +19,9 @@ class MessagesController extends GetxController {
   final RxBool isDragging = false.obs;
   final RxList<File> attachedFiles = <File>[].obs;
   final RxBool showFilePreview = false.obs;
+  
+  // User cache for displaying message author info
+  final Map<UuidValue, User> _userCache = {};
 
   // Autocomplete state
   final RxList<Emoji> autocompleteEmojis = <Emoji>[].obs;
@@ -102,16 +106,15 @@ class MessagesController extends GetxController {
       sameUser: false,
       deleted: false,
       createdAt: DateTime.now(),
-      userId: UuidValue.fromString(
-        '00000000-0000-4000-8000-000000000000',
-      ), // TODO: Get from auth
+      userId: Get.find<AuthController>().currentUserId.value ?? UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       waveform: waveform,
     );
 
     try {
       await client.chat.sendMessage(chatMessage);
       messageController.clear();
-      // No reload needed, stream handles it
+      // Update the room's last message on the sidebar
+      roomsController.updateLastMessage(selectedRoom.id!, chatMessage);
     } catch (e) {
       debugPrint('Error sending message: $e');
     }
@@ -222,6 +225,26 @@ class MessagesController extends GetxController {
         await client.chat.sendTyping(isTyping, room.id!);
     } catch (e) {
         debugPrint("Error sending typing status: $e");
+    }
+  }
+
+  /// Get user profile for a given user ID
+  User? getUserProfile(UuidValue userId) {
+    return _userCache[userId];
+  }
+  
+  /// Cache user information from room data
+  void cacheUserFromRoom(ChatRoom room, UuidValue userId) {
+    if (_userCache.containsKey(userId)) return;
+    
+    // For direct rooms, extract username from room name (format: "User1 & User2")
+    if (room.roomType == 'direct' && room.roomName != null) {
+      final names = room.roomName!.split(' & ');
+      if (names.length == 2) {
+        // We don't know which user is which, so we'll need to handle this differently
+        // For now, just create placeholder users
+        // This is a limitation without a getRoomMembers endpoint
+      }
     }
   }
 

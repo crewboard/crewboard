@@ -51,14 +51,15 @@ class DocsSidebar extends StatelessWidget {
                   ),
                 ),
               ),
-              CreateItemOverlayButton(
-                showColor: true,
-                onSave: (name, colorId) async {
-                  if (colorId != null) {
-                    await controller.addApp(name, colorId);
-                  }
-                },
-              ),
+              if (Get.find<FlowsController>().systemVariables.value?.showEdit ?? true)
+                CreateItemOverlayButton(
+                  showColor: true,
+                  onSave: (name, colorId) async {
+                    if (colorId != null) {
+                      await controller.addApp(name, colorId);
+                    }
+                  },
+                ),
             ],
           ),
         ),
@@ -132,26 +133,27 @@ class DocsSidebar extends StatelessWidget {
             }),
             const SizedBox(width: 10),
             // Add button
-            CreateItemOverlayButton(
-              onSave: (name, _) {
-                if (name.isNotEmpty) {
-                  if (controller.currentSubPage.value == FlowSubPage.flows) {
-                    controller.createNewFlow(name);
-                  } else {
-                    if (!Get.isRegistered<DocumentEditorProvider>()) {
-                      Get.put(DocumentEditorProvider());
-                    }
-                    final docProvider = Get.find<DocumentEditorProvider>();
-                    if (controller.selectedAppId.value != null) {
-                      docProvider.addDoc(
-                        controller.selectedAppId.value!,
-                        name,
-                      );
+            if (controller.systemVariables.value?.showEdit ?? true)
+              CreateItemOverlayButton(
+                onSave: (name, _) {
+                  if (name.isNotEmpty) {
+                    if (controller.currentSubPage.value == FlowSubPage.flows) {
+                      controller.createNewFlow(name);
+                    } else {
+                      if (!Get.isRegistered<DocumentEditorProvider>()) {
+                        Get.put(DocumentEditorProvider());
+                      }
+                      final docProvider = Get.find<DocumentEditorProvider>();
+                      if (controller.selectedAppId.value != null) {
+                        docProvider.addDoc(
+                          controller.selectedAppId.value!,
+                          name,
+                        );
+                      }
                     }
                   }
-                }
-              },
-            ),
+                },
+              ),
           ],
         ),
         const SizedBox(height: 10),

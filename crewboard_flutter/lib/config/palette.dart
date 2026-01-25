@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:crewboard_client/crewboard_client.dart';
 import '../controllers/theme_controller.dart';
+import '../widgets/document/src/editor_toolbar_shared/color.dart';
 
 StreamController<String> refresh = StreamController<String>.broadcast();
 StreamSink<String> get refreshSink => refresh.sink;
@@ -16,7 +18,7 @@ StreamController<String> message = StreamController<String>.broadcast();
 StreamSink<String> get messageSink => message.sink;
 Stream<String> get messageStream => message.stream;
 
-enum CurrentPage { chat, flowie, planner, settings }
+enum CurrentPage { chat, documentation, planner, settings }
 
 class Window {
   static double width = 0;
@@ -164,5 +166,22 @@ class Pallet {
         iconNormal: windowButtonColors.iconNormal,
         iconMouseOver: Colors.white,
       );
+  }
+
+  static Color getUserColor(User user) {
+    if (user.color != null) {
+      return hexToColor(user.color!.color);
+    }
+    return Colors.blue;
+  }
+
+  static Color getRoomColor(ChatRoom room, UuidValue? currentUserId) {
+    if (room.roomType == 'direct' && room.roomUsers != null && currentUserId != null) {
+      final otherUser = room.roomUsers!.firstWhereOrNull((u) => u.id != currentUserId);
+      if (otherUser != null) {
+        return getUserColor(otherUser);
+      }
+    }
+    return Colors.blue;
   }
 }

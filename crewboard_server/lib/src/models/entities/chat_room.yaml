@@ -7,4 +7,5 @@ fields:
   lastMessageId: UuidValue? # Reference to last message ID
   lastMessage: ChatMessage?, relation(field=lastMessageId)
   messageCount: int
+  roomUsers: List<User>?, !persist # List of users in this room (not persisted, populated on query)
   # lastSeenMessage: int? # This should probably be in a separate map table

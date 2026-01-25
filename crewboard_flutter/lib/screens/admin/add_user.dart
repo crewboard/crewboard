@@ -588,43 +588,12 @@ Future<void> addUser(context, Map? data) async {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 5,
-                                runSpacing: 5,
-                                children: [
-                                  for (var sysColor in controller.colors)
-                                    InkWell(
-                                      onTap: () {
-                                        controller.selectedColor.value =
-                                            sysColor;
-                                      },
-                                      child: Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Color(
-                                            int.parse(
-                                              sysColor.color.replaceAll(
-                                                "#",
-                                                "0xFF",
-                                              ),
-                                            ),
-                                          ),
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color:
-                                                controller
-                                                        .selectedColor
-                                                        .value
-                                                        ?.id ==
-                                                    sysColor.id
-                                                ? Colors.white
-                                                : Colors.transparent,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
+                              ColorPicker(
+                                selectedColorId:
+                                    controller.selectedColor.value?.id,
+                                onColorSelected: (systemColor) {
+                                  controller.selectedColor.value = systemColor;
+                                },
                               ),
                             ],
                           ),

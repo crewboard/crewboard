@@ -3,3 +3,4 @@ fields:
   typeId: UuidValue
   typeName: String
   color: String
+  colorId: UuidValue

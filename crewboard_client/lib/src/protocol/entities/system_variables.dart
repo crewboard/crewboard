@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'package:crewboard_client/src/protocol/protocol.dart' as _i2;
 
 abstract class SystemVariables implements _i1.SerializableModel {
   SystemVariables._({
@@ -24,6 +25,12 @@ abstract class SystemVariables implements _i1.SerializableModel {
     this.showEdit,
     this.allowDelete,
     this.showDelete,
+    this.googleFonts,
+    this.tabPreset1,
+    this.tabPreset2,
+    this.titleFont,
+    this.headingFont,
+    this.subHeadingFont,
   });
 
   factory SystemVariables({
@@ -37,6 +44,12 @@ abstract class SystemVariables implements _i1.SerializableModel {
     bool? showEdit,
     bool? allowDelete,
     bool? showDelete,
+    List<String>? googleFonts,
+    String? tabPreset1,
+    String? tabPreset2,
+    String? titleFont,
+    String? headingFont,
+    String? subHeadingFont,
   }) = _SystemVariablesImpl;
 
   factory SystemVariables.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -51,6 +64,16 @@ abstract class SystemVariables implements _i1.SerializableModel {
       showEdit: jsonSerialization['showEdit'] as bool?,
       allowDelete: jsonSerialization['allowDelete'] as bool?,
       showDelete: jsonSerialization['showDelete'] as bool?,
+      googleFonts: jsonSerialization['googleFonts'] == null
+          ? null
+          : _i2.Protocol().deserialize<List<String>>(
+              jsonSerialization['googleFonts'],
+            ),
+      tabPreset1: jsonSerialization['tabPreset1'] as String?,
+      tabPreset2: jsonSerialization['tabPreset2'] as String?,
+      titleFont: jsonSerialization['titleFont'] as String?,
+      headingFont: jsonSerialization['headingFont'] as String?,
+      subHeadingFont: jsonSerialization['subHeadingFont'] as String?,
     );
   }
 
@@ -77,6 +100,18 @@ abstract class SystemVariables implements _i1.SerializableModel {
 
   bool? showDelete;
 
+  List<String>? googleFonts;
+
+  String? tabPreset1;
+
+  String? tabPreset2;
+
+  String? titleFont;
+
+  String? headingFont;
+
+  String? subHeadingFont;
+
   /// Returns a shallow copy of this [SystemVariables]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -91,6 +126,12 @@ abstract class SystemVariables implements _i1.SerializableModel {
     bool? showEdit,
     bool? allowDelete,
     bool? showDelete,
+    List<String>? googleFonts,
+    String? tabPreset1,
+    String? tabPreset2,
+    String? titleFont,
+    String? headingFont,
+    String? subHeadingFont,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -106,6 +147,12 @@ abstract class SystemVariables implements _i1.SerializableModel {
       if (showEdit != null) 'showEdit': showEdit,
       if (allowDelete != null) 'allowDelete': allowDelete,
       if (showDelete != null) 'showDelete': showDelete,
+      if (googleFonts != null) 'googleFonts': googleFonts?.toJson(),
+      if (tabPreset1 != null) 'tabPreset1': tabPreset1,
+      if (tabPreset2 != null) 'tabPreset2': tabPreset2,
+      if (titleFont != null) 'titleFont': titleFont,
+      if (headingFont != null) 'headingFont': headingFont,
+      if (subHeadingFont != null) 'subHeadingFont': subHeadingFont,
     };
   }
 
@@ -129,6 +176,12 @@ class _SystemVariablesImpl extends SystemVariables {
     bool? showEdit,
     bool? allowDelete,
     bool? showDelete,
+    List<String>? googleFonts,
+    String? tabPreset1,
+    String? tabPreset2,
+    String? titleFont,
+    String? headingFont,
+    String? subHeadingFont,
   }) : super._(
          id: id,
          punchingMode: punchingMode,
@@ -140,6 +193,12 @@ class _SystemVariablesImpl extends SystemVariables {
          showEdit: showEdit,
          allowDelete: allowDelete,
          showDelete: showDelete,
+         googleFonts: googleFonts,
+         tabPreset1: tabPreset1,
+         tabPreset2: tabPreset2,
+         titleFont: titleFont,
+         headingFont: headingFont,
+         subHeadingFont: subHeadingFont,
        );
 
   /// Returns a shallow copy of this [SystemVariables]
@@ -157,6 +216,12 @@ class _SystemVariablesImpl extends SystemVariables {
     Object? showEdit = _Undefined,
     Object? allowDelete = _Undefined,
     Object? showDelete = _Undefined,
+    Object? googleFonts = _Undefined,
+    Object? tabPreset1 = _Undefined,
+    Object? tabPreset2 = _Undefined,
+    Object? titleFont = _Undefined,
+    Object? headingFont = _Undefined,
+    Object? subHeadingFont = _Undefined,
   }) {
     return SystemVariables(
       id: id is int? ? id : this.id,
@@ -173,6 +238,16 @@ class _SystemVariablesImpl extends SystemVariables {
       showEdit: showEdit is bool? ? showEdit : this.showEdit,
       allowDelete: allowDelete is bool? ? allowDelete : this.allowDelete,
       showDelete: showDelete is bool? ? showDelete : this.showDelete,
+      googleFonts: googleFonts is List<String>?
+          ? googleFonts
+          : this.googleFonts?.map((e0) => e0).toList(),
+      tabPreset1: tabPreset1 is String? ? tabPreset1 : this.tabPreset1,
+      tabPreset2: tabPreset2 is String? ? tabPreset2 : this.tabPreset2,
+      titleFont: titleFont is String? ? titleFont : this.titleFont,
+      headingFont: headingFont is String? ? headingFont : this.headingFont,
+      subHeadingFont: subHeadingFont is String?
+          ? subHeadingFont
+          : this.subHeadingFont,
     );
   }
 }

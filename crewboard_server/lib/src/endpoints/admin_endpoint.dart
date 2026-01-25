@@ -20,6 +20,16 @@ class AdminEndpoint extends Endpoint {
     return await SystemVariables.db.findFirstRow(session);
   }
 
+  Future<void> updateSystemVariables(Session session, SystemVariables variables) async {
+    final existing = await SystemVariables.db.findFirstRow(session);
+    if (existing == null) {
+      await SystemVariables.db.insertRow(session, variables);
+    } else {
+      variables.id = existing.id;
+      await SystemVariables.db.updateRow(session, variables);
+    }
+  }
+
   Future<PlannerApp> addApp(
     Session session,
     String name,
@@ -31,7 +41,20 @@ class AdminEndpoint extends Endpoint {
       colorId: colorId,
       organizationId: user.organizationId,
     );
-    return await PlannerApp.db.insertRow(session, app);
+    final newApp = await PlannerApp.db.insertRow(session, app);
+    
+    // Create initial shared bucket for the organization
+    await Bucket.db.insertRow(
+      session,
+      Bucket(
+        userId: user.id!, // Initial owner
+        appId: newApp.id!,
+        bucketName: 'New',
+        isDefault: true,
+      ),
+    );
+
+    return newApp;
   }
 
   Future<List<User>> getUsers(Session session) async {
@@ -231,5 +254,27 @@ class AdminEndpoint extends Endpoint {
     } else {
       return await LeaveRequest.db.updateRow(session, request);
     }
+  }
+
+  Future<List<FontSetting>> getFontSettings(Session session) async {
+    return await FontSetting.db.find(
+      session,
+      orderBy: (t) => t.id,
+    );
+  }
+
+  Future<FontSetting> saveFontSetting(
+    Session session,
+    FontSetting setting,
+  ) async {
+    if (setting.id == null) {
+      return await FontSetting.db.insertRow(session, setting);
+    } else {
+      return await FontSetting.db.updateRow(session, setting);
+    }
+  }
+
+  Future<void> deleteFontSetting(Session session, int id) async {
+    await FontSetting.db.deleteWhere(session, where: (t) => t.id.equals(id));
   }
 }

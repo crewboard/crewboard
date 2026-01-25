@@ -27,7 +27,11 @@ class AuthHelper {
       // 1. Try direct lookup in our User table if identifier is a UUID
       // This handles cases where the identifier might already be our record ID
       final uuid = UuidValue.fromString(identifier);
-      user = await User.db.findById(session, uuid);
+      user = await User.db.findById(
+        session,
+        uuid,
+        include: User.include(color: SystemColor.include()),
+      );
     } catch (e) {
       // Not a UUID or not found by ID
     }
@@ -47,6 +51,7 @@ class AuthHelper {
         user = await User.db.findFirstRow(
           session,
           where: (t) => t.email.equals(profile.email!),
+          include: User.include(color: SystemColor.include()),
         );
 
         if (user != null) {
@@ -77,6 +82,7 @@ class AuthHelper {
         user = await User.db.findFirstRow(
           session,
           where: (t) => t.email.equals(userInfo!.email!),
+          include: User.include(color: SystemColor.include()),
         );
 
         if (user != null) return user;

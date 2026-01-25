@@ -14,7 +14,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../entities/chat_message.dart' as _i2;
-import 'package:crewboard_server/src/generated/protocol.dart' as _i3;
+import '../entities/user.dart' as _i3;
+import 'package:crewboard_server/src/generated/protocol.dart' as _i4;
 
 abstract class ChatRoom
     implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
@@ -25,6 +26,7 @@ abstract class ChatRoom
     this.lastMessageId,
     this.lastMessage,
     required this.messageCount,
+    this.roomUsers,
   });
 
   factory ChatRoom({
@@ -34,6 +36,7 @@ abstract class ChatRoom
     _i1.UuidValue? lastMessageId,
     _i2.ChatMessage? lastMessage,
     required int messageCount,
+    List<_i3.User>? roomUsers,
   }) = _ChatRoomImpl;
 
   factory ChatRoom.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -50,10 +53,15 @@ abstract class ChatRoom
             ),
       lastMessage: jsonSerialization['lastMessage'] == null
           ? null
-          : _i3.Protocol().deserialize<_i2.ChatMessage>(
+          : _i4.Protocol().deserialize<_i2.ChatMessage>(
               jsonSerialization['lastMessage'],
             ),
       messageCount: jsonSerialization['messageCount'] as int,
+      roomUsers: jsonSerialization['roomUsers'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<_i3.User>>(
+              jsonSerialization['roomUsers'],
+            ),
     );
   }
 
@@ -74,6 +82,8 @@ abstract class ChatRoom
 
   int messageCount;
 
+  List<_i3.User>? roomUsers;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -87,6 +97,7 @@ abstract class ChatRoom
     _i1.UuidValue? lastMessageId,
     _i2.ChatMessage? lastMessage,
     int? messageCount,
+    List<_i3.User>? roomUsers,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -98,6 +109,8 @@ abstract class ChatRoom
       if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
       if (lastMessage != null) 'lastMessage': lastMessage?.toJson(),
       'messageCount': messageCount,
+      if (roomUsers != null)
+        'roomUsers': roomUsers?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -111,6 +124,10 @@ abstract class ChatRoom
       if (lastMessageId != null) 'lastMessageId': lastMessageId?.toJson(),
       if (lastMessage != null) 'lastMessage': lastMessage?.toJsonForProtocol(),
       'messageCount': messageCount,
+      if (roomUsers != null)
+        'roomUsers': roomUsers?.toJson(
+          valueToJson: (v) => v.toJsonForProtocol(),
+        ),
     };
   }
 
@@ -154,6 +171,7 @@ class _ChatRoomImpl extends ChatRoom {
     _i1.UuidValue? lastMessageId,
     _i2.ChatMessage? lastMessage,
     required int messageCount,
+    List<_i3.User>? roomUsers,
   }) : super._(
          id: id,
          roomName: roomName,
@@ -161,6 +179,7 @@ class _ChatRoomImpl extends ChatRoom {
          lastMessageId: lastMessageId,
          lastMessage: lastMessage,
          messageCount: messageCount,
+         roomUsers: roomUsers,
        );
 
   /// Returns a shallow copy of this [ChatRoom]
@@ -174,6 +193,7 @@ class _ChatRoomImpl extends ChatRoom {
     Object? lastMessageId = _Undefined,
     Object? lastMessage = _Undefined,
     int? messageCount,
+    Object? roomUsers = _Undefined,
   }) {
     return ChatRoom(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -186,6 +206,9 @@ class _ChatRoomImpl extends ChatRoom {
           ? lastMessage
           : this.lastMessage?.copyWith(),
       messageCount: messageCount ?? this.messageCount,
+      roomUsers: roomUsers is List<_i3.User>?
+          ? roomUsers
+          : this.roomUsers?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

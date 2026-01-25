@@ -10,3 +10,9 @@ fields:
   showEdit: bool?
   allowDelete: bool?
   showDelete: bool?
+  googleFonts: List<String>?
+  tabPreset1: String?
+  tabPreset2: String?
+  titleFont: String?
+  headingFont: String?
+  subHeadingFont: String?

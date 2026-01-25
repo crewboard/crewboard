@@ -60,62 +60,64 @@ void main(List<String> args) async {
     print('\n--- Batch User Seeder ---');
 
     final userList = [
+      'Altair',
+      'Ravix',
+      'Ilyon',
       'Aethera',
       'Nyvora',
       'Lumis',
-      'Zephyra',
-      'Kaivon',
-      'Orinex',
-      'Vireon',
-      'Solvex',
-      'Nexora',
-      'Elvyn',
-      'Astrael',
-      'Morixa',
-      'Valenor',
-      'Eryx',
-      'Kairox',
-      'Thryva',
-      'Orynn',
-      'Zenvik',
-      'Calyra',
-      'Ilyon',
-      'Ravix',
-      'Sorex',
-      'Velora',
-      'Axion',
-      'Myntra',
-      'Kryon',
-      'Altair',
-      'Zorik',
-      'Lyra',
-      'Noven',
     ];
 
     final password = '0007!Asd';
     
-    // Fetch defaults once
+    print('Fetching userType...');
     final userType = await UserTypes.db.findFirstRow(
       session,
       where: (t) => t.userType.equals('user'),
     );
-     final organization = await Organization.db.findFirstRow(session);
-    final defaultColor = await SystemColor.db.findFirstRow(session, where: (t) => t.isDefault.equals(true)) 
-        ?? await SystemColor.db.findFirstRow(session);
+    print('userType: $userType');
+    
+    print('Fetching organization...');
+    var organization = await Organization.db.findFirstRow(
+      session,
+      where: (t) => t.name.equals('test'),
+    );
+    
+    if (organization == null) {
+      print('Creating "test" organization...');
+      organization = await Organization.db.insertRow(
+        session,
+        Organization(name: 'test'),
+      );
+    }
+    print('organization: $organization');
+
+    print('Fetching colors...');
+    final systemColors = await SystemColor.db.find(session);
+    print('Found ${systemColors.length} colors.');
+
+    print('Fetching defaultLeaveConfig...');
     final defaultLeaveConfig = await LeaveConfig.db.findFirstRow(session);
+    print('defaultLeaveConfig: $defaultLeaveConfig');
 
-
-    if (userType == null || organization == null || defaultColor == null || defaultLeaveConfig == null) {
-      print('Error: Missing default resources (UserType, Org, Color, or LeaveConfig).');
+    if (userType == null || systemColors.isEmpty || defaultLeaveConfig == null) {
+      print('Error: Missing default resources.');
+      print('userType: $userType');
+      print('colors count: ${systemColors.length}');
+      print('defaultLeaveConfig: $defaultLeaveConfig');
       exit(1);
     }
 
-    print('Creating ${userList.length} users...');
+    print('Creating ${userList.length} users with dynamic colors...');
 
+    int colorIndex = 0;
     for (final username in userList) {
       try {
         final email = '${username.toLowerCase()}@crewboard.com';
-        print('Creating $username ($email)...');
+        final userColor = systemColors[colorIndex % systemColors.length];
+        colorIndex++;
+
+        print('Creating $username ($email) with color ${userColor.colorName}...');
 
         // Check if exists
         final existingUser = await User.db.findFirstRow(
@@ -132,7 +134,7 @@ void main(List<String> args) async {
           userName: username,
           email: email,
           organizationId: organization.id!,
-          colorId: defaultColor.id!,
+          colorId: userColor.id!,
           userTypeId: userType.id!,
           leaveConfigId: defaultLeaveConfig.id!,
           firstName: username, 

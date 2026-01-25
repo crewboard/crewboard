@@ -22,7 +22,7 @@ class GlassMorph extends StatelessWidget {
     this.height,
     this.sigmaX = 20.0,
     this.sigmaY = 20.0,
-    this.color = const Color(0x19000000),
+    this.color = const Color.fromARGB(36, 0, 0, 0),
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
   });
@@ -53,10 +53,6 @@ class GlassMorph extends StatelessWidget {
         // Classic Light or Dark Mode (Solid Design)
         final isDark = currentTheme == AppTheme.classicDark;
         final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
-        final borderColor = isDark
-            ? Colors.white10
-            : Colors.black.withValues(alpha: 0.1);
-
         return SizedBox(
           width: width,
           height: height,
@@ -67,7 +63,6 @@ class GlassMorph extends StatelessWidget {
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(borderRadius),
-                border: Border.all(color: borderColor),
                 boxShadow: [
                   if (!isDark)
                     BoxShadow(

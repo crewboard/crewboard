@@ -1,0 +1,84 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "system_variables",
+        "schema": "public",
+        "addColumns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "tabPreset1",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "tabPreset2",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          }
+        ],
+        "deleteColumns": [
+          "tabFont1",
+          "tabFont2"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"tabFont1\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "tabFont1"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"tabFont2\" of table \"system_variables\" will be dropped.",
+            "table": "system_variables",
+            "columns": [
+              "tabFont2"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"tabFont1\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "tabFont1"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"tabFont2\" of table \"system_variables\" will be dropped.",
+      "table": "system_variables",
+      "columns": [
+        "tabFont2"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

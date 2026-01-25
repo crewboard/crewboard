@@ -10,6 +10,7 @@ class RoomsController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isSearchingUsers = false.obs;
   final Rx<ChatRoom?> selectedRoom = Rx<ChatRoom?>(null);
+  final RxString searchQuery = "".obs;
 
   @override
   void onInit() {
@@ -31,11 +32,13 @@ class RoomsController extends GetxController {
   }
 
   void resetSearch() {
+    searchQuery.value = "";
     rooms.assignAll(_backup);
     users.clear();
   }
 
   Future<void> searchRooms(String query) async {
+    searchQuery.value = query;
     if (query.isEmpty) {
       resetSearch();
       return;
@@ -81,10 +84,13 @@ class RoomsController extends GetxController {
       final room = await client.chat.createDirectRoom(user.id!);
 
       // Update local lists
-      if (!_backup.any((r) => r.id == room.id)) {
+      int index = _backup.indexWhere((r) => r.id == room.id);
+      if (index != -1) {
+        _backup[index] = room;
+      } else {
         _backup.add(room);
-        _backup.sort((a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''));
       }
+      _backup.sort((a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''));
 
       resetSearch();
       selectRoom(room);
@@ -108,6 +114,22 @@ class RoomsController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error marking room as read: $e');
+    }
+  }
+
+  void updateLastMessage(UuidValue roomId, ChatMessage message) {
+    int index = rooms.indexWhere((r) => r.id == roomId);
+    if (index != -1) {
+      var updatedRoom = rooms[index].copyWith(lastMessage: message);
+      rooms.removeAt(index);
+      rooms.insert(0, updatedRoom);
+    }
+
+    int backupIndex = _backup.indexWhere((r) => r.id == roomId);
+    if (backupIndex != -1) {
+      var updatedBackupRoom = _backup[backupIndex].copyWith(lastMessage: message);
+      _backup.removeAt(backupIndex);
+      _backup.insert(0, updatedBackupRoom);
     }
   }
 }

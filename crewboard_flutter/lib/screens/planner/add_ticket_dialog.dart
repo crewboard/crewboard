@@ -78,6 +78,10 @@ class AddTicketDialog extends StatelessWidget {
                                         );
                                     if (result != null) {
                                       for (var file in result.files) {
+                                        // Add to pendingFiles for upload
+                                        controller.pendingFiles.add(file);
+                                        
+                                        // Add placeholder to attachments for UI display
                                         controller.attachments.add(
                                           AttachmentModel(
                                             id: UuidValue.fromString(

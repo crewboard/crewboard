@@ -12,6 +12,7 @@ class ProfileIcon extends StatelessWidget {
     this.image,
     this.style = ProfileIconStyle.solid,
     this.useOpacity = true,
+    this.borderRadius,
   });
   final String name;
   final Color color;
@@ -20,6 +21,7 @@ class ProfileIcon extends StatelessWidget {
   final String? image;
   final ProfileIconStyle style;
   final bool useOpacity;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class ProfileIcon extends StatelessWidget {
         color: style == ProfileIconStyle.outlined && useOpacity
             ? color.withValues(alpha: 0.2)
             : color,
-        borderRadius: BorderRadius.circular(size),
+        borderRadius: BorderRadius.circular(borderRadius ?? size),
         border: style == ProfileIconStyle.outlined
             ? Border.all(color: color, width: 1)
             : null,

@@ -1,4 +1,5 @@
 import 'package:serverpod/serverpod.dart';
+import 'dart:io';
 import '../generated/protocol.dart';
 import '../utils.dart';
 import 'package:collection/collection.dart';
@@ -18,15 +19,18 @@ class PlannerEndpoint extends Endpoint {
     // Check if app belongs to the same organization
     final app = await PlannerApp.db.findById(session, appIdVal);
     if (app == null || app.organizationId != user.organizationId) {
+      stdout.writeln(
+        'UNAUTHORIZED: User ${user.userName} (Org: ${user.organizationId}) attempted to access App ${appIdVal} (Org: ${app?.organizationId})',
+      );
       throw Exception('Unauthorized access to app');
     }
 
     final userId = user.id!;
 
-    // Fetch buckets for user and app
+    // Fetch buckets for app
     final buckets = await Bucket.db.find(
       session,
-      where: (t) => (t.userId.equals(userId)) & (t.appId.equals(appIdVal)),
+      where: (t) => t.appId.equals(appIdVal),
     );
 
     if (buckets.isEmpty) {
@@ -58,6 +62,23 @@ class PlannerEndpoint extends Endpoint {
         // Fetch assignees for this ticket
         final assigneesList = await _getAssigneesForTicket(session, ticket.id!);
 
+        // Fetch attachments for this ticket
+        final attachments = await TicketAttachment.db.find(
+          session,
+          where: (t) => t.ticketId.equals(ticket.id!),
+        );
+        final attachmentModels = attachments
+            .map(
+              (a) => AttachmentModel(
+                id: a.id!,
+                name: a.attachmentName,
+                size: a.attachmentSize,
+                url: a.attachmentUrl,
+                type: a.attachmentType,
+              ),
+            )
+            .toList();
+
         ticketModels.add(
           PlannerTicket(
             id: ticket.id!,
@@ -73,6 +94,7 @@ class PlannerEndpoint extends Endpoint {
             creds: ticket.creds.toDouble(),
             hasNewActivity: await _hasNewActivity(session, ticket.id!, userId),
             latestActivity: await _getLatestActivity(session, ticket.id!),
+            attachments: attachmentModels,
           ),
         );
       }
@@ -137,6 +159,7 @@ class PlannerEndpoint extends Endpoint {
           typeId: t.id!,
           typeName: t.typeName,
           color: color?.color ?? '#000000',
+          colorId: t.colorId,
         ),
       );
     }
@@ -192,15 +215,38 @@ class PlannerEndpoint extends Endpoint {
       ),
     );
 
-    // Map to bucket
+    // Map to bucket - Shift existing tickets down
+    final existingMaps = await BucketTicketMap.db.find(
+      session,
+      where: (t) => t.bucketId.equals(request.bucketId),
+    );
+    for (final map in existingMaps) {
+      map.order = map.order + 1;
+      await BucketTicketMap.db.updateRow(session, map);
+    }
+
     await BucketTicketMap.db.insertRow(
       session,
       BucketTicketMap(
         bucketId: request.bucketId,
         ticketId: ticket.id!,
-        order: 1, // Default to first
+        order: 1, // New ticket at the top
       ),
     );
+
+    // Save attachments
+    for (final attachment in request.ticket.attachments) {
+      await TicketAttachment.db.insertRow(
+        session,
+        TicketAttachment(
+          ticketId: ticket.id!,
+          attachmentName: attachment.name,
+          attachmentSize: attachment.size,
+          attachmentUrl: attachment.url,
+          attachmentType: attachment.type,
+        ),
+      );
+    }
 
     // LOG INITIAL THREAD ACTIVITY
     await TicketStatusChange.db.insertRow(
@@ -372,6 +418,9 @@ class PlannerEndpoint extends Endpoint {
             UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
         typeName: ticket.type?.typeName ?? '',
         color: ticket.type?.color?.color ?? '#000000',
+        colorId:
+            ticket.type?.colorId ??
+            UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
       ),
       checklist: ticket.checklist ?? [],
       flows: ticket.flows,
@@ -565,10 +614,11 @@ class PlannerEndpoint extends Endpoint {
       await BucketTicketMap.db.updateRow(session, remainingOldMaps[i]);
     }
 
-    // Update order in new bucket
+    // Update order in new bucket: shift tickets from the new position onwards
     final newBucketMaps = await BucketTicketMap.db.find(
       session,
       where: (t) => t.bucketId.equals(newBucketId),
+      orderBy: (t) => t.order,
     );
 
     for (final map in newBucketMaps) {
@@ -584,7 +634,7 @@ class PlannerEndpoint extends Endpoint {
       BucketTicketMap(
         bucketId: newBucketId,
         ticketId: ticketId,
-        order: request.newOrder,
+        order: request.newOrder < 1 ? 1 : request.newOrder,
       ),
     );
 
@@ -746,10 +796,22 @@ class PlannerEndpoint extends Endpoint {
       
       Bucket? targetBucket;
       if (userBuckets.isNotEmpty) {
-         // Try to find default
-         targetBucket = userBuckets.firstWhereOrNull((b) => b.isDefault) ?? userBuckets.first;
+        // Try to find default
+        targetBucket =
+            userBuckets.firstWhereOrNull((b) => b.isDefault) ??
+            userBuckets.first;
+      } else {
+        // Create a new bucket for this user in this app on-the-fly
+        targetBucket = await Bucket.db.insertRow(
+          session,
+          Bucket(
+            userId: userId,
+            appId: ticket.appId,
+            bucketName: 'New',
+          ),
+        );
       }
-
+      
       if (targetBucket != null) {
         await BucketTicketMap.db.insertRow(
           session,
@@ -759,7 +821,67 @@ class PlannerEndpoint extends Endpoint {
             order: 0, // Add to top
           ),
         );
+        
+        // LOG ACTIVITY for adding assignee
+        final addedUser = await User.db.findById(session, userId);
+        if (addedUser != null) {
+          await PlannerActivity.db.insertRow(
+            session,
+            PlannerActivity(
+              ticketId: ticket.id!,
+              ticketName: ticket.ticketName,
+              userName: user.userName,
+              userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
+              action: 'added assignee',
+              details: addedUser.userName,
+              createdAt: DateTime.now(),
+            ),
+          );
+        }
       }
+    }
+
+    // LOG REMOVAL ACTIVITY
+    for (final userId in toRemove) {
+       final removedUser = await User.db.findById(session, userId);
+       if (removedUser != null) {
+          await PlannerActivity.db.insertRow(
+            session,
+            PlannerActivity(
+              ticketId: ticket.id!,
+              ticketName: ticket.ticketName,
+              userName: user.userName,
+              userColor: (await SystemColor.db.findById(session, user.colorId))?.color ?? '#000000',
+              action: 'removed assignee',
+              details: removedUser.userName,
+              createdAt: DateTime.now(),
+            ),
+          );
+       }
+    }
+
+    // 4. Update Attachments
+    // Delete existing attachments
+    final existingAttachments = await TicketAttachment.db.find(
+      session,
+      where: (t) => t.ticketId.equals(ticket.id!),
+    );
+    for (final attachment in existingAttachments) {
+      await TicketAttachment.db.deleteRow(session, attachment);
+    }
+
+    // Insert new attachments
+    for (final attachment in updatedTicket.attachments) {
+      await TicketAttachment.db.insertRow(
+        session,
+        TicketAttachment(
+          ticketId: ticket.id!,
+          attachmentName: attachment.name,
+          attachmentSize: attachment.size,
+          attachmentUrl: attachment.url,
+          attachmentType: attachment.type,
+        ),
+      );
     }
 
     // Save the ticket row
@@ -796,6 +918,117 @@ class PlannerEndpoint extends Endpoint {
       }
     }
     return assigneesList;
+  }
+
+  /// Add or update a status
+  Future<bool> addStatus(Session session, UuidValue? id, String name) async {
+    if (id != null) {
+      final status = await Status.db.findById(session, id);
+      if (status != null) {
+        status.statusName = name;
+        await Status.db.updateRow(session, status);
+        return true;
+      }
+    }
+    await Status.db.insertRow(
+      session,
+      Status(statusName: name),
+    );
+    return true;
+  }
+
+  /// Add or update a priority
+  Future<bool> addPriority(Session session, UuidValue? id, String name) async {
+    if (id != null) {
+      final priority = await Priority.db.findById(session, id);
+      if (priority != null) {
+        priority.priorityName = name;
+        await Priority.db.updateRow(session, priority);
+        return true;
+      }
+    }
+
+    // Find max priority to append
+    final priorities = await Priority.db.find(session, orderBy: (p) => p.priority);
+    int nextOrder = 1;
+    if (priorities.isNotEmpty) {
+      nextOrder = priorities.last.priority + 1;
+    }
+
+    await Priority.db.insertRow(
+      session,
+      Priority(priorityName: name, priority: nextOrder),
+    );
+    return true;
+  }
+
+  /// Add or update a ticket type
+  Future<bool> addTicketType(
+    Session session,
+    UuidValue? id,
+    String name,
+    UuidValue colorId,
+  ) async {
+    if (id != null) {
+      final type = await TicketType.db.findById(session, id);
+      if (type != null) {
+        type.typeName = name;
+        type.colorId = colorId;
+        await TicketType.db.updateRow(session, type);
+        return true;
+      }
+    }
+    await TicketType.db.insertRow(
+      session,
+      TicketType(typeName: name, colorId: colorId),
+    );
+    return true;
+  }
+
+  /// Delete a planner variable (status, type, priority)
+  Future<bool> deletePlannerVariable(
+    Session session,
+    String type,
+    UuidValue id,
+  ) async {
+    if (type == 'status') {
+      await Status.db.deleteWhere(session, where: (t) => t.id.equals(id));
+    } else if (type == 'type') {
+      await TicketType.db.deleteWhere(session, where: (t) => t.id.equals(id));
+    } else if (type == 'priority') {
+      await Priority.db.deleteWhere(session, where: (t) => t.id.equals(id));
+    }
+    return true;
+  }
+
+  /// Change priority order
+  Future<bool> changePriority(
+    Session session,
+    UuidValue priorityId,
+    int currentOrder,
+    String direction,
+  ) async {
+    final priorities = await Priority.db.find(session, orderBy: (p) => p.priority);
+    final index = priorities.indexWhere((p) => p.id == priorityId);
+    if (index == -1) return false;
+
+    if (direction == 'up' && index > 0) {
+      final other = priorities[index - 1];
+      final temp = priorities[index].priority;
+      priorities[index].priority = other.priority;
+      other.priority = temp;
+      await Priority.db.updateRow(session, priorities[index]);
+      await Priority.db.updateRow(session, other);
+    } else if (direction == 'down' && index < priorities.length - 1) {
+      final other = priorities[index + 1];
+      final temp = priorities[index].priority;
+      priorities[index].priority = other.priority;
+      other.priority = temp;
+      await Priority.db.updateRow(session, priorities[index]);
+      await Priority.db.updateRow(session, other);
+    }
+
+    return true;
   }
 
   /// Get all planner activities for an app

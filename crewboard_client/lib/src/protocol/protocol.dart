@@ -20,86 +20,89 @@ import 'entities/chat_room.dart' as _i7;
 import 'entities/doc.dart' as _i8;
 import 'entities/emoji.dart' as _i9;
 import 'entities/flow_model.dart' as _i10;
-import 'entities/leave_config.dart' as _i11;
-import 'entities/leave_request.dart' as _i12;
-import 'entities/memory.dart' as _i13;
-import 'entities/organization.dart' as _i14;
-import 'entities/planner_activity.dart' as _i15;
-import 'entities/planner_app.dart' as _i16;
-import 'entities/planner_notification.dart' as _i17;
-import 'entities/priority.dart' as _i18;
-import 'entities/status.dart' as _i19;
-import 'entities/system_color.dart' as _i20;
-import 'entities/system_variables.dart' as _i21;
-import 'entities/ticket.dart' as _i22;
-import 'entities/ticket_assignee.dart' as _i23;
-import 'entities/ticket_attachment.dart' as _i24;
-import 'entities/ticket_comment.dart' as _i25;
-import 'entities/ticket_status_change.dart' as _i26;
-import 'entities/ticket_type.dart' as _i27;
-import 'entities/ticket_view.dart' as _i28;
-import 'entities/user.dart' as _i29;
-import 'entities/user_break.dart' as _i30;
-import 'entities/user_device.dart' as _i31;
-import 'entities/user_room_map.dart' as _i32;
-import 'entities/user_types.dart' as _i33;
-import 'enums/device_type.dart' as _i34;
-import 'enums/message_type.dart' as _i35;
-import 'gif.dart' as _i36;
-import 'greetings/greeting.dart' as _i37;
-import 'protocols/add_bucket_request.dart' as _i38;
-import 'protocols/add_comment_request.dart' as _i39;
-import 'protocols/add_ticket_dto.dart' as _i40;
-import 'protocols/add_ticket_request.dart' as _i41;
-import 'protocols/attachment_model.dart' as _i42;
-import 'protocols/bucket_model.dart' as _i43;
-import 'protocols/change_bucket_request.dart' as _i44;
-import 'protocols/check_model.dart' as _i45;
-import 'protocols/check_organization_response.dart' as _i46;
-import 'protocols/check_username_response.dart' as _i47;
-import 'protocols/comment_model.dart' as _i48;
-import 'protocols/get_add_ticket_data_response.dart' as _i49;
-import 'protocols/get_all_tickets_response.dart' as _i50;
-import 'protocols/get_attendance_data_response.dart' as _i51;
-import 'protocols/get_planner_activities_response.dart' as _i52;
-import 'protocols/get_planner_data_response.dart' as _i53;
-import 'protocols/get_ticket_comments_response.dart' as _i54;
-import 'protocols/get_ticket_data_response.dart' as _i55;
-import 'protocols/get_ticket_thread_response.dart' as _i56;
-import 'protocols/planner_assignee.dart' as _i57;
-import 'protocols/planner_bucket.dart' as _i58;
-import 'protocols/planner_ticket.dart' as _i59;
-import 'protocols/priority_model.dart' as _i60;
-import 'protocols/register_admin_response.dart' as _i61;
-import 'protocols/sign_in_response.dart' as _i62;
-import 'protocols/status_model.dart' as _i63;
-import 'protocols/thread_item_model.dart' as _i64;
-import 'protocols/ticket_attachment_dto.dart' as _i65;
-import 'protocols/ticket_model.dart' as _i66;
-import 'protocols/type_model.dart' as _i67;
-import 'protocols/user_model.dart' as _i68;
-import 'typing_indicator.dart' as _i69;
+import 'entities/font_setting.dart' as _i11;
+import 'entities/leave_config.dart' as _i12;
+import 'entities/leave_request.dart' as _i13;
+import 'entities/memory.dart' as _i14;
+import 'entities/organization.dart' as _i15;
+import 'entities/planner_activity.dart' as _i16;
+import 'entities/planner_app.dart' as _i17;
+import 'entities/planner_notification.dart' as _i18;
+import 'entities/priority.dart' as _i19;
+import 'entities/status.dart' as _i20;
+import 'entities/system_color.dart' as _i21;
+import 'entities/system_variables.dart' as _i22;
+import 'entities/ticket.dart' as _i23;
+import 'entities/ticket_assignee.dart' as _i24;
+import 'entities/ticket_attachment.dart' as _i25;
+import 'entities/ticket_comment.dart' as _i26;
+import 'entities/ticket_status_change.dart' as _i27;
+import 'entities/ticket_type.dart' as _i28;
+import 'entities/ticket_view.dart' as _i29;
+import 'entities/user.dart' as _i30;
+import 'entities/user_break.dart' as _i31;
+import 'entities/user_device.dart' as _i32;
+import 'entities/user_room_map.dart' as _i33;
+import 'entities/user_types.dart' as _i34;
+import 'enums/device_type.dart' as _i35;
+import 'enums/message_type.dart' as _i36;
+import 'gif.dart' as _i37;
+import 'greetings/greeting.dart' as _i38;
+import 'protocols/add_bucket_request.dart' as _i39;
+import 'protocols/add_comment_request.dart' as _i40;
+import 'protocols/add_ticket_dto.dart' as _i41;
+import 'protocols/add_ticket_request.dart' as _i42;
+import 'protocols/attachment_model.dart' as _i43;
+import 'protocols/bucket_model.dart' as _i44;
+import 'protocols/change_bucket_request.dart' as _i45;
+import 'protocols/check_model.dart' as _i46;
+import 'protocols/check_organization_response.dart' as _i47;
+import 'protocols/check_username_response.dart' as _i48;
+import 'protocols/comment_model.dart' as _i49;
+import 'protocols/get_add_ticket_data_response.dart' as _i50;
+import 'protocols/get_all_tickets_response.dart' as _i51;
+import 'protocols/get_attendance_data_response.dart' as _i52;
+import 'protocols/get_planner_activities_response.dart' as _i53;
+import 'protocols/get_planner_data_response.dart' as _i54;
+import 'protocols/get_ticket_comments_response.dart' as _i55;
+import 'protocols/get_ticket_data_response.dart' as _i56;
+import 'protocols/get_ticket_thread_response.dart' as _i57;
+import 'protocols/planner_assignee.dart' as _i58;
+import 'protocols/planner_bucket.dart' as _i59;
+import 'protocols/planner_ticket.dart' as _i60;
+import 'protocols/priority_model.dart' as _i61;
+import 'protocols/register_admin_response.dart' as _i62;
+import 'protocols/sign_in_response.dart' as _i63;
+import 'protocols/status_model.dart' as _i64;
+import 'protocols/thread_item_model.dart' as _i65;
+import 'protocols/ticket_attachment_dto.dart' as _i66;
+import 'protocols/ticket_model.dart' as _i67;
+import 'protocols/type_model.dart' as _i68;
+import 'protocols/user_model.dart' as _i69;
+import 'typing_indicator.dart' as _i70;
 import 'package:crewboard_client/src/protocol/entities/planner_app.dart'
-    as _i70;
-import 'package:crewboard_client/src/protocol/entities/user.dart' as _i71;
-import 'package:crewboard_client/src/protocol/entities/user_types.dart' as _i72;
-import 'package:crewboard_client/src/protocol/entities/attendance.dart' as _i73;
+    as _i71;
+import 'package:crewboard_client/src/protocol/entities/user.dart' as _i72;
+import 'package:crewboard_client/src/protocol/entities/user_types.dart' as _i73;
+import 'package:crewboard_client/src/protocol/entities/attendance.dart' as _i74;
 import 'package:crewboard_client/src/protocol/entities/leave_config.dart'
-    as _i74;
-import 'package:crewboard_client/src/protocol/entities/system_color.dart'
     as _i75;
-import 'package:crewboard_client/src/protocol/entities/chat_room.dart' as _i76;
-import 'package:crewboard_client/src/protocol/entities/chat_message.dart'
+import 'package:crewboard_client/src/protocol/entities/system_color.dart'
+    as _i76;
+import 'package:crewboard_client/src/protocol/entities/font_setting.dart'
     as _i77;
-import 'package:crewboard_client/src/protocol/entities/flow_model.dart' as _i78;
-import 'package:crewboard_client/src/protocol/entities/doc.dart' as _i79;
-import 'package:crewboard_client/src/protocol/entities/emoji.dart' as _i80;
-import 'package:crewboard_client/src/protocol/gif.dart' as _i81;
+import 'package:crewboard_client/src/protocol/entities/chat_room.dart' as _i78;
+import 'package:crewboard_client/src/protocol/entities/chat_message.dart'
+    as _i79;
+import 'package:crewboard_client/src/protocol/entities/flow_model.dart' as _i80;
+import 'package:crewboard_client/src/protocol/entities/doc.dart' as _i81;
+import 'package:crewboard_client/src/protocol/entities/emoji.dart' as _i82;
+import 'package:crewboard_client/src/protocol/gif.dart' as _i83;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i82;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i83;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i84;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i85;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i86;
 export 'chat_stream_event.dart';
 export 'entities/attendance.dart';
 export 'entities/bucket.dart';
@@ -109,6 +112,7 @@ export 'entities/chat_room.dart';
 export 'entities/doc.dart';
 export 'entities/emoji.dart';
 export 'entities/flow_model.dart';
+export 'entities/font_setting.dart';
 export 'entities/leave_config.dart';
 export 'entities/leave_request.dart';
 export 'entities/memory.dart';
@@ -231,182 +235,185 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i10.FlowModel) {
       return _i10.FlowModel.fromJson(data) as T;
     }
-    if (t == _i11.LeaveConfig) {
-      return _i11.LeaveConfig.fromJson(data) as T;
+    if (t == _i11.FontSetting) {
+      return _i11.FontSetting.fromJson(data) as T;
     }
-    if (t == _i12.LeaveRequest) {
-      return _i12.LeaveRequest.fromJson(data) as T;
+    if (t == _i12.LeaveConfig) {
+      return _i12.LeaveConfig.fromJson(data) as T;
     }
-    if (t == _i13.Memory) {
-      return _i13.Memory.fromJson(data) as T;
+    if (t == _i13.LeaveRequest) {
+      return _i13.LeaveRequest.fromJson(data) as T;
     }
-    if (t == _i14.Organization) {
-      return _i14.Organization.fromJson(data) as T;
+    if (t == _i14.Memory) {
+      return _i14.Memory.fromJson(data) as T;
     }
-    if (t == _i15.PlannerActivity) {
-      return _i15.PlannerActivity.fromJson(data) as T;
+    if (t == _i15.Organization) {
+      return _i15.Organization.fromJson(data) as T;
     }
-    if (t == _i16.PlannerApp) {
-      return _i16.PlannerApp.fromJson(data) as T;
+    if (t == _i16.PlannerActivity) {
+      return _i16.PlannerActivity.fromJson(data) as T;
     }
-    if (t == _i17.PlannerNotification) {
-      return _i17.PlannerNotification.fromJson(data) as T;
+    if (t == _i17.PlannerApp) {
+      return _i17.PlannerApp.fromJson(data) as T;
     }
-    if (t == _i18.Priority) {
-      return _i18.Priority.fromJson(data) as T;
+    if (t == _i18.PlannerNotification) {
+      return _i18.PlannerNotification.fromJson(data) as T;
     }
-    if (t == _i19.Status) {
-      return _i19.Status.fromJson(data) as T;
+    if (t == _i19.Priority) {
+      return _i19.Priority.fromJson(data) as T;
     }
-    if (t == _i20.SystemColor) {
-      return _i20.SystemColor.fromJson(data) as T;
+    if (t == _i20.Status) {
+      return _i20.Status.fromJson(data) as T;
     }
-    if (t == _i21.SystemVariables) {
-      return _i21.SystemVariables.fromJson(data) as T;
+    if (t == _i21.SystemColor) {
+      return _i21.SystemColor.fromJson(data) as T;
     }
-    if (t == _i22.Ticket) {
-      return _i22.Ticket.fromJson(data) as T;
+    if (t == _i22.SystemVariables) {
+      return _i22.SystemVariables.fromJson(data) as T;
     }
-    if (t == _i23.TicketAssignee) {
-      return _i23.TicketAssignee.fromJson(data) as T;
+    if (t == _i23.Ticket) {
+      return _i23.Ticket.fromJson(data) as T;
     }
-    if (t == _i24.TicketAttachment) {
-      return _i24.TicketAttachment.fromJson(data) as T;
+    if (t == _i24.TicketAssignee) {
+      return _i24.TicketAssignee.fromJson(data) as T;
     }
-    if (t == _i25.TicketComment) {
-      return _i25.TicketComment.fromJson(data) as T;
+    if (t == _i25.TicketAttachment) {
+      return _i25.TicketAttachment.fromJson(data) as T;
     }
-    if (t == _i26.TicketStatusChange) {
-      return _i26.TicketStatusChange.fromJson(data) as T;
+    if (t == _i26.TicketComment) {
+      return _i26.TicketComment.fromJson(data) as T;
     }
-    if (t == _i27.TicketType) {
-      return _i27.TicketType.fromJson(data) as T;
+    if (t == _i27.TicketStatusChange) {
+      return _i27.TicketStatusChange.fromJson(data) as T;
     }
-    if (t == _i28.TicketView) {
-      return _i28.TicketView.fromJson(data) as T;
+    if (t == _i28.TicketType) {
+      return _i28.TicketType.fromJson(data) as T;
     }
-    if (t == _i29.User) {
-      return _i29.User.fromJson(data) as T;
+    if (t == _i29.TicketView) {
+      return _i29.TicketView.fromJson(data) as T;
     }
-    if (t == _i30.UserBreak) {
-      return _i30.UserBreak.fromJson(data) as T;
+    if (t == _i30.User) {
+      return _i30.User.fromJson(data) as T;
     }
-    if (t == _i31.UserDevice) {
-      return _i31.UserDevice.fromJson(data) as T;
+    if (t == _i31.UserBreak) {
+      return _i31.UserBreak.fromJson(data) as T;
     }
-    if (t == _i32.UserRoomMap) {
-      return _i32.UserRoomMap.fromJson(data) as T;
+    if (t == _i32.UserDevice) {
+      return _i32.UserDevice.fromJson(data) as T;
     }
-    if (t == _i33.UserTypes) {
-      return _i33.UserTypes.fromJson(data) as T;
+    if (t == _i33.UserRoomMap) {
+      return _i33.UserRoomMap.fromJson(data) as T;
     }
-    if (t == _i34.DeviceType) {
-      return _i34.DeviceType.fromJson(data) as T;
+    if (t == _i34.UserTypes) {
+      return _i34.UserTypes.fromJson(data) as T;
     }
-    if (t == _i35.MessageType) {
-      return _i35.MessageType.fromJson(data) as T;
+    if (t == _i35.DeviceType) {
+      return _i35.DeviceType.fromJson(data) as T;
     }
-    if (t == _i36.Gif) {
-      return _i36.Gif.fromJson(data) as T;
+    if (t == _i36.MessageType) {
+      return _i36.MessageType.fromJson(data) as T;
     }
-    if (t == _i37.Greeting) {
-      return _i37.Greeting.fromJson(data) as T;
+    if (t == _i37.Gif) {
+      return _i37.Gif.fromJson(data) as T;
     }
-    if (t == _i38.AddBucketRequest) {
-      return _i38.AddBucketRequest.fromJson(data) as T;
+    if (t == _i38.Greeting) {
+      return _i38.Greeting.fromJson(data) as T;
     }
-    if (t == _i39.AddCommentRequest) {
-      return _i39.AddCommentRequest.fromJson(data) as T;
+    if (t == _i39.AddBucketRequest) {
+      return _i39.AddBucketRequest.fromJson(data) as T;
     }
-    if (t == _i40.AddTicketDTO) {
-      return _i40.AddTicketDTO.fromJson(data) as T;
+    if (t == _i40.AddCommentRequest) {
+      return _i40.AddCommentRequest.fromJson(data) as T;
     }
-    if (t == _i41.AddTicketRequest) {
-      return _i41.AddTicketRequest.fromJson(data) as T;
+    if (t == _i41.AddTicketDTO) {
+      return _i41.AddTicketDTO.fromJson(data) as T;
     }
-    if (t == _i42.AttachmentModel) {
-      return _i42.AttachmentModel.fromJson(data) as T;
+    if (t == _i42.AddTicketRequest) {
+      return _i42.AddTicketRequest.fromJson(data) as T;
     }
-    if (t == _i43.BucketModel) {
-      return _i43.BucketModel.fromJson(data) as T;
+    if (t == _i43.AttachmentModel) {
+      return _i43.AttachmentModel.fromJson(data) as T;
     }
-    if (t == _i44.ChangeBucketRequest) {
-      return _i44.ChangeBucketRequest.fromJson(data) as T;
+    if (t == _i44.BucketModel) {
+      return _i44.BucketModel.fromJson(data) as T;
     }
-    if (t == _i45.CheckModel) {
-      return _i45.CheckModel.fromJson(data) as T;
+    if (t == _i45.ChangeBucketRequest) {
+      return _i45.ChangeBucketRequest.fromJson(data) as T;
     }
-    if (t == _i46.CheckOrganizationResponse) {
-      return _i46.CheckOrganizationResponse.fromJson(data) as T;
+    if (t == _i46.CheckModel) {
+      return _i46.CheckModel.fromJson(data) as T;
     }
-    if (t == _i47.CheckUsernameResponse) {
-      return _i47.CheckUsernameResponse.fromJson(data) as T;
+    if (t == _i47.CheckOrganizationResponse) {
+      return _i47.CheckOrganizationResponse.fromJson(data) as T;
     }
-    if (t == _i48.CommentModel) {
-      return _i48.CommentModel.fromJson(data) as T;
+    if (t == _i48.CheckUsernameResponse) {
+      return _i48.CheckUsernameResponse.fromJson(data) as T;
     }
-    if (t == _i49.GetAddTicketDataResponse) {
-      return _i49.GetAddTicketDataResponse.fromJson(data) as T;
+    if (t == _i49.CommentModel) {
+      return _i49.CommentModel.fromJson(data) as T;
     }
-    if (t == _i50.GetAllTicketsResponse) {
-      return _i50.GetAllTicketsResponse.fromJson(data) as T;
+    if (t == _i50.GetAddTicketDataResponse) {
+      return _i50.GetAddTicketDataResponse.fromJson(data) as T;
     }
-    if (t == _i51.GetAttendanceDataResponse) {
-      return _i51.GetAttendanceDataResponse.fromJson(data) as T;
+    if (t == _i51.GetAllTicketsResponse) {
+      return _i51.GetAllTicketsResponse.fromJson(data) as T;
     }
-    if (t == _i52.GetPlannerActivitiesResponse) {
-      return _i52.GetPlannerActivitiesResponse.fromJson(data) as T;
+    if (t == _i52.GetAttendanceDataResponse) {
+      return _i52.GetAttendanceDataResponse.fromJson(data) as T;
     }
-    if (t == _i53.GetPlannerDataResponse) {
-      return _i53.GetPlannerDataResponse.fromJson(data) as T;
+    if (t == _i53.GetPlannerActivitiesResponse) {
+      return _i53.GetPlannerActivitiesResponse.fromJson(data) as T;
     }
-    if (t == _i54.GetTicketCommentsResponse) {
-      return _i54.GetTicketCommentsResponse.fromJson(data) as T;
+    if (t == _i54.GetPlannerDataResponse) {
+      return _i54.GetPlannerDataResponse.fromJson(data) as T;
     }
-    if (t == _i55.GetTicketDataResponse) {
-      return _i55.GetTicketDataResponse.fromJson(data) as T;
+    if (t == _i55.GetTicketCommentsResponse) {
+      return _i55.GetTicketCommentsResponse.fromJson(data) as T;
     }
-    if (t == _i56.GetTicketThreadResponse) {
-      return _i56.GetTicketThreadResponse.fromJson(data) as T;
+    if (t == _i56.GetTicketDataResponse) {
+      return _i56.GetTicketDataResponse.fromJson(data) as T;
     }
-    if (t == _i57.PlannerAssignee) {
-      return _i57.PlannerAssignee.fromJson(data) as T;
+    if (t == _i57.GetTicketThreadResponse) {
+      return _i57.GetTicketThreadResponse.fromJson(data) as T;
     }
-    if (t == _i58.PlannerBucket) {
-      return _i58.PlannerBucket.fromJson(data) as T;
+    if (t == _i58.PlannerAssignee) {
+      return _i58.PlannerAssignee.fromJson(data) as T;
     }
-    if (t == _i59.PlannerTicket) {
-      return _i59.PlannerTicket.fromJson(data) as T;
+    if (t == _i59.PlannerBucket) {
+      return _i59.PlannerBucket.fromJson(data) as T;
     }
-    if (t == _i60.PriorityModel) {
-      return _i60.PriorityModel.fromJson(data) as T;
+    if (t == _i60.PlannerTicket) {
+      return _i60.PlannerTicket.fromJson(data) as T;
     }
-    if (t == _i61.RegisterAdminResponse) {
-      return _i61.RegisterAdminResponse.fromJson(data) as T;
+    if (t == _i61.PriorityModel) {
+      return _i61.PriorityModel.fromJson(data) as T;
     }
-    if (t == _i62.SignInResponse) {
-      return _i62.SignInResponse.fromJson(data) as T;
+    if (t == _i62.RegisterAdminResponse) {
+      return _i62.RegisterAdminResponse.fromJson(data) as T;
     }
-    if (t == _i63.StatusModel) {
-      return _i63.StatusModel.fromJson(data) as T;
+    if (t == _i63.SignInResponse) {
+      return _i63.SignInResponse.fromJson(data) as T;
     }
-    if (t == _i64.ThreadItemModel) {
-      return _i64.ThreadItemModel.fromJson(data) as T;
+    if (t == _i64.StatusModel) {
+      return _i64.StatusModel.fromJson(data) as T;
     }
-    if (t == _i65.TicketAttachmentDTO) {
-      return _i65.TicketAttachmentDTO.fromJson(data) as T;
+    if (t == _i65.ThreadItemModel) {
+      return _i65.ThreadItemModel.fromJson(data) as T;
     }
-    if (t == _i66.TicketModel) {
-      return _i66.TicketModel.fromJson(data) as T;
+    if (t == _i66.TicketAttachmentDTO) {
+      return _i66.TicketAttachmentDTO.fromJson(data) as T;
     }
-    if (t == _i67.TypeModel) {
-      return _i67.TypeModel.fromJson(data) as T;
+    if (t == _i67.TicketModel) {
+      return _i67.TicketModel.fromJson(data) as T;
     }
-    if (t == _i68.UserModel) {
-      return _i68.UserModel.fromJson(data) as T;
+    if (t == _i68.TypeModel) {
+      return _i68.TypeModel.fromJson(data) as T;
     }
-    if (t == _i69.TypingIndicator) {
-      return _i69.TypingIndicator.fromJson(data) as T;
+    if (t == _i69.UserModel) {
+      return _i69.UserModel.fromJson(data) as T;
+    }
+    if (t == _i70.TypingIndicator) {
+      return _i70.TypingIndicator.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.ChatStreamEvent?>()) {
       return (data != null ? _i2.ChatStreamEvent.fromJson(data) : null) as T;
@@ -435,207 +442,210 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i10.FlowModel?>()) {
       return (data != null ? _i10.FlowModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.LeaveConfig?>()) {
-      return (data != null ? _i11.LeaveConfig.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.FontSetting?>()) {
+      return (data != null ? _i11.FontSetting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.LeaveRequest?>()) {
-      return (data != null ? _i12.LeaveRequest.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.LeaveConfig?>()) {
+      return (data != null ? _i12.LeaveConfig.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.Memory?>()) {
-      return (data != null ? _i13.Memory.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.LeaveRequest?>()) {
+      return (data != null ? _i13.LeaveRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.Organization?>()) {
-      return (data != null ? _i14.Organization.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.Memory?>()) {
+      return (data != null ? _i14.Memory.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.PlannerActivity?>()) {
-      return (data != null ? _i15.PlannerActivity.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.Organization?>()) {
+      return (data != null ? _i15.Organization.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i16.PlannerApp?>()) {
-      return (data != null ? _i16.PlannerApp.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.PlannerActivity?>()) {
+      return (data != null ? _i16.PlannerActivity.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i17.PlannerNotification?>()) {
-      return (data != null ? _i17.PlannerNotification.fromJson(data) : null)
+    if (t == _i1.getType<_i17.PlannerApp?>()) {
+      return (data != null ? _i17.PlannerApp.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i18.PlannerNotification?>()) {
+      return (data != null ? _i18.PlannerNotification.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i18.Priority?>()) {
-      return (data != null ? _i18.Priority.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.Priority?>()) {
+      return (data != null ? _i19.Priority.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.Status?>()) {
-      return (data != null ? _i19.Status.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.Status?>()) {
+      return (data != null ? _i20.Status.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i20.SystemColor?>()) {
-      return (data != null ? _i20.SystemColor.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.SystemColor?>()) {
+      return (data != null ? _i21.SystemColor.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.SystemVariables?>()) {
-      return (data != null ? _i21.SystemVariables.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.SystemVariables?>()) {
+      return (data != null ? _i22.SystemVariables.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.Ticket?>()) {
-      return (data != null ? _i22.Ticket.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.Ticket?>()) {
+      return (data != null ? _i23.Ticket.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i23.TicketAssignee?>()) {
-      return (data != null ? _i23.TicketAssignee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i24.TicketAssignee?>()) {
+      return (data != null ? _i24.TicketAssignee.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.TicketAttachment?>()) {
-      return (data != null ? _i24.TicketAttachment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i25.TicketAttachment?>()) {
+      return (data != null ? _i25.TicketAttachment.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.TicketComment?>()) {
-      return (data != null ? _i25.TicketComment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.TicketComment?>()) {
+      return (data != null ? _i26.TicketComment.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.TicketStatusChange?>()) {
-      return (data != null ? _i26.TicketStatusChange.fromJson(data) : null)
+    if (t == _i1.getType<_i27.TicketStatusChange?>()) {
+      return (data != null ? _i27.TicketStatusChange.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i27.TicketType?>()) {
-      return (data != null ? _i27.TicketType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i28.TicketType?>()) {
+      return (data != null ? _i28.TicketType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i28.TicketView?>()) {
-      return (data != null ? _i28.TicketView.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.TicketView?>()) {
+      return (data != null ? _i29.TicketView.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.User?>()) {
-      return (data != null ? _i29.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i30.User?>()) {
+      return (data != null ? _i30.User.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.UserBreak?>()) {
-      return (data != null ? _i30.UserBreak.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i31.UserBreak?>()) {
+      return (data != null ? _i31.UserBreak.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i31.UserDevice?>()) {
-      return (data != null ? _i31.UserDevice.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i32.UserDevice?>()) {
+      return (data != null ? _i32.UserDevice.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i32.UserRoomMap?>()) {
-      return (data != null ? _i32.UserRoomMap.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.UserRoomMap?>()) {
+      return (data != null ? _i33.UserRoomMap.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.UserTypes?>()) {
-      return (data != null ? _i33.UserTypes.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i34.UserTypes?>()) {
+      return (data != null ? _i34.UserTypes.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i34.DeviceType?>()) {
-      return (data != null ? _i34.DeviceType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i35.DeviceType?>()) {
+      return (data != null ? _i35.DeviceType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i35.MessageType?>()) {
-      return (data != null ? _i35.MessageType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.MessageType?>()) {
+      return (data != null ? _i36.MessageType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i36.Gif?>()) {
-      return (data != null ? _i36.Gif.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.Gif?>()) {
+      return (data != null ? _i37.Gif.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i37.Greeting?>()) {
-      return (data != null ? _i37.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i38.Greeting?>()) {
+      return (data != null ? _i38.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i38.AddBucketRequest?>()) {
-      return (data != null ? _i38.AddBucketRequest.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i39.AddBucketRequest?>()) {
+      return (data != null ? _i39.AddBucketRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i39.AddCommentRequest?>()) {
-      return (data != null ? _i39.AddCommentRequest.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i40.AddCommentRequest?>()) {
+      return (data != null ? _i40.AddCommentRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i40.AddTicketDTO?>()) {
-      return (data != null ? _i40.AddTicketDTO.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i41.AddTicketDTO?>()) {
+      return (data != null ? _i41.AddTicketDTO.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i41.AddTicketRequest?>()) {
-      return (data != null ? _i41.AddTicketRequest.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i42.AddTicketRequest?>()) {
+      return (data != null ? _i42.AddTicketRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i42.AttachmentModel?>()) {
-      return (data != null ? _i42.AttachmentModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i43.AttachmentModel?>()) {
+      return (data != null ? _i43.AttachmentModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i43.BucketModel?>()) {
-      return (data != null ? _i43.BucketModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i44.BucketModel?>()) {
+      return (data != null ? _i44.BucketModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i44.ChangeBucketRequest?>()) {
-      return (data != null ? _i44.ChangeBucketRequest.fromJson(data) : null)
+    if (t == _i1.getType<_i45.ChangeBucketRequest?>()) {
+      return (data != null ? _i45.ChangeBucketRequest.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i45.CheckModel?>()) {
-      return (data != null ? _i45.CheckModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i46.CheckModel?>()) {
+      return (data != null ? _i46.CheckModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i46.CheckOrganizationResponse?>()) {
+    if (t == _i1.getType<_i47.CheckOrganizationResponse?>()) {
       return (data != null
-              ? _i46.CheckOrganizationResponse.fromJson(data)
+              ? _i47.CheckOrganizationResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i47.CheckUsernameResponse?>()) {
-      return (data != null ? _i47.CheckUsernameResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i48.CheckUsernameResponse?>()) {
+      return (data != null ? _i48.CheckUsernameResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i48.CommentModel?>()) {
-      return (data != null ? _i48.CommentModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i49.CommentModel?>()) {
+      return (data != null ? _i49.CommentModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i49.GetAddTicketDataResponse?>()) {
+    if (t == _i1.getType<_i50.GetAddTicketDataResponse?>()) {
       return (data != null
-              ? _i49.GetAddTicketDataResponse.fromJson(data)
+              ? _i50.GetAddTicketDataResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i50.GetAllTicketsResponse?>()) {
-      return (data != null ? _i50.GetAllTicketsResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i51.GetAllTicketsResponse?>()) {
+      return (data != null ? _i51.GetAllTicketsResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i51.GetAttendanceDataResponse?>()) {
+    if (t == _i1.getType<_i52.GetAttendanceDataResponse?>()) {
       return (data != null
-              ? _i51.GetAttendanceDataResponse.fromJson(data)
+              ? _i52.GetAttendanceDataResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i52.GetPlannerActivitiesResponse?>()) {
+    if (t == _i1.getType<_i53.GetPlannerActivitiesResponse?>()) {
       return (data != null
-              ? _i52.GetPlannerActivitiesResponse.fromJson(data)
+              ? _i53.GetPlannerActivitiesResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i53.GetPlannerDataResponse?>()) {
-      return (data != null ? _i53.GetPlannerDataResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i54.GetPlannerDataResponse?>()) {
+      return (data != null ? _i54.GetPlannerDataResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i54.GetTicketCommentsResponse?>()) {
+    if (t == _i1.getType<_i55.GetTicketCommentsResponse?>()) {
       return (data != null
-              ? _i54.GetTicketCommentsResponse.fromJson(data)
+              ? _i55.GetTicketCommentsResponse.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i55.GetTicketDataResponse?>()) {
-      return (data != null ? _i55.GetTicketDataResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i56.GetTicketDataResponse?>()) {
+      return (data != null ? _i56.GetTicketDataResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i56.GetTicketThreadResponse?>()) {
-      return (data != null ? _i56.GetTicketThreadResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i57.GetTicketThreadResponse?>()) {
+      return (data != null ? _i57.GetTicketThreadResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i57.PlannerAssignee?>()) {
-      return (data != null ? _i57.PlannerAssignee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i58.PlannerAssignee?>()) {
+      return (data != null ? _i58.PlannerAssignee.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i58.PlannerBucket?>()) {
-      return (data != null ? _i58.PlannerBucket.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i59.PlannerBucket?>()) {
+      return (data != null ? _i59.PlannerBucket.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.PlannerTicket?>()) {
-      return (data != null ? _i59.PlannerTicket.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i60.PlannerTicket?>()) {
+      return (data != null ? _i60.PlannerTicket.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i60.PriorityModel?>()) {
-      return (data != null ? _i60.PriorityModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i61.PriorityModel?>()) {
+      return (data != null ? _i61.PriorityModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i61.RegisterAdminResponse?>()) {
-      return (data != null ? _i61.RegisterAdminResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i62.RegisterAdminResponse?>()) {
+      return (data != null ? _i62.RegisterAdminResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i62.SignInResponse?>()) {
-      return (data != null ? _i62.SignInResponse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i63.SignInResponse?>()) {
+      return (data != null ? _i63.SignInResponse.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i63.StatusModel?>()) {
-      return (data != null ? _i63.StatusModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i64.StatusModel?>()) {
+      return (data != null ? _i64.StatusModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i64.ThreadItemModel?>()) {
-      return (data != null ? _i64.ThreadItemModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i65.ThreadItemModel?>()) {
+      return (data != null ? _i65.ThreadItemModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i65.TicketAttachmentDTO?>()) {
-      return (data != null ? _i65.TicketAttachmentDTO.fromJson(data) : null)
+    if (t == _i1.getType<_i66.TicketAttachmentDTO?>()) {
+      return (data != null ? _i66.TicketAttachmentDTO.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i66.TicketModel?>()) {
-      return (data != null ? _i66.TicketModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i67.TicketModel?>()) {
+      return (data != null ? _i67.TicketModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i67.TypeModel?>()) {
-      return (data != null ? _i67.TypeModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i68.TypeModel?>()) {
+      return (data != null ? _i68.TypeModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i68.UserModel?>()) {
-      return (data != null ? _i68.UserModel.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i69.UserModel?>()) {
+      return (data != null ? _i69.UserModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i69.TypingIndicator?>()) {
-      return (data != null ? _i69.TypingIndicator.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i70.TypingIndicator?>()) {
+      return (data != null ? _i70.TypingIndicator.fromJson(data) : null) as T;
     }
     if (t == List<_i1.UuidValue>) {
       return (data as List).map((e) => deserialize<_i1.UuidValue>(e)).toList()
@@ -650,171 +660,197 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
+    if (t == List<_i30.User>) {
+      return (data as List).map((e) => deserialize<_i30.User>(e)).toList() as T;
+    }
+    if (t == _i1.getType<List<_i30.User>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<_i30.User>(e)).toList()
+              : null)
+          as T;
+    }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
-    if (t == List<_i45.CheckModel>) {
-      return (data as List).map((e) => deserialize<_i45.CheckModel>(e)).toList()
+    if (t == _i1.getType<List<String>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
           as T;
     }
-    if (t == _i1.getType<List<_i45.CheckModel>?>()) {
+    if (t == List<_i46.CheckModel>) {
+      return (data as List).map((e) => deserialize<_i46.CheckModel>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i46.CheckModel>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i45.CheckModel>(e))
+                    .map((e) => deserialize<_i46.CheckModel>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i65.TicketAttachmentDTO>) {
+    if (t == List<_i66.TicketAttachmentDTO>) {
       return (data as List)
-              .map((e) => deserialize<_i65.TicketAttachmentDTO>(e))
+              .map((e) => deserialize<_i66.TicketAttachmentDTO>(e))
               .toList()
           as T;
     }
-    if (t == List<_i57.PlannerAssignee>) {
+    if (t == List<_i58.PlannerAssignee>) {
       return (data as List)
-              .map((e) => deserialize<_i57.PlannerAssignee>(e))
+              .map((e) => deserialize<_i58.PlannerAssignee>(e))
               .toList()
           as T;
     }
-    if (t == List<_i59.PlannerTicket>) {
+    if (t == List<_i60.PlannerTicket>) {
       return (data as List)
-              .map((e) => deserialize<_i59.PlannerTicket>(e))
+              .map((e) => deserialize<_i60.PlannerTicket>(e))
               .toList()
           as T;
     }
-    if (t == List<_i68.UserModel>) {
-      return (data as List).map((e) => deserialize<_i68.UserModel>(e)).toList()
+    if (t == List<_i69.UserModel>) {
+      return (data as List).map((e) => deserialize<_i69.UserModel>(e)).toList()
           as T;
     }
-    if (t == List<_i63.StatusModel>) {
+    if (t == List<_i64.StatusModel>) {
       return (data as List)
-              .map((e) => deserialize<_i63.StatusModel>(e))
+              .map((e) => deserialize<_i64.StatusModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i60.PriorityModel>) {
+    if (t == List<_i61.PriorityModel>) {
       return (data as List)
-              .map((e) => deserialize<_i60.PriorityModel>(e))
+              .map((e) => deserialize<_i61.PriorityModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i67.TypeModel>) {
-      return (data as List).map((e) => deserialize<_i67.TypeModel>(e)).toList()
+    if (t == List<_i68.TypeModel>) {
+      return (data as List).map((e) => deserialize<_i68.TypeModel>(e)).toList()
           as T;
     }
     if (t == List<_i10.FlowModel>) {
       return (data as List).map((e) => deserialize<_i10.FlowModel>(e)).toList()
           as T;
     }
-    if (t == List<_i29.User>) {
-      return (data as List).map((e) => deserialize<_i29.User>(e)).toList() as T;
-    }
     if (t == List<_i3.Attendance>) {
       return (data as List).map((e) => deserialize<_i3.Attendance>(e)).toList()
           as T;
     }
-    if (t == List<_i11.LeaveConfig>) {
+    if (t == List<_i12.LeaveConfig>) {
       return (data as List)
-              .map((e) => deserialize<_i11.LeaveConfig>(e))
+              .map((e) => deserialize<_i12.LeaveConfig>(e))
               .toList()
           as T;
     }
-    if (t == List<_i12.LeaveRequest>) {
+    if (t == List<_i13.LeaveRequest>) {
       return (data as List)
-              .map((e) => deserialize<_i12.LeaveRequest>(e))
+              .map((e) => deserialize<_i13.LeaveRequest>(e))
               .toList()
           as T;
     }
-    if (t == List<_i15.PlannerActivity>) {
+    if (t == List<_i16.PlannerActivity>) {
       return (data as List)
-              .map((e) => deserialize<_i15.PlannerActivity>(e))
+              .map((e) => deserialize<_i16.PlannerActivity>(e))
               .toList()
           as T;
     }
-    if (t == List<_i43.BucketModel>) {
+    if (t == List<_i44.BucketModel>) {
       return (data as List)
-              .map((e) => deserialize<_i43.BucketModel>(e))
+              .map((e) => deserialize<_i44.BucketModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i48.CommentModel>) {
+    if (t == List<_i49.CommentModel>) {
       return (data as List)
-              .map((e) => deserialize<_i48.CommentModel>(e))
+              .map((e) => deserialize<_i49.CommentModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i64.ThreadItemModel>) {
+    if (t == List<_i65.ThreadItemModel>) {
       return (data as List)
-              .map((e) => deserialize<_i64.ThreadItemModel>(e))
+              .map((e) => deserialize<_i65.ThreadItemModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i42.AttachmentModel>) {
+    if (t == List<_i43.AttachmentModel>) {
       return (data as List)
-              .map((e) => deserialize<_i42.AttachmentModel>(e))
+              .map((e) => deserialize<_i43.AttachmentModel>(e))
               .toList()
           as T;
     }
-    if (t == List<_i70.PlannerApp>) {
-      return (data as List).map((e) => deserialize<_i70.PlannerApp>(e)).toList()
+    if (t == _i1.getType<List<_i43.AttachmentModel>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i43.AttachmentModel>(e))
+                    .toList()
+              : null)
           as T;
     }
-    if (t == List<_i71.User>) {
-      return (data as List).map((e) => deserialize<_i71.User>(e)).toList() as T;
-    }
-    if (t == List<_i72.UserTypes>) {
-      return (data as List).map((e) => deserialize<_i72.UserTypes>(e)).toList()
+    if (t == List<_i71.PlannerApp>) {
+      return (data as List).map((e) => deserialize<_i71.PlannerApp>(e)).toList()
           as T;
     }
-    if (t == List<_i73.Attendance>) {
-      return (data as List).map((e) => deserialize<_i73.Attendance>(e)).toList()
+    if (t == List<_i72.User>) {
+      return (data as List).map((e) => deserialize<_i72.User>(e)).toList() as T;
+    }
+    if (t == List<_i73.UserTypes>) {
+      return (data as List).map((e) => deserialize<_i73.UserTypes>(e)).toList()
           as T;
     }
-    if (t == List<_i74.LeaveConfig>) {
+    if (t == List<_i74.Attendance>) {
+      return (data as List).map((e) => deserialize<_i74.Attendance>(e)).toList()
+          as T;
+    }
+    if (t == List<_i75.LeaveConfig>) {
       return (data as List)
-              .map((e) => deserialize<_i74.LeaveConfig>(e))
+              .map((e) => deserialize<_i75.LeaveConfig>(e))
               .toList()
           as T;
     }
-    if (t == List<_i75.SystemColor>) {
+    if (t == List<_i76.SystemColor>) {
       return (data as List)
-              .map((e) => deserialize<_i75.SystemColor>(e))
+              .map((e) => deserialize<_i76.SystemColor>(e))
               .toList()
           as T;
     }
-    if (t == List<_i76.ChatRoom>) {
-      return (data as List).map((e) => deserialize<_i76.ChatRoom>(e)).toList()
-          as T;
-    }
-    if (t == List<_i77.ChatMessage>) {
+    if (t == List<_i77.FontSetting>) {
       return (data as List)
-              .map((e) => deserialize<_i77.ChatMessage>(e))
+              .map((e) => deserialize<_i77.FontSetting>(e))
               .toList()
           as T;
     }
-    if (t == List<_i78.FlowModel>) {
-      return (data as List).map((e) => deserialize<_i78.FlowModel>(e)).toList()
+    if (t == List<_i78.ChatRoom>) {
+      return (data as List).map((e) => deserialize<_i78.ChatRoom>(e)).toList()
           as T;
     }
-    if (t == List<_i79.Doc>) {
-      return (data as List).map((e) => deserialize<_i79.Doc>(e)).toList() as T;
-    }
-    if (t == List<_i80.Emoji>) {
-      return (data as List).map((e) => deserialize<_i80.Emoji>(e)).toList()
+    if (t == List<_i79.ChatMessage>) {
+      return (data as List)
+              .map((e) => deserialize<_i79.ChatMessage>(e))
+              .toList()
           as T;
     }
-    if (t == List<_i81.Gif>) {
-      return (data as List).map((e) => deserialize<_i81.Gif>(e)).toList() as T;
+    if (t == List<_i80.FlowModel>) {
+      return (data as List).map((e) => deserialize<_i80.FlowModel>(e)).toList()
+          as T;
     }
-    try {
-      return _i82.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
-    try {
-      return _i83.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    if (t == List<_i81.Doc>) {
+      return (data as List).map((e) => deserialize<_i81.Doc>(e)).toList() as T;
+    }
+    if (t == List<_i82.Emoji>) {
+      return (data as List).map((e) => deserialize<_i82.Emoji>(e)).toList()
+          as T;
+    }
+    if (t == List<_i83.Gif>) {
+      return (data as List).map((e) => deserialize<_i83.Gif>(e)).toList() as T;
+    }
     try {
       return _i84.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i85.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i86.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -830,65 +866,66 @@ class Protocol extends _i1.SerializationManager {
       _i8.Doc => 'Doc',
       _i9.Emoji => 'Emoji',
       _i10.FlowModel => 'FlowModel',
-      _i11.LeaveConfig => 'LeaveConfig',
-      _i12.LeaveRequest => 'LeaveRequest',
-      _i13.Memory => 'Memory',
-      _i14.Organization => 'Organization',
-      _i15.PlannerActivity => 'PlannerActivity',
-      _i16.PlannerApp => 'PlannerApp',
-      _i17.PlannerNotification => 'PlannerNotification',
-      _i18.Priority => 'Priority',
-      _i19.Status => 'Status',
-      _i20.SystemColor => 'SystemColor',
-      _i21.SystemVariables => 'SystemVariables',
-      _i22.Ticket => 'Ticket',
-      _i23.TicketAssignee => 'TicketAssignee',
-      _i24.TicketAttachment => 'TicketAttachment',
-      _i25.TicketComment => 'TicketComment',
-      _i26.TicketStatusChange => 'TicketStatusChange',
-      _i27.TicketType => 'TicketType',
-      _i28.TicketView => 'TicketView',
-      _i29.User => 'User',
-      _i30.UserBreak => 'UserBreak',
-      _i31.UserDevice => 'UserDevice',
-      _i32.UserRoomMap => 'UserRoomMap',
-      _i33.UserTypes => 'UserTypes',
-      _i34.DeviceType => 'DeviceType',
-      _i35.MessageType => 'MessageType',
-      _i36.Gif => 'Gif',
-      _i37.Greeting => 'Greeting',
-      _i38.AddBucketRequest => 'AddBucketRequest',
-      _i39.AddCommentRequest => 'AddCommentRequest',
-      _i40.AddTicketDTO => 'AddTicketDTO',
-      _i41.AddTicketRequest => 'AddTicketRequest',
-      _i42.AttachmentModel => 'AttachmentModel',
-      _i43.BucketModel => 'BucketModel',
-      _i44.ChangeBucketRequest => 'ChangeBucketRequest',
-      _i45.CheckModel => 'CheckModel',
-      _i46.CheckOrganizationResponse => 'CheckOrganizationResponse',
-      _i47.CheckUsernameResponse => 'CheckUsernameResponse',
-      _i48.CommentModel => 'CommentModel',
-      _i49.GetAddTicketDataResponse => 'GetAddTicketDataResponse',
-      _i50.GetAllTicketsResponse => 'GetAllTicketsResponse',
-      _i51.GetAttendanceDataResponse => 'GetAttendanceDataResponse',
-      _i52.GetPlannerActivitiesResponse => 'GetPlannerActivitiesResponse',
-      _i53.GetPlannerDataResponse => 'GetPlannerDataResponse',
-      _i54.GetTicketCommentsResponse => 'GetTicketCommentsResponse',
-      _i55.GetTicketDataResponse => 'GetTicketDataResponse',
-      _i56.GetTicketThreadResponse => 'GetTicketThreadResponse',
-      _i57.PlannerAssignee => 'PlannerAssignee',
-      _i58.PlannerBucket => 'PlannerBucket',
-      _i59.PlannerTicket => 'PlannerTicket',
-      _i60.PriorityModel => 'PriorityModel',
-      _i61.RegisterAdminResponse => 'RegisterAdminResponse',
-      _i62.SignInResponse => 'SignInResponse',
-      _i63.StatusModel => 'StatusModel',
-      _i64.ThreadItemModel => 'ThreadItemModel',
-      _i65.TicketAttachmentDTO => 'TicketAttachmentDTO',
-      _i66.TicketModel => 'TicketModel',
-      _i67.TypeModel => 'TypeModel',
-      _i68.UserModel => 'UserModel',
-      _i69.TypingIndicator => 'TypingIndicator',
+      _i11.FontSetting => 'FontSetting',
+      _i12.LeaveConfig => 'LeaveConfig',
+      _i13.LeaveRequest => 'LeaveRequest',
+      _i14.Memory => 'Memory',
+      _i15.Organization => 'Organization',
+      _i16.PlannerActivity => 'PlannerActivity',
+      _i17.PlannerApp => 'PlannerApp',
+      _i18.PlannerNotification => 'PlannerNotification',
+      _i19.Priority => 'Priority',
+      _i20.Status => 'Status',
+      _i21.SystemColor => 'SystemColor',
+      _i22.SystemVariables => 'SystemVariables',
+      _i23.Ticket => 'Ticket',
+      _i24.TicketAssignee => 'TicketAssignee',
+      _i25.TicketAttachment => 'TicketAttachment',
+      _i26.TicketComment => 'TicketComment',
+      _i27.TicketStatusChange => 'TicketStatusChange',
+      _i28.TicketType => 'TicketType',
+      _i29.TicketView => 'TicketView',
+      _i30.User => 'User',
+      _i31.UserBreak => 'UserBreak',
+      _i32.UserDevice => 'UserDevice',
+      _i33.UserRoomMap => 'UserRoomMap',
+      _i34.UserTypes => 'UserTypes',
+      _i35.DeviceType => 'DeviceType',
+      _i36.MessageType => 'MessageType',
+      _i37.Gif => 'Gif',
+      _i38.Greeting => 'Greeting',
+      _i39.AddBucketRequest => 'AddBucketRequest',
+      _i40.AddCommentRequest => 'AddCommentRequest',
+      _i41.AddTicketDTO => 'AddTicketDTO',
+      _i42.AddTicketRequest => 'AddTicketRequest',
+      _i43.AttachmentModel => 'AttachmentModel',
+      _i44.BucketModel => 'BucketModel',
+      _i45.ChangeBucketRequest => 'ChangeBucketRequest',
+      _i46.CheckModel => 'CheckModel',
+      _i47.CheckOrganizationResponse => 'CheckOrganizationResponse',
+      _i48.CheckUsernameResponse => 'CheckUsernameResponse',
+      _i49.CommentModel => 'CommentModel',
+      _i50.GetAddTicketDataResponse => 'GetAddTicketDataResponse',
+      _i51.GetAllTicketsResponse => 'GetAllTicketsResponse',
+      _i52.GetAttendanceDataResponse => 'GetAttendanceDataResponse',
+      _i53.GetPlannerActivitiesResponse => 'GetPlannerActivitiesResponse',
+      _i54.GetPlannerDataResponse => 'GetPlannerDataResponse',
+      _i55.GetTicketCommentsResponse => 'GetTicketCommentsResponse',
+      _i56.GetTicketDataResponse => 'GetTicketDataResponse',
+      _i57.GetTicketThreadResponse => 'GetTicketThreadResponse',
+      _i58.PlannerAssignee => 'PlannerAssignee',
+      _i59.PlannerBucket => 'PlannerBucket',
+      _i60.PlannerTicket => 'PlannerTicket',
+      _i61.PriorityModel => 'PriorityModel',
+      _i62.RegisterAdminResponse => 'RegisterAdminResponse',
+      _i63.SignInResponse => 'SignInResponse',
+      _i64.StatusModel => 'StatusModel',
+      _i65.ThreadItemModel => 'ThreadItemModel',
+      _i66.TicketAttachmentDTO => 'TicketAttachmentDTO',
+      _i67.TicketModel => 'TicketModel',
+      _i68.TypeModel => 'TypeModel',
+      _i69.UserModel => 'UserModel',
+      _i70.TypingIndicator => 'TypingIndicator',
       _ => null,
     };
   }
@@ -921,134 +958,136 @@ class Protocol extends _i1.SerializationManager {
         return 'Emoji';
       case _i10.FlowModel():
         return 'FlowModel';
-      case _i11.LeaveConfig():
+      case _i11.FontSetting():
+        return 'FontSetting';
+      case _i12.LeaveConfig():
         return 'LeaveConfig';
-      case _i12.LeaveRequest():
+      case _i13.LeaveRequest():
         return 'LeaveRequest';
-      case _i13.Memory():
+      case _i14.Memory():
         return 'Memory';
-      case _i14.Organization():
+      case _i15.Organization():
         return 'Organization';
-      case _i15.PlannerActivity():
+      case _i16.PlannerActivity():
         return 'PlannerActivity';
-      case _i16.PlannerApp():
+      case _i17.PlannerApp():
         return 'PlannerApp';
-      case _i17.PlannerNotification():
+      case _i18.PlannerNotification():
         return 'PlannerNotification';
-      case _i18.Priority():
+      case _i19.Priority():
         return 'Priority';
-      case _i19.Status():
+      case _i20.Status():
         return 'Status';
-      case _i20.SystemColor():
+      case _i21.SystemColor():
         return 'SystemColor';
-      case _i21.SystemVariables():
+      case _i22.SystemVariables():
         return 'SystemVariables';
-      case _i22.Ticket():
+      case _i23.Ticket():
         return 'Ticket';
-      case _i23.TicketAssignee():
+      case _i24.TicketAssignee():
         return 'TicketAssignee';
-      case _i24.TicketAttachment():
+      case _i25.TicketAttachment():
         return 'TicketAttachment';
-      case _i25.TicketComment():
+      case _i26.TicketComment():
         return 'TicketComment';
-      case _i26.TicketStatusChange():
+      case _i27.TicketStatusChange():
         return 'TicketStatusChange';
-      case _i27.TicketType():
+      case _i28.TicketType():
         return 'TicketType';
-      case _i28.TicketView():
+      case _i29.TicketView():
         return 'TicketView';
-      case _i29.User():
+      case _i30.User():
         return 'User';
-      case _i30.UserBreak():
+      case _i31.UserBreak():
         return 'UserBreak';
-      case _i31.UserDevice():
+      case _i32.UserDevice():
         return 'UserDevice';
-      case _i32.UserRoomMap():
+      case _i33.UserRoomMap():
         return 'UserRoomMap';
-      case _i33.UserTypes():
+      case _i34.UserTypes():
         return 'UserTypes';
-      case _i34.DeviceType():
+      case _i35.DeviceType():
         return 'DeviceType';
-      case _i35.MessageType():
+      case _i36.MessageType():
         return 'MessageType';
-      case _i36.Gif():
+      case _i37.Gif():
         return 'Gif';
-      case _i37.Greeting():
+      case _i38.Greeting():
         return 'Greeting';
-      case _i38.AddBucketRequest():
+      case _i39.AddBucketRequest():
         return 'AddBucketRequest';
-      case _i39.AddCommentRequest():
+      case _i40.AddCommentRequest():
         return 'AddCommentRequest';
-      case _i40.AddTicketDTO():
+      case _i41.AddTicketDTO():
         return 'AddTicketDTO';
-      case _i41.AddTicketRequest():
+      case _i42.AddTicketRequest():
         return 'AddTicketRequest';
-      case _i42.AttachmentModel():
+      case _i43.AttachmentModel():
         return 'AttachmentModel';
-      case _i43.BucketModel():
+      case _i44.BucketModel():
         return 'BucketModel';
-      case _i44.ChangeBucketRequest():
+      case _i45.ChangeBucketRequest():
         return 'ChangeBucketRequest';
-      case _i45.CheckModel():
+      case _i46.CheckModel():
         return 'CheckModel';
-      case _i46.CheckOrganizationResponse():
+      case _i47.CheckOrganizationResponse():
         return 'CheckOrganizationResponse';
-      case _i47.CheckUsernameResponse():
+      case _i48.CheckUsernameResponse():
         return 'CheckUsernameResponse';
-      case _i48.CommentModel():
+      case _i49.CommentModel():
         return 'CommentModel';
-      case _i49.GetAddTicketDataResponse():
+      case _i50.GetAddTicketDataResponse():
         return 'GetAddTicketDataResponse';
-      case _i50.GetAllTicketsResponse():
+      case _i51.GetAllTicketsResponse():
         return 'GetAllTicketsResponse';
-      case _i51.GetAttendanceDataResponse():
+      case _i52.GetAttendanceDataResponse():
         return 'GetAttendanceDataResponse';
-      case _i52.GetPlannerActivitiesResponse():
+      case _i53.GetPlannerActivitiesResponse():
         return 'GetPlannerActivitiesResponse';
-      case _i53.GetPlannerDataResponse():
+      case _i54.GetPlannerDataResponse():
         return 'GetPlannerDataResponse';
-      case _i54.GetTicketCommentsResponse():
+      case _i55.GetTicketCommentsResponse():
         return 'GetTicketCommentsResponse';
-      case _i55.GetTicketDataResponse():
+      case _i56.GetTicketDataResponse():
         return 'GetTicketDataResponse';
-      case _i56.GetTicketThreadResponse():
+      case _i57.GetTicketThreadResponse():
         return 'GetTicketThreadResponse';
-      case _i57.PlannerAssignee():
+      case _i58.PlannerAssignee():
         return 'PlannerAssignee';
-      case _i58.PlannerBucket():
+      case _i59.PlannerBucket():
         return 'PlannerBucket';
-      case _i59.PlannerTicket():
+      case _i60.PlannerTicket():
         return 'PlannerTicket';
-      case _i60.PriorityModel():
+      case _i61.PriorityModel():
         return 'PriorityModel';
-      case _i61.RegisterAdminResponse():
+      case _i62.RegisterAdminResponse():
         return 'RegisterAdminResponse';
-      case _i62.SignInResponse():
+      case _i63.SignInResponse():
         return 'SignInResponse';
-      case _i63.StatusModel():
+      case _i64.StatusModel():
         return 'StatusModel';
-      case _i64.ThreadItemModel():
+      case _i65.ThreadItemModel():
         return 'ThreadItemModel';
-      case _i65.TicketAttachmentDTO():
+      case _i66.TicketAttachmentDTO():
         return 'TicketAttachmentDTO';
-      case _i66.TicketModel():
+      case _i67.TicketModel():
         return 'TicketModel';
-      case _i67.TypeModel():
+      case _i68.TypeModel():
         return 'TypeModel';
-      case _i68.UserModel():
+      case _i69.UserModel():
         return 'UserModel';
-      case _i69.TypingIndicator():
+      case _i70.TypingIndicator():
         return 'TypingIndicator';
     }
-    className = _i82.Protocol().getClassNameForObject(data);
+    className = _i84.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i83.Protocol().getClassNameForObject(data);
+    className = _i85.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
-    className = _i84.Protocol().getClassNameForObject(data);
+    className = _i86.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -1088,194 +1127,197 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'FlowModel') {
       return deserialize<_i10.FlowModel>(data['data']);
     }
+    if (dataClassName == 'FontSetting') {
+      return deserialize<_i11.FontSetting>(data['data']);
+    }
     if (dataClassName == 'LeaveConfig') {
-      return deserialize<_i11.LeaveConfig>(data['data']);
+      return deserialize<_i12.LeaveConfig>(data['data']);
     }
     if (dataClassName == 'LeaveRequest') {
-      return deserialize<_i12.LeaveRequest>(data['data']);
+      return deserialize<_i13.LeaveRequest>(data['data']);
     }
     if (dataClassName == 'Memory') {
-      return deserialize<_i13.Memory>(data['data']);
+      return deserialize<_i14.Memory>(data['data']);
     }
     if (dataClassName == 'Organization') {
-      return deserialize<_i14.Organization>(data['data']);
+      return deserialize<_i15.Organization>(data['data']);
     }
     if (dataClassName == 'PlannerActivity') {
-      return deserialize<_i15.PlannerActivity>(data['data']);
+      return deserialize<_i16.PlannerActivity>(data['data']);
     }
     if (dataClassName == 'PlannerApp') {
-      return deserialize<_i16.PlannerApp>(data['data']);
+      return deserialize<_i17.PlannerApp>(data['data']);
     }
     if (dataClassName == 'PlannerNotification') {
-      return deserialize<_i17.PlannerNotification>(data['data']);
+      return deserialize<_i18.PlannerNotification>(data['data']);
     }
     if (dataClassName == 'Priority') {
-      return deserialize<_i18.Priority>(data['data']);
+      return deserialize<_i19.Priority>(data['data']);
     }
     if (dataClassName == 'Status') {
-      return deserialize<_i19.Status>(data['data']);
+      return deserialize<_i20.Status>(data['data']);
     }
     if (dataClassName == 'SystemColor') {
-      return deserialize<_i20.SystemColor>(data['data']);
+      return deserialize<_i21.SystemColor>(data['data']);
     }
     if (dataClassName == 'SystemVariables') {
-      return deserialize<_i21.SystemVariables>(data['data']);
+      return deserialize<_i22.SystemVariables>(data['data']);
     }
     if (dataClassName == 'Ticket') {
-      return deserialize<_i22.Ticket>(data['data']);
+      return deserialize<_i23.Ticket>(data['data']);
     }
     if (dataClassName == 'TicketAssignee') {
-      return deserialize<_i23.TicketAssignee>(data['data']);
+      return deserialize<_i24.TicketAssignee>(data['data']);
     }
     if (dataClassName == 'TicketAttachment') {
-      return deserialize<_i24.TicketAttachment>(data['data']);
+      return deserialize<_i25.TicketAttachment>(data['data']);
     }
     if (dataClassName == 'TicketComment') {
-      return deserialize<_i25.TicketComment>(data['data']);
+      return deserialize<_i26.TicketComment>(data['data']);
     }
     if (dataClassName == 'TicketStatusChange') {
-      return deserialize<_i26.TicketStatusChange>(data['data']);
+      return deserialize<_i27.TicketStatusChange>(data['data']);
     }
     if (dataClassName == 'TicketType') {
-      return deserialize<_i27.TicketType>(data['data']);
+      return deserialize<_i28.TicketType>(data['data']);
     }
     if (dataClassName == 'TicketView') {
-      return deserialize<_i28.TicketView>(data['data']);
+      return deserialize<_i29.TicketView>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i29.User>(data['data']);
+      return deserialize<_i30.User>(data['data']);
     }
     if (dataClassName == 'UserBreak') {
-      return deserialize<_i30.UserBreak>(data['data']);
+      return deserialize<_i31.UserBreak>(data['data']);
     }
     if (dataClassName == 'UserDevice') {
-      return deserialize<_i31.UserDevice>(data['data']);
+      return deserialize<_i32.UserDevice>(data['data']);
     }
     if (dataClassName == 'UserRoomMap') {
-      return deserialize<_i32.UserRoomMap>(data['data']);
+      return deserialize<_i33.UserRoomMap>(data['data']);
     }
     if (dataClassName == 'UserTypes') {
-      return deserialize<_i33.UserTypes>(data['data']);
+      return deserialize<_i34.UserTypes>(data['data']);
     }
     if (dataClassName == 'DeviceType') {
-      return deserialize<_i34.DeviceType>(data['data']);
+      return deserialize<_i35.DeviceType>(data['data']);
     }
     if (dataClassName == 'MessageType') {
-      return deserialize<_i35.MessageType>(data['data']);
+      return deserialize<_i36.MessageType>(data['data']);
     }
     if (dataClassName == 'Gif') {
-      return deserialize<_i36.Gif>(data['data']);
+      return deserialize<_i37.Gif>(data['data']);
     }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i37.Greeting>(data['data']);
+      return deserialize<_i38.Greeting>(data['data']);
     }
     if (dataClassName == 'AddBucketRequest') {
-      return deserialize<_i38.AddBucketRequest>(data['data']);
+      return deserialize<_i39.AddBucketRequest>(data['data']);
     }
     if (dataClassName == 'AddCommentRequest') {
-      return deserialize<_i39.AddCommentRequest>(data['data']);
+      return deserialize<_i40.AddCommentRequest>(data['data']);
     }
     if (dataClassName == 'AddTicketDTO') {
-      return deserialize<_i40.AddTicketDTO>(data['data']);
+      return deserialize<_i41.AddTicketDTO>(data['data']);
     }
     if (dataClassName == 'AddTicketRequest') {
-      return deserialize<_i41.AddTicketRequest>(data['data']);
+      return deserialize<_i42.AddTicketRequest>(data['data']);
     }
     if (dataClassName == 'AttachmentModel') {
-      return deserialize<_i42.AttachmentModel>(data['data']);
+      return deserialize<_i43.AttachmentModel>(data['data']);
     }
     if (dataClassName == 'BucketModel') {
-      return deserialize<_i43.BucketModel>(data['data']);
+      return deserialize<_i44.BucketModel>(data['data']);
     }
     if (dataClassName == 'ChangeBucketRequest') {
-      return deserialize<_i44.ChangeBucketRequest>(data['data']);
+      return deserialize<_i45.ChangeBucketRequest>(data['data']);
     }
     if (dataClassName == 'CheckModel') {
-      return deserialize<_i45.CheckModel>(data['data']);
+      return deserialize<_i46.CheckModel>(data['data']);
     }
     if (dataClassName == 'CheckOrganizationResponse') {
-      return deserialize<_i46.CheckOrganizationResponse>(data['data']);
+      return deserialize<_i47.CheckOrganizationResponse>(data['data']);
     }
     if (dataClassName == 'CheckUsernameResponse') {
-      return deserialize<_i47.CheckUsernameResponse>(data['data']);
+      return deserialize<_i48.CheckUsernameResponse>(data['data']);
     }
     if (dataClassName == 'CommentModel') {
-      return deserialize<_i48.CommentModel>(data['data']);
+      return deserialize<_i49.CommentModel>(data['data']);
     }
     if (dataClassName == 'GetAddTicketDataResponse') {
-      return deserialize<_i49.GetAddTicketDataResponse>(data['data']);
+      return deserialize<_i50.GetAddTicketDataResponse>(data['data']);
     }
     if (dataClassName == 'GetAllTicketsResponse') {
-      return deserialize<_i50.GetAllTicketsResponse>(data['data']);
+      return deserialize<_i51.GetAllTicketsResponse>(data['data']);
     }
     if (dataClassName == 'GetAttendanceDataResponse') {
-      return deserialize<_i51.GetAttendanceDataResponse>(data['data']);
+      return deserialize<_i52.GetAttendanceDataResponse>(data['data']);
     }
     if (dataClassName == 'GetPlannerActivitiesResponse') {
-      return deserialize<_i52.GetPlannerActivitiesResponse>(data['data']);
+      return deserialize<_i53.GetPlannerActivitiesResponse>(data['data']);
     }
     if (dataClassName == 'GetPlannerDataResponse') {
-      return deserialize<_i53.GetPlannerDataResponse>(data['data']);
+      return deserialize<_i54.GetPlannerDataResponse>(data['data']);
     }
     if (dataClassName == 'GetTicketCommentsResponse') {
-      return deserialize<_i54.GetTicketCommentsResponse>(data['data']);
+      return deserialize<_i55.GetTicketCommentsResponse>(data['data']);
     }
     if (dataClassName == 'GetTicketDataResponse') {
-      return deserialize<_i55.GetTicketDataResponse>(data['data']);
+      return deserialize<_i56.GetTicketDataResponse>(data['data']);
     }
     if (dataClassName == 'GetTicketThreadResponse') {
-      return deserialize<_i56.GetTicketThreadResponse>(data['data']);
+      return deserialize<_i57.GetTicketThreadResponse>(data['data']);
     }
     if (dataClassName == 'PlannerAssignee') {
-      return deserialize<_i57.PlannerAssignee>(data['data']);
+      return deserialize<_i58.PlannerAssignee>(data['data']);
     }
     if (dataClassName == 'PlannerBucket') {
-      return deserialize<_i58.PlannerBucket>(data['data']);
+      return deserialize<_i59.PlannerBucket>(data['data']);
     }
     if (dataClassName == 'PlannerTicket') {
-      return deserialize<_i59.PlannerTicket>(data['data']);
+      return deserialize<_i60.PlannerTicket>(data['data']);
     }
     if (dataClassName == 'PriorityModel') {
-      return deserialize<_i60.PriorityModel>(data['data']);
+      return deserialize<_i61.PriorityModel>(data['data']);
     }
     if (dataClassName == 'RegisterAdminResponse') {
-      return deserialize<_i61.RegisterAdminResponse>(data['data']);
+      return deserialize<_i62.RegisterAdminResponse>(data['data']);
     }
     if (dataClassName == 'SignInResponse') {
-      return deserialize<_i62.SignInResponse>(data['data']);
+      return deserialize<_i63.SignInResponse>(data['data']);
     }
     if (dataClassName == 'StatusModel') {
-      return deserialize<_i63.StatusModel>(data['data']);
+      return deserialize<_i64.StatusModel>(data['data']);
     }
     if (dataClassName == 'ThreadItemModel') {
-      return deserialize<_i64.ThreadItemModel>(data['data']);
+      return deserialize<_i65.ThreadItemModel>(data['data']);
     }
     if (dataClassName == 'TicketAttachmentDTO') {
-      return deserialize<_i65.TicketAttachmentDTO>(data['data']);
+      return deserialize<_i66.TicketAttachmentDTO>(data['data']);
     }
     if (dataClassName == 'TicketModel') {
-      return deserialize<_i66.TicketModel>(data['data']);
+      return deserialize<_i67.TicketModel>(data['data']);
     }
     if (dataClassName == 'TypeModel') {
-      return deserialize<_i67.TypeModel>(data['data']);
+      return deserialize<_i68.TypeModel>(data['data']);
     }
     if (dataClassName == 'UserModel') {
-      return deserialize<_i68.UserModel>(data['data']);
+      return deserialize<_i69.UserModel>(data['data']);
     }
     if (dataClassName == 'TypingIndicator') {
-      return deserialize<_i69.TypingIndicator>(data['data']);
+      return deserialize<_i70.TypingIndicator>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i82.Protocol().deserializeByClassName(data);
+      return _i84.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i83.Protocol().deserializeByClassName(data);
+      return _i85.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i84.Protocol().deserializeByClassName(data);
+      return _i86.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

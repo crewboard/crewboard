@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../config/palette.dart';
 import '../../controllers/rooms_controller.dart';
 import '../../controllers/messages_controller.dart';
+import '../../controllers/auth_controller.dart';
 import '../../widgets/widgets.dart';
 
 class Rooms extends StatefulWidget {
@@ -18,13 +19,11 @@ class _RoomsState extends State<Rooms> {
   final RoomsController roomsController = Get.put(RoomsController());
   final MessagesController messagesController = Get.put(MessagesController());
   bool search = false;
-  UuidValue? userId;
 
   @override
   void initState() {
     super.initState();
     roomsController.loadRooms();
-    _loadUserId();
   }
 
   @override
@@ -108,59 +107,13 @@ class _RoomsState extends State<Rooms> {
           Expanded(
             child: ListView(
               children: [
-                if (roomsController.rooms.isNotEmpty) ...[
+                if (!search && roomsController.rooms.isNotEmpty) ...[
                   for (var room in rooms)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: InkWell(
-                        onTap: () {
-                          roomsController.markAsRead(room);
-                          Window.subPage.value = "messages";
-                          roomsController.selectRoom(room);
-
-                          // Load messages for selected room
-                          messagesController.loadInitialMessages(
-                            roomId: room.id!,
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                (roomsController.selectedRoom.value?.id ==
-                                    room.id)
-                                ? Pallet.inside1
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              RoomItem(
-                                name: room.roomName ?? "",
-                                color: _getRoomColor(room),
-                                message: room.lastMessage?.toJson() ?? {},
-                                userId: userId,
-                                messageCount: room.messageCount,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildRoomItem(room),
                 ],
-                if (search && roomsController.users.isNotEmpty) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      "Users",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Pallet.font1,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                if (search && roomsController.searchQuery.isNotEmpty) ...[
+                  for (var room in rooms)
+                    _buildRoomItem(room),
                   for (var user in roomsController.users)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -176,20 +129,18 @@ class _RoomsState extends State<Rooms> {
                           }
                         },
                         borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                (roomsController.selectedRoom.value?.id ==
-                                    roomsController.selectedRoom.value?.id)
-                                ? Pallet.inside1
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: RoomItem(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: roomsController.selectedRoom.value?.roomName == user.userName 
+                                  ? Pallet.inside1 
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: RoomItem(
                             name: user.userName,
-                            color: _getUserColor(user),
+                            color: Pallet.getUserColor(user),
                             message: const {},
-                            userId: userId,
+                            userId: authController.currentUserId.value,
                             messageCount: 0,
                           ),
                         ),
@@ -224,28 +175,46 @@ class _RoomsState extends State<Rooms> {
     });
   }
 
-  void _loadUserId() async {
-    // TODO: Load user ID from local storage or auth controller
-    setState(() {});
+  Widget _buildRoomItem(ChatRoom room) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: InkWell(
+        onTap: () {
+          roomsController.markAsRead(room);
+          Window.subPage.value = "messages";
+          roomsController.selectRoom(room);
+
+          // Load messages for selected room
+          messagesController.loadInitialMessages(
+            roomId: room.id!,
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            color: roomsController.selectedRoom.value?.id == room.id
+                ? Pallet.inside1
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RoomItem(
+                name: room.roomName ?? "",
+                color: Pallet.getRoomColor(room, authController.currentUserId.value),
+                message: room.lastMessage?.toJson() ?? {},
+                userId: authController.currentUserId.value,
+                messageCount: room.messageCount,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  Color _getRoomColor(ChatRoom room) {
-    // If room color is eventually added to the model, use it here.
-    // For now, we can derive it from name or use a default that isn't hardcoded red.
-    // Ideally, for direct chats, we'd fetch the other user's color.
-    return Colors.blue; 
-  }
-
-  Color _getUserColor(User user) {
-    if (user.color != null) {
-      try {
-        return Color(int.parse(user.color!.color.replaceAll("#", "0xFF")));
-      } catch (e) {
-        debugPrint("Error parsing user color: $e");
-      }
-    }
-    return Colors.blue;
-  }
+  final AuthController authController = Get.find<AuthController>();
 }
 
 class RoomItem extends StatelessWidget {
@@ -268,11 +237,11 @@ class RoomItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 11, bottom: 11),
       child: Row(
         children: [
           ProfileIcon(
-            size: 45,
+            size: 42,
             fontSize: 18,
             name: name,
             color: color,
@@ -285,7 +254,7 @@ class RoomItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: const TextStyle(fontSize: 14)),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 if (message["messageType"] == "text")
                   () {
                     try {
@@ -301,7 +270,7 @@ class RoomItem extends StatelessWidget {
                                     text: text["value"],
                                     style: TextStyle(
                                       color: Pallet.font3,
-                                      fontSize: 13,
+                                      fontSize: 11,
                                     ),
                                   )
                                 else
@@ -309,7 +278,7 @@ class RoomItem extends StatelessWidget {
                                     text: text["value"]["emoji"],
                                     style: TextStyle(
                                       color: Pallet.font3,
-                                      fontSize: 13,
+                                      fontSize: 11,
                                     ),
                                   ),
                             ],
@@ -319,7 +288,7 @@ class RoomItem extends StatelessWidget {
                     } catch (_) {}
                     return Text(
                       message["message"] ?? "",
-                      style: TextStyle(color: Pallet.font3, fontSize: 13),
+                      style: TextStyle(color: Pallet.font3, fontSize: 11),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     );
@@ -329,12 +298,12 @@ class RoomItem extends StatelessWidget {
                     (UuidValue.fromString(message["userId"]) == userId)
                         ? "you sent a ${message["messageType"]}"
                         : "sent you a ${message["messageType"]}",
-                    style: TextStyle(color: Pallet.font3, fontSize: 13),
+                    style: TextStyle(color: Pallet.font3, fontSize: 11),
                   )
                 else
                   Text(
                     "no messages yet",
-                    style: TextStyle(color: Pallet.font3, fontSize: 13),
+                    style: TextStyle(color: Pallet.font3, fontSize: 11),
                   ),
               ],
             ),

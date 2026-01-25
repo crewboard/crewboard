@@ -1,0 +1,10 @@
+class: FontSetting
+table: font_setting
+fields:
+  name: String
+  fontSize: double?
+  fontFamily: String?
+  fontWeight: String?
+  color: String?
+  lineHeight: double?
+  headerLevel: int?

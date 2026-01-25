@@ -11,6 +11,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart'; // for client
 import '../../widgets/document/flutter_quill.dart';
 import '../../widgets/document/src/controller/quill_controller.dart';
+import 'package:collection/collection.dart';
 import 'flows/flows_controller.dart'; // For FlowModel
 
 /// Unified settings class used both for the current selection (`_fontSettings`)
@@ -25,11 +26,14 @@ class FontSettings {
   final double? styleSize; // e.g. 30.0 for h1
   final FontWeight? weight; // e.g. FontWeight.bold
   final double? spacing; // horizontal spacing value (as double)
+  final double? lineHeight;
 
   // new fields
   final String name; // human readable name matching the preset keys
   final dynamic
   headerAttribute; // e.g. Attribute.h1 / Attribute.h2 / null for body
+  final String? color;
+  final UuidValue? systemColorId;
 
   FontSettings({
     this.preset = 'Body',
@@ -38,8 +42,11 @@ class FontSettings {
     this.styleSize,
     this.weight,
     this.spacing,
+    this.lineHeight,
     this.name = 'Body',
     this.headerAttribute,
+    this.color,
+    this.systemColorId,
   });
 
   FontSettings copyWith({
@@ -49,8 +56,11 @@ class FontSettings {
     double? styleSize,
     FontWeight? weight,
     double? spacing,
+    double? lineHeight,
     String? name,
     dynamic headerAttribute,
+    String? color,
+    UuidValue? systemColorId,
   }) {
     return FontSettings(
       preset: preset ?? this.preset,
@@ -59,8 +69,11 @@ class FontSettings {
       styleSize: styleSize ?? this.styleSize,
       weight: weight ?? this.weight,
       spacing: spacing ?? this.spacing,
+      lineHeight: lineHeight ?? this.lineHeight,
       name: name ?? this.name,
       headerAttribute: headerAttribute ?? this.headerAttribute,
+      color: color ?? this.color,
+      systemColorId: systemColorId ?? this.systemColorId,
     );
   }
 }
@@ -155,42 +168,11 @@ class DocumentEditorProvider extends GetxController {
   final RxBool isNumberedList = false.obs;
 
   // Centralized editor-style definitions keyed by preset name.
-  final Map<String, FontSettings> editorFontSettings = {
-    'Heading': FontSettings(
-      name: 'Heading',
-      preset: 'Heading',
-      styleSize: 30.0,
-      weight: FontWeight.bold,
-      spacing: 16.0,
-      headerAttribute: Attribute.h1,
-    ),
-    'Title': FontSettings(
-      name: 'Title',
-      preset: 'Title',
-      styleSize: 24.0,
-      weight: FontWeight.w600,
-      spacing: 8.0,
-      headerAttribute: Attribute.h2,
-    ),
-    'Subtitle': FontSettings(
-      name: 'Subtitle',
-      preset: 'Subtitle',
-      styleSize: 20.0,
-      weight: FontWeight.w500,
-      spacing: 4.0,
-      headerAttribute: Attribute.h3,
-    ),
-    'Body': FontSettings(
-      name: 'Body',
-      preset: 'Body',
-      styleSize: 14.0,
-      weight: FontWeight.normal,
-      spacing: 4.0,
-      headerAttribute: null,
-    ),
-  };
+  final RxMap<String, FontSettings> editorFontSettings = <String, FontSettings>{}.obs;
 
-  static const List<String> presets = ['Body', 'Heading', 'Title', 'Subtitle'];
+  final RxList<SystemColor> systemColors = <SystemColor>[].obs;
+
+  final RxList<String> dynamicPresets = <String>[].obs;
 
   // Observable loading state for docs
   final RxBool isLoadingDocs = false.obs;
@@ -200,13 +182,144 @@ class DocumentEditorProvider extends GetxController {
   final RxList<FlowModel> overlayFlows = <FlowModel>[].obs;
   final Rx<Offset> overlayPosition = Offset.zero.obs;
   final RxString flowQuery = ''.obs;
+  
+  // Observable system variables for settings
+  final Rx<SystemVariables?> systemVariables = Rx<SystemVariables?>(null);
+  final RxBool isLoadingSettings = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    loadSettings();
     initializeEditor();
   }
 
+  Future<void> loadSettings() async {
+    try {
+      isLoadingSettings.value = true;
+      final result = await client.admin.getSystemVariables();
+      if (result != null) {
+        // Normalize tab presets to lowercase for consistent comparison
+        if (result.tabPreset1 != null) result.tabPreset1 = result.tabPreset1!.toLowerCase();
+        if (result.tabPreset2 != null) result.tabPreset2 = result.tabPreset2!.toLowerCase();
+        if (result.titleFont != null) result.titleFont = result.titleFont!.toLowerCase();
+        if (result.headingFont != null) result.headingFont = result.headingFont!.toLowerCase();
+        if (result.subHeadingFont != null) result.subHeadingFont = result.subHeadingFont!.toLowerCase();
+        
+        systemVariables.value = result;
+        quillController.readOnly = !(result.allowEdit ?? true);
+        if (result.googleFonts != null && result.googleFonts!.isNotEmpty) {
+          availableFonts.assignAll(result.googleFonts!);
+        }
+      } else {
+        systemVariables.value = null;
+      }
+
+      final colors = await client.admin.getColors();
+      systemColors.assignAll(colors);
+
+      final fonts = await client.admin.getFontSettings();
+      final Map<String, FontSettings> newSettings = {};
+      final List<String> newPresets = [];
+
+      for (var f in fonts) {
+        final name = f.name.toLowerCase();
+        
+        // Determine header level from SystemVariables, fallback to legacy definition
+        Attribute? headerAttr;
+        int level = f.headerLevel ?? 0;
+        
+        if (systemVariables.value?.titleFont == name) {
+          headerAttr = Attribute.h1;
+          level = 1;
+        } else if (systemVariables.value?.headingFont == name) {
+          headerAttr = Attribute.h2;
+          level = 2;
+        } else if (systemVariables.value?.subHeadingFont == name) {
+          headerAttr = Attribute.h3;
+          level = 3;
+        } else if (level == 1) headerAttr = Attribute.h1;
+          else if (level == 2) headerAttr = Attribute.h2;
+          else if (level == 3) headerAttr = Attribute.h3;
+
+        newSettings[name] = FontSettings(
+          name: name,
+          preset: name,
+          fontFamily: f.fontFamily ?? 'Roboto',
+          fontSize: (f.fontSize ?? 14).toString(),
+          styleSize: f.fontSize ?? 14,
+          weight: _parseWeight(f.fontWeight),
+          lineHeight: f.lineHeight ?? 1.5,
+          spacing: level > 0 ? (20.0 - level * 4) : 4.0,
+          headerAttribute: headerAttr,
+        );
+        newPresets.add(name);
+      }
+
+      editorFontSettings.assignAll(newSettings);
+      dynamicPresets.assignAll(newPresets);
+
+      // Ensure at least a 'body' fallback if not present
+      if (!editorFontSettings.containsKey('body')) {
+         editorFontSettings['body'] = FontSettings(name: 'body', preset: 'body');
+         dynamicPresets.insert(0, 'body');
+      }
+    } catch (e) {
+      print('Error loading settings: $e');
+    } finally {
+      isLoadingSettings.value = false;
+    }
+  }
+
+  FontWeight? _parseWeight(String? weight) {
+    if (weight == null) return null;
+    switch (weight.toLowerCase()) {
+      case 'bold':
+        return FontWeight.bold;
+      case 'normal':
+        return FontWeight.normal;
+      case 'w100':
+        return FontWeight.w100;
+      case 'w200':
+        return FontWeight.w200;
+      case 'w300':
+        return FontWeight.w300;
+      case 'w400':
+        return FontWeight.w400;
+      case 'w500':
+        return FontWeight.w500;
+      case 'w600':
+        return FontWeight.w600;
+      case 'w700':
+        return FontWeight.w700;
+      case 'w800':
+        return FontWeight.w800;
+      case 'w900':
+        return FontWeight.w900;
+      default:
+        return null;
+    }
+  }
+
+  FontSettings getSettingsForLevel(int level) {
+    for (var fs in editorFontSettings.values) {
+      int fsLevel = 0;
+      if (fs.headerAttribute == Attribute.h1) {
+        fsLevel = 1;
+      } else if (fs.headerAttribute == Attribute.h2) {
+        fsLevel = 2;
+      } else if (fs.headerAttribute == Attribute.h3) {
+        fsLevel = 3;
+      }
+
+      if (fsLevel == level) return fs;
+    }
+    // Fallback to body or first available
+    return editorFontSettings['body'] ??
+        (editorFontSettings.isNotEmpty
+            ? editorFontSettings.values.first
+            : FontSettings());
+  }
   @override
   void onClose() {
     quillController.dispose();
@@ -244,14 +357,9 @@ class DocumentEditorProvider extends GetxController {
     quillController.addListener(_onEditorChanged);
 
     // Keyboard handler
-    editorFocusNode.onKey = _handleKey;
+    editorFocusNode.onKeyEvent = _handleKey;
 
-    // Init font size controller and ensure current family has an entry in _editorFontSettings
     fontSizeController.text = fontSettings.value.fontSize;
-    editorFontSettings[fontSettings.value.fontFamily] =
-        (editorFontSettings[fontSettings.value.fontFamily] ??
-                FontSettings(fontFamily: fontSettings.value.fontFamily))
-            .copyWith(fontSize: fontSettings.value.fontSize);
 
     // keep input in sync when selection-driven font settings change
     ever(fontSettings, (FontSettings fs) {
@@ -283,27 +391,17 @@ class DocumentEditorProvider extends GetxController {
     _saveDocument();
   }
 
-  KeyEventResult _handleKey(FocusNode node, RawKeyEvent event) {
-    if (event is RawKeyDownEvent &&
-        event.logicalKey == LogicalKeyboardKey.keyP &&
-        HardwareKeyboard.instance.isControlPressed) {
-      insertBulletPoint();
-      return KeyEventResult.handled;
-    }
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        return KeyEventResult.ignored;
+      }
 
-    if (event is RawKeyDownEvent &&
-        event.logicalKey == LogicalKeyboardKey.tab) {
-      _cycleFontPreset();
-      return KeyEventResult.handled;
-    }
-
-    if (showFlowOverlay.value) {
-      if (event is RawKeyDownEvent) {
+      if (showFlowOverlay.value) {
         if (event.logicalKey == LogicalKeyboardKey.escape) {
           dismissFlowOverlay();
           return KeyEventResult.handled;
         }
-        // Could implement arrow keys navigation here
         if (event.logicalKey == LogicalKeyboardKey.enter) {
           if (overlayFlows.isNotEmpty) {
             selectFlow(overlayFlows.first);
@@ -467,7 +565,6 @@ class DocumentEditorProvider extends GetxController {
 
     String fontFamily = fontSettings.value.fontFamily;
     String fontSize = fontSettings.value.fontSize;
-    String preset = fontSettings.value.preset;
 
     final fontRaw = attributes[Attribute.font.key];
     final fontVal = attrValue(fontRaw);
@@ -475,30 +572,71 @@ class DocumentEditorProvider extends GetxController {
 
     final sizeRaw = attributes[Attribute.size.key];
     final sizeVal = attrValue(sizeRaw);
-    final mappedSize = editorFontSettings[fontFamily]?.fontSize;
-    if (mappedSize != null) {
-      fontSize = mappedSize;
-    } else if (sizeVal != null) {
+    if (sizeVal != null) {
       fontSize = sizeVal.toString();
     }
 
     final headerRaw = attributes[Attribute.header.key];
     final headerVal = attrValue(headerRaw);
+    int level = 0;
     if (headerVal != null) {
-      final level = (headerVal is int)
+      level = (headerVal is int)
           ? headerVal
           : int.tryParse(headerVal.toString()) ?? 0;
-      if (level == 1) preset = 'Heading';
-      if (level == 2) preset = 'Title';
-      if (level == 3) preset = 'Subtitle';
-    } else {
-      preset = 'Body';
+    }
+
+    // Preferred preset resolution: prioritize current if level matches
+    String? foundPreset;
+    final currentPreset = fontSettings.value.preset;
+    final currentFs = editorFontSettings[currentPreset.toLowerCase().trim()];
+    if (currentFs != null) {
+      int currentLevel = 0;
+      if (currentFs.headerAttribute == Attribute.h1) currentLevel = 1;
+      else if (currentFs.headerAttribute == Attribute.h2) currentLevel = 2;
+      else if (currentFs.headerAttribute == Attribute.h3) currentLevel = 3;
+      
+      if (currentLevel == level) {
+        foundPreset = currentPreset;
+      }
+    }
+
+    // Only search others if current preset doesn't match level
+    if (foundPreset == null) {
+      for (var pName in dynamicPresets) {
+        final fs = editorFontSettings[pName.toLowerCase().trim()];
+        if (fs != null) {
+          int fsLevel = 0;
+          if (fs.headerAttribute == Attribute.h1) fsLevel = 1;
+          else if (fs.headerAttribute == Attribute.h2) fsLevel = 2;
+          else if (fs.headerAttribute == Attribute.h3) fsLevel = 3;
+          if (fsLevel == level) {
+            foundPreset = pName;
+            break;
+          }
+        }
+      }
+    }
+    
+    final resolvedPreset = foundPreset ?? (dynamicPresets.isNotEmpty ? dynamicPresets.first : 'body');
+
+    final colorRaw = attributes[Attribute.color.key];
+    final colorVal = attrValue(colorRaw);
+    final String? colorHex = colorVal?.toString();
+    UuidValue? colorId;
+
+    if (colorHex != null && systemColors.isNotEmpty) {
+      final match = systemColors.firstWhereOrNull(
+            (c) => c.color.toLowerCase() == colorHex.toLowerCase(),
+      );
+      colorId = match?.id;
     }
 
     fontSettings.value = fontSettings.value.copyWith(
-      preset: preset,
+      preset: resolvedPreset,
       fontFamily: fontFamily,
       fontSize: fontSize,
+      color: colorHex,
+      systemColorId: colorId,
     );
   }
 
@@ -616,49 +754,165 @@ class DocumentEditorProvider extends GetxController {
   }
 
   void _cycleFontPreset() {
-    final currentIndex = DocumentEditorProvider.presets.indexOf(
+    final vars = systemVariables.value;
+    final current = fontSettings.value.preset;
+
+    if (vars != null &&
+        vars.tabPreset1 != null &&
+        vars.tabPreset1!.isNotEmpty &&
+        vars.tabPreset2 != null &&
+        vars.tabPreset2!.isNotEmpty) {
+      // If tab switching presets are configured, toggle between them
+      final target = (current == vars.tabPreset1) ? vars.tabPreset2! : vars.tabPreset1!;
+      _applyFontPreset(target);
+      return;
+    }
+
+    // Fallback to original behavior: cycling presets
+    if (dynamicPresets.isEmpty) return;
+
+    final currentIndex = dynamicPresets.indexOf(
       fontSettings.value.preset,
     );
     final nextIndex =
-        (currentIndex + 1) % DocumentEditorProvider.presets.length;
-    _applyFontPreset(DocumentEditorProvider.presets[nextIndex]);
+        (currentIndex + 1) % dynamicPresets.length;
+    _applyFontPreset(dynamicPresets[nextIndex]);
   }
 
-  void _applyFontPreset(String preset) {
-    final fs = editorFontSettings[preset] ?? editorFontSettings['Body']!;
+  void applyColor(SystemColor color) {
+    fontSettings.value = fontSettings.value.copyWith(
+      color: color.color,
+      systemColorId: color.id,
+    );
+    quillController.formatSelection(
+      Attribute.fromKeyValue(Attribute.color.key, color.color),
+    );
+  }
+
+  void applyColorHex(String hex) {
+    // Try to find a matching system color, otherwise just use the hex
+    UuidValue? colorId;
+    if (systemColors.isNotEmpty) {
+      final match = systemColors.firstWhereOrNull(
+            (c) => c.color.toLowerCase() == hex.toLowerCase(),
+      );
+      colorId = match?.id;
+    }
+
+    fontSettings.value = fontSettings.value.copyWith(
+      color: hex,
+      systemColorId: colorId,
+    );
+    quillController.formatSelection(
+      Attribute.fromKeyValue(Attribute.color.key, hex),
+    );
+  }
+
+  void applyFontSize(double size) {
+    String sizeStr = size.toString().replaceAll(RegExp(r'\.0$'), '');
+    fontSettings.value = fontSettings.value.copyWith(
+      fontSize: sizeStr,
+    );
+    quillController.formatSelection(
+      Attribute.fromKeyValue(Attribute.size.key, sizeStr),
+    );
+  }
+
+  void _applyFontPreset(String presetName) {
+    String lookup = presetName.toLowerCase().trim();
+    
+    // Fuzzy match: if "heading" is requested but only "heading 1" exists, use it.
+    if (!editorFontSettings.containsKey(lookup)) {
+      final match = dynamicPresets.firstWhereOrNull(
+        (p) => p.toLowerCase().trim() == lookup || p.toLowerCase().trim().startsWith(lookup)
+      );
+      if (match != null) {
+        lookup = match.toLowerCase().trim();
+      }
+    }
+
+    final fs = editorFontSettings[lookup] ??
+        editorFontSettings['body'] ??
+        (editorFontSettings.isNotEmpty ? editorFontSettings.values.first : FontSettings());
+    
+    final finalPresetName = editorFontSettings.containsKey(lookup) 
+        ? dynamicPresets.firstWhere((p) => p.toLowerCase().trim() == lookup, orElse: () => presetName)
+        : presetName;
 
     String fontSize;
     if (fs.styleSize != null) {
       fontSize = fs.styleSize!.toString().replaceAll(RegExp(r'\.0$'), '');
     } else {
-      fontSize = editorFontSettings[preset]?.fontSize ?? '14';
+      fontSize = fs.fontSize ?? '14';
     }
 
-    if (fs.headerAttribute != null) {
-      quillController.formatSelection(fs.headerAttribute!);
-    } else {
-      quillController.formatSelection(Attribute.clone(Attribute.header, null));
-    }
-
-    editorFontSettings[fontSettings.value.fontFamily] =
-        (editorFontSettings[fontSettings.value.fontFamily] ??
-                FontSettings(fontFamily: fontSettings.value.fontFamily))
-            .copyWith(fontSize: fontSize);
-    fontSettings.value = fontSettings.value.copyWith(
-      preset: preset,
+    // Update the reactive fontSettings value *before* applying to QuillController
+    // to prevent race conditions and incorrect state reverts by change listeners.
+    this.fontSettings.value = fs.copyWith(
+      preset: finalPresetName,
+      headerAttribute: fs.headerAttribute,
       fontSize: fontSize,
+      fontFamily: fs.fontFamily ?? fontSettings.value.fontFamily,
     );
 
+    // 2. Synchronize UI components
     updateEditorStyleSizeForCurrentPreset(fontSize);
-
-    quillController.formatSelection(
-      Attribute.fromKeyValue(Attribute.size.key, fontSize),
-    );
-    quillController.formatSelection(
-      Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily),
-    );
-
     fontSizeController.text = fontSize;
+
+    // 3. Apply formatting
+    // 3. Apply formatting
+    final selection = quillController.selection;
+    if (selection.isCollapsed) {
+       final plainText = quillController.document.toPlainText();
+       final len = plainText.length;
+       int start = selection.baseOffset;
+       int end = selection.baseOffset;
+
+       // Find start of line
+       while (start > 0 && plainText[start - 1] != '\n') {
+         start--;
+       }
+
+       // Find end of line
+       while (end < len && plainText[end] != '\n') {
+         end++;
+       }
+
+       final length = end - start;
+
+       if (length > 0) {
+          if (fs.headerAttribute != null) {
+            quillController.formatText(start, length, fs.headerAttribute!);
+          } else {
+            quillController.formatText(start, length, Attribute.clone(Attribute.header, null));
+          }
+          quillController.formatText(start, length, Attribute.fromKeyValue(Attribute.size.key, fontSize));
+          quillController.formatText(start, length, Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily));
+       } else {
+          // Empty line, format selection (cursor)
+          if (fs.headerAttribute != null) {
+            quillController.formatSelection(fs.headerAttribute!);
+          } else {
+            quillController.formatSelection(Attribute.clone(Attribute.header, null));
+          }
+          quillController.formatSelection(Attribute.fromKeyValue(Attribute.size.key, fontSize));
+          quillController.formatSelection(Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily));
+       }
+    } else {
+      // Normal selection
+      if (fs.headerAttribute != null) {
+        quillController.formatSelection(fs.headerAttribute!);
+      } else {
+        quillController.formatSelection(Attribute.clone(Attribute.header, null));
+      }
+
+      quillController.formatSelection(
+        Attribute.fromKeyValue(Attribute.size.key, fontSize),
+      );
+      quillController.formatSelection(
+        Attribute.fromKeyValue(Attribute.font.key, fontSettings.value.fontFamily),
+      );
+    }
   }
 
   void applyFontPreset(String preset) {
@@ -871,19 +1125,23 @@ class DocumentEditorProvider extends GetxController {
     }
 
     if (wordStart != -1) {
-      // Replace the #query with #flowName
-      final replacement = '#${flow.name} ';
+      // Remove the #query
       quillController.replaceText(
         wordStart,
         selection.baseOffset - wordStart,
-        replacement,
+        '',
         null,
       );
 
-      // Move cursor
-      final newPosition = wordStart + replacement.length;
+      // Insert Flow Embed
+      final index = wordStart;
+      quillController.document.insert(index, BlockEmbed.custom(
+        CustomBlockEmbed('flow', flow.name),
+      ));
+
+      // Move cursor after embed
       quillController.updateSelection(
-        TextSelection.collapsed(offset: newPosition),
+        TextSelection.collapsed(offset: index + 1),
         ChangeSource.local,
       );
     }

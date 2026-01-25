@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:collection/collection.dart';
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import '../utils.dart';
@@ -31,34 +33,48 @@ class ChatEndpoint extends Endpoint {
       room.messageCount = map.unreadCount;
     }
 
-    // Identify Direct Rooms and fetch other participants
-    final directRooms = rooms.where((r) => r.roomType == 'direct').toList();
-    if (directRooms.isNotEmpty) {
-      final directRoomIds = directRooms.map((r) => r.id!).toSet();
-      
-      // Find UserRoomMaps for these rooms where user is NOT current user
-      final otherUserMaps = await UserRoomMap.db.find(
-        session,
-        where: (t) => t.roomId.inSet(directRoomIds) & t.userId.notEquals(userId),
-      );
+    // Fetch all members for all identified rooms
+    final allRoomMembersMap = await UserRoomMap.db.find(
+      session,
+      where: (t) => t.roomId.inSet(roomIds),
+    );
 
-      final otherUserIds = otherUserMaps.map((m) => m.userId).toSet();
-      final otherUsers = await User.db.find(
-        session,
-        where: (t) => t.id.inSet(otherUserIds),
-      );
+    final allMemberUserIds = allRoomMembersMap.map((m) => m.userId).toSet();
+    final allMemberUsers = await User.db.find(
+      session,
+      where: (t) => t.id.inSet(allMemberUserIds),
+      include: User.include(color: SystemColor.include()),
+    );
 
-      for (var room in directRooms) {
-        // Find the map for this room
+    // Group users by roomId and assign to transcript field
+    for (var room in rooms) {
+      final memberMapForRoom =
+          allRoomMembersMap.where((m) => m.roomId == room.id);
+      final memberIds = memberMapForRoom.map((m) => m.userId).toSet();
+      room.roomUsers =
+          allMemberUsers.where((u) => memberIds.contains(u.id)).toList();
+
+      // Handle Direct Room naming
+      if (room.roomType == 'direct') {
         try {
-            final otherMap = otherUserMaps.firstWhere((m) => m.roomId == room.id);
-            final otherUser = otherUsers.firstWhere((u) => u.id == otherMap.userId);
-            room.roomName = otherUser.userName;
-        } catch (e) {
-            // If checking against self or user deleted, fallback
-            if (room.roomName == null || room.roomName!.contains('-')) {
-                 room.roomName = 'Unknown User';
+          final otherUser = room.roomUsers?.firstWhereOrNull((u) => u.id != userId);
+          if (otherUser != null) {
+            final oldName = room.roomName;
+            final newName = otherUser.userName;
+            if (oldName != newName) {
+              room.roomName = newName;
+              // Update in database if it was the generic name
+              if (oldName == 'Direct Message' || oldName == null) {
+                 unawaited(ChatRoom.db.updateRow(session, room));
+              }
             }
+          } else if (room.roomName == null || room.roomName == 'Direct Message') {
+            room.roomName = 'Unknown User';
+          }
+        } catch (e) {
+          if (room.roomName == null || room.roomName == 'Direct Message') {
+            room.roomName = 'Unknown User';
+          }
         }
       }
     }
@@ -78,6 +94,7 @@ class ChatEndpoint extends Endpoint {
               t.firstName.ilike('%$query%') |
               t.lastName.ilike('%$query%')) &
           t.id.notEquals(currentUser.id!),
+      include: User.include(color: SystemColor.include()),
       limit: 10,
     );
   }
@@ -105,6 +122,17 @@ class ChatEndpoint extends Endpoint {
       if (existingMap != null) {
         final room = await ChatRoom.db.findById(session, existingMap.roomId);
         if (room != null && room.roomType == 'direct') {
+          final otherUser = await User.db.findById(session, otherUserId);
+          if (otherUser != null) {
+            final oldName = room.roomName;
+            final newName = otherUser.userName;
+            if (oldName != newName) {
+              room.roomName = newName;
+              if (oldName == 'Direct Message' || oldName == null) {
+                await ChatRoom.db.updateRow(session, room);
+              }
+            }
+          }
           return room;
         }
       }
@@ -118,7 +146,7 @@ class ChatEndpoint extends Endpoint {
       final room = await ChatRoom.db.insertRow(
         session,
         ChatRoom(
-          roomName: 'Direct Message',
+          roomName: otherUser.userName,
           roomType: 'direct',
           messageCount: 0,
         ),

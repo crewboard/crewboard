@@ -4,6 +4,7 @@ import 'package:crewboard_client/crewboard_client.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
 import '../../widgets/glass_morph.dart';
+import '../../widgets/document/src/editor_toolbar_shared/color.dart';
 import '../../main.dart'; // For client
 import 'add_user.dart'; // Import the add_user dialog function
 
@@ -155,7 +156,7 @@ class UsersSettings extends StatelessWidget {
                                 children: [
                                   ProfileIcon(
                                     name: user.userName,
-                                    color: Colors.blue, // TODO: Parse hex color
+                                    color: hexToColor(user.color?.color),
                                     size: 30,
                                   ),
                                   const SizedBox(width: 10),

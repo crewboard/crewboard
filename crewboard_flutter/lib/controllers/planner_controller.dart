@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+import 'dart:io';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:crewboard_flutter/screens/docs/flows/flows_controller.dart';
 import 'package:crewboard_flutter/screens/docs/docs_sidebar.dart';
@@ -59,6 +62,7 @@ class PlannerController extends GetxController {
   final Rx<TextEditingController> controller = TextEditingController().obs;
   final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
   final RxList<AttachmentModel> attachments = <AttachmentModel>[].obs;
+  final RxList<PlatformFile> pendingFiles = <PlatformFile>[].obs;
   final RxList<ThreadItemModel> ticketThread = <ThreadItemModel>[].obs;
   final Rxn<ThreadItemModel> lastActivity = Rxn<ThreadItemModel>();
   final Rxn<UuidValue> selectedTicketId = Rxn<UuidValue>();
@@ -125,10 +129,10 @@ class PlannerController extends GetxController {
   }
 
   // Fetch Kanban data
-  Future<void> loadPlannerData() async {
+  Future<void> loadPlannerData({bool showLoading = true}) async {
     if (selectedAppId.value == null) return;
     try {
-      isLoadingPlanner.value = true;
+      if (showLoading) isLoadingPlanner.value = true;
       final response = await client.planner.getPlannerData(
         selectedAppId.value!,
       );
@@ -136,7 +140,7 @@ class PlannerController extends GetxController {
     } catch (e) {
       debugPrint('Error loading planner data: $e');
     } finally {
-      isLoadingPlanner.value = false;
+      if (showLoading) isLoadingPlanner.value = false;
     }
   }
 
@@ -213,6 +217,8 @@ class PlannerController extends GetxController {
     deadline.value = null;
     selectedUsers.clear();
     checklist.clear();
+    attachments.clear();
+    pendingFiles.clear();
     status.value = null;
     type.value = null;
     priority.value = null;
@@ -236,6 +242,8 @@ class PlannerController extends GetxController {
       }
       selectedUsers.assignAll(ticket.assignees);
       checklist.assignAll(ticket.checklist);
+      attachments.assignAll(ticket.attachments);
+      pendingFiles.clear();  // Clear pending files when loading existing ticket
       status.value = ticket.status;
       priority.value = ticket.priority;
       type.value = ticket.type;
@@ -266,6 +274,51 @@ class PlannerController extends GetxController {
     }
   }
 
+  /// Upload pending files and return AttachmentModel list
+  Future<List<AttachmentModel>> _uploadPendingAttachments() async {
+    final uploadedAttachments = <AttachmentModel>[];
+    
+    for (final file in pendingFiles) {
+      try {
+        // Read file bytes - on desktop, bytes might be null, so use path
+        Uint8List? bytes = file.bytes;
+        
+        if (bytes == null && file.path != null) {
+          try {
+            final fileObj = File(file.path!);
+            bytes = await fileObj.readAsBytes();
+          } catch (e) {
+            debugPrint('Error reading file from path: $e');
+          }
+        }
+        
+        if (bytes == null) {
+          continue;
+        }
+
+        // Upload to server
+        final byteData = ByteData.view(bytes.buffer);
+        final url = await client.upload.uploadFile(file.name, byteData);
+        
+        if (url != null) {
+          uploadedAttachments.add(
+            AttachmentModel(
+              id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+              name: file.name,
+              size: file.size.toDouble(),
+              url: url,
+              type: file.extension ?? '',
+            ),
+          );
+        }
+      } catch (e) {
+        debugPrint('Error uploading file ${file.name}: $e');
+      }
+    }
+    
+    return uploadedAttachments;
+  }
+
   Future<void> save(UuidValue bucketId) async {
     error.value = "";
     if (title.value.text.isEmpty) {
@@ -290,6 +343,12 @@ class PlannerController extends GetxController {
     }
 
     try {
+      // Upload pending files
+      final uploadedAttachments = await _uploadPendingAttachments();
+      
+      // Combine with existing attachments
+      final allAttachments = [...attachments, ...uploadedAttachments];
+
       final ticketModel = TicketModel(
         id: UuidValue.fromString(
           '00000000-0000-4000-8000-000000000000',
@@ -304,7 +363,7 @@ class PlannerController extends GetxController {
         deadline: deadline.value,
         checklist: checklist,
         flows: "",
-        attachments: [],
+        attachments: allAttachments,
       );
 
       final success = await client.planner.addTicket(
@@ -317,6 +376,7 @@ class PlannerController extends GetxController {
 
       if (success) {
         error.value = "";
+        pendingFiles.clear();
         loadPlannerData();
         loadAllTickets();
       } else {
@@ -343,6 +403,12 @@ class PlannerController extends GetxController {
   Future<void> updateTicket(UuidValue ticketId) async {
     debugPrint('Updating ticket $ticketId');
     try {
+      // Upload pending files
+      final uploadedAttachments = await _uploadPendingAttachments();
+      
+      // Combine with existing attachments
+      final allAttachments = [...attachments, ...uploadedAttachments];
+
       final ticketModel = TicketModel(
         id: ticketId,
         ticketName: title.value.text,
@@ -355,13 +421,14 @@ class PlannerController extends GetxController {
         deadline: deadline.value, // Assuming format is already correct (yyyy-MM-dd) or null
         checklist: checklist,
         flows: "",
-        attachments: [],
+        attachments: allAttachments,
       );
 
       final success = await client.planner.updateTicket(ticketModel);
       
       if (success) {
         editStack.clear(); // Clear stack as we just synced everything
+        pendingFiles.clear();
         loadPlannerData();
         getTicketThread(ticketId);
         
@@ -385,7 +452,7 @@ class PlannerController extends GetxController {
     try {
       final success = await client.planner.changeBucket(request);
       if (success) {
-        loadPlannerData();
+        loadPlannerData(showLoading: false);
         return true;
       }
     } catch (e) {
@@ -533,15 +600,37 @@ class PlannerController extends GetxController {
   void onDrop(UuidValue bucketId, int index) {
     if (draggingTicket.value == null) return;
 
-    final ticketId = draggingTicket.value!.id;
+    final ticket = draggingTicket.value!;
+    final ticketId = ticket.id;
+    final sourceBucketId = draggingSourceBucketId.value;
 
+    // Optimistic UI update: Remove from source, insert at target
+    // 1. Remove from source bucket
+    if (sourceBucketId != null) {
+      final sourceBucket = buckets.firstWhereOrNull((b) => b.bucketId == sourceBucketId);
+      if (sourceBucket != null) {
+        sourceBucket.tickets.removeWhere((t) => t.id == ticketId);
+      }
+    }
+
+    // 2. Remove placeholder from target bucket and insert ticket
+    final targetBucket = buckets.firstWhereOrNull((b) => b.bucketId == bucketId);
+    if (targetBucket != null) {
+      targetBucket.tickets.removeWhere((t) => t.holder == 'true');
+      final safeIndex = index.clamp(0, targetBucket.tickets.length);
+      targetBucket.tickets.insert(safeIndex, ticket);
+    }
+
+    buckets.refresh();
+
+    // Trigger server update
     changeBucket(
       ChangeBucketRequest(
         ticketId: ticketId,
         newBucketId: bucketId,
-        newOrder: index,
+        newOrder: index + 1, // Server expects 1-indexed order
         oldBucketId:
-            draggingSourceBucketId.value ??
+            sourceBucketId ??
             UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       ),
     );
@@ -549,7 +638,7 @@ class PlannerController extends GetxController {
     // Cleanup drag state
     draggingTicket.value = null;
     draggingSourceBucketId.value = null;
-    loadPlannerData();
+    // Note: changeBucket already calls loadPlannerData(showLoading: false)
   }
 
   void onDragCancelled() {
@@ -584,7 +673,7 @@ class PlannerController extends GetxController {
 
       // Switching to Flows tab in Sidebar
       if (Get.isRegistered<SidebarController>()) {
-        Get.find<SidebarController>().navigate(CurrentPage.flowie);
+        Get.find<SidebarController>().navigate(CurrentPage.documentation);
       }
       
       flowsController.sidebarMode.value = SidebarMode.flows;
@@ -603,7 +692,7 @@ class PlannerController extends GetxController {
       }
 
       if (Get.isRegistered<SidebarController>()) {
-        Get.find<SidebarController>().navigate(CurrentPage.flowie);
+        Get.find<SidebarController>().navigate(CurrentPage.documentation);
       }
 
       final FlowsController flowsController = Get.put(FlowsController());

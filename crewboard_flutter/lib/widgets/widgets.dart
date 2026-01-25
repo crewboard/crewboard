@@ -14,3 +14,7 @@ export 'tabs.dart';
 export 'text_box.dart';
 export 'file_preview.dart';
 export 'bot_item.dart';
+export 'font_size_editor.dart';
+export 'app_color_picker.dart';
+export 'document_dropdown.dart';
+export 'font_family_search_dropdown.dart';

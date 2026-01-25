@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:crewboard_client/crewboard_client.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -148,7 +149,32 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                         children: [
                           ChipButton(
                             name: "add attachments",
-                            onPress: () {},
+                            onPress: () async {
+                              FilePickerResult? result = await FilePicker
+                                  .platform
+                                  .pickFiles(
+                                    allowMultiple: true,
+                                  );
+                              if (result != null) {
+                               for (var file in result.files) {
+                                  // Add to pendingFiles for upload
+                                  controller.pendingFiles.add(file);
+                                  
+                                  // Add placeholder to attachments for UI display
+                                  controller.attachments.add(
+                                    AttachmentModel(
+                                      id: UuidValue.fromString(
+                                        '00000000-0000-4000-8000-000000000000',
+                                      ),
+                                      name: file.name,
+                                      size: file.size.toDouble(),
+                                      url: "",
+                                      type: file.extension ?? "",
+                                    ),
+                                  );
+                                }
+                              }
+                            },
                           ),
                           const SizedBox(width: 10),
                           ChipButton(
@@ -223,6 +249,55 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                               ),
                           ],
                         ),
+                      // ATTACHMENTS display
+                      if (controller.attachments.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              "attachments",
+                              style: TextStyle(
+                                color: Pallet.font3,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            for (
+                              var i = 0;
+                              i < controller.attachments.length;
+                              i++
+                            )
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 10,
+                                ),
+                                child: Stack(
+                                  children: [
+                                    FilePreview(
+                                      name:
+                                          controller.attachments[i].name,
+                                      size: controller.attachments[i].size
+                                          .toInt(),
+                                    ),
+                                    Positioned(
+                                      right: 5,
+                                      top: 5,
+                                      child: InkWell(
+                                        onTap: () =>
+                                            controller.attachments.removeAt(i),
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 16,
+                                          color: Colors.white54,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -269,6 +344,10 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       MultiSelect(
                         items: controller.users,
                         selected: controller.selectedUsers,
+                        onChanged: () => controller.addToEditStack(
+                          "assignees",
+                          controller.selectedUsers.length.toString(),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       DropDown(
@@ -415,7 +494,8 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                 SmallButton(
                   label: "done",
                   onPress: () async {
-                    if (controller.editStack.isNotEmpty) {
+                    // Update ticket if there are edits OR pending files to upload
+                    if (controller.editStack.isNotEmpty || controller.pendingFiles.isNotEmpty) {
                       await controller.updateTicket(widget.ticketId);
                     }
                     Get.back();
