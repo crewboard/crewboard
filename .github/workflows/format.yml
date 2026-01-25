@@ -22,6 +22,10 @@ jobs:
         working-directory: crewboard_server
         run: dart pub get
 
+      - name: Install dependencies (Client)
+        working-directory: crewboard_client
+        run: dart pub get
+
       - name: Install dependencies (Flutter App)
         working-directory: crewboard_flutter
         run: flutter pub get
