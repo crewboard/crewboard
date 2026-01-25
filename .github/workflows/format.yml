@@ -11,15 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v4
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: 3.8.0
+          channel: 'master'
 
-      - name: Install dependencies
+      - name: Install dependencies (Server)
         working-directory: crewboard_server
         run: dart pub get
+
+      - name: Install dependencies (Flutter App)
+        working-directory: crewboard_flutter
+        run: flutter pub get
+
+      - name: Install dependencies (Landing)
+        working-directory: landing
+        run: flutter pub get
 
       - name: Check formatting
         run: dart format --set-exit-if-changed .
