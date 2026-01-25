@@ -144,8 +144,9 @@ void main(List<String> args) async {
 
           // Ensure target directory exists
           final targetSubDir = Directory('${uploadsDir.path}/$type');
-          if (!targetSubDir.existsSync())
+          if (!targetSubDir.existsSync()) {
             targetSubDir.createSync(recursive: true);
+          }
         }
       }
     } else {
