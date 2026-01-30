@@ -14,49 +14,16 @@ import 'package:landing/payments.dart';
 import 'package:landing/widgets.dart';
 // import 'package:visibility_detector/visibility_detector.dart';
 import 'package:lottie/lottie.dart';
-import 'package:particles_flutter/particles_flutter.dart';
+
 import 'package:rive/rive.dart';
 
 import 'demo/chat.dart';
 import 'package:flutter/rendering.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'types.dart';
 
-class Event {
-  String name;
-  Function func;
-  Event({required this.name, required this.func});
-}
-
-class Events {
-  List<Event> registeredEvents = [];
-  registerEvent(eventName, func) {
-    bool exists = false;
-    for (var event in registeredEvents) {
-      if (event.name == eventName) {
-        exists = true;
-      }
-    }
-    if (!exists) {
-      print("registered " + eventName);
-      registeredEvents.add(Event(name: eventName, func: func));
-    }
-  }
-
-  Events() {
-    animationStream.listen((eventName) async {
-      for (var event in registeredEvents) {
-        if (event.name == eventName) {
-          print("playing " + event.name);
-          event.func();
-        }
-      }
-    });
-  }
-}
-
-Events events = Events();
-
 void main() {
+  Pallet.lightMode();
   runApp(const MyApp());
 }
 
@@ -68,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Crewboard',
       theme: ThemeData(
         textTheme: GoogleFonts.ubuntuTextTheme(TextTheme(
           displayMedium: TextStyle(color: Pallet.font1),
@@ -79,7 +46,7 @@ class MyApp extends StatelessWidget {
         )),
         iconTheme: IconThemeData(color: Pallet.font2),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Crewboard Home Page'),
     );
   }
 }
@@ -106,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Window.width = Window.fullWidth * 0.9;
     Window.height = Window.fullHeight * 0.9;
-    Window.stageWidth = Window.width - Window.sideBarWidth;
+    Window.stageWidth =
+        Window.isMobile ? Window.width : Window.width - Window.sideBarWidth;
 
     return LandingPage();
   }
@@ -130,7 +98,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -186,35 +154,8 @@ class _ParalaxBlockState extends State<ParalaxBlock> {
           width: Window.fullWidth,
           child: Stack(
             children: [
-              Center(
-                child: CircularParticle(
-                  key: UniqueKey(),
-                  awayRadius: 120,
-                  numberOfParticles: 10,
-                  speedOfParticles: 3,
-                  height: Window.fullHeight,
-                  width: Window.fullWidth,
-                  onTapAnimation: false,
-                  maxParticleSize: 300,
-                  isRandSize: true,
-                  isRandomColor: true,
-                  randColorList: const [
-                    Color(0xFF49b3a7),
-                    Color(0xFFd865d8),
-                    Color(0xFF4de436)
-                  ],
-                  enableHover: false,
-                ),
-              ),
-              BackdropFilter(
-                filter: ImageFilter.blur(
-                  tileMode: TileMode.repeated,
-                  sigmaX: 80,
-                  sigmaY: 80,
-                ),
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                ),
+              Container(
+                color: Colors.white,
               ),
             ],
           ),
@@ -223,70 +164,6 @@ class _ParalaxBlockState extends State<ParalaxBlock> {
     );
   }
 }
-// class ParalaxBlock extends StatelessWidget {
-//   const ParalaxBlock({super.key, required this.child});
-//   final Widget child;
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: Window.fullWidth,
-//       height: Window.fullHeight,
-//       child: Stack(children: [_buildParallaxBackground(context), Intro()]),
-//     );
-
-//   }
-
-//   Widget _buildParallaxBackground(context) {
-//     return Flow(
-//       delegate: ParallaxFlowDelegate(
-//         scrollable: Scrollable.of(context),
-//         listItemContext: context,
-//         backgroundImageKey: GlobalKey(),
-//       ),
-//       children: [
-//         // Image.asset(
-//         //   "login.jpg",
-//         //   fit: BoxFit.cover,
-//         // )
-//         SizedBox(
-//           key: ,
-//           height: Window.fullHeight * 2,
-//           width: Window.fullWidth,
-//           child: Stack(
-//             children: [
-//               Center(
-//                 child: CircularParticle(
-//                   key: UniqueKey(),
-//                   awayRadius: 120,
-//                   numberOfParticles: 3,
-//                   speedOfParticles: 3,
-//                   height: Window.fullHeight,
-//                   width: Window.fullWidth,
-//                   onTapAnimation: false,
-//                   maxParticleSize: 200,
-//                   isRandSize: true,
-//                   isRandomColor: true,
-//                   randColorList: [Colors.red, Colors.yellow, Colors.blue],
-//                   enableHover: true,
-//                 ),
-//               ),
-//               BackdropFilter(
-//                 filter: ImageFilter.blur(
-//                   tileMode: TileMode.repeated,
-//                   sigmaX: 100,
-//                   sigmaY: 100,
-//                 ),
-//                 child: Container(
-//                   color: Colors.black.withOpacity(0.5),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
 
 class TopBar extends StatelessWidget {
   const TopBar({super.key});
@@ -300,15 +177,15 @@ class TopBar extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          SvgPicture.asset(
+          Image.asset(
             width: 35,
-            "assets/kolab.svg",
+            "assets/logo.png",
           ),
           SizedBox(
             width: 5,
           ),
           Text(
-            "kolab",
+            "Crewboard",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           Expanded(
@@ -345,13 +222,18 @@ class Intro extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: Center(
-                        child: SizedBox(
-                          width: Window.fullWidth * 0.3,
+              (Window.isMobile)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                              maxHeight: Window.fullHeight * 0.4),
+                          child: Image.asset("assets/kollab_landing.png"),
+                        ),
+                        SizedBox(height: 20),
+                        SizedBox(
+                          width: Window.fullWidth * 0.9,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -359,10 +241,10 @@ class Intro extends StatelessWidget {
                                 text: TextSpan(
                                   text: '',
                                   style: TextStyle(
-                                      fontSize: 50, color: Pallet.font1),
+                                      fontSize: 30, color: Pallet.font1),
                                   children: const <TextSpan>[
                                     TextSpan(
-                                        text: 'Kolab ',
+                                        text: 'Crewboard ',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         )),
@@ -372,73 +254,106 @@ class Intro extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Crewboard is opensource, which means you own your data in your own servers. start contributing to or using crewboard now!",
+                                style: GoogleFonts.openSans(
+                                    textStyle:
+                                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              ),
+                              SizedBox(
                                 height: 15,
                               ),
-                              Text(
-                                "Kolab is designed to protect ur data, own your data in your own servers. get the installation files and instructions right now!",
-                                style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Button(
-                                label: "request beta",
-                                onPress: () {},
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Maintaining this project is however difficult without funds, we appriciate ur contribution in advance",
-                                style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Button(
-                                label: "support",
-                                onPress: () {},
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Kolab is an all in one solution for, planning, managing and coordinating. Befriend Kolab through out the whole process of project managment",
-                                style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Button(
-                                label: "see whats kolab",
+                                label: "go to github",
+                                icon: SvgPicture.string(
+                                  '<svg height="20" width="20" viewBox="0 0 16 16"><path fill="white" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>',
+                                  width: 18,
+                                  height: 18,
+                                ),
                                 onPress: () async {
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 500));
-                                  eventSink.add("open_mail");
+                                  final Uri url = Uri.parse(
+                                      'https://github.com/crewboard/crewboard');
+                                  if (!await launchUrl(url)) {
+                                    throw Exception('Could not launch $url');
+                                  }
                                 },
+                                color: Color(0xFF24292F),
                               ),
                             ],
                           ),
                         ),
-                      )),
-                  Expanded(
-                      flex: 3,
-                      child: Container(
-                        constraints:
-                            BoxConstraints(maxHeight: Window.fullHeight * 0.8),
-                        child: Image.asset("assets/kollab_landing.png"),
-                      )),
-                ],
-              ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: SizedBox(
+                                width: Window.fullWidth * 0.3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                        text: '',
+                                        style: TextStyle(
+                                            fontSize: 45, color: Pallet.font1),
+                                        children: const <TextSpan>[
+                                          TextSpan(
+                                              text: 'Crewboard ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          TextSpan(
+                                              text: 'is currently in beta stage'),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 80,
+                                    ),
+                                    Text(
+                                      "Crewboard is opensource, which means you own your data in your own servers. start contributing to or using crewboard now!",
+                                      style: GoogleFonts.openSans(
+                                          textStyle: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Button(
+                                      label: "go to github",
+                                      icon: SvgPicture.string(
+                                        '<svg height="20" width="20" viewBox="0 0 16 16"><path fill="white" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>',
+                                        width: 18,
+                                        height: 18,
+                                      ),
+                                      onPress: () async {
+                                        final Uri url = Uri.parse(
+                                            'https://github.com/crewboard/crewboard');
+                                        if (!await launchUrl(url)) {
+                                          throw Exception('Could not launch $url');
+                                        }
+                                      },
+                                      color: Color(0xFF24292F),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                              constraints: BoxConstraints(
+                                  maxHeight: Window.fullHeight * 0.8),
+                              child: Image.asset("assets/kollab_landing.png"),
+                            )),
+                      ],
+                    ),
             ],
           ),
         ),
@@ -473,9 +388,18 @@ class Link extends StatelessWidget {
 }
 
 class Button extends StatelessWidget {
-  const Button({super.key, required this.label, required this.onPress});
+  const Button(
+      {super.key,
+      required this.label,
+      required this.onPress,
+      this.color,
+      this.icon,
+      this.textColor});
   final String label;
   final Function onPress;
+  final Color? color;
+  final Color? textColor;
+  final Widget? icon;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -485,12 +409,20 @@ class Button extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
         decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.25),
-            borderRadius: BorderRadius.circular(15)),
-        // decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
-        child: Text(
-          label,
-          style: TextStyle(color: Colors.white, fontSize: 14),
+            color: color ?? Color(0xFF2196F3),
+            borderRadius: BorderRadius.circular(20)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              icon!,
+              SizedBox(width: 10),
+            ],
+            Text(
+              label,
+              style: TextStyle(color: textColor ?? Colors.white, fontSize: 14),
+            ),
+          ],
         ),
       ),
     );

@@ -1,14 +1,9 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-// import 'backend/server.dart';
+import 'package:particles_flutter/particles_flutter.dart';
 import 'types.dart';
-// import 'package:audio_session/audio_session.dart';
-// import 'package:just_audio/just_audio.dart';
-// import 'package:rxdart/rxdart.dart';
-import 'dart:math' as math;
 
 class ProfileIcon extends StatelessWidget {
   const ProfileIcon(
@@ -32,174 +27,53 @@ class ProfileIcon extends StatelessWidget {
           color: color, borderRadius: BorderRadius.circular(size)),
       child: Center(
         child: Text(name![0].toString().toUpperCase(),
-            style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                    fontSize: fontSize, fontWeight: FontWeight.w500))),
+            style: TextStyle(
+              color: Colors.white,
+                fontFamily: DemoPallet.fontFamily,
+                fontSize: fontSize, 
+
+                fontWeight: FontWeight.w500)),
       ),
     );
   }
 }
 
-class AddButton extends StatelessWidget {
-  const AddButton({super.key, required this.onPress});
-  final Function onPress;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        onPress();
-      },
-      child: Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            border: Border.all(color: Pallet.font1),
-            borderRadius: BorderRadius.circular(5)),
-        child: Icon(
-          Icons.add,
-          size: 12,
-        ),
-      ),
-    );
-  }
-}
-
-class CustomBadge extends StatelessWidget {
-  const CustomBadge({super.key, required this.label, required this.color});
-  final String label;
+class GlassMorph extends StatelessWidget {
+  final Widget child;
+  final double borderRadius;
+  final double? width;
+  final double? height;
+  final double sigmaX;
+  final double sigmaY;
   final Color color;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        border: Border.all(color: color),
-        borderRadius: BorderRadius.circular(5),
-        color: color.withOpacity(0.2),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(fontSize: 12, color: color),
-        ),
-      ),
-    );
-  }
-}
+  final EdgeInsets padding;
+  final EdgeInsets margin;
 
-class TextBox extends StatelessWidget {
-  const TextBox(
-      {super.key,
-      this.controller,
-      this.maxLines,
-      this.onType,
-      this.onEnter,
-      this.hintText,
-      this.focus,
-      this.radius});
-  final TextEditingController? controller;
-  final int? maxLines;
-  final Function(String)? onType;
-  final Function(String)? onEnter;
-  final String? hintText;
-  final FocusNode? focus;
-  final double? radius;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // eddited for mobile
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Pallet.inner3,
-        borderRadius: BorderRadius.circular(radius ?? 5),
-      ),
-      child: TextField(
-          focusNode: focus,
-          onSubmitted: onEnter,
-          onChanged: onType,
-          controller: controller,
-          style: TextStyle(fontSize: 12),
-          maxLines: maxLines ?? 1,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(fontSize: 12, color: Pallet.font3),
-            isDense: true,
-            border: InputBorder.none,
-          )),
-    );
-  }
-}
+  const GlassMorph({
+    super.key,
+    required this.child,
+    this.borderRadius = 10.0,
+    this.width,
+    this.height,
+    this.sigmaX = 20.0,
+    this.sigmaY = 20.0,
+    this.color = const Color.fromARGB(36, 0, 0, 0),
+    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
+  });
 
-class Button extends StatelessWidget {
-  const Button({super.key, required this.label, required this.onPress});
-  final String label;
-  final Function onPress;
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.all(0),
-          minimumSize: Size(30, 30),
-        ),
-        onPressed: () {
-          onPress();
-        },
-        child: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Pallet.inner1,
-              border: Border.all(color: Pallet.font3),
-              borderRadius: BorderRadius.circular(5)),
-          child: Center(
-              child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 12, color: Pallet.font3),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Icon(
-                Icons.add,
-                color: Pallet.font3,
-                size: 18,
-              )
-            ],
-          )),
-        ));
-  }
-}
-
-class SmallButton extends StatelessWidget {
-  const SmallButton({super.key, required this.label, required this.onPress});
-  final String label;
-  final Function onPress;
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0),
-        minimumSize: Size(30, 30),
-      ),
-      onPressed: () {
-        onPress();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: Pallet.inner1,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: TextStyle(color: Pallet.font3, fontSize: 12),
-              ),
-            ],
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Padding(
+        padding: margin,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
+            child: Container(padding: padding, color: color, child: child),
           ),
         ),
       ),
@@ -207,813 +81,65 @@ class SmallButton extends StatelessWidget {
   }
 }
 
-class ColorPicker extends StatefulWidget {
-  const ColorPicker({super.key, required this.color, required this.onSelect});
-  final Color color;
-  final Function onSelect;
+class DemoBackground extends StatelessWidget {
+  final Widget child;
+  final double blurSigma;
+  final double borderRadius;
 
-  @override
-  State<ColorPicker> createState() => _ColorPickerState();
-}
-
-class _ColorPickerState extends State<ColorPicker> {
-  GlobalKey actionKey = GlobalKey();
-  double height = 0, width = 0, initX = 0, initY = 0;
-  OverlayEntry? dropdown;
-  bool isOpen = false;
-  static ValueNotifier<bool> adding = ValueNotifier<bool>(false);
-  TextEditingController color = TextEditingController();
-
-  late Color selectedColor;
-  @override
-  void initState() {
-    selectedColor = widget.color;
-    getData();
-    super.initState();
-  }
-
-  void getDropDownData() {
-    RenderBox renderBox =
-        actionKey.currentContext!.findRenderObject() as RenderBox;
-    height = 200;
-    width = 200;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    initX = offset.dx;
-    initY = offset.dy;
-  }
-
-  void close() {
-    if (isOpen) {
-      dropdown!.remove();
-      isOpen = false;
-    }
-  }
-
-  List defaultColors = [];
-  List customColors = [];
-  getData() async {
-    // server.get(
-    //     refresh: true,
-    //     lock: true,
-    //     data: {"0": "get_colors"},
-    //     func: (data) {
-    //       defaultColors = data["default"];
-    //       if (defaultColors.isNotEmpty) {
-    //         selectedColor = Color(int.parse(defaultColors.first["color"]));
-    //       }
-    //       print(defaultColors);
-    //       customColors = data["custom"];
-    //       adding.notifyListeners();
-    //       setState(() {});
-    //     });
-    // await server.lock();
-    // server.release();
-  }
-
-  OverlayEntry _createDropDown() {
-    return OverlayEntry(builder: (context) {
-      return GestureDetector(
-        onTap: () {
-          close();
-        },
-        child: Container(
-          color: Colors.transparent,
-          width: Window.width,
-          height: Window.height,
-          child: Stack(
-            children: [
-              Positioned(
-                  top: initY,
-                  left: initX - (width / 2),
-                  width: width,
-                  height: height,
-                  child: Material(
-                    color: Colors.transparent,
-                    elevation: 10,
-                    child: GestureDetector(
-                      onTap: () {},
-                      behavior: HitTestBehavior.opaque,
-                      child: ValueListenableBuilder<bool>(
-                          valueListenable: adding,
-                          builder:
-                              (BuildContext context, bool _, Widget? child) {
-                            return Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: Pallet.inner2,
-                                  borderRadius: BorderRadius.circular(10)),
-                              width: 160,
-                              height: 160,
-                              child: ListView(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      if (adding.value)
-                                        Expanded(
-                                          child: Container(
-                                            // eddited for mobile
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              color: Pallet.inner3,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                      controller: color,
-                                                      // focusNode: focus,
-                                                      // onSubmitted: onEnter,
-                                                      // onChanged: onType,
-                                                      // controller: controller,
-                                                      style: TextStyle(
-                                                          fontSize: 12),
-                                                      // maxLines: maxLines ?? 1,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        // hintText: hintText,
-                                                        hintStyle: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Pallet.font3),
-                                                        isDense: true,
-                                                        border:
-                                                            InputBorder.none,
-                                                      )),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    adding.value = false;
-                                                    setState(() {});
-                                                  },
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 14,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      AddButton(
-                                        onPress: () {
-                                          if (adding.value) {
-                                            String hash =
-                                                color.text.replaceAll("#", "");
-                                            if (hash.length == 6) {
-                                              hash = "0xFF" + hash;
-                                            }
-                                            // server.get(
-                                            //     data: {"0": "add_color", "1": hash},
-                                            //     func: (value) {
-                                            //       request.add("get_colors");
-                                            //     });
-                                          } else {
-                                            adding.value = true;
-                                            setState(() {});
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.end,
-                                  //   children: [
-                                  //     AddButton(
-                                  //       onPress: () {},
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // TextField(
-                                  //   style: TextStyle(fontSize: 10),
-                                  //   decoration: InputDecoration(
-                                  //     hintStyle: TextStyle(fontSize: 12, color: Pallet.font3),
-                                  //     isDense: true,
-                                  //   ),
-                                  //   onChanged: (text) {},
-                                  // ),
-                                  Text(
-                                    "colors",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Wrap(
-                                    children: [
-                                      for (var color in defaultColors)
-                                        InkWell(
-                                          onTap: () {
-                                            selectedColor = Color(
-                                                int.parse(color["color"]));
-                                            widget.onSelect(color);
-                                            close();
-                                            setState(() {});
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.all(5),
-                                            width: 26,
-                                            height: 26,
-                                            decoration: BoxDecoration(
-                                                color: Color(
-                                                    int.parse(color["color"])),
-                                                // color: Colors.red,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                          ),
-                                        )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  if (customColors.isNotEmpty)
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "colors",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Wrap(
-                                          children: [
-                                            for (var color in customColors)
-                                              InkWell(
-                                                onTap: () {
-                                                  selectedColor = Color(
-                                                      int.parse(
-                                                          color["color"]));
-                                                  widget.onSelect(color);
-                                                  close();
-                                                },
-                                                child: Container(
-                                                  margin: EdgeInsets.all(5),
-                                                  width: 26,
-                                                  height: 26,
-                                                  decoration: BoxDecoration(
-                                                      color: Color(int.parse(
-                                                          color["color"])),
-                                                      // color: Colors.red,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                ),
-                                              )
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                ],
-                              ),
-                            );
-                          }),
-                    ),
-                  )),
-            ],
-          ),
-        ),
-      );
-    });
-  }
+  const DemoBackground({
+    super.key,
+    required this.child,
+    this.blurSigma = 30.0,
+    this.borderRadius = 10.0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        if (!isOpen) {
-          if (defaultColors.isEmpty) {
-            await getData();
-          }
-          getDropDownData();
-          dropdown = _createDropDown();
-          Overlay.of(context)!.insert(dropdown!);
-        } else {
-          close();
-        }
-        isOpen = !isOpen;
-        setState(() {});
-      },
-      child: Container(
-        key: actionKey,
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-            color: selectedColor, borderRadius: BorderRadius.circular(5)),
-      ),
-    );
-  }
-}
-
-class MultiSelect extends StatefulWidget {
-  const MultiSelect(
-      {super.key,
-      required this.label,
-      required this.items,
-      required this.itemKey,
-      required this.onChanged,
-      // required this.onPress,
-      this.itemHeight = 40,
-      this.menuDecoration});
-  final String label;
-  final List<Map> items;
-  final String itemKey;
-  final double itemHeight;
-  final BoxDecoration? menuDecoration;
-  final Function onChanged;
-  @override
-  State<MultiSelect> createState() => _MultiSelectState();
-}
-
-class _MultiSelectState extends State<MultiSelect> {
-  double height = 0, width = 0, initX = 0, initY = 0;
-  GlobalKey actionKey = GlobalKey();
-  OverlayEntry? dropdown;
-  bool isOpen = false;
-  final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
-
-  void findDropDownData() {
-    RenderBox renderBox =
-        actionKey.currentContext!.findRenderObject() as RenderBox;
-    height = renderBox.size.height;
-    width = renderBox.size.width;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    initX = offset.dx;
-    initY = offset.dy;
-  }
-
-  close() {
-    if (isOpen) {
-      dropdown!.remove();
-      isOpen = false;
-      setState(() {});
-    }
-  }
-
-  OverlayEntry _createDropDown() {
-    return OverlayEntry(builder: (context) {
-      return GestureDetector(
-        onTap: () {
-          print("here");
-          close();
-        },
-        child: Container(
-          color: Colors.transparent,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-              Positioned(
-                left: initX,
-                width: width,
-                top: initY + height + 5,
-                height: widget.itemHeight * widget.items.length,
-                child: Material(
-                  elevation: 60,
-                  color: Colors.transparent,
-                  child: ValueListenableBuilder<int?>(
-                      valueListenable: hoveredIdx,
-                      builder: (BuildContext context, int? _hoveredIdx,
-                          Widget? child) {
-                        return Container(
-                            decoration: widget.menuDecoration,
-                            child: ListView(children: [
-                              for (var i = 0; i < widget.items.length; i++)
-                                MouseRegion(
-                                  onEnter: (details) {
-                                    hoveredIdx.value = i;
-                                  },
-                                  onExit: (details) {
-                                    hoveredIdx.value = null;
-                                  },
-                                  child: InkWell(
-                                    onTap: () {
-                                      widget.items[i]["selected"] =
-                                          !widget.items[i]["selected"];
-                                      hoveredIdx.notifyListeners();
-
-                                      widget.onChanged(widget.items[i]);
-                                      // if (widget.items[i]["selected"] == true) {
-                                      // widget.items[i]["selected"] = false;
-                                      // for (var i = 0; i < ticket.selectedUsers.length; i++) {
-                                      // if (item["userId"] == ticket.selectedUsers[i]["userId"]) {
-                                      // ticket.selectedUsers.removeAt(i);
-                                      // }
-                                      // }
-                                      // } else {
-                                      // ticket.selectedUsers.add(item);
-                                      // item["selected"] = true;
-                                      // }
-                                      // notifier.notifyListeners();
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: (i == _hoveredIdx)
-                                            ? Pallet.inner3
-                                            : Colors.transparent,
-                                      ),
-                                      height: widget.itemHeight,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          ProfileIcon(
-                                            size: 25,
-                                            name: widget.items[i]["userName"],
-                                            color: Color(int.parse(
-                                                widget.items[i]["color"])),
-                                            // color: Color(int.parse(item["color"].toString(), radix: 16)),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
-                                            child: Text(
-                                              widget.items[i]["userName"],
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          InkWell(
-                                            onTap: () {},
-                                            child: Container(),
-                                          ),
-                                          Checkbox(
-                                              activeColor: Pallet.inner2,
-                                              value: widget.items[i]
-                                                  ["selected"],
-                                              onChanged: (value) {
-                                                widget.items[i]["selected"] =
-                                                    value;
-                                                hoveredIdx.notifyListeners();
-                                                widget
-                                                    .onChanged(widget.items[i]);
-
-                                                // if (item["selected"] == true) {
-                                                //   item["selected"] = false;
-                                                //   for (var i = 0; i < ticket.selectedUsers.length; i++) {
-                                                //     if (item["userId"] == ticket.selectedUsers[i]["userId"]) {
-                                                //       ticket.selectedUsers.removeAt(i);
-                                                //     }
-                                                //   }
-                                                // } else {
-                                                //   ticket.selectedUsers.add(item);
-                                                //   item["selected"] = true;
-                                                // }
-                                                // item["selected"] = value;
-                                                // notifier.notifyListeners();
-
-                                                // refreshSink.add("");
-                                              })
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                            ]));
-                      }),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (isOpen) {
-          dropdown!.remove();
-        } else {
-          findDropDownData();
-          dropdown = _createDropDown();
-          Overlay.of(context)!.insert(dropdown!);
-        }
-
-        isOpen = !isOpen;
-        setState(() {});
-      },
-      child: Container(
-        key: actionKey,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Pallet.inner1,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            Text(
-              widget.label,
-              style: TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DropDown extends StatefulWidget {
-  const DropDown(
-      {super.key,
-      required this.label,
-      required this.items,
-      required this.itemKey,
-      required this.onPress,
-      this.itemHeight = 40,
-      this.menuDecoration});
-
-  final String label;
-  final List<Map> items;
-  final String itemKey;
-  final double itemHeight;
-  final BoxDecoration? menuDecoration;
-  final Function(Map) onPress;
-  @override
-  State<DropDown> createState() => _DropDownState();
-}
-
-class _DropDownState extends State<DropDown> {
-  double height = 0, width = 0, initX = 0, initY = 0;
-  GlobalKey actionKey = GlobalKey();
-  OverlayEntry? dropdown;
-  bool isOpen = false;
-  final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
-
-  void findDropDownData() {
-    RenderBox renderBox =
-        actionKey.currentContext!.findRenderObject() as RenderBox;
-    height = renderBox.size.height;
-    width = renderBox.size.width;
-    // Offset offset = renderBox.localToGlobal(Offset.zero);
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    initX = offset.dx;
-    initY = offset.dy;
-    print(initX);
-  }
-
-  close() {
-    if (isOpen) {
-      dropdown!.remove();
-      isOpen = false;
-      setState(() {});
-    }
-  }
-
-  OverlayEntry _createDropDown() {
-    return OverlayEntry(builder: (context) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: GestureDetector(
-          onTap: () {
-            close();
-          },
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: initX,
-                  width: width,
-                  top: initY + height + 5,
-                  height: widget.itemHeight * widget.items.length,
-                  child: Material(
-                      elevation: 60,
-                      color: Colors.transparent,
-                      child: ValueListenableBuilder<int?>(
-                          valueListenable: hoveredIdx,
-                          builder: (BuildContext context, int? _hoveredIdx,
-                              Widget? child) {
-                            return Container(
-                                // decoration: BoxDecoration(color: Colors.blue),
-                                decoration: widget.menuDecoration,
-                                child: ListView(children: [
-                                  // for (var item in widget.items)
-                                  for (var i = 0; i < widget.items.length; i++)
-                                    MouseRegion(
-                                      onEnter: (details) {
-                                        hoveredIdx.value = i;
-                                      },
-                                      onExit: (details) {
-                                        hoveredIdx.value = null;
-                                      },
-                                      child: InkWell(
-                                        onTap: () {
-                                          print("object");
-                                          widget.onPress(widget.items[i]);
-                                          close();
-                                        },
-                                        child: Container(
-                                          color: (i == _hoveredIdx)
-                                              ? Pallet.inner3
-                                              : Colors.transparent,
-                                          height: widget.itemHeight,
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: Text(
-                                                  widget.items[i]
-                                                      [widget.itemKey],
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                ]));
-                          })),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (isOpen) {
-          dropdown!.remove();
-        } else {
-          findDropDownData();
-          dropdown = _createDropDown();
-          Overlay.of(context)!.insert(dropdown!);
-        }
-
-        isOpen = !isOpen;
-        setState(() {});
-      },
-      child: Container(
-        key: actionKey,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Pallet.inner1,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            Text(
-              widget.label,
-              style: TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FilePreview extends StatelessWidget {
-  const FilePreview(
-      {super.key, required this.name, required this.size, this.url});
-  final String name;
-  final int size;
-  final String? url;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Pallet.inner3,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Pallet.font3.withOpacity(0.5))),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      constraints: BoxConstraints(maxWidth: 200),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Stack(
         children: [
-          SizedBox(
-            width: 35,
-            height: 42,
-            child: Stack(
-              children: [
-                SvgPicture.asset(
-                  getFileColor(name.split(".").last.toLowerCase()),
-                  width: 35,
-                  height: 42,
-                  fit: BoxFit.fill,
-                ),
-                Center(
-                  child: Text(
-                    name.split(".").last,
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
-                  ),
-                )
-              ],
+          if (DemoPallet.isGlass)
+            Positioned.fill(
+              child: CircularParticle(
+                key: UniqueKey(),
+                awayRadius: 100,
+                numberOfParticles: 5,
+                speedOfParticles: 1,
+                height: Window.fullHeight * 0.6,
+                width: Window.fullWidth * 0.5,
+                onTapAnimation: false,
+                maxParticleSize: 150,
+                isRandSize: true,
+                isRandomColor: true,
+                randColorList: DemoPallet.light
+                    ? const [
+                        Color(0xFF5292f6),
+                        Color(0xFF834bac),
+                        Color(0xFFde7bb1),
+                      ]
+                    : const [
+                        Color(0xFF002772),
+                        Color(0xFF5c0057),
+                        Color(0xFF00283f),
+                      ],
+                enableHover: false,
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 12),
+          if (DemoPallet.isGlass)
+            Positioned.fill(
+              child: BackdropFilter(
+                filter:
+                    ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma, tileMode: TileMode.clamp),
+                child: Container(
+                  color: DemoPallet.light
+                      ? Colors.white.withOpacity(0.3)
+                      : Colors.black.withOpacity(0.75),
                 ),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  getSize(size),
-                  style: TextStyle(fontSize: 10, color: Pallet.font3),
-                ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Icon(Icons.download),
-          SizedBox(
-            width: 10,
-          ),
+          child,
         ],
-      ),
-    );
-  }
-
-  getSize(int size) {
-    double _size = size / 1048576;
-    if (_size < 1) {
-      _size = _size * 1000;
-      return _size.toStringAsFixed(2) + " KB";
-    } else if (_size < 1000) {
-      return _size.toStringAsFixed(2) + " MB";
-    } else {
-      _size = _size / 1000;
-      return _size.toStringAsFixed(2) + " GB";
-    }
-  }
-
-  getFileColor(String fileType) {
-    List<String> green = ["xlsx", "xls", "csv", "py", "apk"];
-    List<String> red = ["pdf", "ppt", "pptx", "odp"];
-    List<String> yellow = ["html", "ipa"];
-    if (green.contains(fileType)) {
-      return "assets/file/green.svg";
-    } else if (red.contains(fileType)) {
-      return "assets/file/red.svg";
-    } else if (yellow.contains(fileType)) {
-      return "assets/file/yellow.svg";
-    } else {
-      return "assets/file/blue.svg";
-    }
-  }
-}
-
-class ChipButton extends StatelessWidget {
-  const ChipButton({super.key, required this.name, required this.onPress});
-  final String name;
-  final Function onPress;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        onPress();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-            color: Pallet.inner1,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Pallet.font3)),
-        child: Center(
-          child: Text(
-            name,
-            style: TextStyle(color: Pallet.font3, fontSize: 11.8),
-          ),
-        ),
       ),
     );
   }

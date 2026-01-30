@@ -1,5 +1,7 @@
 # Crewboard
 
+[![Crewboard Demo](thumbnail.png)](https://youtu.be/cqfBFUfqoOw)
+
 Crewboard involves a complete Serverpod 3 setup with a Flutter client app and a separate landing page project.
 
 ## Project Structure

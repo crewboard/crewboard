@@ -1,69 +1,22 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:landing/demo/aimation.dart';
-import 'package:landing/main.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rive/rive.dart';
+
+import 'package:rive/rive.dart' hide LinearGradient;
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../types.dart';
 import '../widgets.dart';
 
-class DemoPallet {
-  // static Color background = Color(0xFF161819);
-  // static Color font1 = Color(0xFFf9f9fb);
-  // static Color font2 = Color(0xFFececed);
-  // static Color font3 = Color(0xFFbebebe);
-  // static Color inner1 = Color(0xFF323337);
-  // static Color inner2 = Color(0xFF27292D);
-  // static Color inner3 = Color(0xFF1d1f20);
 
-  static bool light = false;
 
-  static Color background = Color(0xFF161819);
-  static Color insideFont = Colors.white;
-
-  static Color font1 = Color(0xFFf9f9fb);
-  static Color font2 = Color(0xFFececed);
-  static Color font3 = Color(0xFFbebebe);
-
-  static Color inner1 = Color(0xFF323337);
-  static Color inner2 = Color(0xFF27292D);
-  static Color inner3 = Color(0xFF1d1f20);
-  static darkMode() {
-    DemoPallet.light = false;
-    DemoPallet.background = Color(0xFF161819);
-    DemoPallet.insideFont = Colors.white;
-
-    DemoPallet.font1 = Color(0xFFf9f9fb);
-    DemoPallet.font2 = Color(0xFFececed);
-    DemoPallet.font3 = Color(0xFFbebebe);
-
-    DemoPallet.inner1 = Color(0xFF323337);
-    DemoPallet.inner2 = Color(0xFF27292D);
-    DemoPallet.inner3 = Color(0xFF1d1f20);
-  }
-
-  static lightMode() {
-    DemoPallet.light = true;
-    DemoPallet.background = Color(0xFFf5f7fb);
-    DemoPallet.insideFont = Colors.white;
-
-    DemoPallet.font1 = Color(0xFF464646);
-    DemoPallet.font2 = Color(0xFF5c5c5c);
-    DemoPallet.font3 = Color(0xFFa2a2a2);
-
-    DemoPallet.inner1 = Color(0xFFffffff);
-    DemoPallet.inner2 = Color(0xFFe3e3e5);
-    DemoPallet.inner3 = Color(0xFFf5f7fb);
-  }
-}
+// DemoPallet has been moved to types.dart
 
 ScrollController _scrollController = ScrollController();
 bool typing = false;
@@ -237,140 +190,371 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(children: [
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: Window.fullWidth * 0.3,
-                    child: Animate(
-                      controller: _controller,
-                      effects: const [
-                        SlideEffect(duration: Duration(milliseconds: 1000)),
-                        FadeEffect(duration: Duration(milliseconds: 1000))
-                      ],
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Seamless chatting with team mates",
-                              style:
-                                  TextStyle(fontSize: 50, color: Pallet.font1),
+            (Window.isMobile)
+                ? Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Center(
+                        child: FittedBox(
+                          child: Animate(
+                            controller: _controller,
+                            effects: [
+                              ScaleEffect(duration: Duration(milliseconds: 1000)),
+                              FadeEffect(duration: Duration(milliseconds: 1000))
+                            ],
+                            child: DeskTopToPhone(
+                              height: Window.fullHeight * 0.85,
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              "responsive design",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    animationSink.add("show_desktop");
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.withOpacity(0.2)),
-                                    // decoration:
-                                    //     BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
-                                    child: Icon(Icons.desktop_mac_outlined,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: Window.fullWidth * 0.9,
+                      child: Animate(
+                        controller: _controller,
+                        effects: const [
+                          SlideEffect(duration: Duration(milliseconds: 1000)),
+                          FadeEffect(duration: Duration(milliseconds: 1000))
+                        ],
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Seamless chatting with team mates",
+                                style:
+                                    TextStyle(fontSize: 30, color: Colors.black),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "responsive design",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      animationSink.add("show_desktop");
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.grey.withOpacity(0.2)),
+                                      // decoration:
+                                      //     BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
+                                      child: Icon(Icons.desktop_mac_outlined,
+                                          color: isPhone
+                                              ? Pallet.font2
+                                              : Colors.blue[100]),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  InkWell(
+                                    onTap: () {
+                                      animationSink.add("show_phone");
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.grey.withOpacity(0.2)),
+                                      child: Icon(
+                                        Icons.phone_android_rounded,
                                         color: isPhone
-                                            ? Pallet.font2
-                                            : Colors.blue[100]),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    animationSink.add("show_phone");
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.withOpacity(0.2)),
-                                    child: Icon(
-                                      Icons.phone_android_rounded,
-                                      color: isPhone
-                                          ? Colors.blue[100]
-                                          : Pallet.font2,
+                                            ? Colors.blue[100]
+                                            : Pallet.font2,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                            Text("supports all themes",
-                                style: TextStyle(fontSize: 16)),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    DemoPallet.lightMode();
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.withOpacity(0.2)),
-                                    child: Icon(
-                                      Icons.light_mode,
-                                      color: DemoPallet.light
-                                          ? Colors.yellow
-                                          : Pallet.font2,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    DemoPallet.darkMode();
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.withOpacity(0.2)),
-                                    child: Icon(
-                                      Icons.dark_mode,
-                                      color: DemoPallet.light
-                                          ? Pallet.font1
-                                          : Colors.blue[800],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
+                                ],
+                              ),
+                              SizedBox(height: 15),
+                              Text("supports all themes",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black54)),
+                              SizedBox(height: 10),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: AppTheme.values.map((theme) {
+                                  return ThemePreview(
+                                    theme: theme,
+                                    isSelected:
+                                        DemoPallet.currentTheme == theme,
+                                    onTap: () {
+                                      DemoPallet.setTheme(theme);
+                                      setState(() {});
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            ]),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Animate(
-                    controller: _controller,
-                    effects: [
-                      ScaleEffect(duration: Duration(milliseconds: 1000)),
-                      FadeEffect(duration: Duration(milliseconds: 1000))
-                    ],
-                    child: DeskTopToPhone(
-                      height: Window.fullHeight * 0.5,
+                  ])
+                : Row(children: [
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          width: Window.fullWidth * 0.3,
+                          child: Animate(
+                            controller: _controller,
+                            effects: const [
+                              SlideEffect(
+                                  duration: Duration(milliseconds: 1000)),
+                              FadeEffect(duration: Duration(milliseconds: 1000))
+                            ],
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Seamless chatting with team mates",
+                                    style: TextStyle(
+                                        fontSize: 50, color: Colors.black),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "responsive design",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black54),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          animationSink.add("show_desktop");
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey
+                                                  .withOpacity(0.2)),
+                                          // decoration:
+                                          //     BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
+                                          child: Icon(
+                                              Icons.desktop_mac_outlined,
+                                              color: isPhone
+                                                  ? Pallet.font2
+                                                  : Colors.blue[100]),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      InkWell(
+                                        onTap: () {
+                                          animationSink.add("show_phone");
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey
+                                                  .withOpacity(0.2)),
+                                          child: Icon(
+                                            Icons.phone_android_rounded,
+                                            color: isPhone
+                                                ? Colors.blue[100]
+                                                : Pallet.font2,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 15),
+                                  Text("supports all themes",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black54)),
+                                  SizedBox(height: 10),
+                                  Wrap(
+                                    spacing: 10,
+                                    runSpacing: 10,
+                                    children: AppTheme.values.map((theme) {
+                                      return ThemePreview(
+                                        theme: theme,
+                                        isSelected:
+                                            DemoPallet.currentTheme == theme,
+                                        onTap: () {
+                                          DemoPallet.setTheme(theme);
+                                          setState(() {});
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              // SizedBox(width: 50)
-            ]),
+                    Expanded(
+                      child: Center(
+                        child: Animate(
+                          controller: _controller,
+                          effects: [
+                            ScaleEffect(duration: Duration(milliseconds: 1000)),
+                            FadeEffect(duration: Duration(milliseconds: 1000))
+                          ],
+                          child: DeskTopToPhone(
+                            height: (isPhone)
+                                ? Window.fullHeight * 0.8
+                                : Window.fullHeight * 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // SizedBox(width: 50)
+                  ]),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ThemePreview extends StatelessWidget {
+  final AppTheme theme;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const ThemePreview({
+    super.key,
+    required this.theme,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color previewBg;
+    Color previewAccent;
+    bool isGlass;
+    String name;
+
+    switch (theme) {
+      case AppTheme.glassDark:
+        previewBg = Colors.black.withOpacity(0.3);
+        previewAccent = Colors.white.withOpacity(0.2);
+        isGlass = true;
+        name = "Glass Dark";
+        break;
+      case AppTheme.glassLight:
+        previewBg = Colors.white.withOpacity(0.3);
+        previewAccent = Colors.black.withOpacity(0.1);
+        isGlass = true;
+        name = "Glass Light";
+        break;
+      case AppTheme.classicLight:
+        previewBg = Colors.white;
+        previewAccent = Colors.grey.shade200;
+        isGlass = false;
+        name = "Classic Light";
+        break;
+      case AppTheme.classicDark:
+        previewBg = const Color(0xFF1E1E1E);
+        previewAccent = const Color(0xFF2D2D2D);
+        isGlass = false;
+        name = "Classic Dark";
+        break;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              width: 80,
+              height: 50,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.3),
+                  width: isSelected ? 2 : 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Stack(
+                children: [
+                  if (isGlass) ...[
+                    if (theme == AppTheme.glassLight)
+                      Positioned.fill(child: Container(color: Colors.white)),
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: theme == AppTheme.glassDark
+                                ? [const Color(0xFF002772), const Color(0xFF5c0057)]
+                                : [const Color(0xFFb3d1ff), const Color(0xFFe6ccff)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          color: theme == AppTheme.glassDark
+                              ? Colors.black.withOpacity(0.5)
+                              : Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    Positioned.fill(child: Container(color: previewBg)),
+                  ],
+                  Positioned(
+                    top: 10,
+                    left: 5,
+                    child: Container(
+                      width: 20,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: previewAccent,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 18,
+                    left: 5,
+                    child: Container(
+                      width: 30,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: previewAccent,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 10,
+              color: isSelected ? Colors.blue : Colors.black54,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -390,15 +574,13 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
       mult = 0.53;
       borderRadius = 10;
       isPhone = true;
-      setState(() {});
-      // refreshSink.add("");
+      if (mounted) setState(() {});
     });
     events.registerEvent("show_desktop", () {
-      mult = 1.25;
+      mult = 1.5; // Increased from 1.25 for better widescreen
       borderRadius = 5;
       isPhone = false;
-      setState(() {});
-      // refreshSink.add("");
+      if (mounted) setState(() {});
     });
     // animationStream.listen((event) {
     //   if (event == "show_phone") {
@@ -418,12 +600,10 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
       mult = 0.53;
       borderRadius = 10;
       isPhone = true;
-      // refreshSink.add("");
     } else {
-      mult = 1.25;
+      mult = 1.5; // Increased from 1.25
       borderRadius = 5;
       isPhone = false;
-      // refreshSink.add("");
     }
     super.initState();
   }
@@ -460,29 +640,33 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(borderRadius),
                           color: DemoPallet.background),
-                      child: Column(children: [
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (isPhone)
-                              Container(
-                                width: 30,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.black),
-                              ),
-                          ],
-                        ),
-                        Expanded(child: Content())
-                      ]),
+                      child: DemoBackground(
+                        borderRadius: borderRadius,
+                        blurSigma: 25,
+                        child: Column(children: [
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (isPhone)
+                                Container(
+                                  width: 30,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.black),
+                                ),
+                            ],
+                          ),
+                          Expanded(child: Content())
+                        ]),
+                      ),
                     ),
                   ),
                 ),
                 if (!isPhone)
                   Container(
-                    height: 40,
+                    height: 25, // Reduced from 40
                     decoration: const BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.only(
@@ -495,7 +679,7 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
           if (!isPhone)
             Container(
               width: 80,
-              height: 60,
+              height: 40, // Reduced from 60
               decoration: BoxDecoration(color: Colors.black),
             )
         ],
@@ -744,7 +928,8 @@ class _ContentState extends State<Content> {
                                         message["same"] == false)
                                       Text(
                                         "deepak",
-                                        style: TextStyle(fontSize: 10),
+                                        style: TextStyle(
+                                            fontSize: 10, color: DemoPallet.font1),
                                       ),
                                     SizedBox(
                                       height: 5,
@@ -820,106 +1005,111 @@ class _ContentState extends State<Content> {
               //     height: 10,
               //     color: Colors.red,
               //   ),
-              Container(
-                margin: (isPhone)
-                    ? EdgeInsets.symmetric(horizontal: 10)
-                    : EdgeInsets.symmetric(horizontal: 20),
-                // padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Icon(
-                        Icons.emoji_emotions,
-                        color: DemoPallet.font3,
-                        size: 18,
+              Builder(builder: (context) {
+                final bool isSmall = isPhone || Window.isMobile;
+                return Container(
+                  margin: (isSmall)
+                      ? EdgeInsets.symmetric(horizontal: 10)
+                      : EdgeInsets.symmetric(horizontal: 20),
+                  // padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Icon(
+                          Icons.emoji_emotions,
+                          color: DemoPallet.font3,
+                          size: isSmall ? 15 : 18,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: DemoPallet.inner2,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              color: DemoPallet.inner2,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Column(
+                            children: [
+                              TextField(
+                                  style: TextStyle(
+                                      color: DemoPallet.font3,
+                                      fontSize: isSmall ? 10 : 12),
+                                  onSubmitted: (value) {
+                                    // chat.sendMessage(chat.message.text, "text");
+                                  },
+                                  onChanged: (value) {
+                                    // server.get(data: {"0": "typing", "1": chat.selectedRoom["roomId"], "2": userId, "3": "typing"}, func: (data) {});
+                                  },
+                                  controller: message,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    hintStyle: TextStyle(
+                                        color: DemoPallet.font3,
+                                        fontSize: isSmall ? 10 : 12),
+                                    border: InputBorder.none,
+                                    hintText: 'Message',
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      if (!isSmall)
+                        Row(
                           children: [
-                            TextField(
-                                style: TextStyle(
-                                    color: DemoPallet.font3, fontSize: 12),
-                                onSubmitted: (value) {
-                                  // chat.sendMessage(chat.message.text, "text");
-                                },
-                                onChanged: (value) {
-                                  // server.get(data: {"0": "typing", "1": chat.selectedRoom["roomId"], "2": userId, "3": "typing"}, func: (data) {});
-                                },
-                                controller: message,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  hintStyle: TextStyle(
-                                      color: DemoPallet.font3, fontSize: 12),
-                                  border: InputBorder.none,
-                                  hintText: 'Message',
-                                )),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 2),
+                              child: Icon(
+                                Icons.mic,
+                                color: DemoPallet.font3,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 2),
+                              child: Icon(
+                                Icons.attach_file,
+                                color: DemoPallet.font3,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
                           ],
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if (!isPhone)
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: GestureDetector(
+                          onTap: () async {
+                            // chat.sendMessage(chat.message.text, "text");
+                          },
+                          child: Icon(
+                            Icons.send,
+                            color: DemoPallet.font3,
+                            size: isSmall ? 15 : 18,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Icon(
-                              Icons.mic,
-                              color: DemoPallet.font3,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Icon(
-                              Icons.attach_file,
-                              color: DemoPallet.font3,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: GestureDetector(
-                        onTap: () async {
-                          // chat.sendMessage(chat.message.text, "text");
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: DemoPallet.font3,
-                          size: 18,
                         ),
                       ),
-                    ),
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
-                  ],
-                ),
-              ),
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
+                    ],
+                  ),
+                );
+              }),
               SizedBox(height: 5)
             ],
           );

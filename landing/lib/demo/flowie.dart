@@ -1,15 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart' as an;
-// import 'package:flutter_animate/flutter_animate.dart';
-import 'package:landing/main.dart';
+import 'package:landing/touchable/src/canvas_touch_detector.dart';
+import 'package:landing/touchable/src/touchy_canvas.dart';
 import 'package:lottie/lottie.dart';
-import 'package:touchable/touchable.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'dart:math' as math;
+import 'dart:math';
 
 import 'types.dart';
 import '../types.dart';
+import '../widgets.dart';
 import 'dart:math' as math;
 
 GlobalKey screenKey = GlobalKey();
@@ -31,6 +31,9 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
+    themeChangeStream.listen((event) {
+      if (mounted) setState(() {});
+    });
 
     events.registerEvent("show_flowie", () async {
       if (!playing) {
@@ -40,7 +43,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
           await Future.delayed(const Duration(milliseconds: 200));
           RenderBox renderBox =
               screenKey.currentContext!.findRenderObject() as RenderBox;
-          Window.stageWidth = renderBox.size.width;
+          final double scale = Window.isMobile ? 0.5 : 1.0;
+          Window.stageWidth = renderBox.size.width / scale;
 
           if (!playing) {
             break;
@@ -309,16 +313,19 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
   }
 
   selectRightNode(int idx) {
-    mouseX = flowie.flows[idx].x +
+    final double scale = Window.isMobile ? 0.5 : 1.0;
+    mouseX =
+        flowie.flows[idx].x +
         flowie.flows[idx].width +
         flowie.flows[idx].right.lineHeight;
     mouseY = flowie.flows[idx].y + flowie.flows[idx].height / 2;
-    mouseX -= 23;
-    mouseY -= 8;
+    mouseX -= 23 / scale;
+    mouseY -= 8 / scale;
     animationSink.add("");
   }
 
   selectBottomNode() async {
+    final double scale = Window.isMobile ? 0.5 : 1.0;
     mouseY = 0;
     for (var flow in flowie.flows) {
       if ((flow.y + flow.height + flow.down.lineHeight) > mouseY) {
@@ -326,8 +333,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
         mouseY = (flow.y + flow.height + flow.down.lineHeight);
       }
     }
-    mouseY -= 8;
-    mouseX -= 25;
+    mouseY -= 8 / scale;
+    mouseX -= 25 / scale;
     animationSink.add("");
 
     await Future.delayed(const Duration(milliseconds: 500));
@@ -347,15 +354,15 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
   }
 
   selectFlowType(double adder) async {
-    mouseX = Window.stageWidth - 120;
-    mouseY = 20 + adder;
+    mouseX = Window.stageWidth - (Window.isMobile ? 140 : 120);
+    mouseY = (Window.isMobile ? 30 : 20) + adder;
     animationSink.add("");
     await Future.delayed(const Duration(milliseconds: 500));
     animationSink.add("");
   }
 
   selectText() async {
-    mouseX = Window.stageWidth - 165;
+    mouseX = Window.stageWidth - (Window.isMobile ? 180 : 165);
     mouseY = 90;
     animationSink.add("");
     await Future.delayed(const Duration(milliseconds: 500));
@@ -394,7 +401,8 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
         }
 
         debugPrint(
-            'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
+          'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible',
+        );
       },
       child: SizedBox(
         width: Window.fullWidth,
@@ -402,168 +410,470 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(children: [
-              SizedBox(
-                width: Window.fullWidth * 0.1,
-              ),
-              Expanded(
-                child: StreamBuilder<Object>(
-                    stream: animationStream,
-                    builder: (context, snapshot) {
-                      return an.Animate(
-                        controller: _controller,
-                        effects: const [
-                          an.ScaleEffect(
-                              duration: Duration(milliseconds: 1000)),
-                          an.FadeEffect(duration: Duration(milliseconds: 1000))
-                        ],
-                        child: Container(
-                          key: screenKey,
-                          decoration: BoxDecoration(
-                              color: Pallet.background,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Pallet.font1)),
-                          height: Window.fullHeight * 0.6,
-                          // width: 691.2,
-                          child: Stack(
-                            children: [
-                              Lines(),
-                              for (var flow in flowie.flows)
-                                if (flow.type == FlowType.terminal)
-                                  Positioned(
-                                      left: flow.x,
-                                      top: flow.y,
-                                      child: InkWell(
-                                        onTap: () {
-                                          // selectFlow(flow.id, flow.direction!, flow.type);
-                                        },
-                                        child: Terminal(
-                                          width: flow.width,
-                                          height: flow.height,
-                                          label: flow.value,
-                                        ),
-                                      ))
-                                else if (flow.type == FlowType.process)
-                                  Positioned(
-                                      left: flow.x,
-                                      top: flow.y,
-                                      child: InkWell(
-                                        onTap: () {
-                                          // selectFlow(flow.id, flow.direction!, flow.type);
-                                        },
-                                        child: Process(
-                                          width: flow.width,
-                                          height: flow.height,
-                                          label: flow.value,
-                                        ),
-                                      ))
-                                else if (flow.type == FlowType.condition)
-                                  Positioned(
-                                      left: flow.x,
-                                      top: flow.y,
-                                      child: InkWell(
-                                        onTap: () {
-                                          // selectFlow(flow.id, flow.direction!, flow.type);
-                                        },
-                                        child: Condition(
-                                          width: flow.width,
-                                          height: flow.width,
-                                          label: flow.value,
-                                        ),
-                                      )),
-                              if (Window.mode == "edit")
-                                Positioned(right: 5, top: 5, child: EditFlow())
-                              else
-                                Positioned(right: 5, top: 5, child: AddFlow()),
-                              AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 200),
-                                  top: mouseY,
-                                  left: mouseX,
-                                  child: SizedBox(
-                                      width: 50,
-                                      height: 30,
-                                      // color: Colors.red,
-                                      child: Lottie.asset(
-                                          'assets/white_select.json')))
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: Window.fullWidth * 0.3,
-                    child: an.Animate(
-                      controller: _controller,
-                      effects: const [
-                        an.SlideEffect(duration: Duration(milliseconds: 1500)),
-                        an.FadeEffect(duration: Duration(milliseconds: 1500))
-                      ],
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            Builder(
+              builder: (context) {
+                final double scale = Window.isMobile ? 0.5 : 1.0;
+                return (Window.isMobile)
+                    ? Column(
                         children: [
-                          Text(
-                            "Make sure no flow is left untouched with flowie",
-                            style: TextStyle(fontSize: 45, color: Pallet.font1),
+                          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            width: Window.fullWidth,
+            constraints: BoxConstraints(
+              maxHeight: Window.fullHeight * 0.4,
+            ),
+                            child: StreamBuilder<Object>(
+                              stream: animationStream,
+                              builder: (context, snapshot) {
+                                return an.Animate(
+                                  controller: _controller,
+                                  effects: const [
+                                    an.ScaleEffect(
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                    an.FadeEffect(
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                  ],
+                                  child: Container(
+                                    key: screenKey,
+                                    decoration: BoxDecoration(
+                                      color: DemoPallet.background,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    height: Window.fullHeight * 0.5,
+                                    // width: 691.2,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: DemoBackground(
+                                        child: Stack(
+                                          children: [
+                                            Lines(),
+                                            for (var flow in flowie.flows)
+                                              if (flow.type ==
+                                                  FlowType.terminal)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Terminal(
+                                                      width: flow.width,
+                                                      height: flow.height,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                )
+                                              else if (flow.type ==
+                                                  FlowType.process)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Process(
+                                                      width: flow.width,
+                                                      height: flow.height,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                )
+                                              else if (flow.type ==
+                                                  FlowType.condition)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Condition(
+                                                      width: flow.width,
+                                                      height: flow.width,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                            if (Window.mode == "edit")
+                                              Positioned(
+                                                right: 5,
+                                                top: 5,
+                                                child: EditFlow(),
+                                              )
+                                            else
+                                              Positioned(
+                                                right: 5,
+                                                top: 5,
+                                                child: AddFlow(),
+                                              ),
+                                            AnimatedPositioned(
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              top: mouseY * scale,
+                                              left: mouseX * scale,
+                                              child: SizedBox(
+                                                width: 50,
+                                                height: 30,
+                                                // color: Colors.red,
+                                                child: Lottie.asset(
+                                                  'assets/white_select.json',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 15,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            color: Colors.red, width: 3)),
+                          SizedBox(height: 20),
+                          Center(
+                            child: SizedBox(
+                              width: Window.fullWidth * 0.9,
+                              child: an.Animate(
+                                controller: _controller,
+                                effects: const [
+                                  an.SlideEffect(
+                                    duration: Duration(milliseconds: 1500),
                                   ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    width: 15,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.yellow, width: 3)),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    width: 15,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.blue, width: 3)),
+                                  an.FadeEffect(
+                                    duration: Duration(milliseconds: 1500),
                                   ),
                                 ],
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Make sure no flow is left untouched with flowie",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                border: Border.all(
+                                                  color: Colors.red,
+                                                  width: 3,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.yellow,
+                                                  width: 3,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.blue,
+                                                  width: 3,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "terminal",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                                fontFamily:
+                                                    DemoPallet.fontFamily,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "condition",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                                fontFamily:
+                                                    DemoPallet.fontFamily,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "process",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                                fontFamily:
+                                                    DemoPallet.fontFamily,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "terminal",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text("condition",
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(height: 8),
-                                  Text("process",
-                                      style: TextStyle(fontSize: 16)),
-                                ],
-                              )
-                            ],
-                          )
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ]),
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(width: Window.fullWidth * 0.1),
+                          Expanded(
+                            child: StreamBuilder<Object>(
+                              stream: animationStream,
+                              builder: (context, snapshot) {
+                                return an.Animate(
+                                  controller: _controller,
+                                  effects: const [
+                                    an.ScaleEffect(
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                    an.FadeEffect(
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                  ],
+                                  child: Container(
+                                    key: screenKey,
+                                    decoration: BoxDecoration(
+                                      color: DemoPallet.background,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    height: Window.fullHeight * 0.5,
+                                    // width: 691.2,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: DemoBackground(
+                                        child: Stack(
+                                          children: [
+                                            Lines(),
+                                            for (var flow in flowie.flows)
+                                              if (flow.type ==
+                                                  FlowType.terminal)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Terminal(
+                                                      width: flow.width,
+                                                      height: flow.height,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                )
+                                              else if (flow.type ==
+                                                  FlowType.process)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Process(
+                                                      width: flow.width,
+                                                      height: flow.height,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                )
+                                              else if (flow.type ==
+                                                  FlowType.condition)
+                                                Positioned(
+                                                  left: flow.x * scale,
+                                                  top: flow.y * scale,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // selectFlow(flow.id, flow.direction!, flow.type);
+                                                    },
+                                                    child: Condition(
+                                                      width: flow.width,
+                                                      height: flow.width,
+                                                      label: flow.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                            if (Window.mode == "edit")
+                                              Positioned(
+                                                right: 5,
+                                                top: 5,
+                                                child: EditFlow(),
+                                              )
+                                            else
+                                              Positioned(
+                                                right: 5,
+                                                top: 5,
+                                                child: AddFlow(),
+                                              ),
+                                            AnimatedPositioned(
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              top: mouseY * scale,
+                                              left: mouseX * scale,
+                                              child: SizedBox(
+                                                width: 50,
+                                                height: 30,
+                                                // color: Colors.red,
+                                                child: Lottie.asset(
+                                                  'assets/white_select.json',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: SizedBox(
+                                width: Window.fullWidth * 0.3,
+                                child: an.Animate(
+                                  controller: _controller,
+                                  effects: const [
+                                    an.SlideEffect(
+                                      duration: Duration(milliseconds: 1500),
+                                    ),
+                                    an.FadeEffect(
+                                      duration: Duration(milliseconds: 1500),
+                                    ),
+                                  ],
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Make sure no flow is left untouched with flowie",
+                                        style: TextStyle(
+                                          fontSize: 45,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  border: Border.all(
+                                                    color: Colors.red,
+                                                    width: 3,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 15),
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.yellow,
+                                                    width: 3,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 15),
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.blue,
+                                                    width: 3,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 10),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "terminal",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black54,
+                                                  fontFamily:
+                                                      DemoPallet.fontFamily,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                "condition",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black54,
+                                                  fontFamily:
+                                                      DemoPallet.fontFamily,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                "process",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black54,
+                                                  fontFamily:
+                                                      DemoPallet.fontFamily,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+              },
+            ),
           ],
         ),
       ),
@@ -601,35 +911,26 @@ class LinePainter2 extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var myCanvas = TouchyCanvas(context, canvas);
     var paint = Paint()
-      ..color = (Pallet.light) ? Colors.black : Colors.white
+      ..color = DemoPallet.font1
       ..strokeWidth = 1;
 
+    final double scale = Window.isMobile ? 0.5 : 1.0;
+
     final textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: 11,
+      color: DemoPallet.font1,
+      fontSize: 11 * scale,
+      fontFamily: DemoPallet.fontFamily,
     );
     final yesp = TextPainter(
-      text: TextSpan(
-        text: 'yes',
-        style: textStyle,
-      ),
+      text: TextSpan(text: 'yes', style: textStyle),
       textDirection: TextDirection.ltr,
     );
-    yesp.layout(
-      minWidth: 0,
-      maxWidth: 20,
-    );
+    yesp.layout(minWidth: 0, maxWidth: 20 * scale);
     final nop = TextPainter(
-      text: TextSpan(
-        text: 'no',
-        style: textStyle,
-      ),
+      text: TextSpan(text: 'no', style: textStyle),
       textDirection: TextDirection.ltr,
     );
-    nop.layout(
-      minWidth: 0,
-      maxWidth: size.width,
-    );
+    nop.layout(minWidth: 0, maxWidth: size.width);
     Offset start = Offset(0, 0);
     Offset end = Offset(0, 0);
     final paintText = (text, off, r) {
@@ -658,18 +959,30 @@ class LinePainter2 extends CustomPainter {
       if (!(flow.type == FlowType.condition &&
           flow.left.hasChild &&
           flow.right.hasChild)) {
-        start = Offset(flow.x + flow.width / 2, flow.y + flow.height);
-        end = Offset(flow.x + flow.width / 2,
-            flow.y + flow.height + flow.down.lineHeight);
+        start = Offset(
+          (flow.x * scale) + (flow.width * scale) / 2,
+          (flow.y * scale) + (flow.height * scale),
+        );
+        end = Offset(
+          (flow.x * scale) + (flow.width * scale) / 2,
+          (flow.y * scale) +
+              (flow.height * scale) +
+              flow.down.lineHeight * scale,
+        );
         canvas.drawLine(start, end, paint);
         if (!flow.down.hasChild) {
-          myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-            Window.mode = "add";
-            Ram.selectedId = flow.id;
-            Ram.selectedDirection = Direction.down;
-            flowie.save();
-            refreshSink.add("");
-          });
+          myCanvas.drawCircle(
+            end,
+            3 * scale,
+            paint,
+            onTapDown: (tapdetail) {
+              Window.mode = "add";
+              Ram.selectedId = flow.id;
+              Ram.selectedDirection = Direction.down;
+              flowie.save();
+              refreshSink.add("");
+            },
+          );
         }
       }
 
@@ -678,52 +991,90 @@ class LinePainter2 extends CustomPainter {
 
         if (flow.direction != Direction.left &&
             !(flow.down.hasChild && flow.left.hasChild)) {
-          start = Offset(flow.x + flow.width, flow.y + flow.height / 2);
-          end = Offset(flow.x + flow.width + flow.right.lineHeight,
-              flow.y + flow.height / 2);
+          start = Offset(
+            (flow.x * scale) + (flow.width * scale),
+            (flow.y * scale) + (flow.height * scale) / 2,
+          );
+          end = Offset(
+            (flow.x * scale) +
+                (flow.width * scale) +
+                flow.right.lineHeight * scale,
+            (flow.y * scale) + (flow.height * scale) / 2,
+          );
           canvas.drawLine(start, end, paint);
           if (!flow.right.hasChild) {
-            myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-              Window.mode = "add";
-              Ram.selectedId = flow.id;
-              Ram.selectedDirection = Direction.right;
-              flowie.save();
-              refreshSink.add("");
-            });
+            myCanvas.drawCircle(
+              end,
+              3 * scale,
+              paint,
+              onTapDown: (tapdetail) {
+                Window.mode = "add";
+                Ram.selectedId = flow.id;
+                Ram.selectedDirection = Direction.right;
+                flowie.save();
+                refreshSink.add("");
+              },
+            );
           }
         }
 
         // left
         if (flow.direction != Direction.right &&
             !(flow.down.hasChild && flow.right.hasChild)) {
-          start = Offset(flow.x, flow.y + flow.height / 2);
-          end = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
+          start = Offset(
+            flow.x * scale,
+            (flow.y * scale) + (flow.height * scale) / 2,
+          );
+          end = Offset(
+            (flow.x * scale) - flow.left.lineHeight * scale,
+            (flow.y * scale) + (flow.height * scale) / 2,
+          );
           canvas.drawLine(start, end, paint);
           if (!flow.left.hasChild) {
-            myCanvas.drawCircle(end, 3, paint, onTapDown: (tapdetail) {
-              Window.mode = "add";
-              Ram.selectedId = flow.id;
-              Ram.selectedDirection = Direction.left;
-              flowie.save();
-              refreshSink.add("");
-            });
+            myCanvas.drawCircle(
+              end,
+              3 * scale,
+              paint,
+              onTapDown: (tapdetail) {
+                Window.mode = "add";
+                Ram.selectedId = flow.id;
+                Ram.selectedDirection = Direction.left;
+                flowie.save();
+                refreshSink.add("");
+              },
+            );
           }
         }
-        Offset down = Offset((flow.x + flow.width / 2) + 20,
-            (flow.y + flow.height + flow.down.lineHeight / 2) - 10);
-        Offset left = Offset((flow.x - flow.left.lineHeight / 2) - 2,
-            (flow.y + flow.height / 2) - 20);
+        Offset down = Offset(
+          ((flow.x * scale) + (flow.width * scale) / 2) + 20 * scale,
+          ((flow.y * scale) +
+                  (flow.height * scale) +
+                  (flow.down.lineHeight * scale) / 2) -
+              10 * scale,
+        );
+        Offset left = Offset(
+          ((flow.x * scale) - (flow.left.lineHeight * scale) / 2) - 2 * scale,
+          ((flow.y * scale) + (flow.height * scale) / 2) - 20 * scale,
+        );
         Offset right = Offset(
-            (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
-            (flow.y + flow.height / 2) - 20);
+          ((flow.x * scale) +
+                  (flow.width * scale) +
+                  (flow.right.lineHeight * scale) / 2) -
+              10 * scale,
+          ((flow.y * scale) + (flow.height * scale) / 2) - 20 * scale,
+        );
         // yes
         if (flow.yes == Direction.down) {
           paintText('yes', down, true);
           // right
           if (flow.right.hasChild) {
             start = Offset(
-                (flow.x + flow.width + flow.right.lineHeight / 2) - 10,
-                (flow.y + flow.height / 2) - 20);
+              ((flow.x * scale) +
+                      (flow.width * scale) +
+                      (flow.right.lineHeight * scale) / 2) -
+                  10 * scale,
+              ((flow.y * scale) + (flow.height * scale) / 2) - 20 * scale,
+            );
             paintText('no', right, false);
           }
           // left
@@ -805,22 +1156,34 @@ class LinePainter extends CustomPainter {
 }
 
 class Condition extends StatelessWidget {
-  const Condition(
-      {super.key,
-      required this.label,
-      required this.width,
-      required this.height});
+  const Condition({
+    super.key,
+    required this.label,
+    required this.width,
+    required this.height,
+  });
   final String label;
   final double width;
   final double height;
   @override
   Widget build(BuildContext context) {
+    final double scale = Window.isMobile ? 0.5 : 1.0;
     return CustomPaint(
       child: Container(
-        padding: EdgeInsets.all(width / 4),
-        width: width,
-        height: width,
-        child: Center(child: Text(label, style: TextStyle(fontSize: 10))),
+        padding: EdgeInsets.all(width * scale / 4),
+        width: width * scale,
+        height: width * scale,
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10 * scale,
+              color: DemoPallet.font1,
+              fontFamily: DemoPallet.fontFamily,
+            ),
+          ),
+        ),
       ),
       foregroundPainter: LinePainter(),
     );
@@ -828,47 +1191,78 @@ class Condition extends StatelessWidget {
 }
 
 class Terminal extends StatelessWidget {
-  const Terminal(
-      {super.key,
-      required this.label,
-      required this.width,
-      required this.height});
+  const Terminal({
+    super.key,
+    required this.label,
+    required this.width,
+    required this.height,
+  });
   final String label;
   final double width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
+    final double scale = Window.isMobile ? 0.5 : 1.0;
     return Container(
-      width: width,
-      height: height,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      width: width * scale,
+      height: height * scale,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10 * scale,
+        vertical: 5 * scale,
+      ),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.red),
-          borderRadius: BorderRadius.circular(40)),
-      child: Center(child: Text(label, style: TextStyle(fontSize: 10))),
+        border: Border.all(color: Colors.red),
+        borderRadius: BorderRadius.circular(40 * scale),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 10 * scale,
+            color: DemoPallet.font1,
+            fontFamily: DemoPallet.fontFamily,
+          ),
+        ),
+      ),
     );
   }
 }
 
 class Process extends StatelessWidget {
-  const Process(
-      {super.key,
-      required this.label,
-      required this.width,
-      required this.height});
+  const Process({
+    super.key,
+    required this.label,
+    required this.width,
+    required this.height,
+  });
   final String label;
   final double width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
+    final double scale = Window.isMobile ? 0.5 : 1.0;
     return Container(
-      width: width,
-      height: height,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      width: width * scale,
+      height: height * scale,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10 * scale,
+        vertical: 5 * scale,
+      ),
       decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      child: Center(child: Text(label, style: TextStyle(fontSize: 10))),
+      child: Center(
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 10 * scale,
+            color: DemoPallet.font1,
+            fontFamily: DemoPallet.fontFamily,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -883,167 +1277,81 @@ class EditFlow extends StatefulWidget {
 class _EditFlowState extends State<EditFlow> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: 150,
-        decoration: BoxDecoration(
-            color: Pallet.inner2, borderRadius: BorderRadius.circular(5)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "width",
-              style: TextStyle(fontSize: 10),
+    final double scale = Window.isMobile ? 0.6 : 1.0;
+    return GlassMorph(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10 * scale,
+        vertical: 5 * scale,
+      ),
+      width: 150 * scale,
+      borderRadius: 5 * scale,
+      sigmaX: 5,
+      sigmaY: 5,
+      color: DemoPallet.isGlass
+          ? (DemoPallet.light
+                ? Colors.white.withOpacity(0.1)
+                : Colors.grey.withOpacity(0.1))
+          : Pallet.inner2,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "width",
+            style: TextStyle(
+              fontSize: 10 * scale,
+              color: DemoPallet.font1,
+              fontFamily: DemoPallet.fontFamily,
             ),
-            SizedBox(
-              height: 5,
+          ),
+          SizedBox(height: 5 * scale),
+          TextBox(
+            controller: TextEditingController(
+              text: flowie.flows[Ram.selectedId!].width.toString(),
             ),
-            TextBox(
-              controller: TextEditingController(
-                text: flowie.flows[Ram.selectedId!].width.toString(),
-              ),
+          ),
+          SizedBox(height: 8 * scale),
+          Text(
+            "value",
+            style: TextStyle(
+              fontSize: 10 * scale,
+              color: DemoPallet.font1,
+              fontFamily: DemoPallet.fontFamily,
             ),
-            SizedBox(
-              height: 8,
+          ),
+          SizedBox(height: 5 * scale),
+          TextBox(
+            controller: TextEditingController(
+              text: flowie.flows[Ram.selectedId!].value.toString(),
             ),
-            Text(
-              "value",
-              style: TextStyle(fontSize: 10),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            TextBox(
-              controller: TextEditingController(
-                text: flowie.flows[Ram.selectedId!].value.toString(),
-              ),
-              maxLines: 5,
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            if (flowie.flows[Ram.selectedId!].down.hasChild ||
-                flowie.flows[Ram.selectedId!].right.hasChild ||
-                flowie.flows[Ram.selectedId!].left.hasChild)
-              Column(
-                children: [
-                  Text(
-                    "line heights",
-                    style: TextStyle(fontSize: 10),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                ],
-              ),
+            maxLines: Window.isMobile ? 3 : 5,
+          ),
+          SizedBox(height: 10 * scale),
 
-            if (flowie.flows[Ram.selectedId!].down.hasChild)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 45,
-                      child: Text(
-                        "down",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextBox(),
-                    ),
-                  ],
-                ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SmallButton(
+                label: "done",
+                onPress: () {
+                  // flowie.save();
+                  // Window.mode = "none";
+                  // refreshSink.add("");
+                },
               ),
-            if (Ram.selectedType == FlowType.condition)
-              if (flowie.flows[Ram.selectedId!].left.hasChild)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 45,
-                        child: Text(
-                          "left",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextBox(),
-                      ),
-                    ],
-                  ),
-                ),
-            if (Ram.selectedType == FlowType.condition)
-              if (flowie.flows[Ram.selectedId!].right.hasChild)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 45,
-                        child: Text(
-                          "right",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextBox(),
-                      ),
-                    ],
-                  ),
-                ),
-
-            // InkWell(
-            //   onTap: () {},
-            //   child: Container(
-            //     decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(5)),
-            //     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Text("delete", style: TextStyle(fontSize: 10)),
-            //         SizedBox(
-            //           width: 10,
-            //         ),
-            //         Icon(
-            //           Icons.delete,
-            //           size: 14,
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SmallButton(
-                  label: "done",
-                  onPress: () {
-                    // flowie.save();
-                    // Window.mode = "none";
-                    // refreshSink.add("");
-                  },
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                SmallButton(
-                  label: "close",
-                  onPress: () {
-                    // Window.mode = "none";
-                    // refreshSink.add("");
-                  },
-                ),
-              ],
-            )
-          ],
-        ));
-    ;
+              SizedBox(width: 5),
+              SmallButton(
+                label: "close",
+                onPress: () {
+                  // Window.mode = "none";
+                  // refreshSink.add("");
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -1053,30 +1361,25 @@ class SmallButton extends StatelessWidget {
   final Function onPress;
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0),
-        minimumSize: Size(30, 30),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Pallet.inner1,
+        borderRadius: BorderRadius.circular(5),
       ),
-      onPressed: () {
-        onPress();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Pallet.inner1,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: TextStyle(color: Pallet.font3, fontSize: 9),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: DemoPallet.font3,
+                fontSize: 9 * (Window.isMobile ? 0.6 : 1.0),
+                fontFamily: DemoPallet.fontFamily,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -1084,15 +1387,16 @@ class SmallButton extends StatelessWidget {
 }
 
 class TextBox extends StatelessWidget {
-  const TextBox(
-      {super.key,
-      this.controller,
-      this.maxLines,
-      this.onType,
-      this.onEnter,
-      this.hintText,
-      this.focus,
-      this.radius});
+  const TextBox({
+    super.key,
+    this.controller,
+    this.maxLines,
+    this.onType,
+    this.onEnter,
+    this.hintText,
+    this.focus,
+    this.radius,
+  });
   final TextEditingController? controller;
   final int? maxLines;
   final Function(String)? onType;
@@ -1109,18 +1413,26 @@ class TextBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius ?? 5),
       ),
       child: TextField(
-          focusNode: focus,
-          onSubmitted: onEnter,
-          onChanged: onType,
-          controller: controller,
-          style: TextStyle(fontSize: 10),
-          maxLines: maxLines ?? 1,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(fontSize: 12, color: Pallet.font3),
-            isDense: true,
-            border: InputBorder.none,
-          )),
+        focusNode: focus,
+        onSubmitted: onEnter,
+        onChanged: onType,
+        controller: controller,
+        style: TextStyle(
+          fontSize: 10 * (Window.isMobile ? 0.6 : 1.0),
+          color: DemoPallet.font1,
+          fontFamily: DemoPallet.fontFamily,
+        ),
+        maxLines: maxLines ?? 1,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            fontSize: 12 * (Window.isMobile ? 0.6 : 1.0),
+            color: Pallet.font3,
+          ),
+          isDense: true,
+          border: InputBorder.none,
+        ),
+      ),
     );
   }
 }
@@ -1130,37 +1442,36 @@ class AddFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // margin: EdgeInsets.only(top: 10, right: 10),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: 150,
-        decoration: BoxDecoration(
-            color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Button(
-              label: "Add Terminal",
-              onPress: () {},
-            ),
-            SizedBox(height: 10),
-            Button(
-              label: "Add Process",
-              onPress: () {},
-            ),
-            SizedBox(height: 10),
-            Button(
-              label: "Add Condition",
-              onPress: () {},
-            ),
-            SizedBox(height: 10),
-            Button(
-              label: "Add Loop",
-              onPress: () {},
-            ),
-          ],
-        ));
+    final double scale = Window.isMobile ? 0.6 : 1.0;
+    return GlassMorph(
+      // margin: EdgeInsets.only(top: 10, right: 10),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10 * scale,
+        vertical: 10 * scale,
+      ),
+      width: 150 * scale,
+      borderRadius: 10 * scale,
+      sigmaX: 5,
+      sigmaY: 5,
+      color: DemoPallet.isGlass
+          ? (DemoPallet.light
+                ? Colors.white.withOpacity(0.1)
+                : Colors.grey.withOpacity(0.1))
+          : Pallet.inner1,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Button(label: "Add Terminal", onPress: () {}),
+          SizedBox(height: 10),
+          Button(label: "Add Process", onPress: () {}),
+          SizedBox(height: 10),
+          Button(label: "Add Condition", onPress: () {}),
+          SizedBox(height: 10),
+          Button(label: "Add Loop", onPress: () {}),
+        ],
+      ),
+    );
   }
 }
 
@@ -1171,58 +1482,68 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double scale = Window.isMobile ? 0.6 : 1.0;
     return Container(
       padding: EdgeInsets.symmetric(
-          vertical: label.toLowerCase().contains("loop") ? 5 : 8,
-          horizontal: 10),
+        vertical: label.toLowerCase().contains("loop") ? 5 * scale : 8 * scale,
+        horizontal: 10 * scale,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15 * scale),
         color: Pallet.inner2,
       ),
       child: Row(
         children: [
           Expanded(
-              child: Text(
-            label,
-            style: TextStyle(fontSize: 10),
-          )),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 10 * scale,
+                color: DemoPallet.font1,
+                fontFamily: DemoPallet.fontFamily,
+              ),
+            ),
+          ),
           if (label.toLowerCase().contains("condition"))
             Transform.rotate(
               angle: 40,
               child: Container(
-                width: 10,
-                height: 10,
+                width: 10 * scale,
+                height: 10 * scale,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.yellow, width: 2)),
+                  border: Border.all(color: Colors.yellow, width: 2 * scale),
+                ),
               ),
             )
           else if (label.toLowerCase().contains("process"))
             Container(
-              width: 12,
-              height: 12,
+              width: 12 * scale,
+              height: 12 * scale,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2)),
+                border: Border.all(color: Colors.blue, width: 2 * scale),
+              ),
             )
           else if (label.toLowerCase().contains("terminal"))
             Container(
-              width: 12,
-              height: 12,
+              width: 12 * scale,
+              height: 12 * scale,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.red, width: 2)),
+                borderRadius: BorderRadius.circular(15 * scale),
+                border: Border.all(color: Colors.red, width: 2 * scale),
+              ),
             )
           else
             SizedBox(
-              width: 16,
-              height: 16,
+              width: 16 * scale,
+              height: 16 * scale,
               child: Icon(
                 Icons.loop,
                 // opticalSize: 5,
-                size: 18,
+                size: 18 * scale,
                 // weight: 6,
                 color: Colors.green,
               ),
-            )
+            ),
         ],
       ),
     );

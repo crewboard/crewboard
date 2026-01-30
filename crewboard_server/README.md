@@ -31,7 +31,14 @@ All schema from `crewboard_old` has been migrated to Serverpod `.spy.yaml` model
    cd crewboard/crewboard/crewboard_server
    ```
 
-2. Start the database (Postgres + Redis):
+2. Configure the server:
+   - Copy the example passwords file:
+     ```bash
+     cp config/passwords.yaml.example config/passwords.yaml
+     ```
+   - Update `config/passwords.yaml` with your own secrets if necessary (defaults are provided for local dev).
+
+3. Start the database (Postgres + Redis):
    ```bash
    docker-compose up --build -d
    ```
