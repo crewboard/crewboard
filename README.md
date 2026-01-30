@@ -31,7 +31,14 @@ Before you begin, ensure you have the following installed:
     cd crewboard_server
     ```
 
-2.  Start the database (Postgres + Redis) using Docker:
+2.  Configure the server:
+    - Copy the example passwords file:
+      ```bash
+      cp config/passwords.yaml.example config/passwords.yaml
+      ```
+    - Update `config/passwords.yaml` with your own secrets if necessary.
+
+3.  Start the database (Postgres + Redis) using Docker:
     ```bash
     docker-compose up --build --detach
     ```
