@@ -193,7 +193,7 @@ Future<void> seedDatabase(Session session) async {
     stdout.writeln('Seeding default SystemVariables...');
     systemVars = SystemVariables(
       punchingMode: 'manual_user',
-      lineHeight: 1.5,
+      lineHeight: 25.0,
       processWidth: 100,
       conditionWidth: 100,
       terminalWidth: 100,
@@ -223,10 +223,10 @@ Future<void> seedDatabase(Session session) async {
       systemVars.tabPreset2 = 'body';
       updated = true;
     }
-    // If lineHeight is still at the old anomalous default 25, reset it to 1.5
-    if (systemVars.lineHeight == 25) {
-      stdout.writeln('Resetting SystemVariables.lineHeight from 25 to 1.5...');
-      systemVars.lineHeight = 1.5;
+    // If lineHeight is not 25, update it to 25
+    if (systemVars.lineHeight != 25) {
+      stdout.writeln('Updating SystemVariables.lineHeight to 25...');
+      systemVars.lineHeight = 25;
       updated = true;
     }
     if (updated) {
