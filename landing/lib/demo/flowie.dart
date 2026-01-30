@@ -417,11 +417,11 @@ class _FlowieDemoState extends State<FlowieDemo> with TickerProviderStateMixin {
                     ? Column(
                         children: [
                           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            width: Window.fullWidth,
-            constraints: BoxConstraints(
-              maxHeight: Window.fullHeight * 0.4,
-            ),
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            width: Window.fullWidth,
+                            constraints: BoxConstraints(
+                              maxHeight: Window.fullHeight * 0.4,
+                            ),
                             child: StreamBuilder<Object>(
                               stream: animationStream,
                               builder: (context, snapshot) {

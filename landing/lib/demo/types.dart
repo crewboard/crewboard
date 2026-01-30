@@ -5,17 +5,9 @@ import 'dart:convert';
 
 import '../types.dart';
 
-enum Direction {
-  down,
-  right,
-  left,
-}
+enum Direction { down, right, left }
 
-enum FlowType {
-  terminal,
-  process,
-  condition,
-}
+enum FlowType { terminal, process, condition }
 
 class Defaults {
   static double lineHeight = 25;
@@ -46,20 +38,21 @@ class FlowClass {
   Line right;
   Line left;
   Direction? yes;
-  FlowClass(
-      {required this.id,
-      required this.width,
-      required this.height,
-      required this.x,
-      required this.y,
-      required this.value,
-      required this.type,
-      required this.down,
-      required this.left,
-      required this.right,
-      this.pid,
-      this.direction,
-      this.yes}) {}
+  FlowClass({
+    required this.id,
+    required this.width,
+    required this.height,
+    required this.x,
+    required this.y,
+    required this.value,
+    required this.type,
+    required this.down,
+    required this.left,
+    required this.right,
+    this.pid,
+    this.direction,
+    this.yes,
+  }) {}
 }
 
 class Line {
@@ -79,18 +72,19 @@ class FlowieClass {
     double y = 20;
 
     FlowClass flow = FlowClass(
-        id: flows.length,
-        width: Defaults.flowWidth,
-        height: (type == FlowType.condition) ? Defaults.flowWidth : 40,
-        x: Window.stageWidth / 2 - Defaults.flowWidth / 2,
-        y: y,
-        type: type,
-        value: "start",
-        down: Line(),
-        left: Line(),
-        right: Line(),
-        pid: Ram.selectedId,
-        direction: Ram.selectedDirection);
+      id: flows.length,
+      width: Defaults.flowWidth,
+      height: (type == FlowType.condition) ? Defaults.flowWidth : 40,
+      x: Window.stageWidth / 2 - Defaults.flowWidth / 2,
+      y: y,
+      type: type,
+      value: "start",
+      down: Line(),
+      left: Line(),
+      right: Line(),
+      pid: Ram.selectedId,
+      direction: Ram.selectedDirection,
+    );
     if (Ram.selectedId != null) {
       if (flows[Ram.selectedId!].type == FlowType.condition &&
           flows[Ram.selectedId!].yes == null) {
@@ -262,25 +256,29 @@ class FlowieClass {
         }
       }
       FlowClass flow = FlowClass(
-          id: _flow["id"],
-          width: _flow["width"],
-          height: _flow["height"],
-          x: _flow["x"],
-          y: _flow["y"],
-          type: _type,
-          value: _flow["value"],
-          down: Line(
-              lineHeight: _flow["down"]["lineHeight"],
-              hasChild: _flow["down"]["hasChild"]),
-          left: Line(
-              lineHeight: _flow["left"]["lineHeight"],
-              hasChild: _flow["left"]["hasChild"]),
-          right: Line(
-              lineHeight: _flow["right"]["lineHeight"],
-              hasChild: _flow["right"]["hasChild"]),
-          pid: _flow["pid"],
-          direction: _direction,
-          yes: _yes);
+        id: _flow["id"],
+        width: _flow["width"],
+        height: _flow["height"],
+        x: _flow["x"],
+        y: _flow["y"],
+        type: _type,
+        value: _flow["value"],
+        down: Line(
+          lineHeight: _flow["down"]["lineHeight"],
+          hasChild: _flow["down"]["hasChild"],
+        ),
+        left: Line(
+          lineHeight: _flow["left"]["lineHeight"],
+          hasChild: _flow["left"]["hasChild"],
+        ),
+        right: Line(
+          lineHeight: _flow["right"]["lineHeight"],
+          hasChild: _flow["right"]["hasChild"],
+        ),
+        pid: _flow["pid"],
+        direction: _direction,
+        yes: _yes,
+      );
       flows.add(flow);
     }
   }
@@ -329,19 +327,19 @@ class FlowieClass {
         "value": flow.value,
         "down": {
           "lineHeight": flow.down.lineHeight,
-          "hasChild": flow.down.hasChild
+          "hasChild": flow.down.hasChild,
         },
         "left": {
           "lineHeight": flow.left.lineHeight,
-          "hasChild": flow.left.hasChild
+          "hasChild": flow.left.hasChild,
         },
         "right": {
           "lineHeight": flow.right.lineHeight,
-          "hasChild": flow.right.hasChild
+          "hasChild": flow.right.hasChild,
         },
         "pid": flow.pid,
         "direction": _direction,
-        "yes": _yes
+        "yes": _yes,
       };
       _flows.add(_flow);
     }

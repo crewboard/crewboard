@@ -212,5 +212,6 @@ class DemoPallet {
   static void lightMode() => setTheme(AppTheme.glassLight);
 
   static bool get light =>
-      currentTheme == AppTheme.glassLight || currentTheme == AppTheme.classicLight;
+      currentTheme == AppTheme.glassLight ||
+      currentTheme == AppTheme.classicLight;
 }

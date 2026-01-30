@@ -99,8 +99,7 @@ class _PlannerDemoState extends State<PlannerDemo>
                           ),
                           height: Window.fullHeight * 0.4,
                           child: DemoBackground(
-                            child:
-                                isBucketView ? BucketView() : SearchView(),
+                            child: isBucketView ? BucketView() : SearchView(),
                           ),
                         ),
                       ),
@@ -143,7 +142,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 18, vertical: 8),
+                                        horizontal: 18,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                         color: isBucketView
@@ -153,7 +154,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                       child: const Text(
                                         "Bucket View",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -167,7 +170,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 18, vertical: 8),
+                                        horizontal: 18,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                         color: !isBucketView
@@ -177,7 +182,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                       child: const Text(
                                         "Search View",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -233,7 +240,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 18, vertical: 8),
+                                        horizontal: 18,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         color: isBucketView
@@ -243,7 +252,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                       child: const Text(
                                         "Bucket View",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -265,7 +276,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 18, vertical: 8),
+                                        horizontal: 18,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         color: !isBucketView
@@ -275,7 +288,9 @@ class _PlannerDemoState extends State<PlannerDemo>
                                       child: const Text(
                                         "Search View",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -299,8 +314,7 @@ class _PlannerDemoState extends State<PlannerDemo>
                             ),
                             height: Window.fullHeight * 0.5,
                             child: DemoBackground(
-                              child:
-                                  isBucketView ? BucketView() : SearchView(),
+                              child: isBucketView ? BucketView() : SearchView(),
                             ),
                           ),
                         ),
@@ -313,7 +327,6 @@ class _PlannerDemoState extends State<PlannerDemo>
       ),
     );
   }
-
 }
 
 List<List> buckets = [
@@ -469,7 +482,8 @@ class _SearchViewState extends State<SearchView> {
 
           // Calculate relative offsets
           final double sidebarWidth = Window.isMobile ? 100 : 180;
-          final double dropdownX = Window.stageWidth - (Window.isMobile ? 152 : 165);
+          final double dropdownX =
+              Window.stageWidth - (Window.isMobile ? 152 : 165);
 
           // filter 1
           mouseX = Window.stageWidth - (sidebarWidth / 2) - 25;
@@ -723,9 +737,7 @@ class _SearchViewState extends State<SearchView> {
                   padding: EdgeInsets.only(left: 8.0 * scale),
                   child: Text(
                     items[i]["name"],
-                    style: TextStyle(
-                        fontSize: 10 * scale,
-                        color: Pallet.font2),
+                    style: TextStyle(fontSize: 10 * scale, color: Pallet.font2),
                   ),
                 ),
               ],
@@ -810,13 +822,16 @@ class _SearchViewState extends State<SearchView> {
                                   onTap: () {},
                                   child: GlassMorph(
                                     margin: EdgeInsets.only(
-                                      bottom: (Window.isMobile ? 5 : 10) * scale,
+                                      bottom:
+                                          (Window.isMobile ? 5 : 10) * scale,
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 20 * scale,
-                                      vertical: (Window.isMobile ? 3 : 8) * scale,
+                                      vertical:
+                                          (Window.isMobile ? 3 : 8) * scale,
                                     ),
-                                    height: (Window.isMobile ? 80 : 115) * scale,
+                                    height:
+                                        (Window.isMobile ? 80 : 115) * scale,
                                     borderRadius: 10,
                                     sigmaX: 10,
                                     sigmaY: 10,
@@ -857,7 +872,11 @@ class _SearchViewState extends State<SearchView> {
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(height: (Window.isMobile ? 2 : 5) * scale),
+                                              SizedBox(
+                                                height:
+                                                    (Window.isMobile ? 2 : 5) *
+                                                    scale,
+                                              ),
                                               Text(
                                                 ticket["ticketBody"],
                                                 maxLines: 3,
@@ -911,8 +930,16 @@ class _SearchViewState extends State<SearchView> {
                                                       left: i * 10 * scale,
                                                     ),
                                                     child: ProfileIcon(
-                                                      size: (Window.isMobile ? 15 : 20) * scale,
-                                                      fontSize: (Window.isMobile ? 8 : 10) * scale,
+                                                      size:
+                                                          (Window.isMobile
+                                                              ? 15
+                                                              : 20) *
+                                                          scale,
+                                                      fontSize:
+                                                          (Window.isMobile
+                                                              ? 8
+                                                              : 10) *
+                                                          scale,
                                                       name:
                                                           ticket["assignees"][i]["userName"],
                                                       color: Color(
@@ -966,8 +993,9 @@ class _SearchViewState extends State<SearchView> {
                                 child: Text(
                                   "filters",
                                   style: TextStyle(
-                                      fontSize: 12 * fScale,
-                                      color: Pallet.font1),
+                                    fontSize: 12 * fScale,
+                                    color: Pallet.font1,
+                                  ),
                                 ),
                               ),
                               SmallButton(label: "add", onPress: () {}),
@@ -977,15 +1005,15 @@ class _SearchViewState extends State<SearchView> {
                             ],
                           ),
                           for (var i = 0; i < filters.length; i++)
-                              GlassMorph(
-                                margin: EdgeInsets.only(
-                                  top: (Window.isMobile ? 2 : 5) * fScale,
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: (Window.isMobile ? 5 : 10) * fScale,
-                                  vertical: (Window.isMobile ? 5 : 10) * fScale,
-                                ),
-                              borderRadius: Window.isMobile ? 5 :  10,
+                            GlassMorph(
+                              margin: EdgeInsets.only(
+                                top: (Window.isMobile ? 2 : 5) * fScale,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: (Window.isMobile ? 5 : 10) * fScale,
+                                vertical: (Window.isMobile ? 5 : 10) * fScale,
+                              ),
+                              borderRadius: Window.isMobile ? 5 : 10,
                               sigmaX: 10,
                               sigmaY: 10,
                               color: DemoPallet.isGlass
@@ -999,8 +1027,9 @@ class _SearchViewState extends State<SearchView> {
                                   Text(
                                     "property",
                                     style: TextStyle(
-                                        fontSize: 10 * fScale,
-                                        color: Pallet.font1),
+                                      fontSize: 10 * fScale,
+                                      color: Pallet.font1,
+                                    ),
                                   ),
                                   SizedBox(height: 5 * fScale),
                                   Container(
@@ -1021,17 +1050,21 @@ class _SearchViewState extends State<SearchView> {
                                               ? "select"
                                               : filters[i]["name"],
                                           style: TextStyle(
-                                              fontSize: 10 * fScale,
-                                              color: Pallet.font2),
+                                            fontSize: 10 * fScale,
+                                            color: Pallet.font2,
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   SizedBox(height: 5 * fScale),
-                                  Text("value",
-                                      style: TextStyle(
-                                          fontSize: 10 * fScale,
-                                          color: Pallet.font1)),
+                                  Text(
+                                    "value",
+                                    style: TextStyle(
+                                      fontSize: 10 * fScale,
+                                      color: Pallet.font1,
+                                    ),
+                                  ),
                                   SizedBox(height: 5 * fScale),
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -1051,8 +1084,9 @@ class _SearchViewState extends State<SearchView> {
                                               ? "select"
                                               : filters[i]["value"],
                                           style: TextStyle(
-                                              fontSize: 10 * fScale,
-                                              color: Pallet.font2),
+                                            fontSize: 10 * fScale,
+                                            color: Pallet.font2,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1160,7 +1194,13 @@ class _BucketViewState extends State<BucketView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(names[i], style: TextStyle(fontSize: 12 * scale, color: Pallet.font1)),
+                      Text(
+                        names[i],
+                        style: TextStyle(
+                          fontSize: 12 * scale,
+                          color: Pallet.font1,
+                        ),
+                      ),
                       if (i == 0)
                         Container(
                           decoration: BoxDecoration(
@@ -1231,13 +1271,23 @@ class Ticket extends StatelessWidget {
                 color: Color(int.parse(data["typeColor"])),
               ),
               Expanded(child: SizedBox()),
-              Icon(Icons.upload_outlined, color: Pallet.font3, size: 18 * scale),
-              Icon(Icons.download_outlined, color: Pallet.font3, size: 18 * scale),
+              Icon(
+                Icons.upload_outlined,
+                color: Pallet.font3,
+                size: 18 * scale,
+              ),
+              Icon(
+                Icons.download_outlined,
+                color: Pallet.font3,
+                size: 18 * scale,
+              ),
             ],
           ),
           SizedBox(height: 10 * scale),
-          Text(data["ticketName"],
-              style: TextStyle(fontSize: 13 * scale, color: Pallet.font1)),
+          Text(
+            data["ticketName"],
+            style: TextStyle(fontSize: 13 * scale, color: Pallet.font1),
+          ),
           SizedBox(height: 5 * scale),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 2 * scale),
@@ -1282,7 +1332,6 @@ class Ticket extends StatelessWidget {
   }
 }
 
-
 class CustomBadge extends StatelessWidget {
   const CustomBadge({super.key, required this.label, required this.color});
   final String label;
@@ -1302,10 +1351,7 @@ class CustomBadge extends StatelessWidget {
       child: Center(
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: Window.isMobile ? 6 : 8,
-            color: color,
-          ),
+          style: TextStyle(fontSize: Window.isMobile ? 6 : 8, color: color),
         ),
       ),
     );

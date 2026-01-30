@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:landing/demo/aimation.dart';
+import 'package:landing/demo/animation.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:rive/rive.dart' hide LinearGradient;
@@ -13,8 +13,6 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import '../types.dart';
 import '../widgets.dart';
-
-
 
 // DemoPallet has been moved to types.dart
 
@@ -48,9 +46,10 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
             break;
           }
           await _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.fastOutSlowIn);
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.fastOutSlowIn,
+          );
 
           if (!playing) {
             break;
@@ -67,14 +66,12 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
 
           typing = false;
           animationSink.add("");
-          messages.add(
-            {
-              "user": "deepak",
-              "same": false,
-              "message": "that looks cool!",
-              "messageType": "text",
-            },
-          );
+          messages.add({
+            "user": "deepak",
+            "same": false,
+            "message": "that looks cool!",
+            "messageType": "text",
+          });
           animationSink.add("");
 
           if (!playing) {
@@ -86,24 +83,23 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
             break;
           }
           await _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.fastOutSlowIn);
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.fastOutSlowIn,
+          );
 
           if (!playing) {
             break;
           }
           await Future.delayed(const Duration(milliseconds: 500));
 
-          messages.add(
-            {
-              "user": "deepak",
-              "same": true,
-              "message": "😎",
-              "animation": coolAnimated,
-              "messageType": "emoji",
-            },
-          );
+          messages.add({
+            "user": "deepak",
+            "same": true,
+            "message": "😎",
+            "animation": coolAnimated,
+            "messageType": "emoji",
+          });
           animationSink.add("");
 
           if (!playing) {
@@ -115,9 +111,10 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
             break;
           }
           await _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.fastOutSlowIn);
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.fastOutSlowIn,
+          );
 
           if (!playing) {
             break;
@@ -182,7 +179,8 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
         }
 
         debugPrint(
-            'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
+          'Widget ${visibilityInfo.key} is ${visiblePercentage}% visible',
+        );
       },
       child: SizedBox(
         width: Window.fullWidth,
@@ -191,46 +189,55 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             (Window.isMobile)
-                ? Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Center(
-                        child: FittedBox(
-                          child: Animate(
-                            controller: _controller,
-                            effects: [
-                              ScaleEffect(duration: Duration(milliseconds: 1000)),
-                              FadeEffect(duration: Duration(milliseconds: 1000))
-                            ],
-                            child: DeskTopToPhone(
-                              height: Window.fullHeight * 0.85,
+                ? Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Center(
+                          child: FittedBox(
+                            child: Animate(
+                              controller: _controller,
+                              effects: [
+                                ScaleEffect(
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                                FadeEffect(
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              ],
+                              child: DeskTopToPhone(
+                                height: Window.fullHeight * 0.85,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    SizedBox(
-                      width: Window.fullWidth * 0.9,
-                      child: Animate(
-                        controller: _controller,
-                        effects: const [
-                          SlideEffect(duration: Duration(milliseconds: 1000)),
-                          FadeEffect(duration: Duration(milliseconds: 1000))
-                        ],
-                        child: Column(
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: Window.fullWidth * 0.9,
+                        child: Animate(
+                          controller: _controller,
+                          effects: const [
+                            SlideEffect(duration: Duration(milliseconds: 1000)),
+                            FadeEffect(duration: Duration(milliseconds: 1000)),
+                          ],
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Seamless chatting with team mates",
-                                style:
-                                    TextStyle(fontSize: 30, color: Colors.black),
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.black,
+                                ),
                               ),
                               SizedBox(height: 10),
                               Text(
                                 "responsive design",
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.black54),
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
                               ),
                               SizedBox(height: 10),
                               Row(
@@ -243,15 +250,17 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                     child: Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.grey.withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey.withOpacity(0.2),
+                                      ),
                                       // decoration:
                                       //     BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
-                                      child: Icon(Icons.desktop_mac_outlined,
-                                          color: isPhone
-                                              ? Pallet.font2
-                                              : Colors.blue[100]),
+                                      child: Icon(
+                                        Icons.desktop_mac_outlined,
+                                        color: isPhone
+                                            ? Pallet.font2
+                                            : Colors.blue[100],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 10),
@@ -263,9 +272,9 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                     child: Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.grey.withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey.withOpacity(0.2),
+                                      ),
                                       child: Icon(
                                         Icons.phone_android_rounded,
                                         color: isPhone
@@ -277,9 +286,13 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                 ],
                               ),
                               SizedBox(height: 15),
-                              Text("supports all themes",
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black54)),
+                              Text(
+                                "supports all themes",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
                               SizedBox(height: 10),
                               Wrap(
                                 spacing: 10,
@@ -296,35 +309,45 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                   );
                                 }).toList(),
                               ),
-                            ]),
-                      ),
-                    ),
-                  ])
-                : Row(children: [
-                    Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          width: Window.fullWidth * 0.3,
-                          child: Animate(
-                            controller: _controller,
-                            effects: const [
-                              SlideEffect(
-                                  duration: Duration(milliseconds: 1000)),
-                              FadeEffect(duration: Duration(milliseconds: 1000))
                             ],
-                            child: Column(
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            width: Window.fullWidth * 0.3,
+                            child: Animate(
+                              controller: _controller,
+                              effects: const [
+                                SlideEffect(
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                                FadeEffect(
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              ],
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "Seamless chatting with team mates",
                                     style: TextStyle(
-                                        fontSize: 50, color: Colors.black),
+                                      fontSize: 50,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Text(
                                     "responsive design",
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.black54),
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Row(
@@ -337,17 +360,19 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                         child: Container(
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.grey
-                                                  .withOpacity(0.2)),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            color: Colors.grey.withOpacity(0.2),
+                                          ),
                                           // decoration:
                                           //     BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner2),
                                           child: Icon(
-                                              Icons.desktop_mac_outlined,
-                                              color: isPhone
-                                                  ? Pallet.font2
-                                                  : Colors.blue[100]),
+                                            Icons.desktop_mac_outlined,
+                                            color: isPhone
+                                                ? Pallet.font2
+                                                : Colors.blue[100],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(width: 10),
@@ -359,10 +384,11 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                         child: Container(
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.grey
-                                                  .withOpacity(0.2)),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            color: Colors.grey.withOpacity(0.2),
+                                          ),
                                           child: Icon(
                                             Icons.phone_android_rounded,
                                             color: isPhone
@@ -374,10 +400,13 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                     ],
                                   ),
                                   SizedBox(height: 15),
-                                  Text("supports all themes",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black54)),
+                                  Text(
+                                    "supports all themes",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
                                   SizedBox(height: 10),
                                   Wrap(
                                     spacing: 10,
@@ -394,29 +423,35 @@ class _ChatDemoState extends State<ChatDemo> with TickerProviderStateMixin {
                                       );
                                     }).toList(),
                                   ),
-                                ]),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Animate(
-                          controller: _controller,
-                          effects: [
-                            ScaleEffect(duration: Duration(milliseconds: 1000)),
-                            FadeEffect(duration: Duration(milliseconds: 1000))
-                          ],
-                          child: DeskTopToPhone(
-                            height: (isPhone)
-                                ? Window.fullHeight * 0.8
-                                : Window.fullHeight * 0.5,
+                      Expanded(
+                        child: Center(
+                          child: Animate(
+                            controller: _controller,
+                            effects: [
+                              ScaleEffect(
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                              FadeEffect(
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            ],
+                            child: DeskTopToPhone(
+                              height: (isPhone)
+                                  ? Window.fullHeight * 0.8
+                                  : Window.fullHeight * 0.5,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    // SizedBox(width: 50)
-                  ]),
+                      // SizedBox(width: 50)
+                    ],
+                  ),
           ],
         ),
       ),
@@ -481,7 +516,9 @@ class ThemePreview extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.3),
+                  color: isSelected
+                      ? Colors.blue
+                      : Colors.grey.withOpacity(0.3),
                   width: isSelected ? 2 : 1,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -496,8 +533,14 @@ class ThemePreview extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: theme == AppTheme.glassDark
-                                ? [const Color(0xFF002772), const Color(0xFF5c0057)]
-                                : [const Color(0xFFb3d1ff), const Color(0xFFe6ccff)],
+                                ? [
+                                    const Color(0xFF002772),
+                                    const Color(0xFF5c0057),
+                                  ]
+                                : [
+                                    const Color(0xFFb3d1ff),
+                                    const Color(0xFFe6ccff),
+                                  ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -627,39 +670,44 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 400),
                     decoration: BoxDecoration(
-                        borderRadius: (isPhone)
-                            ? BorderRadius.circular(borderRadius)
-                            : BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                topRight: Radius.circular(5),
-                              ),
-                        color: Colors.black),
+                      borderRadius: (isPhone)
+                          ? BorderRadius.circular(borderRadius)
+                          : BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
+                            ),
+                      color: Colors.black,
+                    ),
                     padding: const EdgeInsets.all(5),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 400),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(borderRadius),
-                          color: DemoPallet.background),
+                        borderRadius: BorderRadius.circular(borderRadius),
+                        color: DemoPallet.background,
+                      ),
                       child: DemoBackground(
                         borderRadius: borderRadius,
                         blurSigma: 25,
-                        child: Column(children: [
-                          const SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (isPhone)
-                                Container(
-                                  width: 30,
-                                  height: 8,
-                                  decoration: BoxDecoration(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (isPhone)
+                                  Container(
+                                    width: 30,
+                                    height: 8,
+                                    decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: Colors.black),
-                                ),
-                            ],
-                          ),
-                          Expanded(child: Content())
-                        ]),
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            Expanded(child: Content()),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -668,11 +716,13 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
                   Container(
                     height: 25, // Reduced from 40
                     decoration: const BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(5),
-                            bottomRight: Radius.circular(5))),
-                  )
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -681,7 +731,7 @@ class _DeskTopToPhoneState extends State<DeskTopToPhone> {
               width: 80,
               height: 40, // Reduced from 60
               decoration: BoxDecoration(color: Colors.black),
-            )
+            ),
         ],
       ),
     );
@@ -727,12 +777,7 @@ List<Map> messages = [
     "message": "il enquire and get u the designs by tommorow",
     "messageType": "text",
   },
-  {
-    "user": "me",
-    "same": false,
-    "message": "okay sir",
-    "messageType": "text",
-  },
+  {"user": "me", "same": false, "message": "okay sir", "messageType": "text"},
   {
     "user": "deepak",
     "same": false,
@@ -763,12 +808,7 @@ List<Map> messages = [
     "message": "i have updates the errors in ticket please check",
     "messageType": "text",
   },
-  {
-    "user": "me",
-    "same": true,
-    "message": "okay sir",
-    "messageType": "text",
-  },
+  {"user": "me", "same": true, "message": "okay sir", "messageType": "text"},
   {
     "user": "me",
     "same": true,
@@ -787,12 +827,7 @@ List<Map> messages = [
     "message": "sure will update u shorlty",
     "messageType": "text",
   },
-  {
-    "user": "me",
-    "same": true,
-    "message": "okay",
-    "messageType": "text",
-  },
+  {"user": "me", "same": true, "message": "okay", "messageType": "text"},
 ];
 
 class Content extends StatefulWidget {
@@ -805,29 +840,31 @@ class _ContentState extends State<Content> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-        stream: animationStream,
-        builder: (context, snapshot) {
-          return Column(
-            children: [
-              SizedBox(height: 2),
-              Row(
-                children: [
-                  SizedBox(width: 10),
-                  ProfileIcon(
-                    size: (isPhone) ? 15 : 20,
-                    fontSize: 10,
-                    name: "j",
-                    color: Colors.cyan,
+      stream: animationStream,
+      builder: (context, snapshot) {
+        return Column(
+          children: [
+            SizedBox(height: 2),
+            Row(
+              children: [
+                SizedBox(width: 10),
+                ProfileIcon(
+                  size: (isPhone) ? 15 : 20,
+                  fontSize: 10,
+                  name: "j",
+                  color: Colors.cyan,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "deepak",
+                  style: TextStyle(
+                    color: DemoPallet.font1,
+                    fontSize: (isPhone) ? 12 : 14,
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    "deepak",
-                    style: TextStyle(
-                        color: DemoPallet.font1, fontSize: (isPhone) ? 12 : 14),
-                  ),
-                  if (isPhone)
-                    Expanded(
-                        child: Row(
+                ),
+                if (isPhone)
+                  Expanded(
+                    child: Row(
                       children: [
                         Expanded(child: SizedBox()),
                         SvgPicture.asset(
@@ -843,10 +880,11 @@ class _ContentState extends State<Content> {
                         ),
                         const SizedBox(width: 10),
                       ],
-                    ))
-                  else
-                    Expanded(
-                        child: Row(
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: Row(
                       children: [
                         Expanded(child: SizedBox()),
                         SvgPicture.asset(
@@ -886,126 +924,126 @@ class _ContentState extends State<Content> {
                         ),
                         const SizedBox(width: 20),
                       ],
-                    ))
-                  // ],)
-                ],
-              ),
-              Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: ListView(
-                    controller: _scrollController,
-                    children: [
-                      for (var message in messages)
-                        Row(
-                          mainAxisAlignment: (message["user"] == "me")
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (message["user"] != "me" &&
-                                    message["same"] == false)
-                                  ProfileIcon(
-                                    size: 15,
-                                    fontSize: 10,
-                                    name: "j",
-                                    color: Colors.cyan,
-                                  )
-                                else
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (message["user"] != "me" &&
-                                        message["same"] == false)
-                                      Text(
-                                        "deepak",
-                                        style: TextStyle(
-                                            fontSize: 10, color: DemoPallet.font1),
+                    ),
+                  ),
+                // ],)
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 10,
+                ),
+                child: ListView(
+                  controller: _scrollController,
+                  children: [
+                    for (var message in messages)
+                      Row(
+                        mainAxisAlignment: (message["user"] == "me")
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (message["user"] != "me" &&
+                                  message["same"] == false)
+                                ProfileIcon(
+                                  size: 15,
+                                  fontSize: 10,
+                                  name: "j",
+                                  color: Colors.cyan,
+                                )
+                              else
+                                SizedBox(width: 15),
+                              SizedBox(width: 5),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (message["user"] != "me" &&
+                                      message["same"] == false)
+                                    Text(
+                                      "deepak",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: DemoPallet.font1,
                                       ),
-                                    SizedBox(
-                                      height: 5,
                                     ),
-                                    if (message["messageType"] == "text")
-                                      Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth: (isPhone) ? 100 : 200),
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            color: DemoPallet.inner2,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Text(
-                                          message["message"],
-                                          style: TextStyle(
-                                              color: DemoPallet.font1,
-                                              fontSize: 10),
-                                        ),
-                                      )
-                                    else if (message["messageType"] == "image")
-                                      ClipRRect(
+                                  SizedBox(height: 5),
+                                  if (message["messageType"] == "text")
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: (isPhone) ? 100 : 200,
+                                      ),
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: DemoPallet.inner2,
                                         borderRadius: BorderRadius.circular(5),
-                                        child: Image.asset(
-                                          message["message"],
-                                          width: (isPhone) ? 100 : 150,
-                                          height: (isPhone) ? 100 : 150,
-                                          fit: BoxFit.cover,
+                                      ),
+                                      child: Text(
+                                        message["message"],
+                                        style: TextStyle(
+                                          color: DemoPallet.font1,
+                                          fontSize: 10,
                                         ),
-                                      )
-                                    else if (message["messageType"] == "emoji")
-                                      Container(
-                                        child: Emoji(
-                                          size: 18,
-                                          animation: message["animation"],
-                                          emoji: message["message"],
-                                        ),
-                                      )
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        )
-                    ],
-                  ),
+                                      ),
+                                    )
+                                  else if (message["messageType"] == "image")
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Image.asset(
+                                        message["message"],
+                                        width: (isPhone) ? 100 : 150,
+                                        height: (isPhone) ? 100 : 150,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  else if (message["messageType"] == "emoji")
+                                    Container(
+                                      child: Emoji(
+                                        size: 18,
+                                        animation: message["animation"],
+                                        emoji: message["message"],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ),
-              if (typing)
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, bottom: 5),
-                  child: Row(
-                    children: [
-                      ProfileIcon(
-                        size: 15,
-                        name: "deepak",
-                        color: Colors.cyan,
-                        fontSize: 10,
-                      ),
-                      SizedBox(width: 5),
-                      SizedBox(
-                        width: 25,
-                        height: 25,
-                        child: RiveAnimation.asset(
-                          'assets/typing.riv',
-                        ),
-                      )
-                    ],
-                  ),
+            ),
+            if (typing)
+              Padding(
+                padding: const EdgeInsets.only(left: 10, bottom: 5),
+                child: Row(
+                  children: [
+                    ProfileIcon(
+                      size: 15,
+                      name: "deepak",
+                      color: Colors.cyan,
+                      fontSize: 10,
+                    ),
+                    SizedBox(width: 5),
+                    SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: RiveAnimation.asset('assets/typing.riv'),
+                    ),
+                  ],
                 ),
-              // if (typing)
-              //   Container(
-              //     height: 10,
-              //     color: Colors.red,
-              //   ),
-              Builder(builder: (context) {
+              ),
+            // if (typing)
+            //   Container(
+            //     height: 10,
+            //     color: Colors.red,
+            //   ),
+            Builder(
+              builder: (context) {
                 final bool isSmall = isPhone || Window.isMobile;
                 return Container(
                   margin: (isSmall)
@@ -1023,49 +1061,47 @@ class _ContentState extends State<Content> {
                           size: isSmall ? 15 : 18,
                         ),
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 5),
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
-                              color: DemoPallet.inner2,
-                              borderRadius: BorderRadius.circular(5)),
+                            color: DemoPallet.inner2,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Column(
                             children: [
                               TextField(
-                                  style: TextStyle(
-                                      color: DemoPallet.font3,
-                                      fontSize: isSmall ? 10 : 12),
-                                  onSubmitted: (value) {
-                                    // chat.sendMessage(chat.message.text, "text");
-                                  },
-                                  onChanged: (value) {
-                                    // server.get(data: {"0": "typing", "1": chat.selectedRoom["roomId"], "2": userId, "3": "typing"}, func: (data) {});
-                                  },
-                                  controller: message,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    hintStyle: TextStyle(
-                                        color: DemoPallet.font3,
-                                        fontSize: isSmall ? 10 : 12),
-                                    border: InputBorder.none,
-                                    hintText: 'Message',
-                                  )),
+                                style: TextStyle(
+                                  color: DemoPallet.font3,
+                                  fontSize: isSmall ? 10 : 12,
+                                ),
+                                onSubmitted: (value) {
+                                  // chat.sendMessage(chat.message.text, "text");
+                                },
+                                onChanged: (value) {
+                                  // server.get(data: {"0": "typing", "1": chat.selectedRoom["roomId"], "2": userId, "3": "typing"}, func: (data) {});
+                                },
+                                controller: message,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  hintStyle: TextStyle(
+                                    color: DemoPallet.font3,
+                                    fontSize: isSmall ? 10 : 12,
+                                  ),
+                                  border: InputBorder.none,
+                                  hintText: 'Message',
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 5),
                       if (!isSmall)
                         Row(
                           children: [
-                            const SizedBox(
-                              width: 5,
-                            ),
+                            const SizedBox(width: 5),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 2),
                               child: Icon(
@@ -1074,9 +1110,7 @@ class _ContentState extends State<Content> {
                                 size: 18,
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            const SizedBox(width: 10),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 2),
                               child: Icon(
@@ -1085,9 +1119,7 @@ class _ContentState extends State<Content> {
                                 size: 18,
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            const SizedBox(width: 10),
                           ],
                         ),
                       Padding(
@@ -1109,20 +1141,23 @@ class _ContentState extends State<Content> {
                     ],
                   ),
                 );
-              }),
-              SizedBox(height: 5)
-            ],
-          );
-        });
+              },
+            ),
+            SizedBox(height: 5),
+          ],
+        );
+      },
+    );
   }
 }
 
 class Emoji extends StatefulWidget {
-  const Emoji(
-      {super.key,
-      required this.animation,
-      required this.emoji,
-      required this.size});
+  const Emoji({
+    super.key,
+    required this.animation,
+    required this.emoji,
+    required this.size,
+  });
   final Map animation;
   final String emoji;
   final double size;
@@ -1160,8 +1195,9 @@ class _EmojiState extends State<Emoji> with TickerProviderStateMixin {
     var assetData = utf8.encode(json.encode(widget.animation));
     Uint8List byte = Uint8List.fromList(assetData);
 
-    _composition =
-        await LottieComposition.fromByteData(ByteData.sublistView(byte));
+    _composition = await LottieComposition.fromByteData(
+      ByteData.sublistView(byte),
+    );
     _controller.clearListeners();
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -1185,26 +1221,26 @@ class _EmojiState extends State<Emoji> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-        valueListenable: animate,
-        builder: (BuildContext context, bool shouldAnimate, Widget? child) {
-          if (shouldAnimate == true) {
-            return SizedBox(
-              width: widget.size + (widget.size * 0.2),
-              height: widget.size + (widget.size * 0.2),
-              child: Lottie(
-                composition: _composition,
-                controller: _controller,
-              ),
-            );
-          } else {
-            return MouseRegion(
-              onEnter: (details) {
-                _animate();
-              },
-              child: Text(widget.emoji,
-                  style: TextStyle(fontFamily: 'Noto', fontSize: widget.size)),
-            );
-          }
-        });
+      valueListenable: animate,
+      builder: (BuildContext context, bool shouldAnimate, Widget? child) {
+        if (shouldAnimate == true) {
+          return SizedBox(
+            width: widget.size + (widget.size * 0.2),
+            height: widget.size + (widget.size * 0.2),
+            child: Lottie(composition: _composition, controller: _controller),
+          );
+        } else {
+          return MouseRegion(
+            onEnter: (details) {
+              _animate();
+            },
+            child: Text(
+              widget.emoji,
+              style: TextStyle(fontFamily: 'Noto', fontSize: widget.size),
+            ),
+          );
+        }
+      },
+    );
   }
 }
