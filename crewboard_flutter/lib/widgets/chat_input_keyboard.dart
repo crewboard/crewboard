@@ -80,8 +80,8 @@ class ChatInputKeyboard extends StatelessWidget {
                   child: showAutocomplete
                       ? _buildAutocompleteBar()
                       : reply != null
-                          ? _buildReplyPreview()
-                          : const SizedBox.shrink(),
+                      ? _buildReplyPreview()
+                      : const SizedBox.shrink(),
                 ),
                 Container(
                   margin: const EdgeInsets.only(
@@ -118,7 +118,8 @@ class ChatInputKeyboard extends StatelessWidget {
                           ),
                           onChanged: onChanged,
                           onSubmitted: onSubmitted,
-                          contextMenuBuilder: (context, editableTextState) => const SizedBox.shrink(),
+                          contextMenuBuilder: (context, editableTextState) =>
+                              const SizedBox.shrink(),
                           decoration: InputDecoration(
                             hintText: 'Type a message...',
                             hintStyle: TextStyle(

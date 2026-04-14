@@ -43,7 +43,10 @@ class AttendanceState {
   }
 }
 
-final attendanceProvider = NotifierProvider<AttendanceNotifier, AttendanceState>(AttendanceNotifier.new);
+final attendanceProvider =
+    NotifierProvider<AttendanceNotifier, AttendanceState>(
+      AttendanceNotifier.new,
+    );
 
 class AttendanceNotifier extends Notifier<AttendanceState> {
   @override
@@ -57,7 +60,7 @@ class AttendanceNotifier extends Notifier<AttendanceState> {
     try {
       final response = await client.admin.getAttendanceData(state.selectedDate);
       final sysVars = await client.admin.getSystemVariables();
-      
+
       state = state.copyWith(
         users: response.users,
         attendanceRecords: response.attendance,
@@ -73,7 +76,9 @@ class AttendanceNotifier extends Notifier<AttendanceState> {
   }
 
   Attendance? getAttendanceForUser(UuidValue userId) {
-    return state.attendanceRecords.firstWhereOrNull((record) => record.userId == userId);
+    return state.attendanceRecords.firstWhereOrNull(
+      (record) => record.userId == userId,
+    );
   }
 
   void setSelectedDate(DateTime date) {
@@ -84,7 +89,7 @@ class AttendanceNotifier extends Notifier<AttendanceState> {
   Future<void> saveLeaveConfig(LeaveConfig config) async {
     try {
       await client.admin.saveLeaveConfig(config);
-      await loadAttendanceData(); 
+      await loadAttendanceData();
     } catch (e) {
       print("Error saving leave config: $e");
     }
@@ -93,7 +98,7 @@ class AttendanceNotifier extends Notifier<AttendanceState> {
   Future<void> punch(String mode) async {
     try {
       await client.admin.punch(mode);
-      await loadAttendanceData(); 
+      await loadAttendanceData();
     } catch (e) {
       print("Error punching: $e");
     }

@@ -51,7 +51,11 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
 
   // ---------- Overlay creation/update logic ----------
 
-  Map<String, dynamic> _getCaretPositionInfo(DocumentEditorState state, DocumentEditorNotifier notifier, {double verticalPadding = 6.0}) {
+  Map<String, dynamic> _getCaretPositionInfo(
+    DocumentEditorState state,
+    DocumentEditorNotifier notifier, {
+    double verticalPadding = 6.0,
+  }) {
     if (!mounted) return {'useFollower': false, 'offset': null, 'global': null};
 
     try {
@@ -63,18 +67,23 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
 
       final targetContext = _editorKey.currentContext;
       if (targetContext != null && mounted) {
-        final RenderBox targetBox = targetContext.findRenderObject() as RenderBox;
+        final RenderBox targetBox =
+            targetContext.findRenderObject() as RenderBox;
 
         try {
           final fullText = notifier.quillController.document.toPlainText();
           final int safeBase = baseOffset.clamp(0, fullText.length);
 
-          final double fontSize = double.tryParse(state.fontSettings.fontSize) ?? 14.0;
+          final double fontSize =
+              double.tryParse(state.fontSettings.fontSize) ?? 14.0;
           final String fontFamily = state.fontSettings.fontFamily;
-          final TextStyle style = _safeGoogleFont(fontFamily).copyWith(fontSize: fontSize);
+          final TextStyle style = _safeGoogleFont(
+            fontFamily,
+          ).copyWith(fontSize: fontSize);
 
           const double editorPadding = 16.0;
-          final double maxWidth = (targetBox.size.width - editorPadding * 2).clamp(0.0, double.infinity);
+          final double maxWidth = (targetBox.size.width - editorPadding * 2)
+              .clamp(0.0, double.infinity);
 
           final TextSpan span = TextSpan(text: fullText, style: style);
           final TextPainter tp = TextPainter(
@@ -87,10 +96,15 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
           tp.layout(minWidth: 0, maxWidth: maxWidth);
 
           final TextPosition textPosition = TextPosition(offset: safeBase);
-          final Offset caretOffsetLocal = tp.getOffsetForCaret(textPosition, Rect.zero);
+          final Offset caretOffsetLocal = tp.getOffsetForCaret(
+            textPosition,
+            Rect.zero,
+          );
 
           final double lineHeight = tp.preferredLineHeight;
-          final Offset caretLocalPoint = caretOffsetLocal + Offset(editorPadding, lineHeight + verticalPadding);
+          final Offset caretLocalPoint =
+              caretOffsetLocal +
+              Offset(editorPadding, lineHeight + verticalPadding);
           final Offset caretGlobal = targetBox.localToGlobal(caretLocalPoint);
 
           return {
@@ -108,7 +122,10 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
     }
   }
 
-  void _showOrUpdateFlowOverlay(DocumentEditorState state, DocumentEditorNotifier notifier) {
+  void _showOrUpdateFlowOverlay(
+    DocumentEditorState state,
+    DocumentEditorNotifier notifier,
+  ) {
     if (!mounted) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -118,7 +135,10 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
       Offset? followerOffset = info['offset'] as Offset?;
       final Offset? global = info['global'] as Offset?;
 
-      followerOffset = Offset((followerOffset?.dx ?? 0) - 10, (followerOffset?.dy ?? 0) + 18);
+      followerOffset = Offset(
+        (followerOffset?.dx ?? 0) - 10,
+        (followerOffset?.dy ?? 0) + 18,
+      );
 
       if (!useFollower && global == null) {
         _hideFlowOverlay();
@@ -131,7 +151,9 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
         return;
       }
 
-      if (_lastOverlayOffset != null && (_lastOverlayOffset! - newPos).distance < 1.0) return;
+      if (_lastOverlayOffset != null &&
+          (_lastOverlayOffset! - newPos).distance < 1.0)
+        return;
       _lastOverlayOffset = newPos;
 
       _flowOverlayEntry?.remove();
@@ -159,7 +181,10 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
     _lastOverlayOffset = null;
   }
 
-  Widget _buildOverlayBox(DocumentEditorState state, DocumentEditorNotifier notifier) {
+  Widget _buildOverlayBox(
+    DocumentEditorState state,
+    DocumentEditorNotifier notifier,
+  ) {
     return Material(
       color: Colors.transparent,
       elevation: 0,
@@ -182,7 +207,10 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
                     _hideFlowOverlay();
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     child: Text(
                       flow.name,
                       style: TextStyle(color: Pallet.font2, fontSize: 14),
@@ -205,17 +233,23 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
     }
   }
 
-  DefaultStyles _buildCustomStyles(DocumentEditorState state, double? lineHeight) {
+  DefaultStyles _buildCustomStyles(
+    DocumentEditorState state,
+    double? lineHeight,
+  ) {
     final family = state.fontSettings.fontFamily;
-    
+
     FontSettings getFS(int level) {
       for (var pName in state.dynamicPresets) {
         final fs = state.editorFontSettings[pName.toLowerCase().trim()];
         if (fs != null) {
           int fsLevel = 0;
-          if (fs.headerAttribute == Attribute.h1) fsLevel = 1;
-          else if (fs.headerAttribute == Attribute.h2) fsLevel = 2;
-          else if (fs.headerAttribute == Attribute.h3) fsLevel = 3;
+          if (fs.headerAttribute == Attribute.h1)
+            fsLevel = 1;
+          else if (fs.headerAttribute == Attribute.h2)
+            fsLevel = 2;
+          else if (fs.headerAttribute == Attribute.h3)
+            fsLevel = 3;
           if (fsLevel == level) return fs;
         }
       }
@@ -227,7 +261,9 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
     final h3 = getFS(3);
     final p = getFS(0);
 
-    final safeLineHeight = (lineHeight == null || lineHeight > 5.0) ? 1.5 : lineHeight;
+    final safeLineHeight = (lineHeight == null || lineHeight > 5.0)
+        ? 1.5
+        : lineHeight;
 
     return DefaultStyles(
       h1: DefaultTextBlockStyle(
@@ -297,13 +333,18 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
         }
       }
     }
+
     for (final heading in state.outline) {
       addHeading(heading);
     }
     return visible;
   }
 
-  void _jumpToHeading(DocumentEditorState state, DocumentEditorNotifier notifier, int position) {
+  void _jumpToHeading(
+    DocumentEditorState state,
+    DocumentEditorNotifier notifier,
+    int position,
+  ) {
     if (notifier.editorScrollController.hasClients) {
       final max = notifier.editorScrollController.position.maxScrollExtent;
       final ratio = position / notifier.quillController.document.length;
@@ -335,7 +376,10 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
     }
 
     // React to showFlowOverlay changes
-    ref.listen(documentEditorProvider.select((s) => s.showFlowOverlay), (prev, next) {
+    ref.listen(documentEditorProvider.select((s) => s.showFlowOverlay), (
+      prev,
+      next,
+    ) {
       if (next && state.overlayFlows.isNotEmpty) {
         _showOrUpdateFlowOverlay(state, notifier);
       } else {
@@ -373,24 +417,30 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
                   DocumentDropdown(
                     value: state.fontSettings.preset,
                     items: state.dynamicPresets,
-                    onChanged: (value) => notifier.selectFlow(value as FlowModel), 
+                    onChanged: (value) =>
+                        notifier.selectFlow(value as FlowModel),
                   ),
                   const SizedBox(width: 16),
                   FontFamilySearchDropdown(
                     value: state.fontSettings.fontFamily,
                     items: state.availableFonts,
                     onChanged: (value) {
-                       notifier.updateFontSettings({Attribute.font.key: value});
-                       notifier.quillController.formatSelection(Attribute.fromKeyValue(Attribute.font.key, value));
+                      notifier.updateFontSettings({Attribute.font.key: value});
+                      notifier.quillController.formatSelection(
+                        Attribute.fromKeyValue(Attribute.font.key, value),
+                      );
                     },
                     fontFamily: state.fontSettings.fontFamily,
                   ),
                   const SizedBox(width: 16),
                   FontSizeEditor(
                     key: ValueKey('font-size-${state.fontSettings.fontSize}'),
-                    initialSize: double.tryParse(state.fontSettings.fontSize) ?? 14.0,
+                    initialSize:
+                        double.tryParse(state.fontSettings.fontSize) ?? 14.0,
                     onSizeChanged: (newSize) {
-                      notifier.quillController.formatSelection(Attribute.fromKeyValue(Attribute.size.key, newSize));
+                      notifier.quillController.formatSelection(
+                        Attribute.fromKeyValue(Attribute.size.key, newSize),
+                      );
                     },
                     showLabel: false,
                   ),
@@ -398,22 +448,39 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
                   AppColorPicker(
                     initialColor: state.fontSettings.color,
                     onColorChanged: (hex) {
-                      notifier.quillController.formatSelection(Attribute.fromKeyValue(Attribute.color.key, hex));
+                      notifier.quillController.formatSelection(
+                        Attribute.fromKeyValue(Attribute.color.key, hex),
+                      );
                     },
                     title: 'Text Color',
                   ),
                   const SizedBox(width: 16),
                   IconButton(
-                    icon: Icon(Icons.format_bold, color: state.isBold ? Colors.white : Pallet.font2),
-                    onPressed: () => notifier.quillController.formatSelection(Attribute.bold),
+                    icon: Icon(
+                      Icons.format_bold,
+                      color: state.isBold ? Colors.white : Pallet.font2,
+                    ),
+                    onPressed: () => notifier.quillController.formatSelection(
+                      Attribute.bold,
+                    ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.format_italic, color: state.isItalic ? Colors.white : Pallet.font2),
-                    onPressed: () => notifier.quillController.formatSelection(Attribute.italic),
+                    icon: Icon(
+                      Icons.format_italic,
+                      color: state.isItalic ? Colors.white : Pallet.font2,
+                    ),
+                    onPressed: () => notifier.quillController.formatSelection(
+                      Attribute.italic,
+                    ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.format_underline, color: state.isUnderline ? Colors.white : Pallet.font2),
-                    onPressed: () => notifier.quillController.formatSelection(Attribute.underline),
+                    icon: Icon(
+                      Icons.format_underline,
+                      color: state.isUnderline ? Colors.white : Pallet.font2,
+                    ),
+                    onPressed: () => notifier.quillController.formatSelection(
+                      Attribute.underline,
+                    ),
                   ),
                 ],
               ),
@@ -425,13 +492,24 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
               children: [
                 Container(
                   width: 250,
-                  decoration: BoxDecoration(border: Border(right: BorderSide(color: Pallet.divider, width: 1))),
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: Pallet.divider, width: 1),
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 10,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 5, bottom: 10, top: 5),
+                        padding: const EdgeInsets.only(
+                          left: 5,
+                          bottom: 10,
+                          top: 5,
+                        ),
                         child: Text(
                           "Headings",
                           style: TextStyle(
@@ -450,10 +528,26 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
                           itemBuilder: (context, index) {
                             final heading = _getVisibleOutline(state)[index];
                             return InkWell(
-                              onTap: () => _jumpToHeading(state, notifier, heading.position),
+                              onTap: () => _jumpToHeading(
+                                state,
+                                notifier,
+                                heading.position,
+                              ),
                               child: Padding(
-                                padding: EdgeInsets.only(left: (heading.level - 1) * 12.0, top: 4, bottom: 4, right: 8),
-                                child: Text(heading.text, style: TextStyle(color: Pallet.font2, fontSize: heading.fontSize, fontWeight: heading.fontWeight)),
+                                padding: EdgeInsets.only(
+                                  left: (heading.level - 1) * 12.0,
+                                  top: 4,
+                                  bottom: 4,
+                                  right: 8,
+                                ),
+                                child: Text(
+                                  heading.text,
+                                  style: TextStyle(
+                                    color: Pallet.font2,
+                                    fontSize: heading.fontSize,
+                                    fontWeight: heading.fontWeight,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -476,14 +570,18 @@ class _DocumentEditorState extends ConsumerState<DocumentEditor> {
                           config: QuillEditorConfig(
                             placeholder: 'Start writing your notes...',
                             padding: const EdgeInsets.all(16),
-                            customStyles: _buildCustomStyles(state, state.systemVariables?.lineHeight),
+                            customStyles: _buildCustomStyles(
+                              state,
+                              state.systemVariables?.lineHeight,
+                            ),
                             embedBuilders: [
                               const LocalImageEmbedBuilder(),
                               const LocalVideoEmbedBuilder(),
                               const FlowEmbedBuilder(),
                             ],
                             onKeyPressed: (event, node) {
-                              if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.tab) {
+                              if (event is KeyDownEvent &&
+                                  event.logicalKey == LogicalKeyboardKey.tab) {
                                 return KeyEventResult.handled;
                               }
                               return null;

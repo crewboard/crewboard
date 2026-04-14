@@ -28,7 +28,9 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
   @override
   void initState() {
     super.initState();
-    _initFuture = ref.read(plannerProvider.notifier).getTicketDataFull(widget.ticketId);
+    _initFuture = ref
+        .read(plannerProvider.notifier)
+        .getTicketDataFull(widget.ticketId);
   }
 
   @override
@@ -56,12 +58,14 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
           child: AlertDialog(
             backgroundColor: Colors.transparent,
             contentPadding: EdgeInsets.zero,
-            content: Builder(builder: (context) {
-              if (page == "comments") {
-                return _buildCommentsView(state, notifier);
-              }
-              return _buildTicketView(state, notifier);
-            }),
+            content: Builder(
+              builder: (context) {
+                if (page == "comments") {
+                  return _buildCommentsView(state, notifier);
+                }
+                return _buildTicketView(state, notifier);
+              },
+            ),
           ),
         );
       },
@@ -118,8 +122,13 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                         )
                       else
                         Text(
-                          (state.type != null && notifier.title.text.startsWith('${state.type!.typeName}: '))
-                              ? notifier.title.text.substring('${state.type!.typeName}: '.length)
+                          (state.type != null &&
+                                  notifier.title.text.startsWith(
+                                    '${state.type!.typeName}: ',
+                                  ))
+                              ? notifier.title.text.substring(
+                                  '${state.type!.typeName}: '.length,
+                                )
                               : notifier.title.text,
                           style: TextStyle(
                             color: Pallet.font1,
@@ -166,7 +175,8 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                             children: _parseBody(notifier.body.text),
                             style: TextStyle(color: Pallet.font1, fontSize: 13),
                           ),
-                          contextMenuBuilder: (context, editableTextState) => const SizedBox.shrink(),
+                          contextMenuBuilder: (context, editableTextState) =>
+                              const SizedBox.shrink(),
                         ),
                       const SizedBox(height: 20),
                       Row(
@@ -241,7 +251,7 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                                     RadialCheckBox(
                                       selected: item.selected,
                                       onSelect: () {
-                                          // Toggle in state if needed
+                                        // Toggle in state if needed
                                       },
                                     ),
                                     const SizedBox(width: 10),
@@ -304,9 +314,7 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            for (
-                              final file in state.pendingFiles
-                            )
+                            for (final file in state.pendingFiles)
                               Padding(
                                 padding: const EdgeInsets.only(
                                   bottom: 10,
@@ -360,8 +368,7 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                                   Padding(
                                     padding: EdgeInsets.only(left: i * 15.0),
                                     child: ProfileIcon(
-                                      name:
-                                          state.selectedUsers[i].userName,
+                                      name: state.selectedUsers[i].userName,
                                       color: Color(
                                         int.parse(
                                           state.selectedUsers[i].color
@@ -382,11 +389,13 @@ class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
                         items: state.users,
                         selected: state.selectedUsers,
                         onSelected: (users) {
-                           notifier.setSelectedUsers(List<UserModel>.from(users));
-                           notifier.addToEditStack(
-                              "assignees",
-                              users.length.toString(),
-                            );
+                          notifier.setSelectedUsers(
+                            List<UserModel>.from(users),
+                          );
+                          notifier.addToEditStack(
+                            "assignees",
+                            users.length.toString(),
+                          );
                         },
                       ),
                       const SizedBox(height: 10),

@@ -287,16 +287,20 @@ void main(List<String> args) async {
           // Randomly pick a cover if available
           String? videoCover;
           if (fileCache['video_covers']!.isNotEmpty) {
-            final coverFile = fileCache['video_covers']![
-                random.nextInt(fileCache['video_covers']!.length)];
+            final coverFile =
+                fileCache['video_covers']![random.nextInt(
+                  fileCache['video_covers']!.length,
+                )];
             final coverFileName = coverFile.uri.pathSegments.last;
-            final coverTargetSubDir =
-                Directory('${uploadsDir.path}/video_covers');
+            final coverTargetSubDir = Directory(
+              '${uploadsDir.path}/video_covers',
+            );
             if (!coverTargetSubDir.existsSync()) {
               coverTargetSubDir.createSync(recursive: true);
             }
-            final coverTargetFile =
-                File('${coverTargetSubDir.path}/$coverFileName');
+            final coverTargetFile = File(
+              '${coverTargetSubDir.path}/$coverFileName',
+            );
             if (!coverTargetFile.existsSync()) {
               coverFile.copySync(coverTargetFile.path);
             }

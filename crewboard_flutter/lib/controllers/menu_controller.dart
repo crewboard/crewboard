@@ -19,7 +19,7 @@ class MenuNotifier extends Notifier<OverlayEntry?> {
         // Fallback if already removed or not mounted
       }
     }
-    
+
     state = entry;
     Overlay.of(context).insert(state!);
   }
@@ -36,4 +36,6 @@ class MenuNotifier extends Notifier<OverlayEntry?> {
   }
 }
 
-final menuProvider = NotifierProvider<MenuNotifier, OverlayEntry?>(MenuNotifier.new);
+final menuProvider = NotifierProvider<MenuNotifier, OverlayEntry?>(
+  MenuNotifier.new,
+);

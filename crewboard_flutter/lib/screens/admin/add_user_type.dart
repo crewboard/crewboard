@@ -66,21 +66,30 @@ class _AddUserTypeDialogState extends ConsumerState<AddUserTypeDialog> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                Text("Role Name", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                Text(
+                  "Role Name",
+                  style: TextStyle(fontSize: 14, color: Pallet.font3),
+                ),
                 const SizedBox(height: 10),
                 SmallTextBox(
                   controller: notifier.nameController,
                   hintText: "Enter role name",
                 ),
                 const SizedBox(height: 25),
-                Text("Color", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                Text(
+                  "Color",
+                  style: TextStyle(fontSize: 14, color: Pallet.font3),
+                ),
                 const SizedBox(height: 10),
                 ColorPicker(
                   selectedColorId: state.selectedColor?.id,
                   onColorSelected: (color) => notifier.selectColor(color),
                 ),
                 const SizedBox(height: 25),
-                Text("Permissions", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                Text(
+                  "Permissions",
+                  style: TextStyle(fontSize: 14, color: Pallet.font3),
+                ),
                 const SizedBox(height: 10),
                 Column(
                   children: state.permissions.keys.map((key) {
@@ -95,17 +104,26 @@ class _AddUserTypeDialogState extends ConsumerState<AddUserTypeDialog> {
                               height: 24,
                               child: Checkbox(
                                 value: state.permissions[key],
-                                onChanged: (_) => notifier.togglePermission(key),
+                                onChanged: (_) =>
+                                    notifier.togglePermission(key),
                                 activeColor: Colors.blue,
                                 checkColor: Colors.white,
-                                side: BorderSide(color: Pallet.font3, width: 1.5),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                side: BorderSide(
+                                  color: Pallet.font3,
+                                  width: 1.5,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 12),
                             Text(
                               key.replaceAll('_', ' ').toLowerCase(),
-                              style: TextStyle(fontSize: 14, color: Pallet.font1),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font1,
+                              ),
                             ),
                           ],
                         ),

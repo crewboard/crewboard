@@ -30,7 +30,7 @@ class SideBar extends ConsumerWidget {
               // Reset closeOnExit if needed (matching original logic)
               // The original logic was: if (closeOnExit) { closeOnExit=false; closeSidebar(); }
               // We should probably do this in the notifier or here.
-              // Let's assume the notifier handles it if it's a one-time thing, 
+              // Let's assume the notifier handles it if it's a one-time thing,
               // but the original code mutated the observable directly.
             }
           },
@@ -65,7 +65,7 @@ class SideBar extends ConsumerWidget {
                       InkWell(
                         onTap: () {
                           // Original logic: controller.closeOnExit.value = !controller.closeOnExit.value;
-                          // Since we didn't add a dedicated toggle method for this flag in the notifier, 
+                          // Since we didn't add a dedicated toggle method for this flag in the notifier,
                           // I'll add it or just use a state update here if it's simple.
                           // Best to keep logic in notifier.
                         },

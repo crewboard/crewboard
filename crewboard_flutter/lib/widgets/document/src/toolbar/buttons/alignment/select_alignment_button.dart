@@ -38,7 +38,9 @@ class QuillToolbarSelectAlignmentButton extends StatelessWidget {
             )
             .toList();
       },
-      child: const Icon(Icons.align_horizontal_left), // Adding a fallback child if missing
+      child: const Icon(
+        Icons.align_horizontal_left,
+      ), // Adding a fallback child if missing
     );
   }
 }

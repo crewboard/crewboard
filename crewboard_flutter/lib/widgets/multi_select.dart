@@ -42,14 +42,18 @@ class _MultiSelectState extends State<MultiSelect> {
     final newList = List<dynamic>.from(widget.selected);
     bool isSel = false;
     if (item is UserModel) {
-      isSel = newList.any((element) => element is UserModel && element.userId == item.userId);
+      isSel = newList.any(
+        (element) => element is UserModel && element.userId == item.userId,
+      );
     } else {
       isSel = newList.contains(item);
     }
 
     if (isSel) {
       if (item is UserModel) {
-        newList.removeWhere((element) => element is UserModel && element.userId == item.userId);
+        newList.removeWhere(
+          (element) => element is UserModel && element.userId == item.userId,
+        );
       } else {
         newList.remove(item);
       }

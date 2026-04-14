@@ -172,7 +172,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   Widget build(BuildContext context) {
     // Watch themeProvider to react to theme changes (which update Pallet static fields)
     ref.watch(themeProvider);
-    
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -252,7 +252,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     // Navigate to sign up, pass onSignIn callback
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => SignupPage(onSignIn: widget.onSignIn),
+                        builder: (context) =>
+                            SignupPage(onSignIn: widget.onSignIn),
                       ),
                     );
                   },

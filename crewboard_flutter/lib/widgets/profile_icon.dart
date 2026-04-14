@@ -30,7 +30,7 @@ class ProfileIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(borderRadius ?? size),
-        border:  Border.all(color: color, width: 1),
+        border: Border.all(color: color, width: 1),
         image: image != null
             ? DecorationImage(
                 image: NetworkImage(image!),

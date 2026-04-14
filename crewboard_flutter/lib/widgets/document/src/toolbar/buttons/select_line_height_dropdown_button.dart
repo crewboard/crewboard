@@ -50,7 +50,6 @@ class _QuillToolbarSelectLineHeightStyleDropdownButtonState
 
   Attribute<dynamic> _selectedItem = Attribute.lineHeight;
 
-
   @override
   void initState() {
     super.initState();

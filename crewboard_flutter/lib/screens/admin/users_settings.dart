@@ -152,16 +152,23 @@ class UsersSettings extends ConsumerWidget {
                                     child: Row(
                                       children: [
                                         CustomBadge(
-                                          label: user.userType?.userType ?? 'N/A',
-                                          color: user.userType?.color?.color != null
-                                              ? hexToColor(user.userType?.color?.color)
+                                          label:
+                                              user.userType?.userType ?? 'N/A',
+                                          color:
+                                              user.userType?.color?.color !=
+                                                  null
+                                              ? hexToColor(
+                                                  user.userType?.color?.color,
+                                                )
                                               : Colors.green,
                                         ),
                                       ],
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 2, child: Text(user.gender ?? '-')),
+                                    flex: 2,
+                                    child: Text(user.gender ?? '-'),
+                                  ),
                                   Expanded(
                                     flex: 1,
                                     child: Row(
@@ -177,17 +184,24 @@ class UsersSettings extends ConsumerWidget {
                                             ),
                                             decoration: BoxDecoration(
                                               color: user.deleted
-                                                  ? Colors.green.withValues(alpha: 0.2)
-                                                  : Colors.red.withValues(alpha: 0.2),
+                                                  ? Colors.green.withValues(
+                                                      alpha: 0.2,
+                                                    )
+                                                  : Colors.red.withValues(
+                                                      alpha: 0.2,
+                                                    ),
                                               border: Border.all(
                                                 color: user.deleted
                                                     ? Colors.green
                                                     : Colors.red,
                                               ),
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                             child: Text(
-                                              user.deleted ? "Activate" : "Deactivate",
+                                              user.deleted
+                                                  ? "Activate"
+                                                  : "Deactivate",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: user.deleted
@@ -267,4 +281,3 @@ class UsersSettings extends ConsumerWidget {
     );
   }
 }
-

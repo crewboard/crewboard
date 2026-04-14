@@ -21,7 +21,7 @@ class PlannerScreen extends ConsumerWidget {
         ),
       );
     }
-    
+
     final currentPage = plannerState.currentSubPage;
     if (currentPage == PlannerSubPage.search) {
       return const SearchView();

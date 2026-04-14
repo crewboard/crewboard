@@ -46,7 +46,11 @@ class GlassMorph extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
-                  child: Container(padding: padding, color: color, child: child),
+                  child: Container(
+                    padding: padding,
+                    color: color,
+                    child: child,
+                  ),
                 ),
               ),
             ),
@@ -54,7 +58,9 @@ class GlassMorph extends ConsumerWidget {
         } else {
           // Classic Light or Dark Mode (Solid Design)
           final isDark = currentTheme == AppTheme.classicDark;
-          final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+          final backgroundColor = isDark
+              ? const Color(0xFF1E1E1E)
+              : Colors.white;
           return SizedBox(
             width: width,
             height: height,

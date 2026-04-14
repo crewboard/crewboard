@@ -31,7 +31,9 @@ class EmojiState {
   }
 }
 
-final emojiProvider = NotifierProvider<EmojiNotifier, EmojiState>(EmojiNotifier.new);
+final emojiProvider = NotifierProvider<EmojiNotifier, EmojiState>(
+  EmojiNotifier.new,
+);
 
 class EmojiNotifier extends Notifier<EmojiState> {
   final EmojiService _emojiService = EmojiService();

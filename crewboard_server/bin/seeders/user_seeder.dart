@@ -56,7 +56,9 @@ void main(List<String> args) async {
   try {
     await pod.start();
   } catch (e) {
-    print('Note: Server listeners did not start (likely port conflict), continuing with database session.');
+    print(
+      'Note: Server listeners did not start (likely port conflict), continuing with database session.',
+    );
   }
 
   try {
@@ -70,7 +72,9 @@ void main(List<String> args) async {
       where: (t) => t.userType.equals('admin'),
     );
     if (adminType == null) {
-      print('Error: "admin" UserType not found. Run main server migrations/seeds first.');
+      print(
+        'Error: "admin" UserType not found. Run main server migrations/seeds first.',
+      );
       exit(1);
     }
 
@@ -155,13 +159,20 @@ void main(List<String> args) async {
     // --- PHASE 2: AUTOMATIC TEST USERS ---
 
     print('\n[Step 2/2] Automatically Seeding Test Users...');
-    final testUsers = ['Altair', 'Ravix', 'Ilyon', 'Aethera', 'Nyvora', 'Lumis'];
+    final testUsers = [
+      'Altair',
+      'Ravix',
+      'Ilyon',
+      'Aethera',
+      'Nyvora',
+      'Lumis',
+    ];
     final defaultPassword = '0007!Asd'; // Consistent test password
 
     int colorIndex = 1; // Start from next color
     for (final username in testUsers) {
       final email = '${username.toLowerCase()}@crewboard.com';
-      
+
       // Check if exists
       final existing = await User.db.findFirstRow(
         session,
@@ -181,7 +192,8 @@ void main(List<String> args) async {
         email: email,
         organizationId: organization.id!,
         colorId: userColor.id!,
-        userTypeId: adminType.id!, // Seed all as admins per user request "needs to be admin with all permissions"
+        userTypeId: adminType
+            .id!, // Seed all as admins per user request "needs to be admin with all permissions"
         leaveConfigId: defaultLeaveConfig.id!,
         firstName: username,
         lastName: '',

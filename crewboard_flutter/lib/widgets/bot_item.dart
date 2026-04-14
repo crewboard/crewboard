@@ -40,8 +40,7 @@ class BotItem extends ConsumerWidget {
         child: Row(
           children: [
             Icon(
-              name.toLowerCase() == "threads" ||
-                      name.toLowerCase() == "planner"
+              name.toLowerCase() == "threads" || name.toLowerCase() == "planner"
                   ? Icons.alternate_email
                   : Icons.memory,
               color: isSelected ? Colors.white : Pallet.font3,
@@ -54,9 +53,7 @@ class BotItem extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14,
                   color: isSelected ? Colors.white : Pallet.font1,
-                  fontWeight: isSelected
-                      ? FontWeight.bold
-                      : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),

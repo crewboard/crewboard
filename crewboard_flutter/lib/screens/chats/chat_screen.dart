@@ -32,14 +32,13 @@ class ChatScreen extends ConsumerWidget {
             children: [
               if (subPage == 'memory')
                 const Expanded(child: MemoryBankScreen())
-              else  if (subPage == 'planner')
-const Expanded(child: TicketThreadsFullView())
-else
+              else if (subPage == 'planner')
+                const Expanded(child: TicketThreadsFullView())
+              else
                 const Expanded(child: Messages()),
             ],
           ),
         ),
-       
       ],
     );
   }
@@ -203,8 +202,10 @@ class Messages extends ConsumerWidget {
                                 itemBuilder: (context, index) {
                                   final msg = messagesState.messages[index];
                                   bool sameUser = false;
-                                  if (index + 1 < messagesState.messages.length) {
-                                    final olderMsg = messagesState.messages[index + 1];
+                                  if (index + 1 <
+                                      messagesState.messages.length) {
+                                    final olderMsg =
+                                        messagesState.messages[index + 1];
                                     if (olderMsg.userId == msg.userId) {
                                       sameUser = true;
                                     }
@@ -349,7 +350,23 @@ class _KeyboardState extends ConsumerState<Keyboard> {
           allowMultiple: true,
           type: FileType.custom,
           allowedExtensions: [
-            'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'mp4', 'mov', 'avi', 'mkv', 'webm', 'mp3', 'wav', 'm4a', 'flac', 'aac', 'ogg',
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+            'webp',
+            'bmp',
+            'mp4',
+            'mov',
+            'avi',
+            'mkv',
+            'webm',
+            'mp3',
+            'wav',
+            'm4a',
+            'flac',
+            'aac',
+            'ogg',
           ],
         );
 

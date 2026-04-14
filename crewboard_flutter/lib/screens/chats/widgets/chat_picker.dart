@@ -88,7 +88,7 @@ class _ChatPickerState extends ConsumerState<ChatPicker> {
 
   Widget _buildGiphyBody() {
     final giphyState = ref.watch(giphyProvider);
-    
+
     if (giphyState.isLoading &&
         (giphyState.isSearching
             ? giphyState.searchResults.isEmpty
@@ -103,9 +103,7 @@ class _ChatPickerState extends ConsumerState<ChatPicker> {
     if (gifs.isEmpty) {
       return Center(
         child: Text(
-          giphyState.isSearching
-              ? "No GIFs found."
-              : "No trending GIFs.",
+          giphyState.isSearching ? "No GIFs found." : "No trending GIFs.",
           style: TextStyle(color: Pallet.font2),
         ),
       );
@@ -123,7 +121,8 @@ class _ChatPickerState extends ConsumerState<ChatPicker> {
       itemBuilder: (context, index) {
         final gif = gifs[index];
         return InkWell(
-          onTap: () => ref.read(messagesProvider.notifier).sendInlineGifMessage(gif),
+          onTap: () =>
+              ref.read(messagesProvider.notifier).sendInlineGifMessage(gif),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(5),
             child: Image.network(

@@ -108,13 +108,14 @@ class HeadingItem {
       fontWeight: FontWeight.values[json['fontWeight']],
       fontSize: json['fontSize'],
       isExpanded: json['isExpanded'] ?? true,
-      children: (json['children'] as List<dynamic>?)
+      children:
+          (json['children'] as List<dynamic>?)
               ?.map((child) => HeadingItem.fromJson(child))
               .toList() ??
           [],
     );
   }
-  
+
   HeadingItem copyWith({bool? isExpanded}) {
     return HeadingItem(
       text: text,
@@ -158,7 +159,13 @@ class DocumentEditorState {
     this.selectedDocId,
     this.selectedDocName = "",
     this.fontSettings = const FontSettings(),
-    this.availableFonts = const ['Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins'],
+    this.availableFonts = const [
+      'Roboto',
+      'Open Sans',
+      'Lato',
+      'Montserrat',
+      'Poppins',
+    ],
     this.outline = const [],
     this.isBold = false,
     this.isItalic = false,
@@ -228,7 +235,10 @@ class DocumentEditorState {
   }
 }
 
-final documentEditorProvider = NotifierProvider<DocumentEditorNotifier, DocumentEditorState>(DocumentEditorNotifier.new);
+final documentEditorProvider =
+    NotifierProvider<DocumentEditorNotifier, DocumentEditorState>(
+      DocumentEditorNotifier.new,
+    );
 
 class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
   late final QuillController quillController;
@@ -255,11 +265,16 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
       state = state.copyWith(isLoadingSettings: true);
       final result = await client.admin.getSystemVariables();
       if (result != null) {
-        if (result.tabPreset1 != null) result.tabPreset1 = result.tabPreset1!.toLowerCase();
-        if (result.tabPreset2 != null) result.tabPreset2 = result.tabPreset2!.toLowerCase();
-        if (result.titleFont != null) result.titleFont = result.titleFont!.toLowerCase();
-        if (result.headingFont != null) result.headingFont = result.headingFont!.toLowerCase();
-        if (result.subHeadingFont != null) result.subHeadingFont = result.subHeadingFont!.toLowerCase();
+        if (result.tabPreset1 != null)
+          result.tabPreset1 = result.tabPreset1!.toLowerCase();
+        if (result.tabPreset2 != null)
+          result.tabPreset2 = result.tabPreset2!.toLowerCase();
+        if (result.titleFont != null)
+          result.titleFont = result.titleFont!.toLowerCase();
+        if (result.headingFont != null)
+          result.headingFont = result.headingFont!.toLowerCase();
+        if (result.subHeadingFont != null)
+          result.subHeadingFont = result.subHeadingFont!.toLowerCase();
 
         state = state.copyWith(systemVariables: result);
         quillController.readOnly = !(result.allowEdit ?? true);
@@ -280,12 +295,21 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
         Attribute? headerAttr;
         int level = f.headerLevel ?? 0;
 
-        if (state.systemVariables?.titleFont == name) { headerAttr = Attribute.h1; level = 1; }
-        else if (state.systemVariables?.headingFont == name) { headerAttr = Attribute.h2; level = 2; }
-        else if (state.systemVariables?.subHeadingFont == name) { headerAttr = Attribute.h3; level = 3; }
-        else if (level == 1) headerAttr = Attribute.h1;
-        else if (level == 2) headerAttr = Attribute.h2;
-        else if (level == 3) headerAttr = Attribute.h3;
+        if (state.systemVariables?.titleFont == name) {
+          headerAttr = Attribute.h1;
+          level = 1;
+        } else if (state.systemVariables?.headingFont == name) {
+          headerAttr = Attribute.h2;
+          level = 2;
+        } else if (state.systemVariables?.subHeadingFont == name) {
+          headerAttr = Attribute.h3;
+          level = 3;
+        } else if (level == 1)
+          headerAttr = Attribute.h1;
+        else if (level == 2)
+          headerAttr = Attribute.h2;
+        else if (level == 3)
+          headerAttr = Attribute.h3;
 
         newSettings[name] = FontSettings(
           name: name,
@@ -306,7 +330,10 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
         newPresets.insert(0, 'body');
       }
 
-      state = state.copyWith(editorFontSettings: newSettings, dynamicPresets: newPresets);
+      state = state.copyWith(
+        editorFontSettings: newSettings,
+        dynamicPresets: newPresets,
+      );
     } catch (e) {
       debugPrint('Error loading settings: $e');
     } finally {
@@ -317,18 +344,30 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
   FontWeight? _parseWeight(String? weight) {
     if (weight == null) return null;
     switch (weight.toLowerCase()) {
-      case 'bold': return FontWeight.bold;
-      case 'normal': return FontWeight.normal;
-      case 'w100': return FontWeight.w100;
-      case 'w200': return FontWeight.w200;
-      case 'w300': return FontWeight.w300;
-      case 'w400': return FontWeight.w400;
-      case 'w500': return FontWeight.w500;
-      case 'w600': return FontWeight.w600;
-      case 'w700': return FontWeight.w700;
-      case 'w800': return FontWeight.w800;
-      case 'w900': return FontWeight.w900;
-      default: return null;
+      case 'bold':
+        return FontWeight.bold;
+      case 'normal':
+        return FontWeight.normal;
+      case 'w100':
+        return FontWeight.w100;
+      case 'w200':
+        return FontWeight.w200;
+      case 'w300':
+        return FontWeight.w300;
+      case 'w400':
+        return FontWeight.w400;
+      case 'w500':
+        return FontWeight.w500;
+      case 'w600':
+        return FontWeight.w600;
+      case 'w700':
+        return FontWeight.w700;
+      case 'w800':
+        return FontWeight.w800;
+      case 'w900':
+        return FontWeight.w900;
+      default:
+        return null;
     }
   }
 
@@ -339,9 +378,15 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
           enableExternalRichPaste: true,
           onImagePaste: (imageBytes) async {
             if (!kIsWeb) {
-              final newFileName = 'image-file-${DateTime.now().toIso8601String()}.png';
-              final newPath = path.join(io.Directory.systemTemp.path, newFileName);
-              final file = await io.File(newPath).writeAsBytes(imageBytes, flush: true);
+              final newFileName =
+                  'image-file-${DateTime.now().toIso8601String()}.png';
+              final newPath = path.join(
+                io.Directory.systemTemp.path,
+                newFileName,
+              );
+              final file = await io.File(
+                newPath,
+              ).writeAsBytes(imageBytes, flush: true);
               return file.path;
             }
             return null;
@@ -372,7 +417,8 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
           dismissFlowOverlay();
           return KeyEventResult.handled;
         }
-        if (event.logicalKey == LogicalKeyboardKey.enter && state.overlayFlows.isNotEmpty) {
+        if (event.logicalKey == LogicalKeyboardKey.enter &&
+            state.overlayFlows.isNotEmpty) {
           selectFlow(state.overlayFlows.first);
           return KeyEventResult.handled;
         }
@@ -403,7 +449,9 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
           text: text,
           level: level,
           position: node.offset,
-          fontWeight: level == 1 ? FontWeight.bold : (level == 2 ? FontWeight.w600 : FontWeight.w500),
+          fontWeight: level == 1
+              ? FontWeight.bold
+              : (level == 2 ? FontWeight.w600 : FontWeight.w500),
           fontSize: level == 1 ? 15 : (level == 2 ? 14 : 13),
           isExpanded: true,
           children: [],
@@ -418,7 +466,7 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
           while (stack.isNotEmpty && stack.last.level >= level) {
             stack.removeLast();
           }
-          
+
           if (stack.isEmpty) {
             outline.add(heading);
             stack.add(heading);
@@ -454,21 +502,32 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
     final headerRaw = attributes[Attribute.header.key];
     final headerVal = attrValue(headerRaw);
     int level = 0;
-    if (headerVal != null) level = (headerVal is int) ? headerVal : int.tryParse(headerVal.toString()) ?? 0;
+    if (headerVal != null)
+      level = (headerVal is int)
+          ? headerVal
+          : int.tryParse(headerVal.toString()) ?? 0;
 
     String? foundPreset;
     for (var pName in state.dynamicPresets) {
       final fs = state.editorFontSettings[pName.toLowerCase().trim()];
       if (fs != null) {
         int fsLevel = 0;
-        if (fs.headerAttribute == Attribute.h1) fsLevel = 1;
-        else if (fs.headerAttribute == Attribute.h2) fsLevel = 2;
-        else if (fs.headerAttribute == Attribute.h3) fsLevel = 3;
-        if (fsLevel == level) { foundPreset = pName; break; }
+        if (fs.headerAttribute == Attribute.h1)
+          fsLevel = 1;
+        else if (fs.headerAttribute == Attribute.h2)
+          fsLevel = 2;
+        else if (fs.headerAttribute == Attribute.h3)
+          fsLevel = 3;
+        if (fsLevel == level) {
+          foundPreset = pName;
+          break;
+        }
       }
     }
 
-    final resolvedPreset = foundPreset ?? (state.dynamicPresets.isNotEmpty ? state.dynamicPresets.first : 'body');
+    final resolvedPreset =
+        foundPreset ??
+        (state.dynamicPresets.isNotEmpty ? state.dynamicPresets.first : 'body');
 
     final colorRaw = attributes[Attribute.color.key];
     final colorVal = attrValue(colorRaw);
@@ -476,7 +535,9 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
     UuidValue? colorId;
 
     if (colorHex != null && state.systemColors.isNotEmpty) {
-      final match = state.systemColors.firstWhereOrNull((c) => c.color.toLowerCase() == colorHex.toLowerCase());
+      final match = state.systemColors.firstWhereOrNull(
+        (c) => c.color.toLowerCase() == colorHex.toLowerCase(),
+      );
       colorId = match?.id;
     }
 
@@ -504,7 +565,7 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
 
     final listRaw = attributes[Attribute.list.key];
     final listVal = attrValue(listRaw);
-    
+
     state = state.copyWith(
       isBold: boldVal != null,
       isItalic: italicVal != null,
@@ -523,7 +584,11 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
     if (doc.doc != null) {
       try {
         final decoded = jsonDecode(doc.doc!);
-        state = state.copyWith(documentContent: decoded is Map<String, dynamic> ? decoded : {'ops': decoded});
+        state = state.copyWith(
+          documentContent: decoded is Map<String, dynamic>
+              ? decoded
+              : {'ops': decoded},
+        );
       } catch (e) {
         state = state.copyWith(documentContent: {'ops': []});
       }
@@ -567,7 +632,9 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
     if (state.selectedDocId == null) return;
     try {
       final docString = jsonEncode(state.documentContent);
-      final outlineData = jsonEncode(state.outline.map((item) => item.toJson()).toList());
+      final outlineData = jsonEncode(
+        state.outline.map((item) => item.toJson()).toList(),
+      );
       await client.docs.saveDoc(state.selectedDocId!, docString, outlineData);
     } catch (e) {
       debugPrint('Error saving document: $e');
@@ -577,7 +644,10 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
   void _checkForFlowTrigger() {
     final selection = quillController.selection;
     if (selection.isCollapsed && selection.baseOffset > 0) {
-      final textBeforeCursor = quillController.document.toPlainText().substring(0, selection.baseOffset);
+      final textBeforeCursor = quillController.document.toPlainText().substring(
+        0,
+        selection.baseOffset,
+      );
       final words = textBeforeCursor.split(RegExp(r'[\s\n]'));
       final lastWord = words.isNotEmpty ? words.last : '';
 
@@ -596,12 +666,23 @@ class DocumentEditorNotifier extends Notifier<DocumentEditorState> {
   void _updateFlowOverlay() {
     final flowsState = ref.read(flowsProvider);
     if (flowsState.selectedAppId != null) {
-      final filtered = flowsState.savedFlows.where((f) => f.name.toLowerCase().contains(state.flowQuery.toLowerCase())).toList();
-      state = state.copyWith(overlayFlows: filtered, showFlowOverlay: filtered.isNotEmpty);
+      final filtered = flowsState.savedFlows
+          .where(
+            (f) => f.name.toLowerCase().contains(state.flowQuery.toLowerCase()),
+          )
+          .toList();
+      state = state.copyWith(
+        overlayFlows: filtered,
+        showFlowOverlay: filtered.isNotEmpty,
+      );
     }
   }
 
-  void dismissFlowOverlay() => state = state.copyWith(showFlowOverlay: false, overlayFlows: [], flowQuery: '');
+  void dismissFlowOverlay() => state = state.copyWith(
+    showFlowOverlay: false,
+    overlayFlows: [],
+    flowQuery: '',
+  );
 
   void selectFlow(FlowModel flow) {
     // ... simplified selectFlow implementation ...

@@ -54,7 +54,10 @@ class Flows extends ConsumerWidget {
                   width: state.widthText.isEmpty
                       ? 0
                       : double.tryParse(state.widthText) ?? 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   child: Center(
                     child: Text(
                       state.valueText,
@@ -66,8 +69,7 @@ class Flows extends ConsumerWidget {
             ),
           const FlowCanvas(),
           if (state.window == "add" &&
-              ((state.currentFlowId != null &&
-                      state.flows.isEmpty) ||
+              ((state.currentFlowId != null && state.flows.isEmpty) ||
                   (state.selectedId >= 0)))
             const Align(alignment: Alignment.topRight, child: AddFlow())
           else if (state.window == "edit")
@@ -91,7 +93,7 @@ class FlowCanvas extends ConsumerWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           notifier.setDimensions(constraints.maxWidth, constraints.maxHeight);
         });
-        
+
         return InteractiveViewer(
           boundaryMargin: const EdgeInsets.all(double.infinity),
           minScale: 0.1,
@@ -108,8 +110,7 @@ class FlowCanvas extends ConsumerWidget {
             children: [
               const Lines(),
               if (state.isSelectingLoop &&
-                  (state.isPickingLoopFrom ||
-                      state.isPickingLoopTo))
+                  (state.isPickingLoopFrom || state.isPickingLoopTo))
                 Positioned.fill(
                   child: Container(color: Colors.black.withValues(alpha: 0.3)),
                 ),
@@ -143,7 +144,8 @@ class FlowCanvas extends ConsumerWidget {
     FlowsState state,
     FlowsNotifier notifier,
   ) {
-    final highlight = state.isSelectingLoop &&
+    final highlight =
+        state.isSelectingLoop &&
         (state.isPickingLoopFrom || state.isPickingLoopTo) &&
         state.loopHoverId == flow.id;
     final cursor = state.isPanning
@@ -222,20 +224,22 @@ class Lines extends ConsumerWidget {
         cursor: state.isPanning
             ? SystemMouseCursors.grabbing
             : state.isDraggingLineHeight
-                ? SystemMouseCursors.resizeUpDown
-                : state.isDraggingLoopPad
-                    ? (state.hoveredLoopPadAxis == "horizontal"
-                        ? SystemMouseCursors.resizeLeftRight
-                        : SystemMouseCursors.resizeUpDown)
-                    : state.hoveredLoopPadAxis == "horizontal"
-                        ? SystemMouseCursors.resizeLeftRight
-                        : state.hoveredLoopPadAxis == "vertical"
-                            ? SystemMouseCursors.resizeUpDown
-                            : state.isMouseOverDot
-                                ? SystemMouseCursors.click
-                                : SystemMouseCursors.basic,
+            ? SystemMouseCursors.resizeUpDown
+            : state.isDraggingLoopPad
+            ? (state.hoveredLoopPadAxis == "horizontal"
+                  ? SystemMouseCursors.resizeLeftRight
+                  : SystemMouseCursors.resizeUpDown)
+            : state.hoveredLoopPadAxis == "horizontal"
+            ? SystemMouseCursors.resizeLeftRight
+            : state.hoveredLoopPadAxis == "vertical"
+            ? SystemMouseCursors.resizeUpDown
+            : state.isMouseOverDot
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
         onHover: (event) {
-          bool isOverDot = state.showAddHandles && _isMouseOverDot(event.localPosition, state);
+          bool isOverDot =
+              state.showAddHandles &&
+              _isMouseOverDot(event.localPosition, state);
           notifier.updateMouseOverDot(isOverDot);
 
           if (state.showAddHandles) {
@@ -293,35 +297,58 @@ class Lines extends ConsumerWidget {
 
       // Down dot
       if (!flow.down.hasChild && canAddMore) {
-        Offset dotPosition = Offset(flow.x + flow.width / 2, flow.y + flow.height + flow.down.lineHeight);
+        Offset dotPosition = Offset(
+          flow.x + flow.width / 2,
+          flow.y + flow.height + flow.down.lineHeight,
+        );
         if ((mousePosition - dotPosition).distance <= dotRadius) return true;
       }
       // Right dot
-      if (flow.type == FlowType.condition && !flow.right.hasChild && canAddMore) {
-        Offset dotPosition = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
+      if (flow.type == FlowType.condition &&
+          !flow.right.hasChild &&
+          canAddMore) {
+        Offset dotPosition = Offset(
+          flow.x + flow.width + flow.right.lineHeight,
+          flow.y + flow.height / 2,
+        );
         if ((mousePosition - dotPosition).distance <= dotRadius) return true;
       }
       // Left dot
-      if (flow.type == FlowType.condition && !flow.left.hasChild && canAddMore) {
-        Offset dotPosition = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
+      if (flow.type == FlowType.condition &&
+          !flow.left.hasChild &&
+          canAddMore) {
+        Offset dotPosition = Offset(
+          flow.x - flow.left.lineHeight,
+          flow.y + flow.height / 2,
+        );
         if ((mousePosition - dotPosition).distance <= dotRadius) return true;
       }
     }
     return false;
   }
 
-  void _checkProcessFlowHover(Offset mousePosition, FlowsState state, FlowsNotifier notifier) {
+  void _checkProcessFlowHover(
+    Offset mousePosition,
+    FlowsState state,
+    FlowsNotifier notifier,
+  ) {
     const double hoverRadius = 15.0;
     for (var flow in state.flows) {
       if (flow.type == FlowType.process) {
         // right side
-        Offset rightCenter = Offset(flow.x + flow.width + flow.right.lineHeight / 2, flow.y + flow.height / 2);
+        Offset rightCenter = Offset(
+          flow.x + flow.width + flow.right.lineHeight / 2,
+          flow.y + flow.height / 2,
+        );
         if ((mousePosition - rightCenter).distance <= hoverRadius) {
           notifier.onProcessHover(flow.id, "right");
           return;
         }
         // left side
-        Offset leftCenter = Offset(flow.x - flow.left.lineHeight / 2, flow.y + flow.height / 2);
+        Offset leftCenter = Offset(
+          flow.x - flow.left.lineHeight / 2,
+          flow.y + flow.height / 2,
+        );
         if ((mousePosition - leftCenter).distance <= hoverRadius) {
           notifier.onProcessHover(flow.id, "left");
           return;
@@ -353,41 +380,68 @@ class LinePainter2 extends CustomPainter {
       ..strokeWidth = 3;
 
     final textStyle = TextStyle(color: Pallet.font2, fontSize: 11);
-    final yesp = TextPainter(text: TextSpan(text: 'yes', style: textStyle), textDirection: TextDirection.ltr)..layout();
-    final nop = TextPainter(text: TextSpan(text: 'no', style: textStyle), textDirection: TextDirection.ltr)..layout();
+    final yesp = TextPainter(
+      text: TextSpan(text: 'yes', style: textStyle),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final nop = TextPainter(
+      text: TextSpan(text: 'no', style: textStyle),
+      textDirection: TextDirection.ltr,
+    )..layout();
 
     // Draw loop links
     for (var loop in state.loopLinks) {
       final fromFlow = state.flows.firstWhere((f) => f.id == loop.fromId);
       final toFlow = state.flows.firstWhere((f) => f.id == loop.toId);
-      
-      final start = Offset(fromFlow.x + fromFlow.width / 2, fromFlow.y + fromFlow.height / 2);
-      final end = Offset(toFlow.x + toFlow.width / 2, toFlow.y + toFlow.height / 2);
-      
+
+      final start = Offset(
+        fromFlow.x + fromFlow.width / 2,
+        fromFlow.y + fromFlow.height / 2,
+      );
+      final end = Offset(
+        toFlow.x + toFlow.width / 2,
+        toFlow.y + toFlow.height / 2,
+      );
+
       // Draw a curved line or orthogonal line for loop
       final paintLoop = Paint()
         ..color = Colors.grey.withValues(alpha: 0.5)
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;
-        
+
       final path = Path();
       path.moveTo(start.dx, start.dy);
-      
+
       // Simple quadratic curve for now to differentiate from regular lines
-      final controlPoint = Offset((start.dx + end.dx) / 2 + 50, (start.dy + end.dy) / 2);
+      final controlPoint = Offset(
+        (start.dx + end.dx) / 2 + 50,
+        (start.dy + end.dy) / 2,
+      );
       path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, end.dx, end.dy);
-      
+
       canvas.drawPath(path, paintLoop);
-      
+
       // Draw arrow at end
-      final angle = math.atan2(end.dy - controlPoint.dy, end.dx - controlPoint.dx);
+      final angle = math.atan2(
+        end.dy - controlPoint.dy,
+        end.dx - controlPoint.dx,
+      );
       const arrowSize = 6.0;
       final arrowPath = Path()
         ..moveTo(end.dx, end.dy)
-        ..lineTo(end.dx - arrowSize * math.cos(angle - math.pi / 6), end.dy - arrowSize * math.sin(angle - math.pi / 6))
-        ..lineTo(end.dx - arrowSize * math.cos(angle + math.pi / 6), end.dy - arrowSize * math.sin(angle + math.pi / 6))
+        ..lineTo(
+          end.dx - arrowSize * math.cos(angle - math.pi / 6),
+          end.dy - arrowSize * math.sin(angle - math.pi / 6),
+        )
+        ..lineTo(
+          end.dx - arrowSize * math.cos(angle + math.pi / 6),
+          end.dy - arrowSize * math.sin(angle + math.pi / 6),
+        )
         ..close();
-      canvas.drawPath(arrowPath, Paint()..color = Colors.grey.withValues(alpha: 0.5));
+      canvas.drawPath(
+        arrowPath,
+        Paint()..color = Colors.grey.withValues(alpha: 0.5),
+      );
     }
 
     for (var flow in state.flows) {
@@ -400,104 +454,169 @@ class LinePainter2 extends CustomPainter {
 
       // 1. Down Line
       Offset startDown = Offset(flow.x + flow.width / 2, flow.y + flow.height);
-      Offset endDown = Offset(flow.x + flow.width / 2, flow.y + flow.height + flow.down.lineHeight);
+      Offset endDown = Offset(
+        flow.x + flow.width / 2,
+        flow.y + flow.height + flow.down.lineHeight,
+      );
 
       bool isHighlightedDown = false;
       if (state.isDraggingLineHeight && state.draggedFlowId >= 0) {
-        final draggedIdx = state.flows.indexWhere((f) => f.id == state.draggedFlowId);
+        final draggedIdx = state.flows.indexWhere(
+          (f) => f.id == state.draggedFlowId,
+        );
         if (draggedIdx != -1) {
           final df = state.flows[draggedIdx];
-          isHighlightedDown = df.pid == flow.id && df.direction == Direction.down;
+          isHighlightedDown =
+              df.pid == flow.id && df.direction == Direction.down;
         }
       }
 
       if (flow.down.hasChild || (state.showAddHandles && canAddMore)) {
-        canvas.drawLine(startDown, endDown, isHighlightedDown ? highlightPaint : paint);
+        canvas.drawLine(
+          startDown,
+          endDown,
+          isHighlightedDown ? highlightPaint : paint,
+        );
       }
 
       if (state.showAddHandles && !flow.down.hasChild && canAddMore) {
-        myCanvas.drawCircle(endDown, 3, paint, onTapDown: (details) {
-          notifier.startAddingFlow(flow.id, Direction.down);
-        });
+        myCanvas.drawCircle(
+          endDown,
+          3,
+          paint,
+          onTapDown: (details) {
+            notifier.startAddingFlow(flow.id, Direction.down);
+          },
+        );
       }
 
       // 2. Right Line
-      if (flow.direction != Direction.left && (flow.right.hasChild || (state.showAddHandles && flow.type == FlowType.condition && canAddMore))) {
-        Offset startRight = Offset(flow.x + flow.width, flow.y + flow.height / 2);
-        Offset endRight = Offset(flow.x + flow.width + flow.right.lineHeight, flow.y + flow.height / 2);
+      if (flow.direction != Direction.left &&
+          (flow.right.hasChild ||
+              (state.showAddHandles &&
+                  flow.type == FlowType.condition &&
+                  canAddMore))) {
+        Offset startRight = Offset(
+          flow.x + flow.width,
+          flow.y + flow.height / 2,
+        );
+        Offset endRight = Offset(
+          flow.x + flow.width + flow.right.lineHeight,
+          flow.y + flow.height / 2,
+        );
 
         bool isHighlightedRight = false;
         if (state.isDraggingLineHeight && state.draggedFlowId >= 0) {
-          final draggedIdx = state.flows.indexWhere((f) => f.id == state.draggedFlowId);
+          final draggedIdx = state.flows.indexWhere(
+            (f) => f.id == state.draggedFlowId,
+          );
           if (draggedIdx != -1) {
             final df = state.flows[draggedIdx];
-            isHighlightedRight = df.pid == flow.id && df.direction == Direction.right;
+            isHighlightedRight =
+                df.pid == flow.id && df.direction == Direction.right;
           }
         }
 
-        canvas.drawLine(startRight, endRight, isHighlightedRight ? highlightPaint : paint);
+        canvas.drawLine(
+          startRight,
+          endRight,
+          isHighlightedRight ? highlightPaint : paint,
+        );
 
         if (state.showAddHandles && !flow.right.hasChild && canAddMore) {
-          myCanvas.drawCircle(endRight, 3, paint, onTapDown: (details) {
-            notifier.startAddingFlow(flow.id, Direction.right);
-          });
+          myCanvas.drawCircle(
+            endRight,
+            3,
+            paint,
+            onTapDown: (details) {
+              notifier.startAddingFlow(flow.id, Direction.right);
+            },
+          );
         }
       }
 
       // 3. Left Line
-      if (flow.direction != Direction.right && (flow.left.hasChild || (state.showAddHandles && flow.type == FlowType.condition && canAddMore))) {
+      if (flow.direction != Direction.right &&
+          (flow.left.hasChild ||
+              (state.showAddHandles &&
+                  flow.type == FlowType.condition &&
+                  canAddMore))) {
         Offset startLeft = Offset(flow.x, flow.y + flow.height / 2);
-        Offset endLeft = Offset(flow.x - flow.left.lineHeight, flow.y + flow.height / 2);
+        Offset endLeft = Offset(
+          flow.x - flow.left.lineHeight,
+          flow.y + flow.height / 2,
+        );
 
         bool isHighlightedLeft = false;
         if (state.isDraggingLineHeight && state.draggedFlowId >= 0) {
-          final draggedIdx = state.flows.indexWhere((f) => f.id == state.draggedFlowId);
+          final draggedIdx = state.flows.indexWhere(
+            (f) => f.id == state.draggedFlowId,
+          );
           if (draggedIdx != -1) {
             final df = state.flows[draggedIdx];
-            isHighlightedLeft = df.pid == flow.id && df.direction == Direction.left;
+            isHighlightedLeft =
+                df.pid == flow.id && df.direction == Direction.left;
           }
         }
 
-        canvas.drawLine(startLeft, endLeft, isHighlightedLeft ? highlightPaint : paint);
+        canvas.drawLine(
+          startLeft,
+          endLeft,
+          isHighlightedLeft ? highlightPaint : paint,
+        );
 
         if (state.showAddHandles && !flow.left.hasChild && canAddMore) {
-          myCanvas.drawCircle(endLeft, 3, paint, onTapDown: (details) {
-            notifier.startAddingFlow(flow.id, Direction.left);
-          });
+          myCanvas.drawCircle(
+            endLeft,
+            3,
+            paint,
+            onTapDown: (details) {
+              notifier.startAddingFlow(flow.id, Direction.left);
+            },
+          );
         }
       }
 
       // Condition labels (yes/no)
       if (flow.type == FlowType.condition) {
-          // Down label
-          if (flow.down.hasChild) {
-            Offset downLabel = Offset((flow.x + flow.width / 2) + 20, (flow.y + flow.height + flow.down.lineHeight / 2) - 10);
-            if (flow.yes == Direction.down) {
-                yesp.paint(canvas, downLabel);
-            } else {
-                nop.paint(canvas, downLabel);
-            }
+        // Down label
+        if (flow.down.hasChild) {
+          Offset downLabel = Offset(
+            (flow.x + flow.width / 2) + 20,
+            (flow.y + flow.height + flow.down.lineHeight / 2) - 10,
+          );
+          if (flow.yes == Direction.down) {
+            yesp.paint(canvas, downLabel);
+          } else {
+            nop.paint(canvas, downLabel);
           }
-          
-          // Right label
-          if (flow.right.hasChild) {
-            Offset rightLabel = Offset(flow.x + flow.width + flow.right.lineHeight / 2 - 10, flow.y + flow.height / 2 - 20);
-            if (flow.yes == Direction.right) {
-                yesp.paint(canvas, rightLabel);
-            } else {
-                nop.paint(canvas, rightLabel);
-            }
-          }
+        }
 
-          // Left label
-          if (flow.left.hasChild) {
-            Offset leftLabel = Offset(flow.x - flow.left.lineHeight / 2 - 10, flow.y + flow.height / 2 - 20);
-            if (flow.yes == Direction.left) {
-                yesp.paint(canvas, leftLabel);
-            } else {
-                nop.paint(canvas, leftLabel);
-            }
+        // Right label
+        if (flow.right.hasChild) {
+          Offset rightLabel = Offset(
+            flow.x + flow.width + flow.right.lineHeight / 2 - 10,
+            flow.y + flow.height / 2 - 20,
+          );
+          if (flow.yes == Direction.right) {
+            yesp.paint(canvas, rightLabel);
+          } else {
+            nop.paint(canvas, rightLabel);
           }
+        }
+
+        // Left label
+        if (flow.left.hasChild) {
+          Offset leftLabel = Offset(
+            flow.x - flow.left.lineHeight / 2 - 10,
+            flow.y + flow.height / 2 - 20,
+          );
+          if (flow.yes == Direction.left) {
+            yesp.paint(canvas, leftLabel);
+          } else {
+            nop.paint(canvas, leftLabel);
+          }
+        }
       }
     }
   }

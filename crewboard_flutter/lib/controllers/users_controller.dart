@@ -26,7 +26,9 @@ class UsersState {
   }
 }
 
-final usersProvider = NotifierProvider<UsersNotifier, UsersState>(UsersNotifier.new);
+final usersProvider = NotifierProvider<UsersNotifier, UsersState>(
+  UsersNotifier.new,
+);
 
 class UsersNotifier extends Notifier<UsersState> {
   @override

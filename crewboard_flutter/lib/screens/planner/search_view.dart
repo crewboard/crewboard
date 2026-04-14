@@ -302,7 +302,8 @@ class _SearchViewState extends ConsumerState<SearchView> {
                         onTap: () {
                           showDialog(
                             context: context,
-                            builder: (context) => ViewTicketDialog(ticketId: ticket.id),
+                            builder: (context) =>
+                                ViewTicketDialog(ticketId: ticket.id),
                           );
                         },
                         child: Container(
@@ -320,14 +321,17 @@ class _SearchViewState extends ConsumerState<SearchView> {
                             children: [
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
                                         Text(
-                                          ticket.ticketName.startsWith('${ticket.typeName}: ')
-                                              ? ticket.ticketName.substring('${ticket.typeName}: '.length)
+                                          ticket.ticketName.startsWith(
+                                                '${ticket.typeName}: ',
+                                              )
+                                              ? ticket.ticketName.substring(
+                                                  '${ticket.typeName}: '.length,
+                                                )
                                               : ticket.ticketName,
                                           style: TextStyle(
                                             color: Pallet.font1,
@@ -402,8 +406,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                           ),
                                           child: ProfileIcon(
                                             size: 30,
-                                            name:
-                                                ticket.assignees[i].userName,
+                                            name: ticket.assignees[i].userName,
                                             color: Color(
                                               int.parse(
                                                 ticket.assignees[i].color
@@ -532,11 +535,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                 },
                               ),
                               const SizedBox(height: 10),
-                              if (selectedFilters[i].name ==
-                                  FilterName.status)
+                              if (selectedFilters[i].name == FilterName.status)
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "value",
@@ -565,8 +566,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                 ),
                               if (selectedFilters[i].name == FilterName.type)
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "value",
@@ -595,8 +595,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                 ),
                               if (selectedFilters[i].type == FilterType.both)
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "type",
@@ -615,13 +614,11 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                       items: [
                                         Operation(
                                           name: "Ascending",
-                                          operation:
-                                              FilterOperation.ascending,
+                                          operation: FilterOperation.ascending,
                                         ),
                                         Operation(
                                           name: "Descending",
-                                          operation:
-                                              FilterOperation.descending,
+                                          operation: FilterOperation.descending,
                                         ),
                                         Operation(
                                           name: "Value",
@@ -641,8 +638,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                               if (selectedFilters[i].operation ==
                                   FilterOperation.value)
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "value",
@@ -672,8 +668,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                               if (selectedFilters[i].name ==
                                   FilterName.deadline)
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "type",
@@ -692,8 +687,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                                         {"name": SortOrder.descending.name},
                                       ],
                                       onPress: (data) {
-                                        selectedFilters[i].value =
-                                            data["name"];
+                                        selectedFilters[i].value = data["name"];
                                         setState(() {});
                                         refreshSink.add("");
                                       },

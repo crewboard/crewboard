@@ -367,7 +367,9 @@ class FlowGenerator {
       'id': id,
       'pid': pid,
       'width': width ?? 100.0,
-      'height': type == FlowType.condition || type == FlowType.user ? 100.0 : 40.0,
+      'height': type == FlowType.condition || type == FlowType.user
+          ? 100.0
+          : 40.0,
       'x': 0.0,
       'y': 0.0,
       'value': value,

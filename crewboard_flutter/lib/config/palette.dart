@@ -48,7 +48,6 @@ class Pallet {
       _currentTheme == AppTheme.glassLight ||
       _currentTheme == AppTheme.classicLight;
 
-
   // Dynamic colors based on theme
   static Color get divider {
     return const Color(0xFF728b99).withOpacity(0.3);

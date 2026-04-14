@@ -44,7 +44,10 @@ class AddUserTypeState {
   }
 }
 
-final addUserTypeProvider = NotifierProvider<AddUserTypeNotifier, AddUserTypeState>(AddUserTypeNotifier.new);
+final addUserTypeProvider =
+    NotifierProvider<AddUserTypeNotifier, AddUserTypeState>(
+      AddUserTypeNotifier.new,
+    );
 
 class AddUserTypeNotifier extends Notifier<AddUserTypeState> {
   final nameController = TextEditingController();
@@ -61,9 +64,15 @@ class AddUserTypeNotifier extends Notifier<AddUserTypeState> {
       final fetchedColors = await client.admin.getColors();
       SystemColor? defaultColor;
       if (fetchedColors.isNotEmpty) {
-        defaultColor = fetchedColors.firstWhere((c) => c.isDefault, orElse: () => fetchedColors.first);
+        defaultColor = fetchedColors.firstWhere(
+          (c) => c.isDefault,
+          orElse: () => fetchedColors.first,
+        );
       }
-      state = state.copyWith(colorsList: fetchedColors, selectedColor: defaultColor);
+      state = state.copyWith(
+        colorsList: fetchedColors,
+        selectedColor: defaultColor,
+      );
     } catch (e) {
       debugPrint("Error fetching colors: $e");
     }
@@ -71,7 +80,7 @@ class AddUserTypeNotifier extends Notifier<AddUserTypeState> {
 
   void initFrom(UserTypes existing) {
     nameController.text = existing.userType;
-    
+
     Map<String, bool> permissions = Map<String, bool>.from(state.permissions);
     try {
       final decoded = jsonDecode(existing.permissions);
@@ -101,7 +110,8 @@ class AddUserTypeNotifier extends Notifier<AddUserTypeState> {
     );
   }
 
-  void selectColor(SystemColor color) => state = state.copyWith(selectedColor: color);
+  void selectColor(SystemColor color) =>
+      state = state.copyWith(selectedColor: color);
 
   void togglePermission(String key) {
     final permissions = Map<String, bool>.from(state.permissions);
@@ -124,10 +134,10 @@ class AddUserTypeNotifier extends Notifier<AddUserTypeState> {
       );
 
       await client.admin.addUserType(userType);
-      
+
       // Refresh users list and user types
       ref.read(usersProvider.notifier).fetchData();
-      
+
       return true;
     } catch (e) {
       debugPrint("Error adding user type: $e");

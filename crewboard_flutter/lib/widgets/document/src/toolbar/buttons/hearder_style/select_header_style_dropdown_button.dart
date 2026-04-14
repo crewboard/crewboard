@@ -49,7 +49,6 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
 
   Attribute<dynamic> _selectedItem = Attribute.header;
 
-
   @override
   void initState() {
     super.initState();

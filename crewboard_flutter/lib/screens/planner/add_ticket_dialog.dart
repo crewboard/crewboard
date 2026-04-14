@@ -90,7 +90,9 @@ class AddTicketDialog extends ConsumerWidget {
                                   // This is likely intended to show the checklist input
                                   // I'll use a local state or a temporary field if needed
                                   // For now, I'll assume 'mode' in PlannerState works.
-                                  ref.read(plannerProvider.notifier).copyWithMode("checklist");
+                                  ref
+                                      .read(plannerProvider.notifier)
+                                      .copyWithMode("checklist");
                                 },
                               ),
                             ],
@@ -112,8 +114,7 @@ class AddTicketDialog extends ConsumerWidget {
                                   children: [
                                     Expanded(
                                       child: SmallTextBox(
-                                        controller:
-                                            notifier.commentController,
+                                        controller: notifier.commentController,
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -141,9 +142,7 @@ class AddTicketDialog extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 20),
-                                for (
-                                  final file in state.pendingFiles
-                                )
+                                for (final file in state.pendingFiles)
                                   Padding(
                                     padding: const EdgeInsets.only(
                                       bottom: 10,
@@ -158,7 +157,8 @@ class AddTicketDialog extends ConsumerWidget {
                                           right: 5,
                                           top: 5,
                                           child: InkWell(
-                                            onTap: () => notifier.removeAttachedFile(file),
+                                            onTap: () => notifier
+                                                .removeAttachedFile(file),
                                             child: const Icon(
                                               Icons.close,
                                               size: 16,
@@ -239,14 +239,10 @@ class AddTicketDialog extends ConsumerWidget {
                                         ),
                                         child: ProfileIcon(
                                           size: 30,
-                                          name: state
-                                              .selectedUsers[i]
-                                              .userName,
+                                          name: state.selectedUsers[i].userName,
                                           color: Color(
                                             int.parse(
-                                              state
-                                                  .selectedUsers[i]
-                                                  .color
+                                              state.selectedUsers[i].color
                                                   .replaceAll("#", "0xFF"),
                                             ),
                                           ),
@@ -263,7 +259,9 @@ class AddTicketDialog extends ConsumerWidget {
                             items: state.users,
                             selected: state.selectedUsers,
                             onSelected: (users) {
-                               notifier.setSelectedUsers(List<UserModel>.from(users));
+                              notifier.setSelectedUsers(
+                                List<UserModel>.from(users),
+                              );
                             },
                           ),
                           const SizedBox(height: 10),
@@ -308,16 +306,17 @@ class AddTicketDialog extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => WheelDatePicker(
-                                  initialDate:
-                                      state.deadline == null
+                                  initialDate: state.deadline == null
                                       ? DateTime.now()
                                       : DateTime.parse(
                                           state.deadline!,
                                         ),
                                   onDateSelected: (date) {
-                                    notifier.setDeadline(DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(date));
+                                    notifier.setDeadline(
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(date),
+                                    );
                                   },
                                 ),
                               );
@@ -328,8 +327,7 @@ class AddTicketDialog extends ConsumerWidget {
                             children: [
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "creds",

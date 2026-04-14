@@ -38,13 +38,17 @@ class RoomsState {
       backup: backup ?? this.backup,
       isLoading: isLoading ?? this.isLoading,
       isSearchingUsers: isSearchingUsers ?? this.isSearchingUsers,
-      selectedRoom: clearSelectedRoom ? null : (selectedRoom ?? this.selectedRoom),
+      selectedRoom: clearSelectedRoom
+          ? null
+          : (selectedRoom ?? this.selectedRoom),
       searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }
 
-final roomsProvider = NotifierProvider<RoomsNotifier, RoomsState>(RoomsNotifier.new);
+final roomsProvider = NotifierProvider<RoomsNotifier, RoomsState>(
+  RoomsNotifier.new,
+);
 
 class RoomsNotifier extends Notifier<RoomsState> {
   @override
@@ -88,7 +92,7 @@ class RoomsNotifier extends Notifier<RoomsState> {
     final filtered = state.backup.where((room) {
       return (room.roomName ?? '').toLowerCase().contains(lower);
     }).toList();
-    
+
     state = state.copyWith(rooms: filtered, isSearchingUsers: true);
 
     // 2. Search for users on the server
@@ -101,9 +105,11 @@ class RoomsNotifier extends Notifier<RoomsState> {
           .map((r) => r.roomName?.toLowerCase())
           .toSet();
 
-      final filteredUsers = foundUsers.where(
-        (u) => !existingRoomUserNames.contains(u.userName.toLowerCase()),
-      ).toList();
+      final filteredUsers = foundUsers
+          .where(
+            (u) => !existingRoomUserNames.contains(u.userName.toLowerCase()),
+          )
+          .toList();
 
       state = state.copyWith(users: filteredUsers, isSearchingUsers: false);
     } catch (e) {
@@ -133,7 +139,9 @@ class RoomsNotifier extends Notifier<RoomsState> {
       } else {
         updatedBackup.add(room);
       }
-      updatedBackup.sort((a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''));
+      updatedBackup.sort(
+        (a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''),
+      );
 
       state = state.copyWith(
         backup: updatedBackup,

@@ -39,7 +39,9 @@ class GeneralSettings extends ConsumerWidget {
           onPressed: () async {
             await sessionManager.signOutDevice();
             if (context.mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              Navigator.of(
+                context,
+              ).pushNamedAndRemoveUntil('/', (route) => false);
             }
           },
           icon: const Icon(

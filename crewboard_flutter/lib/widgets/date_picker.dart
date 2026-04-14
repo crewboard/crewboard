@@ -51,7 +51,8 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
   void initState() {
     super.initState();
 
-    final dateToUse = (widget.minDate != null && widget.initialDate.isBefore(widget.minDate!))
+    final dateToUse =
+        (widget.minDate != null && widget.initialDate.isBefore(widget.minDate!))
         ? widget.minDate!
         : widget.initialDate;
 
@@ -212,13 +213,18 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                         final int finalMonth = selectedMonth;
                         final int finalYear = selectedYear;
 
-                        DateTime selected = DateTime(finalYear, finalMonth, finalDay);
-                        
+                        DateTime selected = DateTime(
+                          finalYear,
+                          finalMonth,
+                          finalDay,
+                        );
+
                         // Validation against minDate
-                        if (widget.minDate != null && selected.isBefore(widget.minDate!)) {
-                            // Automatically adjust to minDate or show warning?
-                            // For now, let's just use minDate to be safe.
-                            selected = widget.minDate!;
+                        if (widget.minDate != null &&
+                            selected.isBefore(widget.minDate!)) {
+                          // Automatically adjust to minDate or show warning?
+                          // For now, let's just use minDate to be safe.
+                          selected = widget.minDate!;
                         }
 
                         widget.onDateSelected(selected);

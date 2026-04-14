@@ -61,7 +61,9 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
     );
     isEditing = widget.data == null;
 
-    if (widget.data == null || widget.data!.config == null || widget.data!.config == "{}") {
+    if (widget.data == null ||
+        widget.data!.config == null ||
+        widget.data!.config == "{}") {
       days = {};
       for (var day in dayNames) {
         days[day] = {
@@ -174,8 +176,7 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
                 const SizedBox(height: 20),
                 _buildDayHeader(),
                 const Divider(color: Colors.white24),
-                for (var dayName in dayNames)
-                  _buildDayRow(dayName),
+                for (var dayName in dayNames) _buildDayRow(dayName),
 
                 const SizedBox(height: 20),
                 Row(
@@ -193,13 +194,12 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
                           final config = LeaveConfig(
                             id: widget.data?.id,
                             configName: nameController.text,
-                            fullDay:
-                                int.tryParse(fullDayController.text) ?? 8,
-                            halfDay:
-                                int.tryParse(halfDayController.text) ?? 4,
+                            fullDay: int.tryParse(fullDayController.text) ?? 8,
+                            halfDay: int.tryParse(halfDayController.text) ?? 4,
                             config: jsonEncode(days),
                           );
-                          await ref.read(attendanceProvider.notifier)
+                          await ref
+                              .read(attendanceProvider.notifier)
                               .saveLeaveConfig(config);
                           Navigator.pop(context);
                         },
@@ -300,7 +300,9 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
                   ? _buildTimeField(
                       dayData,
                       "in",
-                      (val) => setState(() => days[dayName] = {...dayData, "in": val}),
+                      (val) => setState(
+                        () => days[dayName] = {...dayData, "in": val},
+                      ),
                     )
                   : Text(
                       "${dayData["in"]} ${dayData["inType"]}",
@@ -313,7 +315,9 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
                   ? _buildTimeField(
                       dayData,
                       "out",
-                      (val) => setState(() => days[dayName] = {...dayData, "out": val}),
+                      (val) => setState(
+                        () => days[dayName] = {...dayData, "out": val},
+                      ),
                     )
                   : Text(
                       "${dayData["out"]} ${dayData["outType"]}",
@@ -325,7 +329,9 @@ class _LeaveConfigDialogState extends ConsumerState<_LeaveConfigDialog> {
               child: isEditing
                   ? _buildBufferField(
                       dayData,
-                      (val) => setState(() => days[dayName] = {...dayData, "buffer": val}),
+                      (val) => setState(
+                        () => days[dayName] = {...dayData, "buffer": val},
+                      ),
                     )
                   : Text(
                       "${dayData["buffer"]} ${dayData["bufferType"]}",

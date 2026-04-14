@@ -65,7 +65,8 @@ class BucketView extends ConsumerWidget {
                   onPress: () {
                     showDialog(
                       context: context,
-                      builder: (context) => AddTicketDialog(initialBucketId: bucket.bucketId),
+                      builder: (context) =>
+                          AddTicketDialog(initialBucketId: bucket.bucketId),
                     );
                   },
                 ),

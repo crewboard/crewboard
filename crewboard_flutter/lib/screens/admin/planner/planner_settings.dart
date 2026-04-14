@@ -328,7 +328,7 @@ class _TicketTypesSectionState extends State<TicketTypesSection> {
                                 style: const TextStyle(fontSize: 13),
                               ),
                             ),
- 
+
                             const SizedBox(width: 5),
                             ColorPicker(
                               selectedColorId: item.colorId,
@@ -385,7 +385,7 @@ class PrioritiesSection extends StatefulWidget {
 
 class _PrioritiesSectionState extends State<PrioritiesSection> {
   int? selectedIdx;
- 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -445,7 +445,7 @@ class _PrioritiesSectionState extends State<PrioritiesSection> {
                                         style: const TextStyle(fontSize: 13),
                                       ),
                                     ),
- 
+
                                     AddController(
                                       type: "priority",
                                       id: item.priorityId,

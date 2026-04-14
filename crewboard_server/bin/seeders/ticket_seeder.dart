@@ -134,7 +134,10 @@ void main(List<String> args) async {
         for (var name in statuses.keys) {
           var bucket = await Bucket.db.findFirstRow(
             session,
-            where: (t) => t.bucketName.equals(name) & t.appId.equals(app.id!) & t.userId.equals(user.id!),
+            where: (t) =>
+                t.bucketName.equals(name) &
+                t.appId.equals(app.id!) &
+                t.userId.equals(user.id!),
           );
           if (bucket == null) {
             print('  Creating Bucket: $name for user: ${user.userName}');
@@ -152,28 +155,40 @@ void main(List<String> args) async {
         }
 
         // Initialize user stats by checking existing Done tickets in DB
-        final doneStatus = allStatuses.firstWhere((s) => s.completed, orElse: () => allStatuses.last);
+        final doneStatus = allStatuses.firstWhere(
+          (s) => s.completed,
+          orElse: () => allStatuses.last,
+        );
         final userDoneTickets = await BucketTicketMap.db.find(
           session,
-          where: (t) => t.bucketId.equals(userBuckets[user.id!]![doneStatus.statusName]!.id!),
+          where: (t) => t.bucketId.equals(
+            userBuckets[user.id!]![doneStatus.statusName]!.id!,
+          ),
           include: BucketTicketMap.include(ticket: Ticket.include()),
         );
-        
+
         int userOnTime = 0;
         for (var map in userDoneTickets) {
           final ticket = map.ticket;
           if (ticket == null || ticket.deadline == null) continue;
           final lastChange = await TicketStatusChange.db.findFirstRow(
             session,
-            where: (t) => t.ticketId.equals(ticket.id!) & t.newStatusId.equals(doneStatus.id!),
+            where: (t) =>
+                t.ticketId.equals(ticket.id!) &
+                t.newStatusId.equals(doneStatus.id!),
             orderBy: (t) => t.changedAt,
             orderDescending: true,
           );
-          if (lastChange != null && lastChange.changedAt != null && lastChange.changedAt!.isBefore(ticket.deadline!)) {
+          if (lastChange != null &&
+              lastChange.changedAt != null &&
+              lastChange.changedAt!.isBefore(ticket.deadline!)) {
             userOnTime++;
           }
         }
-        userStats[user.id!] = _UserDoneStats(done: userDoneTickets.length, onTime: userOnTime);
+        userStats[user.id!] = _UserDoneStats(
+          done: userDoneTickets.length,
+          onTime: userOnTime,
+        );
       }
 
       // Seed Tickets - Randomly 2 or 3 per status
@@ -181,10 +196,24 @@ void main(List<String> args) async {
         '  Seeding tickets (randomly 2 or 3 per status) for ${app.appName}...',
       );
       final verbs = [
-        'Fix', 'Implement', 'Design', 'Refactor', 'Debug', 'Test', 'Deploy', 'Review',
+        'Fix',
+        'Implement',
+        'Design',
+        'Refactor',
+        'Debug',
+        'Test',
+        'Deploy',
+        'Review',
       ];
       final nouns = [
-        'Login', 'Dashboard', 'Sidebar', 'API', 'Database', 'Cache', 'Footer', 'Header',
+        'Login',
+        'Dashboard',
+        'Sidebar',
+        'API',
+        'Database',
+        'Cache',
+        'Footer',
+        'Header',
       ];
 
       for (var statusName in statuses.keys) {
@@ -204,20 +233,29 @@ void main(List<String> args) async {
         }
 
         if (usersNeedsTicket.isEmpty) {
-          print('  Status "$statusName": All users already have tickets. Adding 1-2 random ones for density.');
+          print(
+            '  Status "$statusName": All users already have tickets. Adding 1-2 random ones for density.',
+          );
         } else {
-          print('  Status "$statusName": ${usersNeedsTicket.length} users have empty buckets. Filling gaps...');
+          print(
+            '  Status "$statusName": ${usersNeedsTicket.length} users have empty buckets. Filling gaps...',
+          );
         }
 
         // We will create tickets until everyone who needs one is covered,
         // or at least a minimum number of tickets are created for this status.
         // For 'Done' status, we increase density to ensure statistical convergence (ratio 80%).
         final isDoneStatus = status.completed;
-        final baseDensity = isDoneStatus ? (usersNeedsTicket.length / 1).ceil() : (usersNeedsTicket.length / 3).ceil();
-        final minTickets = usersNeedsTicket.isEmpty ? (isDoneStatus ? 4 : 1 + random.nextInt(2)) : (isDoneStatus ? 4 : 0);
+        final baseDensity = isDoneStatus
+            ? (usersNeedsTicket.length / 1).ceil()
+            : (usersNeedsTicket.length / 3).ceil();
+        final minTickets = usersNeedsTicket.isEmpty
+            ? (isDoneStatus ? 4 : 1 + random.nextInt(2))
+            : (isDoneStatus ? 4 : 0);
         final ticketsToCreate = max(minTickets, baseDensity);
 
-        final remainingToCover = List<User>.from(usersNeedsTicket)..shuffle(random);
+        final remainingToCover = List<User>.from(usersNeedsTicket)
+          ..shuffle(random);
 
         for (var i = 0; i < ticketsToCreate; i++) {
           // Selector creator (random user from the project)
@@ -257,7 +295,7 @@ void main(List<String> args) async {
           final createdAt = DateTime.now().subtract(
             Duration(days: 15 + random.nextInt(25)),
           );
-          
+
           // deadline: 40-70 days AFTER createdAt (Mostly in the future)
           final durationDays = 40 + random.nextInt(30);
           final deadline = createdAt.add(Duration(days: durationDays));
@@ -279,7 +317,7 @@ void main(List<String> args) async {
             ),
           );
 
-          // Assignees: 
+          // Assignees:
           // 1. Take up to 3 users who still need a ticket in this bucket
           final assignees = <User>[];
           if (remainingToCover.isNotEmpty) {
@@ -288,7 +326,7 @@ void main(List<String> args) async {
               assignees.add(remainingToCover.removeLast());
             }
           }
-          
+
           // 2. Add some random users who already have tickets for extra overlap (if batch is small)
           if (assignees.length < 3 && users.length > assignees.length) {
             final shuffledAll = List<User>.from(users)..shuffle(random);
@@ -302,11 +340,13 @@ void main(List<String> args) async {
 
           for (final assignee in assignees) {
             final assigneeBucket = userBuckets[assignee.id!]![statusName]!;
-            
+
             // Duplicate check: ensure we don't assign the same user to the same ticket twice
             final existingMap = await BucketTicketMap.db.findFirstRow(
               session,
-              where: (t) => t.bucketId.equals(assigneeBucket.id!) & t.ticketId.equals(ticket.id!),
+              where: (t) =>
+                  t.bucketId.equals(assigneeBucket.id!) &
+                  t.ticketId.equals(ticket.id!),
             );
 
             if (existingMap == null) {
@@ -332,7 +372,7 @@ void main(List<String> args) async {
           }
 
           // --- SEED STATUS HISTORY & ACTIVITIES ---
-          
+
           // 1. Initial Creation
           await TicketStatusChange.db.insertRow(
             session,
@@ -351,7 +391,12 @@ void main(List<String> args) async {
               ticketId: ticket.id!,
               ticketName: ticket.ticketName,
               userName: creator.userName,
-              userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+              userColor:
+                  (await SystemColor.db.findById(
+                    session,
+                    creator.colorId,
+                  ))?.color ??
+                  '#000000',
               action: 'created ticket',
               details: 'Initial status: ${status.statusName}',
               createdAt: createdAt,
@@ -373,8 +418,10 @@ void main(List<String> args) async {
             );
 
             // Transition: Created -> Working (occurs 1-2 days after creation)
-            final workStartedAt = createdAt.add(Duration(days: 1 + random.nextInt(2)));
-            
+            final workStartedAt = createdAt.add(
+              Duration(days: 1 + random.nextInt(2)),
+            );
+
             if (workStartedAt.isBefore(DateTime.now())) {
               await TicketStatusChange.db.insertRow(
                 session,
@@ -393,9 +440,15 @@ void main(List<String> args) async {
                   ticketId: ticket.id!,
                   ticketName: ticket.ticketName,
                   userName: creator.userName,
-                  userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+                  userColor:
+                      (await SystemColor.db.findById(
+                        session,
+                        creator.colorId,
+                      ))?.color ??
+                      '#000000',
                   action: 'changed status',
-                  details: 'from ${initialStatus.statusName} to ${workingStatus.statusName}',
+                  details:
+                      'from ${initialStatus.statusName} to ${workingStatus.statusName}',
                   createdAt: workStartedAt,
                 ),
               );
@@ -424,21 +477,27 @@ void main(List<String> args) async {
                     isOnTime = random.nextDouble() < 0.8;
                   }
                 }
-                
+
                 DateTime completedAt;
                 if (isOnTime) {
                   // Must be between workStartedAt and deadline
                   final diff = deadline.difference(workStartedAt).inDays;
                   final maxDays = max(1, diff);
-                  completedAt = workStartedAt.add(Duration(days: random.nextInt(maxDays)));
+                  completedAt = workStartedAt.add(
+                    Duration(days: random.nextInt(maxDays)),
+                  );
                 } else {
                   // After deadline
-                  completedAt = deadline.add(Duration(days: 1 + random.nextInt(5)));
+                  completedAt = deadline.add(
+                    Duration(days: 1 + random.nextInt(5)),
+                  );
                 }
 
                 // IMPORTANT: Ensure Done tickets are actually in the past
                 if (completedAt.isAfter(DateTime.now())) {
-                  completedAt = DateTime.now().subtract(Duration(minutes: 5 + random.nextInt(60)));
+                  completedAt = DateTime.now().subtract(
+                    Duration(minutes: 5 + random.nextInt(60)),
+                  );
                 }
 
                 if (completedAt.isBefore(DateTime.now())) {
@@ -466,9 +525,15 @@ void main(List<String> args) async {
                       ticketId: ticket.id!,
                       ticketName: ticket.ticketName,
                       userName: creator.userName,
-                      userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+                      userColor:
+                          (await SystemColor.db.findById(
+                            session,
+                            creator.colorId,
+                          ))?.color ??
+                          '#000000',
                       action: 'changed status',
-                      details: 'from ${workingStatus.statusName} to ${status.statusName}',
+                      details:
+                          'from ${workingStatus.statusName} to ${status.statusName}',
                       createdAt: completedAt,
                     ),
                   );

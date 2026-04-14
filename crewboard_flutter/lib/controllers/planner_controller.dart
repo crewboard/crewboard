@@ -152,24 +152,35 @@ class PlannerState {
       attachments: attachments ?? this.attachments,
       pendingFiles: pendingFiles ?? this.pendingFiles,
       ticketThread: ticketThread ?? this.ticketThread,
-      lastActivity: clearLastActivity ? null : (lastActivity ?? this.lastActivity),
-      selectedTicketId: clearSelectedTicketId ? null : (selectedTicketId ?? this.selectedTicketId),
-      draggingTicket: clearDraggingTicket ? null : (draggingTicket ?? this.draggingTicket),
-      draggingSourceBucketId: clearDraggingSourceBucketId ? null : (draggingSourceBucketId ?? this.draggingSourceBucketId),
+      lastActivity: clearLastActivity
+          ? null
+          : (lastActivity ?? this.lastActivity),
+      selectedTicketId: clearSelectedTicketId
+          ? null
+          : (selectedTicketId ?? this.selectedTicketId),
+      draggingTicket: clearDraggingTicket
+          ? null
+          : (draggingTicket ?? this.draggingTicket),
+      draggingSourceBucketId: clearDraggingSourceBucketId
+          ? null
+          : (draggingSourceBucketId ?? this.draggingSourceBucketId),
       editStack: editStack ?? this.editStack,
-      currentTicketCreatedAt: currentTicketCreatedAt ?? this.currentTicketCreatedAt,
+      currentTicketCreatedAt:
+          currentTicketCreatedAt ?? this.currentTicketCreatedAt,
     );
   }
 }
 
-final plannerProvider = NotifierProvider<PlannerNotifier, PlannerState>(PlannerNotifier.new);
+final plannerProvider = NotifierProvider<PlannerNotifier, PlannerState>(
+  PlannerNotifier.new,
+);
 
 class PlannerNotifier extends Notifier<PlannerState> {
   final TextEditingController title = TextEditingController();
   final TextEditingController body = TextEditingController();
   final TextEditingController creds = TextEditingController(text: "0");
   final TextEditingController commentController = TextEditingController();
-  
+
   UuidValue? _lastHolderBucketId;
   int? _lastHolderIndex;
 
@@ -234,8 +245,13 @@ class PlannerNotifier extends Notifier<PlannerState> {
     if (state.selectedAppId == null) return;
     try {
       if (showLoading) state = state.copyWith(isLoadingPlanner: true);
-      final response = await client.planner.getPlannerData(state.selectedAppId!);
-      state = state.copyWith(buckets: response.buckets, isLoadingPlanner: false);
+      final response = await client.planner.getPlannerData(
+        state.selectedAppId!,
+      );
+      state = state.copyWith(
+        buckets: response.buckets,
+        isLoadingPlanner: false,
+      );
     } catch (e) {
       debugPrint('Error loading planner data: $e');
       if (showLoading) state = state.copyWith(isLoadingPlanner: false);
@@ -290,12 +306,21 @@ class PlannerNotifier extends Notifier<PlannerState> {
     final lowerQuery = query.toLowerCase();
     final flowSuggestions = state.allFlows
         .where((f) => f.name.toLowerCase().contains(lowerQuery))
-        .map((f) => MentionSuggestion(id: f.id.toString(), name: f.name, type: 'flow'))
+        .map(
+          (f) => MentionSuggestion(
+            id: f.id.toString(),
+            name: f.name,
+            type: 'flow',
+          ),
+        )
         .toList();
 
     final docSuggestions = state.allDocs
         .where((d) => d.name.toLowerCase().contains(lowerQuery))
-        .map((d) => MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'))
+        .map(
+          (d) =>
+              MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'),
+        )
         .toList();
 
     return [...flowSuggestions, ...docSuggestions];
@@ -328,13 +353,17 @@ class PlannerNotifier extends Notifier<PlannerState> {
       title.text = ticket.ticketName;
       body.text = ticket.ticketBody;
       creds.text = ticket.creds.toString();
-      
+
       String? deadlineStr;
       if (ticket.deadline != null) {
-        deadlineStr = DateFormat('yyyy-MM-dd').format(DateTime.parse(ticket.deadline!));
+        deadlineStr = DateFormat(
+          'yyyy-MM-dd',
+        ).format(DateTime.parse(ticket.deadline!));
       }
 
-      final plannerTicket = state.allTickets.firstWhereOrNull((t) => t.id == ticketId);
+      final plannerTicket = state.allTickets.firstWhereOrNull(
+        (t) => t.id == ticketId,
+      );
       final createdAt = plannerTicket?.createdAt ?? DateTime.now();
 
       state = state.copyWith(
@@ -388,13 +417,15 @@ class PlannerNotifier extends Notifier<PlannerState> {
         final url = await client.upload.uploadFile(file.name, byteData);
 
         if (url != null) {
-          uploadedAttachments.add(AttachmentModel(
-            id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
-            name: file.name,
-            size: file.size.toDouble(),
-            url: url,
-            type: file.extension ?? '',
-          ));
+          uploadedAttachments.add(
+            AttachmentModel(
+              id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+              name: file.name,
+              size: file.size.toDouble(),
+              url: url,
+              type: file.extension ?? '',
+            ),
+          );
         }
       } catch (e) {
         debugPrint('Error uploading file ${file.name}: $e');
@@ -405,11 +436,26 @@ class PlannerNotifier extends Notifier<PlannerState> {
 
   Future<void> save(UuidValue bucketId) async {
     state = state.copyWith(error: "");
-    if (title.text.isEmpty) { state = state.copyWith(error: "title cannot be empty"); return; }
-    if (state.status == null) { state = state.copyWith(error: "status cannot be empty"); return; }
-    if (state.type == null) { state = state.copyWith(error: "type cannot be empty"); return; }
-    if (state.priority == null) { state = state.copyWith(error: "priority cannot be empty"); return; }
-    if (state.deadline == null) { state = state.copyWith(error: "deadline cannot be empty"); return; }
+    if (title.text.isEmpty) {
+      state = state.copyWith(error: "title cannot be empty");
+      return;
+    }
+    if (state.status == null) {
+      state = state.copyWith(error: "status cannot be empty");
+      return;
+    }
+    if (state.type == null) {
+      state = state.copyWith(error: "type cannot be empty");
+      return;
+    }
+    if (state.priority == null) {
+      state = state.copyWith(error: "priority cannot be empty");
+      return;
+    }
+    if (state.deadline == null) {
+      state = state.copyWith(error: "deadline cannot be empty");
+      return;
+    }
 
     try {
       final uploadedAttachments = await _uploadPendingAttachments();
@@ -431,7 +477,11 @@ class PlannerNotifier extends Notifier<PlannerState> {
       );
 
       final success = await client.planner.addTicket(
-        AddTicketRequest(appId: state.selectedAppId!, bucketId: bucketId, ticket: ticketModel),
+        AddTicketRequest(
+          appId: state.selectedAppId!,
+          bucketId: bucketId,
+          ticket: ticketModel,
+        ),
       );
 
       if (success) {
@@ -447,7 +497,12 @@ class PlannerNotifier extends Notifier<PlannerState> {
   }
 
   void addCheckItem(String label) {
-    state = state.copyWith(checklist: [...state.checklist, CheckModel(label: label, selected: false)]);
+    state = state.copyWith(
+      checklist: [
+        ...state.checklist,
+        CheckModel(label: label, selected: false),
+      ],
+    );
   }
 
   Future<void> updateTicket(UuidValue ticketId) async {
@@ -499,7 +554,9 @@ class PlannerNotifier extends Notifier<PlannerState> {
   Future<bool> addBucket(String name) async {
     if (state.selectedAppId == null) return false;
     try {
-      final success = await client.planner.addBucket(AddBucketRequest(appId: state.selectedAppId!, bucketName: name));
+      final success = await client.planner.addBucket(
+        AddBucketRequest(appId: state.selectedAppId!, bucketName: name),
+      );
       if (success) {
         loadPlannerData();
         return true;
@@ -511,7 +568,10 @@ class PlannerNotifier extends Notifier<PlannerState> {
   }
 
   void onDragStarted(PlannerTicket ticket, UuidValue bucketId) {
-    state = state.copyWith(draggingTicket: ticket, draggingSourceBucketId: bucketId);
+    state = state.copyWith(
+      draggingTicket: ticket,
+      draggingSourceBucketId: bucketId,
+    );
     _lastHolderBucketId = null;
     _lastHolderIndex = null;
   }
@@ -533,7 +593,9 @@ class PlannerNotifier extends Notifier<PlannerState> {
       }
     }
 
-    final targetBucketIndex = updatedBuckets.indexWhere((b) => b.bucketId == bucketId);
+    final targetBucketIndex = updatedBuckets.indexWhere(
+      (b) => b.bucketId == bucketId,
+    );
     if (targetBucketIndex != -1) {
       final targetBucket = updatedBuckets[targetBucketIndex];
       final placeholder = state.draggingTicket!.copyWith(holder: 'true');
@@ -556,25 +618,37 @@ class PlannerNotifier extends Notifier<PlannerState> {
 
     final updatedBuckets = List<BucketModel>.from(state.buckets);
     if (sourceBucketId != null) {
-      final sourceBucket = updatedBuckets.firstWhereOrNull((b) => b.bucketId == sourceBucketId);
+      final sourceBucket = updatedBuckets.firstWhereOrNull(
+        (b) => b.bucketId == sourceBucketId,
+      );
       sourceBucket?.tickets.removeWhere((t) => t.id == ticketId);
     }
 
-    final targetBucket = updatedBuckets.firstWhereOrNull((b) => b.bucketId == bucketId);
+    final targetBucket = updatedBuckets.firstWhereOrNull(
+      (b) => b.bucketId == bucketId,
+    );
     if (targetBucket != null) {
       targetBucket.tickets.removeWhere((t) => t.holder == 'true');
       final safeIndex = index.clamp(0, targetBucket.tickets.length);
       targetBucket.tickets.insert(safeIndex, ticket);
     }
 
-    state = state.copyWith(buckets: updatedBuckets, draggingTicket: null, draggingSourceBucketId: null);
+    state = state.copyWith(
+      buckets: updatedBuckets,
+      draggingTicket: null,
+      draggingSourceBucketId: null,
+    );
 
-    changeBucket(ChangeBucketRequest(
-      ticketId: ticketId,
-      newBucketId: bucketId,
-      newOrder: index + 1,
-      oldBucketId: sourceBucketId ?? UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-    ));
+    changeBucket(
+      ChangeBucketRequest(
+        ticketId: ticketId,
+        newBucketId: bucketId,
+        newOrder: index + 1,
+        oldBucketId:
+            sourceBucketId ??
+            UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
+      ),
+    );
   }
 
   void onDragCancelled() {
@@ -590,7 +664,9 @@ class PlannerNotifier extends Notifier<PlannerState> {
   }
 
   void openLinkedFlow(String flowName) {
-    final flow = state.allFlows.firstWhereOrNull((f) => f.name.toLowerCase() == flowName.toLowerCase());
+    final flow = state.allFlows.firstWhereOrNull(
+      (f) => f.name.toLowerCase() == flowName.toLowerCase(),
+    );
     if (flow != null) {
       ref.read(sidebarProvider.notifier).navigate(CurrentPage.documentation);
       final flowsNotifier = ref.read(flowsProvider.notifier);
@@ -600,7 +676,9 @@ class PlannerNotifier extends Notifier<PlannerState> {
       return;
     }
 
-    final doc = state.allDocs.firstWhereOrNull((d) => d.name.toLowerCase() == flowName.toLowerCase());
+    final doc = state.allDocs.firstWhereOrNull(
+      (d) => d.name.toLowerCase() == flowName.toLowerCase(),
+    );
     if (doc != null) {
       ref.read(sidebarProvider.notifier).navigate(CurrentPage.documentation);
       final flowsNotifier = ref.read(flowsProvider.notifier);
@@ -613,13 +691,15 @@ class PlannerNotifier extends Notifier<PlannerState> {
       return;
     }
   }
-  
+
   void addAttachedFile(PlatformFile file) {
     state = state.copyWith(pendingFiles: [...state.pendingFiles, file]);
   }
-  
+
   void removeAttachedFile(PlatformFile file) {
-    state = state.copyWith(pendingFiles: state.pendingFiles.where((f) => f != file).toList());
+    state = state.copyWith(
+      pendingFiles: state.pendingFiles.where((f) => f != file).toList(),
+    );
   }
 
   // Update state helpers
@@ -628,7 +708,8 @@ class PlannerNotifier extends Notifier<PlannerState> {
   void setPriority(PriorityModel? p) => state = state.copyWith(priority: p);
   void setDeadline(String? d) => state = state.copyWith(deadline: d);
   void copyWithMode(String mode) => state = state.copyWith(mode: mode);
-  void setSelectedUsers(List<UserModel> users) => state = state.copyWith(selectedUsers: users);
+  void setSelectedUsers(List<UserModel> users) =>
+      state = state.copyWith(selectedUsers: users);
 
   void setSelectedTicketId(UuidValue? id) {
     if (id == null) {

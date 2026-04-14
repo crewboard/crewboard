@@ -29,7 +29,9 @@ class SidebarState {
   }
 }
 
-final sidebarProvider = NotifierProvider<SidebarNotifier, SidebarState>(SidebarNotifier.new);
+final sidebarProvider = NotifierProvider<SidebarNotifier, SidebarState>(
+  SidebarNotifier.new,
+);
 
 class SidebarNotifier extends Notifier<SidebarState> {
   @override

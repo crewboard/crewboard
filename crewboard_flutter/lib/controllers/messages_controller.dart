@@ -73,7 +73,9 @@ class MessagesState {
   }
 }
 
-final messagesProvider = NotifierProvider<MessagesNotifier, MessagesState>(MessagesNotifier.new);
+final messagesProvider = NotifierProvider<MessagesNotifier, MessagesState>(
+  MessagesNotifier.new,
+);
 
 class MessagesNotifier extends Notifier<MessagesState> {
   final Map<UuidValue, User> _userCache = {};
@@ -185,7 +187,8 @@ class MessagesNotifier extends Notifier<MessagesState> {
       sameUser: false,
       deleted: false,
       createdAt: DateTime.now(),
-      userId: authState.currentUserId ??
+      userId:
+          authState.currentUserId ??
           UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       waveform: waveform,
       parentMessageId: parentMessageId ?? state.reply?.id,
@@ -199,7 +202,9 @@ class MessagesNotifier extends Notifier<MessagesState> {
         state = state.copyWith(clearReply: true);
       }
       // Update the room's last message on the sidebar
-      ref.read(roomsProvider.notifier).updateLastMessage(selectedRoom.id!, chatMessage);
+      ref
+          .read(roomsProvider.notifier)
+          .updateLastMessage(selectedRoom.id!, chatMessage);
     } catch (e) {
       debugPrint('Error sending message: $e');
     }
@@ -235,12 +240,15 @@ class MessagesNotifier extends Notifier<MessagesState> {
           final emojiNotifier = ref.read(emojiProvider.notifier);
           final results = await emojiNotifier.searchEmojis(query);
           final autocompleteEmojis = results.take(5).toList();
-          
+
           if (autocompleteEmojis.isNotEmpty) {
             state = state.copyWith(
               autocompleteEmojis: autocompleteEmojis,
               showAutocomplete: true,
-              selectedAutocompleteIndex: state.selectedAutocompleteIndex >= autocompleteEmojis.length ? 0 : state.selectedAutocompleteIndex,
+              selectedAutocompleteIndex:
+                  state.selectedAutocompleteIndex >= autocompleteEmojis.length
+                  ? 0
+                  : state.selectedAutocompleteIndex,
             );
           } else {
             state = state.copyWith(showAutocomplete: false);
@@ -259,13 +267,18 @@ class MessagesNotifier extends Notifier<MessagesState> {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         state = state.copyWith(
-          selectedAutocompleteIndex: (state.selectedAutocompleteIndex + 1) % state.autocompleteEmojis.length,
+          selectedAutocompleteIndex:
+              (state.selectedAutocompleteIndex + 1) %
+              state.autocompleteEmojis.length,
         );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         state = state.copyWith(
-          selectedAutocompleteIndex: (state.selectedAutocompleteIndex - 1 + state.autocompleteEmojis.length) %
-            state.autocompleteEmojis.length,
+          selectedAutocompleteIndex:
+              (state.selectedAutocompleteIndex -
+                  1 +
+                  state.autocompleteEmojis.length) %
+              state.autocompleteEmojis.length,
         );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -328,10 +341,12 @@ class MessagesNotifier extends Notifier<MessagesState> {
       if (event.message != null) {
         final message = event.message!;
         if (state.messages.any((m) => m.id == message.id)) return;
-        
+
         state = state.copyWith(
           messages: [message, ...state.messages],
-          typingUsers: state.typingUsers.where((t) => t.userId != message.userId).toList(),
+          typingUsers: state.typingUsers
+              .where((t) => t.userId != message.userId)
+              .toList(),
         );
       } else if (event.typing != null) {
         final typing = event.typing!;
@@ -346,12 +361,16 @@ class MessagesNotifier extends Notifier<MessagesState> {
           // Auto-remove after 3 seconds if no stop received or message
           Timer(const Duration(seconds: 3), () {
             state = state.copyWith(
-              typingUsers: state.typingUsers.where((t) => t.userId != typing.userId).toList(),
+              typingUsers: state.typingUsers
+                  .where((t) => t.userId != typing.userId)
+                  .toList(),
             );
           });
         } else {
           state = state.copyWith(
-            typingUsers: state.typingUsers.where((t) => t.userId != typing.userId).toList(),
+            typingUsers: state.typingUsers
+                .where((t) => t.userId != typing.userId)
+                .toList(),
           );
         }
       }
@@ -376,7 +395,9 @@ class MessagesNotifier extends Notifier<MessagesState> {
 
   void removeAttachedFile(File file) {
     state = state.copyWith(
-      attachedFiles: state.attachedFiles.where((f) => f.path != file.path).toList(),
+      attachedFiles: state.attachedFiles
+          .where((f) => f.path != file.path)
+          .toList(),
     );
   }
 

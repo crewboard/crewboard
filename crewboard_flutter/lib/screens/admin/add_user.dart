@@ -62,26 +62,44 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text("user name", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "user name",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(
                               controller: notifier.userNameController,
-                              errorText: state.userNameError.isNotEmpty ? state.userNameError : null,
+                              errorText: state.userNameError.isNotEmpty
+                                  ? state.userNameError
+                                  : null,
                               onType: (value) async {
                                 notifier.checkUsername(value);
-                                if (widget.user != null) notifier.setEdited(true);
+                                if (widget.user != null)
+                                  notifier.setEdited(true);
                               },
                             ),
                             const SizedBox(height: 10),
-                            Text("password", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "password",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(
                               isPassword: true,
                               controller: notifier.passwordController,
-                              errorText: state.passwordError.isNotEmpty ? state.passwordError : null,
+                              errorText: state.passwordError.isNotEmpty
+                                  ? state.passwordError
+                                  : null,
                               onType: (value) {
                                 notifier.setPasswordError('');
-                                if (widget.user != null) notifier.setEdited(true);
+                                if (widget.user != null)
+                                  notifier.setEdited(true);
                               },
                             ),
                             const SizedBox(height: 10),
@@ -89,54 +107,99 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("user type", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "user type",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       DropDown(
-                                        label: state.selectedUserType?.userType ?? "Select",
+                                        label:
+                                            state.selectedUserType?.userType ??
+                                            "Select",
                                         itemKey: "userType",
                                         items: state.userTypesList,
                                         onPress: (userType) {
-                                          notifier.selectUserType(userType as UserTypes);
-                                          if (widget.user != null) notifier.setEdited(true);
+                                          notifier.selectUserType(
+                                            userType as UserTypes,
+                                          );
+                                          if (widget.user != null)
+                                            notifier.setEdited(true);
                                         },
                                       ),
                                       if (state.userTypeError.isNotEmpty)
-                                        Text(state.userTypeError, style: const TextStyle(fontSize: 10, color: Colors.red)),
+                                        Text(
+                                          state.userTypeError,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("leave config", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "leave config",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       DropDown(
-                                        label: state.selectedLeaveConfig?.configName ?? "Select",
+                                        label:
+                                            state
+                                                .selectedLeaveConfig
+                                                ?.configName ??
+                                            "Select",
                                         itemKey: "configName",
                                         items: state.leaveConfigsList,
                                         onPress: (config) {
-                                          notifier.selectLeaveConfig(config as LeaveConfig);
-                                          if (widget.user != null) notifier.setEdited(true);
+                                          notifier.selectLeaveConfig(
+                                            config as LeaveConfig,
+                                          );
+                                          if (widget.user != null)
+                                            notifier.setEdited(true);
                                         },
                                       ),
                                       if (state.leaveConfigError.isNotEmpty)
-                                        Text(state.leaveConfigError, style: const TextStyle(fontSize: 10, color: Colors.red)),
+                                        Text(
+                                          state.leaveConfigError,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
-                            Text("punch id", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "punch id",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(
                               controller: notifier.punchIdController,
                               onType: (value) {
-                                if (widget.user != null) notifier.setEdited(true);
+                                if (widget.user != null)
+                                  notifier.setEdited(true);
                               },
                             ),
                           ],
@@ -153,13 +216,24 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("first name", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "first name",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       SmallTextBox(
-                                        controller: notifier.firstNameController,
-                                        errorText: state.firstNameError.isNotEmpty ? state.firstNameError : null,
+                                        controller:
+                                            notifier.firstNameController,
+                                        errorText:
+                                            state.firstNameError.isNotEmpty
+                                            ? state.firstNameError
+                                            : null,
                                       ),
                                     ],
                                   ),
@@ -167,13 +241,23 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("last name", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "last name",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       SmallTextBox(
                                         controller: notifier.lastNameController,
-                                        errorText: state.lastNameError.isNotEmpty ? state.lastNameError : null,
+                                        errorText:
+                                            state.lastNameError.isNotEmpty
+                                            ? state.lastNameError
+                                            : null,
                                       ),
                                     ],
                                   ),
@@ -185,29 +269,51 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("gender", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "gender",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       DropDown(
                                         label: state.selectedGender.toString(),
                                         itemKey: "name",
                                         items: notifier.genders,
                                         onPress: (gender) {
-                                          notifier.selectGender(gender as Gender);
+                                          notifier.selectGender(
+                                            gender as Gender,
+                                          );
                                         },
                                       ),
                                       if (state.genderError.isNotEmpty)
-                                        Text(state.genderError, style: const TextStyle(fontSize: 10, color: Colors.red)),
+                                        Text(
+                                          state.genderError,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("date of birth", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                                      Text(
+                                        "date of birth",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
                                       const SizedBox(height: 10),
                                       DatePicker(
                                         value: state.dateOfBirth,
@@ -215,38 +321,76 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                                         onTap: () async {
                                           showDialog(
                                             context: context,
-                                            builder: (context) => WheelDatePicker(
-                                              initialDate: state.dateOfBirth.isEmpty ? DateTime.now() : DateTime.parse(state.dateOfBirth),
-                                              onDateSelected: (date) {
-                                                notifier.setDateOfBirth(date.toString().split(' ')[0]);
-                                              },
-                                            ),
+                                            builder: (context) =>
+                                                WheelDatePicker(
+                                                  initialDate:
+                                                      state.dateOfBirth.isEmpty
+                                                      ? DateTime.now()
+                                                      : DateTime.parse(
+                                                          state.dateOfBirth,
+                                                        ),
+                                                  onDateSelected: (date) {
+                                                    notifier.setDateOfBirth(
+                                                      date.toString().split(
+                                                        ' ',
+                                                      )[0],
+                                                    );
+                                                  },
+                                                ),
                                           );
                                         },
                                       ),
                                       if (state.dateOfBirthError.isNotEmpty)
-                                        Text(state.dateOfBirthError, style: const TextStyle(fontSize: 10, color: Colors.red)),
+                                        Text(
+                                          state.dateOfBirthError,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
-                            Text("phone", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "phone",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(
                               controller: notifier.phoneController,
-                              errorText: state.phoneError.isNotEmpty ? state.phoneError : null,
+                              errorText: state.phoneError.isNotEmpty
+                                  ? state.phoneError
+                                  : null,
                             ),
                             const SizedBox(height: 10),
-                            Text("email", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "email",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(
                               controller: notifier.emailController,
-                              errorText: state.emailError.isNotEmpty ? state.emailError : null,
+                              errorText: state.emailError.isNotEmpty
+                                  ? state.emailError
+                                  : null,
                             ),
                             const SizedBox(height: 10),
-                            Text("blood group", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "blood group",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             DropDown(
                               label: state.selectedBloodGroup.toString(),
@@ -266,15 +410,35 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text("salary (per month)", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "salary (per month)",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             SmallTextBox(controller: notifier.salaryController),
                             const SizedBox(height: 10),
-                            Text("experience (years)", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "experience (years)",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
-                            SmallTextBox(controller: notifier.experienceController),
+                            SmallTextBox(
+                              controller: notifier.experienceController,
+                            ),
                             const SizedBox(height: 10),
-                            Text("identity verification files", style: TextStyle(fontSize: 14, color: Pallet.font3)),
+                            Text(
+                              "identity verification files",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Pallet.font3,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             Wrap(
                               spacing: 10,
@@ -285,12 +449,20 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                                   child: Container(
                                     width: 90,
                                     height: 70,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Pallet.font3)),
-                                    child: const Center(child: Icon(Icons.upload_file, size: 30)),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Pallet.font3),
+                                    ),
+                                    child: const Center(
+                                      child: Icon(Icons.upload_file, size: 30),
+                                    ),
                                   ),
                                 ),
                                 for (var file in state.attachments)
-                                  FilePreview(name: file["name"], size: file["size"]),
+                                  FilePreview(
+                                    name: file["name"],
+                                    size: file["size"],
+                                  ),
                               ],
                             ),
                           ],
@@ -308,25 +480,51 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                             child: state.profilePreviewBytes != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(55),
-                                    child: Image.memory(state.profilePreviewBytes!, width: 65, height: 65, fit: BoxFit.cover),
+                                    child: Image.memory(
+                                      state.profilePreviewBytes!,
+                                      width: 65,
+                                      height: 65,
+                                      fit: BoxFit.cover,
+                                    ),
                                   )
                                 : Container(
                                     width: 65,
                                     height: 65,
                                     decoration: BoxDecoration(
-                                      color: state.selectedColor != null ? Color(int.parse(state.selectedColor!.color.replaceAll("#", "0xFF"))) : Colors.blue,
+                                      color: state.selectedColor != null
+                                          ? Color(
+                                              int.parse(
+                                                state.selectedColor!.color
+                                                    .replaceAll("#", "0xFF"),
+                                              ),
+                                            )
+                                          : Colors.blue,
                                       borderRadius: BorderRadius.circular(65),
                                     ),
                                     child: Center(
                                       child: Text(
-                                        notifier.userNameController.text.isEmpty ? "A" : notifier.userNameController.text[0].toUpperCase(),
-                                        style: GoogleFonts.poppins(textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Colors.white)),
+                                        notifier.userNameController.text.isEmpty
+                                            ? "A"
+                                            : notifier
+                                                  .userNameController
+                                                  .text[0]
+                                                  .toUpperCase(),
+                                        style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                           ),
                           const SizedBox(height: 10),
-                          Text("color", style: TextStyle(fontSize: 12, color: Pallet.font3)),
+                          Text(
+                            "color",
+                            style: TextStyle(fontSize: 12, color: Pallet.font3),
+                          ),
                           const SizedBox(height: 10),
                           ColorPicker(
                             selectedColorId: state.selectedColor?.id,
@@ -346,16 +544,19 @@ class _AddUserDialogState extends ConsumerState<AddUserDialog> {
                     if (state.currentPage > 1)
                       SmallButton(
                         label: "Back",
-                        onPress: () => notifier.setCurrentPage(state.currentPage - 1),
+                        onPress: () =>
+                            notifier.setCurrentPage(state.currentPage - 1),
                       ),
                     const SizedBox(width: 10),
                     if (state.currentPage < 3)
                       SmallButton(
                         label: "Next",
                         onPress: () {
-                          if (state.currentPage == 1 && notifier.validatePage1()) {
+                          if (state.currentPage == 1 &&
+                              notifier.validatePage1()) {
                             notifier.setCurrentPage(2);
-                          } else if (state.currentPage == 2 && notifier.validatePage2()) {
+                          } else if (state.currentPage == 2 &&
+                              notifier.validatePage2()) {
                             notifier.setCurrentPage(3);
                           }
                         },

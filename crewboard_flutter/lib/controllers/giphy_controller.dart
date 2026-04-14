@@ -34,7 +34,9 @@ class GiphyState {
   }
 }
 
-final giphyProvider = NotifierProvider<GiphyNotifier, GiphyState>(GiphyNotifier.new);
+final giphyProvider = NotifierProvider<GiphyNotifier, GiphyState>(
+  GiphyNotifier.new,
+);
 
 class GiphyNotifier extends Notifier<GiphyState> {
   @override

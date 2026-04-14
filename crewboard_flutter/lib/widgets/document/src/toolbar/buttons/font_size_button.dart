@@ -40,8 +40,6 @@ class QuillToolbarFontSizeButtonState
           QuillToolbarFontSizeButtonExtraOptions,
           String
         > {
-
-
   Map<String, String> get _items {
     final fontSizes =
         options.items ??

@@ -51,7 +51,12 @@ class AttendanceScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final user = state.users[index];
                     final attendance = notifier.getAttendanceForUser(user.id!);
-                    return _buildUserAttendanceRow(context, ref, user, attendance);
+                    return _buildUserAttendanceRow(
+                      context,
+                      ref,
+                      user,
+                      attendance,
+                    );
                   },
                 ),
               ),
@@ -64,8 +69,12 @@ class AttendanceScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPunchingModePanel(BuildContext context, WidgetRef ref, AttendanceState state) {
-    // Note: We don't have a specific 'setPunchingMode' yet in the notifier, 
+  Widget _buildPunchingModePanel(
+    BuildContext context,
+    WidgetRef ref,
+    AttendanceState state,
+  ) {
+    // Note: We don't have a specific 'setPunchingMode' yet in the notifier,
     // but we can add it or handle it via a new state update if needed.
     // For now, I'll assume we can use the notifier to update state.
     return Expanded(
@@ -87,7 +96,12 @@ class AttendanceScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRadioOption(String label, String value, WidgetRef ref, AttendanceState state) {
+  Widget _buildRadioOption(
+    String label,
+    String value,
+    WidgetRef ref,
+    AttendanceState state,
+  ) {
     return Row(
       children: [
         Radio<String>(
@@ -128,7 +142,8 @@ class AttendanceScreen extends ConsumerWidget {
             const SizedBox(height: 10),
             SmallButton(
               label: "Punch Test",
-              onPress: () => ref.read(attendanceProvider.notifier).punch("manual_hr"),
+              onPress: () =>
+                  ref.read(attendanceProvider.notifier).punch("manual_hr"),
             ),
           ],
         ),
@@ -165,7 +180,14 @@ class AttendanceScreen extends ConsumerWidget {
                           size: 20,
                           name: request.user?.userName ?? "?",
                           color: request.user?.color != null
-                              ? Color(int.parse(request.user!.color!.color.replaceAll("#", "0xFF")))
+                              ? Color(
+                                  int.parse(
+                                    request.user!.color!.color.replaceAll(
+                                      "#",
+                                      "0xFF",
+                                    ),
+                                  ),
+                                )
                               : Colors.grey,
                         ),
                         const SizedBox(width: 8),
@@ -179,7 +201,11 @@ class AttendanceScreen extends ConsumerWidget {
                         Icon(
                           Icons.circle,
                           size: 10,
-                          color: request.accepted == true ? Colors.green : (request.accepted == false ? Colors.red : Colors.yellow),
+                          color: request.accepted == true
+                              ? Colors.green
+                              : (request.accepted == false
+                                    ? Colors.red
+                                    : Colors.yellow),
                         ),
                       ],
                     ),
@@ -198,16 +224,42 @@ class AttendanceScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: const Row(
         children: [
-          Expanded(flex: 3, child: Text("user", style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text("login time", style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text("logout time", style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text("leave config", style: TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(
+            flex: 3,
+            child: Text("user", style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              "login time",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              "logout time",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              "leave config",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildUserAttendanceRow(BuildContext context, WidgetRef ref, User user, Attendance? attendance) {
+  Widget _buildUserAttendanceRow(
+    BuildContext context,
+    WidgetRef ref,
+    User user,
+    Attendance? attendance,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -224,7 +276,11 @@ class AttendanceScreen extends ConsumerWidget {
                 ProfileIcon(
                   size: 30,
                   name: user.userName,
-                  color: user.color != null ? Color(int.parse(user.color!.color.replaceAll("#", "0xFF"))) : Colors.blue,
+                  color: user.color != null
+                      ? Color(
+                          int.parse(user.color!.color.replaceAll("#", "0xFF")),
+                        )
+                      : Colors.blue,
                 ),
                 const SizedBox(width: 10),
                 Text(user.userName),
@@ -234,14 +290,18 @@ class AttendanceScreen extends ConsumerWidget {
           Expanded(
             flex: 2,
             child: Text(
-              attendance?.inTime != null ? DateFormat.jm().format(DateTime.parse(attendance!.inTime!)) : "--",
+              attendance?.inTime != null
+                  ? DateFormat.jm().format(DateTime.parse(attendance!.inTime!))
+                  : "--",
               style: const TextStyle(fontSize: 13),
             ),
           ),
           Expanded(
             flex: 2,
             child: Text(
-              attendance?.outTime != null ? DateFormat.jm().format(DateTime.parse(attendance!.outTime!)) : "--",
+              attendance?.outTime != null
+                  ? DateFormat.jm().format(DateTime.parse(attendance!.outTime!))
+                  : "--",
               style: const TextStyle(fontSize: 13),
             ),
           ),
@@ -251,15 +311,28 @@ class AttendanceScreen extends ConsumerWidget {
               children: [
                 if (user.leaveConfig != null)
                   InkWell(
-                    onTap: () => viewLeaveConfig(context, ref, user.leaveConfig, true),
+                    onTap: () =>
+                        viewLeaveConfig(context, ref, user.leaveConfig, true),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: Pallet.inside2, borderRadius: BorderRadius.circular(10)),
-                      child: Text(user.leaveConfig!.configName, style: const TextStyle(fontSize: 11)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Pallet.inside2,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        user.leaveConfig!.configName,
+                        style: const TextStyle(fontSize: 11),
+                      ),
                     ),
                   )
                 else
-                  const Text("None", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                  const Text(
+                    "None",
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
               ],
             ),
           ),
@@ -268,7 +341,11 @@ class AttendanceScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLeaveConfigsSidebar(BuildContext context, WidgetRef ref, AttendanceState state) {
+  Widget _buildLeaveConfigsSidebar(
+    BuildContext context,
+    WidgetRef ref,
+    AttendanceState state,
+  ) {
     return Expanded(
       flex: 1,
       child: Column(
@@ -277,8 +354,13 @@ class AttendanceScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Leave Configs", style: TextStyle(fontSize: 16, color: Pallet.font3)),
-              AddButton(onPress: () => viewLeaveConfig(context, ref, null, false)),
+              Text(
+                "Leave Configs",
+                style: TextStyle(fontSize: 16, color: Pallet.font3),
+              ),
+              AddButton(
+                onPress: () => viewLeaveConfig(context, ref, null, false),
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -291,9 +373,18 @@ class AttendanceScreen extends ConsumerWidget {
                   onTap: () => viewLeaveConfig(context, ref, config, false),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 5),
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-                    decoration: BoxDecoration(color: Pallet.inside1, borderRadius: BorderRadius.circular(10)),
-                    child: Text(config.configName, style: const TextStyle(fontSize: 13)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Pallet.inside1,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      config.configName,
+                      style: const TextStyle(fontSize: 13),
+                    ),
                   ),
                 );
               },

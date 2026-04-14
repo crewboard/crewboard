@@ -32,13 +32,15 @@ class _TicketThreadsFullViewState extends ConsumerState<TicketThreadsFullView> {
     _rightController = ScrollController();
 
     _leftController.addListener(() {
-      if (_rightController.hasClients && _rightController.offset != _leftController.offset) {
+      if (_rightController.hasClients &&
+          _rightController.offset != _leftController.offset) {
         _rightController.jumpTo(_leftController.offset);
       }
     });
 
     _rightController.addListener(() {
-      if (_leftController.hasClients && _leftController.offset != _rightController.offset) {
+      if (_leftController.hasClients &&
+          _leftController.offset != _rightController.offset) {
         _leftController.jumpTo(_rightController.offset);
       }
     });
@@ -96,7 +98,9 @@ class _TicketThreadsFullViewState extends ConsumerState<TicketThreadsFullView> {
                         itemCount: tickets.length + 1,
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                            return const SizedBox(height: kPlannerDateHeaderHeight);
+                            return const SizedBox(
+                              height: kPlannerDateHeaderHeight,
+                            );
                           }
                           final ticket = tickets[index - 1];
                           return _TicketListTile(ticket: ticket);
@@ -160,7 +164,7 @@ class _TicketListTile extends ConsumerWidget {
       child: Container(
         height: kPlannerRowHeight,
         margin: const EdgeInsets.only(bottom: 0),
-        padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         decoration: BoxDecoration(
           color: isSelected
               ? Colors.blue.withValues(alpha: 0.1)
@@ -203,11 +207,7 @@ class _TicketListTile extends ConsumerWidget {
                     10,
                 child: Stack(
                   children: [
-                    for (
-                      var i = 0;
-                      i < ticket.assignees.length && i < 4;
-                      i++
-                    )
+                    for (var i = 0; i < ticket.assignees.length && i < 4; i++)
                       Positioned(
                         left: i * 14.0,
                         child: ProfileIcon(
@@ -292,7 +292,9 @@ class _ThreadContent extends ConsumerWidget {
               Expanded(
                 child: Text(
                   ticket.ticketName.startsWith('${ticket.typeName}: ')
-                      ? ticket.ticketName.substring('${ticket.typeName}: '.length)
+                      ? ticket.ticketName.substring(
+                          '${ticket.typeName}: '.length,
+                        )
                       : ticket.ticketName,
                   style: GoogleFonts.poppins(
                     fontSize: 20,

@@ -220,7 +220,8 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                     // Navigate to sign in, pass onSignIn callback
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => SignInPage(onSignIn: widget.onSignIn),
+                        builder: (context) =>
+                            SignInPage(onSignIn: widget.onSignIn),
                       ),
                     );
                   },

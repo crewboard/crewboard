@@ -91,7 +91,9 @@ class _EditFlowState extends ConsumerState<EditFlow> {
     final flowsState = ref.watch(flowsProvider);
     final flowsNotifier = ref.read(flowsProvider.notifier);
 
-    final flowIdx = flowsState.flows.indexWhere((f) => f.id == flowsState.selectedId);
+    final flowIdx = flowsState.flows.indexWhere(
+      (f) => f.id == flowsState.selectedId,
+    );
     if (flowIdx == -1) {
       return const SizedBox.shrink();
     }
@@ -144,12 +146,14 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Builder(
                       builder: (context) {
-                        final idx = flowsState.flows.indexWhere((f) => f.id == flowsState.loopFrom);
+                        final idx = flowsState.flows.indexWhere(
+                          (f) => f.id == flowsState.loopFrom,
+                        );
                         if (idx == -1) return const SizedBox.shrink();
                         return _FlowPreview(
                           flow: flowsState.flows[idx],
                         );
-                      }
+                      },
                     ),
                   ),
                 const SizedBox(height: 6),
@@ -158,9 +162,7 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                     SmallButton(
                       label: flowsState.isPickingLoopTo
                           ? "pick to (active)"
-                          : (flowsState.loopTo >= 0
-                                ? "change to"
-                                : "pick to"),
+                          : (flowsState.loopTo >= 0 ? "change to" : "pick to"),
                       onPress: () {
                         flowsNotifier.startLoopSelection(false);
                       },
@@ -172,12 +174,14 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Builder(
                       builder: (context) {
-                        final idx = flowsState.flows.indexWhere((f) => f.id == flowsState.loopTo);
+                        final idx = flowsState.flows.indexWhere(
+                          (f) => f.id == flowsState.loopTo,
+                        );
                         if (idx == -1) return const SizedBox.shrink();
                         return _FlowPreview(
                           flow: flowsState.flows[idx],
                         );
-                      }
+                      },
                     ),
                   ),
                 const SizedBox(height: 6),
@@ -219,7 +223,8 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                       flowsNotifier.cancelLoopSelection();
                     } else {
                       flowsNotifier.deleteFlow(flowsState.selectedId);
-                      flowsNotifier.cancelLoopSelection(); // Handles closing window
+                      flowsNotifier
+                          .cancelLoopSelection(); // Handles closing window
                     }
                   },
                   child: Container(
@@ -266,10 +271,11 @@ class _EditFlowState extends ConsumerState<EditFlow> {
               SmallTextBox(
                 controller: _widthController,
                 onType: (value) async {
-                  if (!(flowsState.systemVariables?.allowEdit ??
-                      true)) {
+                  if (!(flowsState.systemVariables?.allowEdit ?? true)) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Editing is disabled in settings")),
+                      const SnackBar(
+                        content: Text("Editing is disabled in settings"),
+                      ),
                     );
                     _widthController.text = selectedFlow.width.toString();
                     return;
@@ -284,9 +290,12 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                       selectedFlow.type,
                     );
                     _saveDebounce?.cancel();
-                    _saveDebounce = Timer(const Duration(milliseconds: 500), () {
-                      flowsNotifier.save();
-                    });
+                    _saveDebounce = Timer(
+                      const Duration(milliseconds: 500),
+                      () {
+                        flowsNotifier.save();
+                      },
+                    );
                   }
                 },
               ),
@@ -297,16 +306,22 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                 controller: _valueController,
                 maxLines: 5,
                 onType: (value) {
-                  if (!(flowsState.systemVariables?.allowEdit ??
-                      true)) {
+                  if (!(flowsState.systemVariables?.allowEdit ?? true)) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Editing is disabled in settings")),
+                      const SnackBar(
+                        content: Text("Editing is disabled in settings"),
+                      ),
                     );
                     _valueController.text = selectedFlow.value;
                     return;
                   }
                   selectedFlow.value = value;
-                  _recalculateSizeForFlow(selectedFlow, value, flowsNotifier, selectedFlow.type);
+                  _recalculateSizeForFlow(
+                    selectedFlow,
+                    value,
+                    flowsNotifier,
+                    selectedFlow.type,
+                  );
                   _saveDebounce?.cancel();
                   _saveDebounce = Timer(const Duration(milliseconds: 500), () {
                     flowsNotifier.save();
@@ -338,7 +353,11 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                             if (!(flowsState.systemVariables?.allowEdit ??
                                 true)) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Editing is disabled in settings")),
+                                const SnackBar(
+                                  content: Text(
+                                    "Editing is disabled in settings",
+                                  ),
+                                ),
                               );
                               _downController.text = selectedFlow
                                   .down
@@ -376,7 +395,11 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                             if (!(flowsState.systemVariables?.allowEdit ??
                                 true)) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Editing is disabled in settings")),
+                                const SnackBar(
+                                  content: Text(
+                                    "Editing is disabled in settings",
+                                  ),
+                                ),
                               );
                               _leftController.text = selectedFlow
                                   .left
@@ -414,7 +437,11 @@ class _EditFlowState extends ConsumerState<EditFlow> {
                             if (!(flowsState.systemVariables?.allowEdit ??
                                 true)) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Editing is disabled in settings")),
+                                const SnackBar(
+                                  content: Text(
+                                    "Editing is disabled in settings",
+                                  ),
+                                ),
                               );
                               _rightController.text = selectedFlow
                                   .right
@@ -439,10 +466,11 @@ class _EditFlowState extends ConsumerState<EditFlow> {
               if (flowsState.systemVariables?.showDelete ?? true)
                 InkWell(
                   onTap: () {
-                    if (!(flowsState.systemVariables?.allowDelete ??
-                        true)) {
+                    if (!(flowsState.systemVariables?.allowDelete ?? true)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Deleting is disabled in settings")),
+                        const SnackBar(
+                          content: Text("Deleting is disabled in settings"),
+                        ),
                       );
                       return;
                     }

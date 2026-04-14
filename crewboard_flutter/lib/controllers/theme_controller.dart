@@ -6,7 +6,9 @@ import '../config/palette.dart';
 
 enum AppTheme { glassDark, glassLight, classicLight, classicDark }
 
-final themeProvider = AsyncNotifierProvider<ThemeNotifier, AppTheme>(ThemeNotifier.new);
+final themeProvider = AsyncNotifierProvider<ThemeNotifier, AppTheme>(
+  ThemeNotifier.new,
+);
 
 class ThemeNotifier extends AsyncNotifier<AppTheme> {
   static const String _themeKey = 'app_theme';

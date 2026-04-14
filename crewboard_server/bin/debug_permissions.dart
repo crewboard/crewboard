@@ -59,7 +59,10 @@ void main(List<String> args) async {
     }
 
     print('\n--- Inspecting Users ---');
-    final users = await User.db.find(session, include: User.include(userType: UserTypes.include()));
+    final users = await User.db.find(
+      session,
+      include: User.include(userType: UserTypes.include()),
+    );
     for (var u in users) {
       print('User: ${u.userName} (${u.email})');
       print('  Type: ${u.userType?.userType ?? 'NULL'}');

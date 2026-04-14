@@ -128,7 +128,8 @@ class AddUserState {
       selectedLeaveConfig: selectedLeaveConfig ?? this.selectedLeaveConfig,
       selectedColor: selectedColor ?? this.selectedColor,
       imageResult: imageResult ?? this.imageResult,
-      verificationFilesResult: verificationFilesResult ?? this.verificationFilesResult,
+      verificationFilesResult:
+          verificationFilesResult ?? this.verificationFilesResult,
       profilePreviewBytes: profilePreviewBytes ?? this.profilePreviewBytes,
       attachments: attachments ?? this.attachments,
       userNameError: userNameError ?? this.userNameError,
@@ -152,7 +153,9 @@ class AddUserState {
   }
 }
 
-final addUserProvider = NotifierProvider<AddUserNotifier, AddUserState>(AddUserNotifier.new);
+final addUserProvider = NotifierProvider<AddUserNotifier, AddUserState>(
+  AddUserNotifier.new,
+);
 
 class AddUserNotifier extends Notifier<AddUserState> {
   final userNameController = TextEditingController();
@@ -170,12 +173,16 @@ class AddUserNotifier extends Notifier<AddUserState> {
     Gender(value: "female"),
     Gender(value: "others"),
   ];
-  
+
   final List<BloodGroup> bloodGroups = const [
-    BloodGroup(value: "A+"), BloodGroup(value: "A-"),
-    BloodGroup(value: "B+"), BloodGroup(value: "B-"),
-    BloodGroup(value: "O+"), BloodGroup(value: "O-"),
-    BloodGroup(value: "AB+"), BloodGroup(value: "AB-"),
+    BloodGroup(value: "A+"),
+    BloodGroup(value: "A-"),
+    BloodGroup(value: "B+"),
+    BloodGroup(value: "B-"),
+    BloodGroup(value: "O+"),
+    BloodGroup(value: "O-"),
+    BloodGroup(value: "AB+"),
+    BloodGroup(value: "AB-"),
   ];
 
   @override
@@ -208,7 +215,8 @@ class AddUserNotifier extends Notifier<AddUserState> {
       final types = await client.admin.getUserTypes();
       state = state.copyWith(
         userTypesList: types,
-        selectedUserType: state.selectedUserType ?? (types.isNotEmpty ? types.first : null),
+        selectedUserType:
+            state.selectedUserType ?? (types.isNotEmpty ? types.first : null),
       );
     } catch (e) {
       debugPrint("Error fetching user types: $e");
@@ -220,7 +228,9 @@ class AddUserNotifier extends Notifier<AddUserState> {
       final configs = await client.admin.getLeaveConfigs();
       state = state.copyWith(
         leaveConfigsList: configs,
-        selectedLeaveConfig: state.selectedLeaveConfig ?? (configs.isNotEmpty ? configs.first : null),
+        selectedLeaveConfig:
+            state.selectedLeaveConfig ??
+            (configs.isNotEmpty ? configs.first : null),
       );
     } catch (e) {
       debugPrint("Error fetching leave configs: $e");
@@ -232,9 +242,15 @@ class AddUserNotifier extends Notifier<AddUserState> {
       final fetchedColors = await client.admin.getColors();
       SystemColor? defaultColor;
       if (fetchedColors.isNotEmpty) {
-        defaultColor = fetchedColors.firstWhere((c) => c.isDefault, orElse: () => fetchedColors.first);
+        defaultColor = fetchedColors.firstWhere(
+          (c) => c.isDefault,
+          orElse: () => fetchedColors.first,
+        );
       }
-      state = state.copyWith(colorsList: fetchedColors, selectedColor: defaultColor);
+      state = state.copyWith(
+        colorsList: fetchedColors,
+        selectedColor: defaultColor,
+      );
     } catch (e) {
       debugPrint("Error fetching colors: $e");
     }
@@ -248,7 +264,10 @@ class AddUserNotifier extends Notifier<AddUserState> {
     state = state.copyWith(isCheckingUsername: true);
     try {
       final response = await client.auth.checkUsername(username);
-      state = state.copyWith(userNameError: response.exists ? "user name exists" : "", isCheckingUsername: false);
+      state = state.copyWith(
+        userNameError: response.exists ? "user name exists" : "",
+        isCheckingUsername: false,
+      );
     } catch (e) {
       debugPrint("Error checking username: $e");
       state = state.copyWith(isCheckingUsername: false);
@@ -256,9 +275,10 @@ class AddUserNotifier extends Notifier<AddUserState> {
   }
 
   void setCurrentPage(int page) => state = state.copyWith(currentPage: page);
-  
+
   void setEdited(bool edited) => state = state.copyWith(isEdited: edited);
-  void setPasswordError(String error) => state = state.copyWith(passwordError: error);
+  void setPasswordError(String error) =>
+      state = state.copyWith(passwordError: error);
 
   void setFormData(User? user) {
     if (user == null) return;
@@ -270,17 +290,29 @@ class AddUserNotifier extends Notifier<AddUserState> {
     punchIdController.text = user.punchId ?? '';
     salaryController.text = user.salary ?? '';
     experienceController.text = user.experience ?? '';
-    
+
     if (user.dateOfBirth != null) {
-       state = state.copyWith(dateOfBirth: user.dateOfBirth.toString().split(' ')[0]);
+      state = state.copyWith(
+        dateOfBirth: user.dateOfBirth.toString().split(' ')[0],
+      );
     }
- 
-    state = state.copyWith(selectedGender: genders.firstWhere((g) => g.value == user.gender, orElse: () => const Gender.empty()));
- 
+
+    state = state.copyWith(
+      selectedGender: genders.firstWhere(
+        (g) => g.value == user.gender,
+        orElse: () => const Gender.empty(),
+      ),
+    );
+
     if (user.bloodGroup != null) {
-      state = state.copyWith(selectedBloodGroup: bloodGroups.firstWhere((b) => b.value == user.bloodGroup, orElse: () => const BloodGroup.empty()));
+      state = state.copyWith(
+        selectedBloodGroup: bloodGroups.firstWhere(
+          (b) => b.value == user.bloodGroup,
+          orElse: () => const BloodGroup.empty(),
+        ),
+      );
     }
-    
+
     // Set relations
     state = state.copyWith(
       selectedUserType: user.userType,
@@ -289,34 +321,64 @@ class AddUserNotifier extends Notifier<AddUserState> {
       editingUser: user,
     );
   }
-  
-  void selectGender(Gender gender) => state = state.copyWith(selectedGender: gender, isEdited: true);
-  void selectBloodGroup(BloodGroup bg) => state = state.copyWith(selectedBloodGroup: bg, isEdited: true);
-  void selectUserType(UserTypes type) => state = state.copyWith(selectedUserType: type, isEdited: true);
-  void selectLeaveConfig(LeaveConfig config) => state = state.copyWith(selectedLeaveConfig: config, isEdited: true);
-  void selectColor(SystemColor color) => state = state.copyWith(selectedColor: color, isEdited: true);
-  void setDateOfBirth(String dob) => state = state.copyWith(dateOfBirth: dob, isEdited: true);
+
+  void selectGender(Gender gender) =>
+      state = state.copyWith(selectedGender: gender, isEdited: true);
+  void selectBloodGroup(BloodGroup bg) =>
+      state = state.copyWith(selectedBloodGroup: bg, isEdited: true);
+  void selectUserType(UserTypes type) =>
+      state = state.copyWith(selectedUserType: type, isEdited: true);
+  void selectLeaveConfig(LeaveConfig config) =>
+      state = state.copyWith(selectedLeaveConfig: config, isEdited: true);
+  void selectColor(SystemColor color) =>
+      state = state.copyWith(selectedColor: color, isEdited: true);
+  void setDateOfBirth(String dob) =>
+      state = state.copyWith(dateOfBirth: dob, isEdited: true);
 
   Future<void> pickImage() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.image, withData: true);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
+    );
     if (result != null && result.files.isNotEmpty) {
-      state = state.copyWith(imageResult: result, profilePreviewBytes: result.files.first.bytes, isEdited: true);
+      state = state.copyWith(
+        imageResult: result,
+        profilePreviewBytes: result.files.first.bytes,
+        isEdited: true,
+      );
     }
   }
 
   Future<void> pickVerificationFiles() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: true, withData: true);
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      withData: true,
+    );
     if (result != null && result.files.isNotEmpty) {
-      final attachments = result.files.map((f) => {"name": f.name, "size": f.size}).toList();
-      state = state.copyWith(verificationFilesResult: result, attachments: attachments, isEdited: true);
+      final attachments = result.files
+          .map((f) => {"name": f.name, "size": f.size})
+          .toList();
+      state = state.copyWith(
+        verificationFilesResult: result,
+        attachments: attachments,
+        isEdited: true,
+      );
     }
   }
 
   bool validatePage1() {
-    final uError = userNameController.text.isEmpty ? "username is required" : "";
-    final pError = passwordController.text.isEmpty ? "password is required" : "";
-    final utError = state.selectedUserType == null ? "user type is required" : "";
-    final lcError = state.selectedLeaveConfig == null ? "leave config is required" : "";
+    final uError = userNameController.text.isEmpty
+        ? "username is required"
+        : "";
+    final pError = passwordController.text.isEmpty
+        ? "password is required"
+        : "";
+    final utError = state.selectedUserType == null
+        ? "user type is required"
+        : "";
+    final lcError = state.selectedLeaveConfig == null
+        ? "leave config is required"
+        : "";
 
     state = state.copyWith(
       userNameError: uError,
@@ -325,14 +387,25 @@ class AddUserNotifier extends Notifier<AddUserState> {
       leaveConfigError: lcError,
     );
 
-    return uError.isEmpty && pError.isEmpty && utError.isEmpty && lcError.isEmpty;
+    return uError.isEmpty &&
+        pError.isEmpty &&
+        utError.isEmpty &&
+        lcError.isEmpty;
   }
 
   bool validatePage2() {
-    final fError = firstNameController.text.isEmpty ? "first name is required" : "";
-    final lError = lastNameController.text.isEmpty ? "last name is required" : "";
-    final gError = state.selectedGender.value == null ? "gender is required" : "";
-    final dError = state.dateOfBirth.isEmpty ? "please select date of birth" : "";
+    final fError = firstNameController.text.isEmpty
+        ? "first name is required"
+        : "";
+    final lError = lastNameController.text.isEmpty
+        ? "last name is required"
+        : "";
+    final gError = state.selectedGender.value == null
+        ? "gender is required"
+        : "";
+    final dError = state.dateOfBirth.isEmpty
+        ? "please select date of birth"
+        : "";
     final phError = phoneController.text.isEmpty ? "phone is required" : "";
     final eError = emailController.text.isEmpty ? "email id is required" : "";
 
@@ -345,7 +418,12 @@ class AddUserNotifier extends Notifier<AddUserState> {
       emailError: eError,
     );
 
-    return fError.isEmpty && lError.isEmpty && gError.isEmpty && dError.isEmpty && phError.isEmpty && eError.isEmpty;
+    return fError.isEmpty &&
+        lError.isEmpty &&
+        gError.isEmpty &&
+        dError.isEmpty &&
+        phError.isEmpty &&
+        eError.isEmpty;
   }
 
   Future<bool> createUser() async {
@@ -359,7 +437,9 @@ class AddUserNotifier extends Notifier<AddUserState> {
         email: emailController.text,
         phone: phoneController.text,
         gender: state.selectedGender.value ?? 'unspecified',
-        dateOfBirth: state.dateOfBirth.isNotEmpty ? DateTime.parse(state.dateOfBirth) : null,
+        dateOfBirth: state.dateOfBirth.isNotEmpty
+            ? DateTime.parse(state.dateOfBirth)
+            : null,
         bloodGroup: state.selectedBloodGroup.value,
         salary: salaryController.text,
         experience: experienceController.text,
@@ -367,7 +447,9 @@ class AddUserNotifier extends Notifier<AddUserState> {
         userTypeId: state.selectedUserType!.id!,
         leaveConfigId: state.selectedLeaveConfig!.id!,
         colorId: state.selectedColor!.id!,
-        organizationId: state.editingUser?.organizationId ?? UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        organizationId:
+            state.editingUser?.organizationId ??
+            UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
         performance: state.editingUser?.performance ?? 0,
         online: state.editingUser?.online ?? false,
         onsite: state.editingUser?.onsite ?? false,
@@ -379,7 +461,10 @@ class AddUserNotifier extends Notifier<AddUserState> {
         return true;
       }
 
-      final response = await client.admin.createUser(user, passwordController.text);
+      final response = await client.admin.createUser(
+        user,
+        passwordController.text,
+      );
       if (response.success) {
         return true;
       } else {

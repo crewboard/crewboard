@@ -154,12 +154,14 @@ class PlannerEndpoint extends Endpoint {
 
     final statuses = await Status.db.find(session);
     final statusModels = statuses
-        .map((s) => StatusModel(
-              statusId: s.id!,
-              statusName: s.statusName,
-              working: s.working,
-              completed: s.completed,
-            ))
+        .map(
+          (s) => StatusModel(
+            statusId: s.id!,
+            statusName: s.statusName,
+            working: s.working,
+            completed: s.completed,
+          ),
+        )
         .toList();
 
     final priorities = await Priority.db.find(session);
@@ -333,8 +335,10 @@ class PlannerEndpoint extends Endpoint {
     );
 
     final ticketModels = <PlannerTicket>[];
-    final completionTimes =
-        await _getCompletionTimes(session, tickets.map((t) => t.id!).toList());
+    final completionTimes = await _getCompletionTimes(
+      session,
+      tickets.map((t) => t.id!).toList(),
+    );
     for (final ticket in tickets) {
       ticketModels.add(
         PlannerTicket(
@@ -467,8 +471,9 @@ class PlannerEndpoint extends Endpoint {
       creds: ticket.creds.toDouble(),
       assignees: assigneesList,
       attachments: attachmentModels,
-      completedAt: (await _getCompletionTimes(session, [ticket.id!]))[ticket.id]
-          ?.toIso8601String(),
+      completedAt: (await _getCompletionTimes(session, [
+        ticket.id!,
+      ]))[ticket.id]?.toIso8601String(),
     );
 
     return GetTicketDataResponse(ticket: ticketModel);
@@ -652,9 +657,11 @@ class PlannerEndpoint extends Endpoint {
     // Verify buckets belong to the user
     final oldBucket = await Bucket.db.findById(session, oldBucketId);
     final newBucket = await Bucket.db.findById(session, newBucketId);
-    
-    if (oldBucket == null || oldBucket.userId != user.id || 
-        newBucket == null || newBucket.userId != user.id) {
+
+    if (oldBucket == null ||
+        oldBucket.userId != user.id ||
+        newBucket == null ||
+        newBucket.userId != user.id) {
       throw Exception('Unauthorized bucket access');
     }
 

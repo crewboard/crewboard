@@ -64,29 +64,33 @@ class DocsSidebar extends ConsumerWidget {
           child: state.isLoadingApps
               ? const Center(child: CircularProgressIndicator())
               : state.apps.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No projects",
-                        style: TextStyle(color: Pallet.font3, fontSize: 12),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: state.apps.length,
-                      itemBuilder: (context, index) {
-                        final app = state.apps[index];
-                        return AppListItem(
-                          app: app,
-                          isSelected: app.id == state.selectedAppId,
-                          onTap: () => notifier.selectApp(app.id!),
-                        );
-                      },
-                    ),
+              ? Center(
+                  child: Text(
+                    "No projects",
+                    style: TextStyle(color: Pallet.font3, fontSize: 12),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: state.apps.length,
+                  itemBuilder: (context, index) {
+                    final app = state.apps[index];
+                    return AppListItem(
+                      app: app,
+                      isSelected: app.id == state.selectedAppId,
+                      onTap: () => notifier.selectApp(app.id!),
+                    );
+                  },
+                ),
         ),
       ],
     );
   }
 
-  Widget _buildFlowsSection(WidgetRef ref, FlowsState state, FlowsNotifier notifier) {
+  Widget _buildFlowsSection(
+    WidgetRef ref,
+    FlowsState state,
+    FlowsNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,7 +127,9 @@ class DocsSidebar extends ConsumerWidget {
                       notifier.createNewFlow(name);
                     } else {
                       if (state.selectedAppId != null) {
-                        ref.read(documentEditorProvider.notifier).addDoc(
+                        ref
+                            .read(documentEditorProvider.notifier)
+                            .addDoc(
                               state.selectedAppId!,
                               name,
                             );

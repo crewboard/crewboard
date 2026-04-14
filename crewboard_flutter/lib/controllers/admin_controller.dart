@@ -14,7 +14,9 @@ enum AdminPage {
   documentation,
 }
 
-final adminProvider = NotifierProvider<AdminNotifier, AdminPage>(AdminNotifier.new);
+final adminProvider = NotifierProvider<AdminNotifier, AdminPage>(
+  AdminNotifier.new,
+);
 
 class AdminNotifier extends Notifier<AdminPage> {
   @override

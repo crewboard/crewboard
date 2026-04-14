@@ -307,7 +307,9 @@ class _MessageState extends ConsumerState<MessageWidget> {
                                       },
                                       child: InkWell(
                                         onTap: () {
-                                          ref.read(messagesProvider.notifier).setReply(widget.message);
+                                          ref
+                                              .read(messagesProvider.notifier)
+                                              .setReply(widget.message);
                                           close();
                                         },
                                         child: Container(
@@ -483,7 +485,9 @@ class _MessageState extends ConsumerState<MessageWidget> {
                                         },
                                         child: InkWell(
                                           onTap: () {
-                                            ref.read(messagesProvider.notifier).setEdit(widget.message);
+                                            ref
+                                                .read(messagesProvider.notifier)
+                                                .setEdit(widget.message);
                                             close();
                                           },
                                           child: Container(
@@ -849,7 +853,9 @@ class ImageMessage extends StatelessWidget {
                               height: 139,
                               color: Pallet.inside2,
                               child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                             );
                           },
@@ -949,7 +955,8 @@ class TextPreview extends StatelessWidget {
     }
 
     return SelectionArea(
-      contextMenuBuilder: (context, selectableRegionState) => const SizedBox.shrink(),
+      contextMenuBuilder: (context, selectableRegionState) =>
+          const SizedBox.shrink(),
       child: Text.rich(
         TextSpan(
           text: '',

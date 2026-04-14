@@ -116,10 +116,12 @@ class _RoomsState extends ConsumerState<Rooms> {
           child: ListView(
             children: [
               if (!search && rooms.isNotEmpty) ...[
-                for (var room in rooms) _buildRoomItem(context, ref, room, roomsState, authState),
+                for (var room in rooms)
+                  _buildRoomItem(context, ref, room, roomsState, authState),
               ],
               if (search && roomsState.searchQuery.isNotEmpty) ...[
-                for (var room in rooms) _buildRoomItem(context, ref, room, roomsState, authState),
+                for (var room in rooms)
+                  _buildRoomItem(context, ref, room, roomsState, authState),
                 for (var user in roomsState.users)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -128,16 +130,21 @@ class _RoomsState extends ConsumerState<Rooms> {
                         await roomsNotifier.startDirectChat(user);
                         // In Riverpod version, we should probably update a subpage provider
                         // and load messages for the new room.
-                        final selectedRoom = ref.read(roomsProvider).selectedRoom;
+                        final selectedRoom = ref
+                            .read(roomsProvider)
+                            .selectedRoom;
                         if (selectedRoom != null) {
-                          messagesNotifier.loadInitialMessages(roomId: selectedRoom.id!);
+                          messagesNotifier.loadInitialMessages(
+                            roomId: selectedRoom.id!,
+                          );
                         }
                         sidebarNotifier.setSubPage('');
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: roomsState.selectedRoom?.roomName == user.userName
+                          color:
+                              roomsState.selectedRoom?.roomName == user.userName
                               ? Pallet.inside1
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
@@ -153,9 +160,7 @@ class _RoomsState extends ConsumerState<Rooms> {
                     ),
                   ),
               ],
-              if (search &&
-                  rooms.isEmpty &&
-                  roomsState.users.isEmpty)
+              if (search && rooms.isEmpty && roomsState.users.isEmpty)
                 if (!roomsState.isSearchingUsers)
                   const Padding(
                     padding: EdgeInsets.all(20),
@@ -180,7 +185,13 @@ class _RoomsState extends ConsumerState<Rooms> {
     );
   }
 
-  Widget _buildRoomItem(BuildContext context, WidgetRef ref, ChatRoom room, RoomsState roomsState, AuthState authState) {
+  Widget _buildRoomItem(
+    BuildContext context,
+    WidgetRef ref,
+    ChatRoom room,
+    RoomsState roomsState,
+    AuthState authState,
+  ) {
     final roomsNotifier = ref.read(roomsProvider.notifier);
     final messagesNotifier = ref.read(messagesProvider.notifier);
     final sidebarNotifier = ref.read(sidebarProvider.notifier);

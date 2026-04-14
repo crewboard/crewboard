@@ -187,7 +187,8 @@ class FlowsState {
       hoveredSide: hoveredSide ?? this.hoveredSide,
       isMouseOverDot: isMouseOverDot ?? this.isMouseOverDot,
       showAddHandles: showAddHandles ?? this.showAddHandles,
-      flowCanvasRefreshCounter: flowCanvasRefreshCounter ?? this.flowCanvasRefreshCounter,
+      flowCanvasRefreshCounter:
+          flowCanvasRefreshCounter ?? this.flowCanvasRefreshCounter,
       isDraggingLineHeight: isDraggingLineHeight ?? this.isDraggingLineHeight,
       draggedFlowId: draggedFlowId ?? this.draggedFlowId,
       initialDragX: initialDragX ?? this.initialDragX,
@@ -204,7 +205,8 @@ class FlowsState {
       loopPad: loopPad ?? this.loopPad,
       hoveredLoopPadAxis: hoveredLoopPadAxis ?? this.hoveredLoopPadAxis,
       isDraggingLoopPad: isDraggingLoopPad ?? this.isDraggingLoopPad,
-      initialLoopPadDragPos: initialLoopPadDragPos ?? this.initialLoopPadDragPos,
+      initialLoopPadDragPos:
+          initialLoopPadDragPos ?? this.initialLoopPadDragPos,
       initialLoopPadValue: initialLoopPadValue ?? this.initialLoopPadValue,
       systemVariables: systemVariables ?? this.systemVariables,
       isLoadingSettings: isLoadingSettings ?? this.isLoadingSettings,
@@ -212,7 +214,9 @@ class FlowsState {
   }
 }
 
-final flowsProvider = NotifierProvider<FlowsNotifier, FlowsState>(FlowsNotifier.new);
+final flowsProvider = NotifierProvider<FlowsNotifier, FlowsState>(
+  FlowsNotifier.new,
+);
 
 class FlowsNotifier extends Notifier<FlowsState> {
   Timer? _saveDebounce;
@@ -245,7 +249,9 @@ class FlowsNotifier extends Notifier<FlowsState> {
   }
 
   void refreshUI() {
-    state = state.copyWith(flowCanvasRefreshCounter: state.flowCanvasRefreshCounter + 1);
+    state = state.copyWith(
+      flowCanvasRefreshCounter: state.flowCanvasRefreshCounter + 1,
+    );
   }
 
   void setDimensions(double width, double height) {
@@ -275,7 +281,10 @@ class FlowsNotifier extends Notifier<FlowsState> {
   }
 
   void selectApp(UuidValue appId) {
-    state = state.copyWith(selectedAppId: appId, sidebarMode: SidebarMode.flows);
+    state = state.copyWith(
+      selectedAppId: appId,
+      sidebarMode: SidebarMode.flows,
+    );
     loadSavedFlows();
   }
 
@@ -301,7 +310,9 @@ class FlowsNotifier extends Notifier<FlowsState> {
     if (subPage == "docs") {
       state = state.copyWith(currentSubPage: FlowSubPage.docs);
       if (state.selectedAppId != null) {
-        ref.read(documentEditorProvider.notifier).loadSavedDocs(state.selectedAppId!);
+        ref
+            .read(documentEditorProvider.notifier)
+            .loadSavedDocs(state.selectedAppId!);
       }
     } else if (subPage == "flows") {
       state = state.copyWith(currentSubPage: FlowSubPage.flows);
@@ -355,7 +366,9 @@ class FlowsNotifier extends Notifier<FlowsState> {
               final loops = item["_loops"] as List?;
               if (loops != null) {
                 for (var l in loops) {
-                  if (l is Map && l.containsKey("fromId") && l.containsKey("toId")) {
+                  if (l is Map &&
+                      l.containsKey("fromId") &&
+                      l.containsKey("toId")) {
                     final fromId = l["fromId"];
                     final toId = l["toId"];
                     if (fromId is int && toId is int) {
@@ -398,7 +411,9 @@ class FlowsNotifier extends Notifier<FlowsState> {
     if (_saveDebounce?.isActive ?? false) _saveDebounce?.cancel();
     _saveDebounce = Timer(const Duration(milliseconds: 500), () async {
       try {
-        final List<dynamic> flowData = state.flows.map((e) => e.toJson()).toList();
+        final List<dynamic> flowData = state.flows
+            .map((e) => e.toJson())
+            .toList();
         if (state.loopLinks.isNotEmpty) {
           final List<Map<String, int>> loops = state.loopLinks
               .map((e) => {"fromId": e.fromId, "toId": e.toId})
@@ -427,11 +442,15 @@ class FlowsNotifier extends Notifier<FlowsState> {
     if (state.flows.isEmpty) return;
 
     // Create deep copies of all flows to avoid mutating state in-place
-    final List<FlowClass> updatedFlows = state.flows.map((f) => f.copyWith(
-      down: f.down.copyWith(hasChild: false),
-      left: f.left.copyWith(hasChild: false),
-      right: f.right.copyWith(hasChild: false),
-    )).toList();
+    final List<FlowClass> updatedFlows = state.flows
+        .map(
+          (f) => f.copyWith(
+            down: f.down.copyWith(hasChild: false),
+            left: f.left.copyWith(hasChild: false),
+            right: f.right.copyWith(hasChild: false),
+          ),
+        )
+        .toList();
 
     final Map<int, FlowClass> nodeMap = {for (var f in updatedFlows) f.id: f};
 
@@ -442,11 +461,17 @@ class FlowsNotifier extends Notifier<FlowsState> {
         final parent = nodeMap[pid];
         if (parent != null) {
           if (flow.direction == Direction.down) {
-            nodeMap[pid] = parent.copyWith(down: parent.down.copyWith(hasChild: true));
+            nodeMap[pid] = parent.copyWith(
+              down: parent.down.copyWith(hasChild: true),
+            );
           } else if (flow.direction == Direction.right) {
-            nodeMap[pid] = parent.copyWith(right: parent.right.copyWith(hasChild: true));
+            nodeMap[pid] = parent.copyWith(
+              right: parent.right.copyWith(hasChild: true),
+            );
           } else if (flow.direction == Direction.left) {
-            nodeMap[pid] = parent.copyWith(left: parent.left.copyWith(hasChild: true));
+            nodeMap[pid] = parent.copyWith(
+              left: parent.left.copyWith(hasChild: true),
+            );
           }
         }
       }
@@ -462,42 +487,64 @@ class FlowsNotifier extends Notifier<FlowsState> {
     const double rootSpacing = 200.0;
     double totalRootsWidth = (roots.length - 1) * rootSpacing;
     for (var root in roots) totalRootsWidth += root.width;
-    
+
     double currentRootX = (state.stageWidth - totalRootsWidth) / 2;
 
     for (var i = 0; i < roots.length; i++) {
-        final root = roots[i];
-        final rootIdx = finalFlows.indexWhere((f) => f.id == root.id);
-        
-        finalFlows[rootIdx].x = currentRootX;
-        finalFlows[rootIdx].y = 20;
-        
-        _positionChildren(finalFlows, nodeMap, finalFlows[rootIdx], currentRootX + root.width / 2);
-        currentRootX += root.width + rootSpacing;
+      final root = roots[i];
+      final rootIdx = finalFlows.indexWhere((f) => f.id == root.id);
+
+      finalFlows[rootIdx].x = currentRootX;
+      finalFlows[rootIdx].y = 20;
+
+      _positionChildren(
+        finalFlows,
+        nodeMap,
+        finalFlows[rootIdx],
+        currentRootX + root.width / 2,
+      );
+      currentRootX += root.width + rootSpacing;
     }
 
     _centerFlows(finalFlows);
     state = state.copyWith(flows: finalFlows);
   }
 
-  void _positionChildren(List<FlowClass> allFlows, Map<int, FlowClass> nodeMap, FlowClass parent, double centerX) {
+  void _positionChildren(
+    List<FlowClass> allFlows,
+    Map<int, FlowClass> nodeMap,
+    FlowClass parent,
+    double centerX,
+  ) {
     final children = allFlows.where((f) => f.pid == parent.id).toList();
     for (var child in children) {
       final childIdx = allFlows.indexWhere((f) => f.id == child.id);
       if (childIdx == -1) continue;
 
       if (child.direction == Direction.down) {
-        allFlows[childIdx].y = parent.y + parent.height + parent.down.lineHeight;
+        allFlows[childIdx].y =
+            parent.y + parent.height + parent.down.lineHeight;
         allFlows[childIdx].x = centerX - child.width / 2;
         _positionChildren(allFlows, nodeMap, allFlows[childIdx], centerX);
       } else if (child.direction == Direction.right) {
         allFlows[childIdx].y = parent.y + parent.height / 2 - child.height / 2;
-        allFlows[childIdx].x = parent.x + parent.width + parent.right.lineHeight;
-        _positionChildren(allFlows, nodeMap, allFlows[childIdx], allFlows[childIdx].x + child.width / 2);
+        allFlows[childIdx].x =
+            parent.x + parent.width + parent.right.lineHeight;
+        _positionChildren(
+          allFlows,
+          nodeMap,
+          allFlows[childIdx],
+          allFlows[childIdx].x + child.width / 2,
+        );
       } else if (child.direction == Direction.left) {
         allFlows[childIdx].y = parent.y + parent.height / 2 - child.height / 2;
         allFlows[childIdx].x = parent.x - parent.left.lineHeight - child.width;
-        _positionChildren(allFlows, nodeMap, allFlows[childIdx], allFlows[childIdx].x + child.width / 2);
+        _positionChildren(
+          allFlows,
+          nodeMap,
+          allFlows[childIdx],
+          allFlows[childIdx].x + child.width / 2,
+        );
       }
     }
   }
@@ -535,39 +582,62 @@ class FlowsNotifier extends Notifier<FlowsState> {
 
   void addFlow(FlowType type) {
     final updatedFlows = List<FlowClass>.from(state.flows);
-    
+
     // Generate a unique ID (max ID + 1)
-    final id = updatedFlows.isEmpty 
-        ? 0 
-        : updatedFlows.fold<int>(0, (maxId, flow) => flow.id > maxId ? flow.id : maxId) + 1;
-    
+    final id = updatedFlows.isEmpty
+        ? 0
+        : updatedFlows.fold<int>(
+                0,
+                (maxId, flow) => flow.id > maxId ? flow.id : maxId,
+              ) +
+              1;
+
     double defaultWidth = Defaults.flowWidth;
     if (state.systemVariables != null) {
-      if (type == FlowType.process) defaultWidth = state.systemVariables!.processWidth ?? Defaults.flowWidth;
-      else if (type == FlowType.condition) defaultWidth = state.systemVariables!.conditionWidth ?? Defaults.flowWidth;
-      else if (type == FlowType.terminal) defaultWidth = state.systemVariables!.terminalWidth ?? Defaults.flowWidth;
+      if (type == FlowType.process)
+        defaultWidth =
+            state.systemVariables!.processWidth ?? Defaults.flowWidth;
+      else if (type == FlowType.condition)
+        defaultWidth =
+            state.systemVariables!.conditionWidth ?? Defaults.flowWidth;
+      else if (type == FlowType.terminal)
+        defaultWidth =
+            state.systemVariables!.terminalWidth ?? Defaults.flowWidth;
     }
 
     FlowClass flow = FlowClass(
       id: id,
       width: defaultWidth,
-      height: (type == FlowType.condition || type == FlowType.user) ? Defaults.flowWidth : 40,
+      height: (type == FlowType.condition || type == FlowType.user)
+          ? Defaults.flowWidth
+          : 40,
       x: state.stageWidth / 2 - defaultWidth / 2,
       y: 20,
       type: type,
       value: "start",
-      down: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
-      left: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
-      right: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
+      down: Line(
+        lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight,
+      ),
+      left: Line(
+        lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight,
+      ),
+      right: Line(
+        lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight,
+      ),
       pid: state.selectedId >= 0 ? state.selectedId : null,
       direction: state.selectedDirection,
     );
 
     if (state.selectedId >= 0) {
-      final parentIdx = updatedFlows.indexWhere((f) => f.id == state.selectedId);
+      final parentIdx = updatedFlows.indexWhere(
+        (f) => f.id == state.selectedId,
+      );
       if (parentIdx != -1) {
-        if (updatedFlows[parentIdx].type == FlowType.condition && updatedFlows[parentIdx].yes == null) {
-          updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(yes: state.selectedDirection);
+        if (updatedFlows[parentIdx].type == FlowType.condition &&
+            updatedFlows[parentIdx].yes == null) {
+          updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
+            yes: state.selectedDirection,
+          );
         }
       }
     }
@@ -606,7 +676,7 @@ class FlowsNotifier extends Notifier<FlowsState> {
         rightText: f.right.lineHeight.toString(),
       );
     }
-    
+
     onProcessUnhover();
     refreshUI();
   }
@@ -682,10 +752,13 @@ class FlowsNotifier extends Notifier<FlowsState> {
     if (flowIdx == -1) return;
 
     FlowClass selectedFlow = updatedFlows[flowIdx];
-    
+
     // Cleanup children recursively
     void removeChildren(int parentId) {
-      final childrenIds = updatedFlows.where((f) => f.pid == parentId).map((f) => f.id).toList();
+      final childrenIds = updatedFlows
+          .where((f) => f.pid == parentId)
+          .map((f) => f.id)
+          .toList();
       for (var cid in childrenIds) {
         removeChildren(cid);
         updatedFlows.removeWhere((f) => f.id == cid);
@@ -694,7 +767,7 @@ class FlowsNotifier extends Notifier<FlowsState> {
 
     removeChildren(id);
     updatedFlows.removeAt(flowIdx);
-    
+
     state = state.copyWith(flows: updatedFlows, window: "none", selectedId: -1);
     updateFlowsReactive();
     save();
@@ -711,9 +784,12 @@ class FlowsNotifier extends Notifier<FlowsState> {
     final parentFlow = state.flows[parentIdx];
 
     double initialLH = 0.0;
-    if (flow.direction == Direction.down) initialLH = parentFlow.down.lineHeight;
-    else if (flow.direction == Direction.left) initialLH = parentFlow.left.lineHeight;
-    else if (flow.direction == Direction.right) initialLH = parentFlow.right.lineHeight;
+    if (flow.direction == Direction.down)
+      initialLH = parentFlow.down.lineHeight;
+    else if (flow.direction == Direction.left)
+      initialLH = parentFlow.left.lineHeight;
+    else if (flow.direction == Direction.right)
+      initialLH = parentFlow.right.lineHeight;
 
     state = state.copyWith(
       isDraggingLineHeight: true,
@@ -726,30 +802,36 @@ class FlowsNotifier extends Notifier<FlowsState> {
 
   void updateLineHeightDrag(double currentX, double currentY) {
     if (!state.isDraggingLineHeight || state.draggedFlowId < 0) return;
-    
+
     final flowIdx = state.flows.indexWhere((f) => f.id == state.draggedFlowId);
     if (flowIdx == -1) return;
     final flow = state.flows[flowIdx];
-    
+
     final parentIdx = state.flows.indexWhere((f) => f.id == flow.pid);
     if (parentIdx == -1) return;
-    
+
     final deltaY = (currentY - state.initialDragY) * 0.5;
     final deltaX = (currentX - state.initialDragX) * 0.5;
 
     final updatedFlows = List<FlowClass>.from(state.flows);
-    
+
     if (flow.direction == Direction.down) {
       updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
-        down: updatedFlows[parentIdx].down.copyWith(lineHeight: (state.initialLineHeight + deltaY).clamp(10.0, 500.0))
+        down: updatedFlows[parentIdx].down.copyWith(
+          lineHeight: (state.initialLineHeight + deltaY).clamp(10.0, 500.0),
+        ),
       );
     } else if (flow.direction == Direction.left) {
       updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
-        left: updatedFlows[parentIdx].left.copyWith(lineHeight: (state.initialLineHeight - deltaX).clamp(10.0, 500.0))
+        left: updatedFlows[parentIdx].left.copyWith(
+          lineHeight: (state.initialLineHeight - deltaX).clamp(10.0, 500.0),
+        ),
       );
     } else if (flow.direction == Direction.right) {
       updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
-        right: updatedFlows[parentIdx].right.copyWith(lineHeight: (state.initialLineHeight + deltaX).clamp(10.0, 500.0))
+        right: updatedFlows[parentIdx].right.copyWith(
+          lineHeight: (state.initialLineHeight + deltaX).clamp(10.0, 500.0),
+        ),
       );
     }
 
@@ -762,8 +844,10 @@ class FlowsNotifier extends Notifier<FlowsState> {
     save();
   }
 
-  void onProcessHover(int id, String side) => state = state.copyWith(hoveredProcessId: id, hoveredSide: side);
-  void onProcessUnhover() => state = state.copyWith(hoveredProcessId: -1, hoveredSide: "");
+  void onProcessHover(int id, String side) =>
+      state = state.copyWith(hoveredProcessId: id, hoveredSide: side);
+  void onProcessUnhover() =>
+      state = state.copyWith(hoveredProcessId: -1, hoveredSide: "");
   void updateMouseOverDot(bool v) => state = state.copyWith(isMouseOverDot: v);
 
   void commitPendingLoop() {
@@ -776,6 +860,10 @@ class FlowsNotifier extends Notifier<FlowsState> {
   }
 
   void deleteAllLoopsForFlow(int id) {
-    state = state.copyWith(loopLinks: state.loopLinks.where((l) => l.fromId != id && l.toId != id).toList());
+    state = state.copyWith(
+      loopLinks: state.loopLinks
+          .where((l) => l.fromId != id && l.toId != id)
+          .toList(),
+    );
   }
 }
