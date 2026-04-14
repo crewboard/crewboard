@@ -39,6 +39,7 @@ class _ColorPickerState extends State<ColorPicker> {
   Future<void> _loadColors() async {
     try {
       final allColors = await client.admin.getColors();
+      if (!mounted) return;
       setState(() {
         _defaultColors = allColors.where((c) => c.isDefault).toList();
         _customColors = allColors.where((c) => !c.isDefault).toList();
@@ -279,22 +280,24 @@ class _ColorPickerState extends State<ColorPicker> {
         _selectedSystemColor?.color.replaceAll("#", "0xFF") ?? "0xFF2196F3";
     final flutterColor = Color(int.parse(hex));
 
-    return InkWell(
+    return SizedBox(
       key: _pickerKey,
-      onTap: () {
-        if (_isOpen) {
-          _hideDropdown();
-        } else {
-          _showDropdown();
-        }
-      },
-      child: Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: flutterColor,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      child: InkWell(
+        onTap: () {
+          if (_isOpen) {
+            _hideDropdown();
+          } else {
+            _showDropdown();
+          }
+        },
+        child: Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: flutterColor,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+          ),
         ),
       ),
     );

@@ -7,11 +7,13 @@ import 'package:flutter/scheduler.dart';
 
 class WheelDatePicker extends StatefulWidget {
   final DateTime initialDate;
+  final DateTime? minDate;
   final Function(DateTime) onDateSelected;
 
   const WheelDatePicker({
     super.key,
     required this.initialDate,
+    this.minDate,
     required this.onDateSelected,
   });
 
@@ -49,9 +51,13 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
   void initState() {
     super.initState();
 
-    selectedDay = widget.initialDate.day;
-    selectedMonth = widget.initialDate.month;
-    selectedYear = widget.initialDate.year;
+    final dateToUse = (widget.minDate != null && widget.initialDate.isBefore(widget.minDate!))
+        ? widget.minDate!
+        : widget.initialDate;
+
+    selectedDay = dateToUse.day;
+    selectedMonth = dateToUse.month;
+    selectedYear = dateToUse.year;
 
     // Controllers initial items (zero-based index)
     _dayController = FixedExtentScrollController(initialItem: selectedDay - 1);
@@ -206,9 +212,16 @@ class _WheelDatePickerState extends State<WheelDatePicker> {
                         final int finalMonth = selectedMonth;
                         final int finalYear = selectedYear;
 
-                        widget.onDateSelected(
-                          DateTime(finalYear, finalMonth, finalDay),
-                        );
+                        DateTime selected = DateTime(finalYear, finalMonth, finalDay);
+                        
+                        // Validation against minDate
+                        if (widget.minDate != null && selected.isBefore(widget.minDate!)) {
+                            // Automatically adjust to minDate or show warning?
+                            // For now, let's just use minDate to be safe.
+                            selected = widget.minDate!;
+                        }
+
+                        widget.onDateSelected(selected);
                         Navigator.pop(context);
                       },
                     ),

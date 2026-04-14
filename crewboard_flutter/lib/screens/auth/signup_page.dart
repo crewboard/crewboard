@@ -1,22 +1,24 @@
 import 'dart:async';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:get/get.dart';
 import 'package:crewboard_flutter/main.dart'; // For client
+import '../../controllers/theme_controller.dart';
 import 'signin_page.dart';
 import 'widgets.dart';
 import '../../config/palette.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignupPage extends ConsumerStatefulWidget {
+  final VoidCallback? onSignIn;
+  const SignupPage({super.key, this.onSignIn});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -138,6 +140,9 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch themeProvider to react to theme changes
+    ref.watch(themeProvider);
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -177,14 +182,12 @@ class _SignupPageState extends State<SignupPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Obx(
-              () => Row(
-                children: [
-                  MinimizeWindowButton(colors: Pallet.windowButtonColors),
-                  MaximizeWindowButton(colors: Pallet.windowButtonColors),
-                  CloseWindowButton(colors: Pallet.closeWindowButtonColors),
-                ],
-              ),
+            child: Row(
+              children: [
+                MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
+              ],
             ),
           ),
         ],
@@ -214,10 +217,10 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to sign in
+                    // Navigate to sign in, pass onSignIn callback
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => const SignInPage(),
+                        builder: (context) => SignInPage(onSignIn: widget.onSignIn),
                       ),
                     );
                   },

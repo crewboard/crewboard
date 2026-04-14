@@ -1,21 +1,34 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
+import '../utils.dart';
 
 class DocsEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
   Future<bool> createFlow(Session session, FlowModel flow) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     await FlowModel.db.insertRow(session, flow);
     return true;
   }
 
   Future<bool> updateFlow(Session session, FlowModel flow) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     await FlowModel.db.updateRow(session, flow);
     return true;
   }
 
   Future<List<FlowModel>> getFlows(Session session, UuidValue appId) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     return await FlowModel.db.find(
       session,
       where: (t) => t.appId.equals(appId),
@@ -23,10 +36,18 @@ class DocsEndpoint extends Endpoint {
   }
 
   Future<FlowModel?> getFlow(Session session, UuidValue flowId) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     return await FlowModel.db.findById(session, flowId);
   }
 
   Future<bool> deleteFlow(Session session, UuidValue flowId) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     final flow = await FlowModel.db.findById(session, flowId);
     if (flow != null) {
       await FlowModel.db.deleteRow(session, flow);
@@ -37,6 +58,10 @@ class DocsEndpoint extends Endpoint {
 
   // Doc endpoints
   Future<List<Doc>> getDocs(Session session, UuidValue appId) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     return await Doc.db.find(
       session,
       where: (t) => t.appId.equals(appId),
@@ -46,6 +71,10 @@ class DocsEndpoint extends Endpoint {
   }
 
   Future<bool> addDoc(Session session, UuidValue appId, String name) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     final doc = Doc(
       appId: appId,
       name: name,
@@ -63,6 +92,10 @@ class DocsEndpoint extends Endpoint {
     String? docContent,
     String? outline,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_flowie')) {
+      throw Exception('Permission denied: manage_flowie');
+    }
     final doc = await Doc.db.findById(session, docId);
     if (doc != null) {
       doc.doc = docContent;

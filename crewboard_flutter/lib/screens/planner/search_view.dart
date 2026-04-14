@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
@@ -9,22 +10,23 @@ import 'types.dart';
 import 'string_extensions.dart';
 import 'view_ticket_dialog.dart';
 
-class SearchView extends StatefulWidget {
+class SearchView extends ConsumerStatefulWidget {
   const SearchView({super.key});
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  ConsumerState<SearchView> createState() => _SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> {
-  final PlannerController plannerController = Get.find<PlannerController>();
+class _SearchViewState extends ConsumerState<SearchView> {
   List backup = [];
   String searchText = '';
 
   @override
   void initState() {
-    plannerController.getAddTicketData();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(plannerProvider.notifier).getAddTicketData();
+    });
   }
 
   List<Filter> filters = [
@@ -145,7 +147,8 @@ class _SearchViewState extends State<SearchView> {
   // Method to apply all filtering and sorting
   List<PlannerTicket> _applyAllFilters() {
     // Get current tickets from planner controller
-    final currentTickets = plannerController.allTickets;
+    final state = ref.read(plannerProvider);
+    final currentTickets = state.allTickets;
 
     List<PlannerTicket> result = List.from(currentTickets);
 
@@ -191,9 +194,12 @@ class _SearchViewState extends State<SearchView> {
     if (text.isEmpty) return [];
     final List<TextSpan> spans = [];
 
+    final state = ref.read(plannerProvider);
+    final notifier = ref.read(plannerProvider.notifier);
+
     final List<String> names = [
-      ...plannerController.allFlows.map((f) => f.name),
-      ...plannerController.allDocs.map((d) => d.name),
+      ...state.allFlows.map((f) => f.name),
+      ...state.allDocs.map((d) => d.name),
     ];
 
     // Create a regex that matches either valid names (prioritized) or standard hashtags
@@ -214,13 +220,13 @@ class _SearchViewState extends State<SearchView> {
         spans.add(
           TextSpan(
             text: match,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                plannerController.openLinkedFlow(flowName);
+                notifier.openLinkedFlow(flowName);
               },
           ),
         );
@@ -236,471 +242,477 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      // Get filtered tickets
-      List<PlannerTicket> displayTickets = _applyAllFilters();
-      return Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
-              child: Column(
-                children: [
-                  Container(
-                    width: 500,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Pallet.inside1,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                searchText = value;
-                              });
-                            },
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Pallet.font1,
+    final state = ref.watch(plannerProvider);
+    final notifier = ref.read(plannerProvider.notifier);
+
+    // Get filtered tickets
+    List<PlannerTicket> displayTickets = _applyAllFilters();
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
+            child: Column(
+              children: [
+                Container(
+                  width: 500,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Pallet.inside1,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              searchText = value;
+                            });
+                          },
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Pallet.font1,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "search",
+                            hintStyle: TextStyle(
+                              fontSize: 14,
+                              color: Pallet.font3,
                             ),
-                            decoration: InputDecoration(
-                              hintText: "search",
-                              hintStyle: TextStyle(
-                                fontSize: 14,
-                                color: Pallet.font3,
-                              ),
-                              isDense: true,
-                              border: InputBorder.none,
-                            ),
+                            isDense: true,
+                            border: InputBorder.none,
                           ),
                         ),
-                        Icon(Icons.search, size: 18, color: Pallet.font1),
-                      ],
-                    ),
+                      ),
+                      Icon(Icons.search, size: 18, color: Pallet.font1),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: displayTickets.length,
+                    itemBuilder: (context, index) {
+                      final ticket = displayTickets[index];
+                      return InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => ViewTicketDialog(ticketId: ticket.id),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          height: 105,
+                          decoration: BoxDecoration(
+                            color: Pallet.inside1,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          ticket.ticketName.startsWith('${ticket.typeName}: ')
+                                              ? ticket.ticketName.substring('${ticket.typeName}: '.length)
+                                              : ticket.ticketName,
+                                          style: TextStyle(
+                                            color: Pallet.font1,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        CustomBadge(
+                                          label: ticket.typeName,
+                                          color: Color(
+                                            int.parse(
+                                              ticket.typeColor.replaceAll(
+                                                "#",
+                                                "0xFF",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: _parseBody(
+                                          ticket.ticketBody,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Pallet.font3,
+                                        ),
+                                      ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.alarm,
+                                        color: Pallet.font3,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        _formatDeadline(ticket.deadline),
+                                        style: TextStyle(
+                                          color: Pallet.font3,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Stack(
+                                    children: [
+                                      for (
+                                        var i = 0;
+                                        i < ticket.assignees.length;
+                                        i++
+                                      )
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: i * 15.0,
+                                          ),
+                                          child: ProfileIcon(
+                                            size: 30,
+                                            name:
+                                                ticket.assignees[i].userName,
+                                            color: Color(
+                                              int.parse(
+                                                ticket.assignees[i].color
+                                                    .replaceAll("#", "0xFF"),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 25, left: 10, right: 10),
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                width: 0.5,
+                color: Pallet.font3.withValues(alpha: 0.2),
+              ),
+            ),
+          ),
+          width: 250,
+          child: StreamBuilder<Object>(
+            stream: refreshStream,
+            builder: (context, snapshot) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "filters",
+                          style: TextStyle(color: Pallet.font1),
+                        ),
+                      ),
+                      SmallButton(
+                        label: "add",
+                        onPress: () {
+                          selectedFilters.add(Filter());
+                          refreshSink.add("");
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      SmallButton(
+                        label: "apply",
+                        onPress: () {
+                          setState(() {
+                            // Remove empty filters
+                            selectedFilters.removeWhere(
+                              (filter) => filter.name == null,
+                            );
+                          });
+                          refreshSink.add("");
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: displayTickets.length,
-                      itemBuilder: (context, index) {
-                        final ticket = displayTickets[index];
-                        return InkWell(
-                          onTap: () {
-                            Get.dialog(ViewTicketDialog(ticketId: ticket.id));
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            height: 105,
-                            decoration: BoxDecoration(
-                              color: Pallet.inside1,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            ticket.ticketName,
-                                            style: TextStyle(
-                                              color: Pallet.font1,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          CustomBadge(
-                                            label: ticket.typeName,
-                                            color: Color(
-                                              int.parse(
-                                                ticket.typeColor.replaceAll(
-                                                  "#",
-                                                  "0xFF",
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text.rich(
-                                        TextSpan(
-                                          children: _parseBody(
-                                            ticket.ticketBody,
-                                          ),
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Pallet.font3,
-                                          ),
-                                        ),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                      itemCount: selectedFilters.length,
+                      itemBuilder: (context, i) {
+                        return GlassMorph(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "property",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Pallet.font1,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedFilters.removeAt(i);
+                                      });
+                                      refreshSink.add("");
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 14,
+                                      color: Pallet.font1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              DropDown(
+                                label:
+                                    selectedFilters[i].name?.name
+                                        .toCapitalized() ??
+                                    "Select",
+                                itemKey: "name",
+                                items: filters,
+                                onPress: (value) {
+                                  selectedFilters[i] = Filter(
+                                    name: value.name,
+                                    type: value.type,
+                                  );
+                                  refreshSink.add("");
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              if (selectedFilters[i].name ==
+                                  FilterName.status)
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.alarm,
-                                          color: Pallet.font3,
-                                          size: 20,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          _formatDeadline(ticket.deadline),
-                                          style: TextStyle(
-                                            color: Pallet.font3,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      "value",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Pallet.font1,
+                                      ),
                                     ),
                                     const SizedBox(height: 10),
-                                    Stack(
-                                      children: [
-                                        for (
-                                          var i = 0;
-                                          i < ticket.assignees.length;
-                                          i++
-                                        )
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: i * 15.0,
-                                            ),
-                                            child: ProfileIcon(
-                                              size: 30,
-                                              name:
-                                                  ticket.assignees[i].userName,
-                                              color: Color(
-                                                int.parse(
-                                                  ticket.assignees[i].color
-                                                      .replaceAll("#", "0xFF"),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
+                                    DropDown(
+                                      label:
+                                          (selectedFilters[i].value
+                                                  as StatusModel?)
+                                              ?.statusName ??
+                                          "Status",
+                                      itemKey: "statusName",
+                                      items: state.statuses,
+                                      onPress: (data) {
+                                        selectedFilters[i].value = data;
+                                        setState(() {});
+                                        refreshSink.add("");
+                                      },
                                     ),
+                                    const SizedBox(height: 10),
                                   ],
                                 ),
-                              ],
-                            ),
+                              if (selectedFilters[i].name == FilterName.type)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "value",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Pallet.font1,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    DropDown(
+                                      label:
+                                          (selectedFilters[i].value
+                                                  as TypeModel?)
+                                              ?.typeName ??
+                                          "Type",
+                                      itemKey: "typeName",
+                                      items: state.types,
+                                      onPress: (data) {
+                                        selectedFilters[i].value = data;
+                                        setState(() {});
+                                        refreshSink.add("");
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                              if (selectedFilters[i].type == FilterType.both)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "type",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Pallet.font1,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    DropDown(
+                                      label:
+                                          selectedFilters[i].operation?.name
+                                              .toCapitalized() ??
+                                          "Value",
+                                      itemKey: "name",
+                                      items: [
+                                        Operation(
+                                          name: "Ascending",
+                                          operation:
+                                              FilterOperation.ascending,
+                                        ),
+                                        Operation(
+                                          name: "Descending",
+                                          operation:
+                                              FilterOperation.descending,
+                                        ),
+                                        Operation(
+                                          name: "Value",
+                                          operation: FilterOperation.value,
+                                        ),
+                                      ],
+                                      onPress: (data) {
+                                        selectedFilters[i].operation =
+                                            data.operation;
+                                        setState(() {});
+                                        refreshSink.add("");
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                              if (selectedFilters[i].operation ==
+                                  FilterOperation.value)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "value",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Pallet.font1,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    DropDown(
+                                      label:
+                                          (selectedFilters[i].value
+                                                  as PriorityModel?)
+                                              ?.priorityName ??
+                                          "Priority",
+                                      itemKey: "priorityName",
+                                      items: state.priorities,
+                                      onPress: (data) {
+                                        selectedFilters[i].value = data;
+                                        setState(() {});
+                                        refreshSink.add("");
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                              if (selectedFilters[i].name ==
+                                  FilterName.deadline)
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "type",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Pallet.font1,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    DropDown(
+                                      label:
+                                          selectedFilters[i].value ?? "Value",
+                                      itemKey: "name",
+                                      items: [
+                                        {"name": SortOrder.ascending.name},
+                                        {"name": SortOrder.descending.name},
+                                      ],
+                                      onPress: (data) {
+                                        selectedFilters[i].value =
+                                            data["name"];
+                                        setState(() {});
+                                        refreshSink.add("");
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                            ],
                           ),
                         );
                       },
                     ),
                   ),
                 ],
-              ),
-            ),
+              );
+            },
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 25, left: 10, right: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(
-                  width: 0.5,
-                  color: Pallet.font3.withValues(alpha: 0.2),
-                ),
-              ),
-            ),
-            width: 250,
-            child: StreamBuilder<Object>(
-              stream: refreshStream,
-              builder: (context, snapshot) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "filters",
-                            style: TextStyle(color: Pallet.font1),
-                          ),
-                        ),
-                        SmallButton(
-                          label: "add",
-                          onPress: () {
-                            selectedFilters.add(Filter());
-                            refreshSink.add("");
-                          },
-                        ),
-                        const SizedBox(width: 10),
-                        SmallButton(
-                          label: "apply",
-                          onPress: () {
-                            setState(() {
-                              // Remove empty filters
-                              selectedFilters.removeWhere(
-                                (filter) => filter.name == null,
-                              );
-                            });
-                            refreshSink.add("");
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: selectedFilters.length,
-                        itemBuilder: (context, i) {
-                          return GlassMorph(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "property",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Pallet.font1,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedFilters.removeAt(i);
-                                        });
-                                        refreshSink.add("");
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 14,
-                                        color: Pallet.font1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                DropDown(
-                                  label:
-                                      selectedFilters[i].name?.name
-                                          .toCapitalized() ??
-                                      "Select",
-                                  itemKey: "name",
-                                  items: filters,
-                                  onPress: (value) {
-                                    selectedFilters[i] = Filter(
-                                      name: value.name,
-                                      type: value.type,
-                                    );
-                                    refreshSink.add("");
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                if (selectedFilters[i].name ==
-                                    FilterName.status)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "value",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DropDown(
-                                        label:
-                                            (selectedFilters[i].value
-                                                    as StatusModel?)
-                                                ?.statusName ??
-                                            "Status",
-                                        itemKey: "statusName",
-                                        items: plannerController.statuses,
-                                        onPress: (data) {
-                                          selectedFilters[i].value = data;
-                                          setState(() {});
-                                          refreshSink.add("");
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (selectedFilters[i].name == FilterName.type)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "value",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DropDown(
-                                        label:
-                                            (selectedFilters[i].value
-                                                    as TypeModel?)
-                                                ?.typeName ??
-                                            "Type",
-                                        itemKey: "typeName",
-                                        items: plannerController.types,
-                                        onPress: (data) {
-                                          selectedFilters[i].value = data;
-                                          setState(() {});
-                                          refreshSink.add("");
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (selectedFilters[i].type == FilterType.both)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "type",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DropDown(
-                                        label:
-                                            selectedFilters[i].operation?.name
-                                                .toCapitalized() ??
-                                            "Value",
-                                        itemKey: "name",
-                                        items: [
-                                          Operation(
-                                            name: "Ascending",
-                                            operation:
-                                                FilterOperation.ascending,
-                                          ),
-                                          Operation(
-                                            name: "Descending",
-                                            operation:
-                                                FilterOperation.descending,
-                                          ),
-                                          Operation(
-                                            name: "Value",
-                                            operation: FilterOperation.value,
-                                          ),
-                                        ],
-                                        onPress: (data) {
-                                          selectedFilters[i].operation =
-                                              data.operation;
-                                          setState(() {});
-                                          refreshSink.add("");
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (selectedFilters[i].operation ==
-                                    FilterOperation.value)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "value",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DropDown(
-                                        label:
-                                            (selectedFilters[i].value
-                                                    as PriorityModel?)
-                                                ?.priorityName ??
-                                            "Priority",
-                                        itemKey: "priorityName",
-                                        items: plannerController.priorities,
-                                        onPress: (data) {
-                                          selectedFilters[i].value = data;
-                                          setState(() {});
-                                          refreshSink.add("");
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (selectedFilters[i].name ==
-                                    FilterName.deadline)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "type",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Pallet.font1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      DropDown(
-                                        label:
-                                            selectedFilters[i].value ?? "Value",
-                                        itemKey: "name",
-                                        items: [
-                                          {"name": SortOrder.ascending.name},
-                                          {"name": SortOrder.descending.name},
-                                        ],
-                                        onPress: (data) {
-                                          selectedFilters[i].value =
-                                              data["name"];
-                                          setState(() {});
-                                          refreshSink.add("");
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }

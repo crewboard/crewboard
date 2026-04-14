@@ -37,6 +37,7 @@ abstract class Ticket implements _i1.SerializableModel {
     required this.creds,
     this.deadline,
     this.createdAt,
+    this.completedAt,
   });
 
   factory Ticket({
@@ -57,6 +58,7 @@ abstract class Ticket implements _i1.SerializableModel {
     required int creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   }) = _TicketImpl;
 
   factory Ticket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -104,6 +106,11 @@ abstract class Ticket implements _i1.SerializableModel {
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      completedAt: jsonSerialization['completedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['completedAt'],
+            ),
     );
   }
 
@@ -144,6 +151,8 @@ abstract class Ticket implements _i1.SerializableModel {
 
   DateTime? createdAt;
 
+  DateTime? completedAt;
+
   /// Returns a shallow copy of this [Ticket]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -165,6 +174,7 @@ abstract class Ticket implements _i1.SerializableModel {
     int? creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -188,6 +198,7 @@ abstract class Ticket implements _i1.SerializableModel {
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
+      if (completedAt != null) 'completedAt': completedAt?.toJson(),
     };
   }
 
@@ -218,6 +229,7 @@ class _TicketImpl extends Ticket {
     required int creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   }) : super._(
          id: id,
          userId: userId,
@@ -236,6 +248,7 @@ class _TicketImpl extends Ticket {
          creds: creds,
          deadline: deadline,
          createdAt: createdAt,
+         completedAt: completedAt,
        );
 
   /// Returns a shallow copy of this [Ticket]
@@ -260,6 +273,7 @@ class _TicketImpl extends Ticket {
     int? creds,
     Object? deadline = _Undefined,
     Object? createdAt = _Undefined,
+    Object? completedAt = _Undefined,
   }) {
     return Ticket(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -283,6 +297,7 @@ class _TicketImpl extends Ticket {
       creds: creds ?? this.creds,
       deadline: deadline is DateTime? ? deadline : this.deadline,
       createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
+      completedAt: completedAt is DateTime? ? completedAt : this.completedAt,
     );
   }
 }

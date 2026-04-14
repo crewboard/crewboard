@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
@@ -10,37 +10,37 @@ import 'view_ticket_dialog.dart';
 
 import 'package:flutter/gestures.dart';
 
-class BucketView extends StatelessWidget {
+class BucketView extends ConsumerWidget {
   const BucketView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final PlannerController controller = Get.find<PlannerController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(plannerProvider);
+    final notifier = ref.read(plannerProvider.notifier);
 
-    return Obx(() {
-      if (controller.isLoadingPlanner.value && controller.buckets.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
+    if (state.isLoadingPlanner && state.buckets.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-      return Container(
-        color: Colors.transparent,
-        child: Scrollbar(
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              for (var bucket in controller.buckets)
-                _buildBucket(context, controller, bucket),
-              _buildAddBucket(controller),
-            ],
-          ),
+    return Container(
+      color: Colors.transparent,
+      child: Scrollbar(
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (var bucket in state.buckets)
+              _buildBucket(context, ref, notifier, bucket),
+            _buildAddBucket(notifier),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget _buildBucket(
     BuildContext context,
-    PlannerController controller,
+    WidgetRef ref,
+    PlannerNotifier notifier,
     BucketModel bucket,
   ) {
     return Container(
@@ -63,8 +63,9 @@ class BucketView extends StatelessWidget {
               if (bucket.isDefault == true)
                 AddButton(
                   onPress: () {
-                    Get.dialog(
-                      AddTicketDialog(initialBucketId: bucket.bucketId),
+                    showDialog(
+                      context: context,
+                      builder: (context) => AddTicketDialog(initialBucketId: bucket.bucketId),
                     );
                   },
                 ),
@@ -75,7 +76,7 @@ class BucketView extends StatelessWidget {
             child: DragTarget<PlannerTicket>(
               onWillAccept: (data) {
                 if (data != null) {
-                  controller.onDragUpdated(
+                  notifier.onDragUpdated(
                     bucket.bucketId,
                     bucket.tickets.length,
                   );
@@ -84,7 +85,7 @@ class BucketView extends StatelessWidget {
                 return false;
               },
               onAcceptWithDetails: (details) {
-                controller.onDrop(bucket.bucketId, bucket.tickets.length);
+                notifier.onDrop(bucket.bucketId, bucket.tickets.length);
               },
               builder: (context, candidateData, rejectedData) {
                 return ListView(
@@ -109,13 +110,13 @@ class BucketView extends StatelessWidget {
                           },
                           onWillAccept: (data) {
                             if (data != null) {
-                              controller.onDragUpdated(bucket.bucketId, i);
+                              notifier.onDragUpdated(bucket.bucketId, i);
                               return true;
                             }
                             return false;
                           },
                           onAcceptWithDetails: (details) {
-                            controller.onDrop(bucket.bucketId, i);
+                            notifier.onDrop(bucket.bucketId, i);
                           },
                         )
                       else
@@ -125,7 +126,7 @@ class BucketView extends StatelessWidget {
                               ticket: bucket.tickets[i],
                               bucketId: bucket.bucketId,
                               onDragStart: () {
-                                controller.onDragStarted(
+                                notifier.onDragStarted(
                                   bucket.tickets[i],
                                   bucket.bucketId,
                                 );
@@ -135,7 +136,7 @@ class BucketView extends StatelessWidget {
                           onWillAccept: (data) {
                             if (data != null &&
                                 data.id != bucket.tickets[i].id) {
-                              controller.onDragUpdated(bucket.bucketId, i);
+                              notifier.onDragUpdated(bucket.bucketId, i);
                               return true;
                             }
                             return false;
@@ -157,7 +158,7 @@ class BucketView extends StatelessWidget {
     );
   }
 
-  Widget _buildAddBucket(PlannerController controller) {
+  Widget _buildAddBucket(PlannerNotifier notifier) {
     return Container(
       width: 280,
       margin: const EdgeInsets.all(10),
@@ -166,7 +167,7 @@ class BucketView extends StatelessWidget {
           CreateItemInlineButton(
             label: "Add Bucket",
             onSave: (name, color) async {
-              await controller.addBucket(name);
+              await notifier.addBucket(name);
             },
           ),
         ],
@@ -175,7 +176,7 @@ class BucketView extends StatelessWidget {
   }
 }
 
-class DraggableCard extends StatelessWidget {
+class DraggableCard extends ConsumerWidget {
   const DraggableCard({
     super.key,
     required this.ticket,
@@ -187,7 +188,7 @@ class DraggableCard extends StatelessWidget {
   final VoidCallback onDragStart;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Draggable<PlannerTicket>(
       data: ticket,
       feedback: Material(
@@ -203,8 +204,7 @@ class DraggableCard extends StatelessWidget {
       ),
       onDragStarted: onDragStart,
       onDraggableCanceled: (velocity, offset) {
-        final PlannerController controller = Get.find<PlannerController>();
-        controller.onDragCancelled();
+        ref.read(plannerProvider.notifier).onDragCancelled();
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -214,7 +214,7 @@ class DraggableCard extends StatelessWidget {
   }
 }
 
-class TicketWidget extends StatelessWidget {
+class TicketWidget extends ConsumerWidget {
   const TicketWidget({
     super.key,
     required this.ticket,
@@ -224,7 +224,7 @@ class TicketWidget extends StatelessWidget {
   final UuidValue bucketId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Check if it's a holder/placeholder ticket
     if (ticket.holder == 'true') {
       return Container(
@@ -240,7 +240,10 @@ class TicketWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Get.dialog(ViewTicketDialog(ticketId: ticket.id));
+        showDialog(
+          context: context,
+          builder: (context) => ViewTicketDialog(ticketId: ticket.id),
+        );
       },
       child: Container(
         width: 300,
@@ -278,7 +281,9 @@ class TicketWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              ticket.ticketName,
+              ticket.ticketName.startsWith('${ticket.typeName}: ')
+                  ? ticket.ticketName.substring('${ticket.typeName}: '.length)
+                  : ticket.ticketName,
               style: TextStyle(fontSize: 16, color: Pallet.font1),
             ),
             const SizedBox(height: 5),
@@ -286,7 +291,7 @@ class TicketWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Text.rich(
                 TextSpan(
-                  children: _parseBody(ticket.ticketBody),
+                  children: _parseBody(ref, ticket.ticketBody),
                   style: TextStyle(fontSize: 13, color: Pallet.font3),
                 ),
                 maxLines: 12,
@@ -431,14 +436,15 @@ class TicketWidget extends StatelessWidget {
     }
   }
 
-  List<TextSpan> _parseBody(String text) {
+  List<TextSpan> _parseBody(WidgetRef ref, String text) {
     if (text.isEmpty) return [];
     final List<TextSpan> spans = [];
 
-    final PlannerController controller = Get.find<PlannerController>();
+    final state = ref.read(plannerProvider);
+    final notifier = ref.read(plannerProvider.notifier);
     final List<String> names = [
-      ...controller.allFlows.map((f) => f.name),
-      ...controller.allDocs.map((d) => d.name),
+      ...state.allFlows.map((f) => f.name),
+      ...state.allDocs.map((d) => d.name),
     ];
 
     // Create a regex that matches either valid names (prioritized) or standard hashtags
@@ -459,15 +465,13 @@ class TicketWidget extends StatelessWidget {
         spans.add(
           TextSpan(
             text: match,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                final PlannerController controller =
-                    Get.find<PlannerController>();
-                controller.openLinkedFlow(flowName);
+                notifier.openLinkedFlow(flowName);
               },
           ),
         );

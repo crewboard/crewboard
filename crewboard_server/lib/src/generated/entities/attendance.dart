@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -431,7 +430,7 @@ class AttendanceRepository {
   /// );
   /// ```
   Future<List<Attendance>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AttendanceTable>? where,
     int? limit,
     int? offset,
@@ -440,6 +439,8 @@ class AttendanceRepository {
     _i1.OrderByListBuilder<AttendanceTable>? orderByList,
     _i1.Transaction? transaction,
     AttendanceInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Attendance>(
       where: where?.call(Attendance.t),
@@ -450,6 +451,8 @@ class AttendanceRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -471,7 +474,7 @@ class AttendanceRepository {
   /// );
   /// ```
   Future<Attendance?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AttendanceTable>? where,
     int? offset,
     _i1.OrderByBuilder<AttendanceTable>? orderBy,
@@ -479,6 +482,8 @@ class AttendanceRepository {
     _i1.OrderByListBuilder<AttendanceTable>? orderByList,
     _i1.Transaction? transaction,
     AttendanceInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Attendance>(
       where: where?.call(Attendance.t),
@@ -488,20 +493,26 @@ class AttendanceRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Attendance] by its [id] or null if no such row exists.
   Future<Attendance?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AttendanceInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Attendance>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -511,14 +522,20 @@ class AttendanceRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Attendance>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Attendance> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Attendance>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -526,7 +543,7 @@ class AttendanceRepository {
   ///
   /// The returned [Attendance] will have its `id` field set.
   Future<Attendance> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Attendance row, {
     _i1.Transaction? transaction,
   }) async {
@@ -542,7 +559,7 @@ class AttendanceRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Attendance>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Attendance> rows, {
     _i1.ColumnSelections<AttendanceTable>? columns,
     _i1.Transaction? transaction,
@@ -558,7 +575,7 @@ class AttendanceRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Attendance> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Attendance row, {
     _i1.ColumnSelections<AttendanceTable>? columns,
     _i1.Transaction? transaction,
@@ -573,7 +590,7 @@ class AttendanceRepository {
   /// Updates a single [Attendance] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Attendance?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AttendanceUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -588,7 +605,7 @@ class AttendanceRepository {
   /// Updates all [Attendance]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Attendance>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<AttendanceUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<AttendanceTable> where,
     int? limit,
@@ -614,7 +631,7 @@ class AttendanceRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Attendance>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Attendance> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -626,7 +643,7 @@ class AttendanceRepository {
 
   /// Deletes a single [Attendance].
   Future<Attendance> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Attendance row, {
     _i1.Transaction? transaction,
   }) async {
@@ -638,7 +655,7 @@ class AttendanceRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Attendance>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<AttendanceTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -651,7 +668,7 @@ class AttendanceRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AttendanceTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -659,6 +676,22 @@ class AttendanceRepository {
     return session.db.count<Attendance>(
       where: where?.call(Attendance.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Attendance] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<AttendanceTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Attendance>(
+      where: where(Attendance.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -670,7 +703,7 @@ class AttendanceAttachRowRepository {
   /// Creates a relation between the given [Attendance] and [User]
   /// by setting the [Attendance]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Attendance attendance,
     _i2.User user, {
     _i1.Transaction? transaction,

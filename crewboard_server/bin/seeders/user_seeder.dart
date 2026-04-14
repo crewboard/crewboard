@@ -16,7 +16,7 @@ void _sendRegistrationCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  print('[EmailIdp] Registration code ($email): $verificationCode');
+  // Silence logs for seeder unless explicitly needed
 }
 
 void _sendPasswordResetCode(
@@ -26,7 +26,7 @@ void _sendPasswordResetCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  print('[EmailIdp] Password reset code ($email): $verificationCode');
+  // Silence logs for seeder unless explicitly needed
 }
 
 void main(List<String> args) async {
@@ -53,103 +53,154 @@ void main(List<String> args) async {
   );
 
   // Start Serverpod (connects to DB)
-  await pod.start();
+  try {
+    await pod.start();
+  } catch (e) {
+    print('Note: Server listeners did not start (likely port conflict), continuing with database session.');
+  }
 
   try {
     final session = await pod.createSession();
 
-    print('\n--- User Seeder ---');
+    print('\n--- User Seeder (Interactive Admin + Automatic Test Users) ---');
 
-    // Get inputs
-    stdout.write('Enter Username: ');
-    final username = stdin.readLineSync()?.trim();
-    if (username == null || username.isEmpty) {
-      print('Username is required.');
-      exit(1);
-    }
-
-    stdout.write('Enter Email: ');
-    final email = stdin.readLineSync()?.trim();
-    if (email == null || email.isEmpty) {
-      print('Email is required.');
-      exit(1);
-    }
-
-    stdout.write('Enter Password (min 8 chars): ');
-    // Note: echoing password for simplicity in this dev script
-    final password = stdin.readLineSync()?.trim();
-    if (password == null || password.length < 8) {
-      print('Password must be at least 8 characters.');
-      exit(1);
-    }
-
-    // Optional: Select User Type (default to 'user' for now, or fetch from DB)
-    final userType = await UserTypes.db.findFirstRow(
+    // 1. Fetch Shared Resources
+    final adminType = await UserTypes.db.findFirstRow(
       session,
-      where: (t) => t.userType.equals('user'),
+      where: (t) => t.userType.equals('admin'),
     );
-    if (userType == null) {
-      print(
-        'Error: "user" UserType not found in database. Run migrations/seeds first.',
-      );
+    if (adminType == null) {
+      print('Error: "admin" UserType not found. Run main server migrations/seeds first.');
       exit(1);
     }
 
-    // Optional: Select Organization (default to first/main one for now)
     final organization = await Organization.db.findFirstRow(session);
     if (organization == null) {
       print('Error: No organizations found. Run migrations/seeds first.');
       exit(1);
     }
 
-    // Default Color/LeaveConfig
-    final defaultColor =
-        await SystemColor.db.findFirstRow(
-          session,
-          where: (t) => t.isDefault.equals(true),
-        ) ??
-        await SystemColor.db.findFirstRow(session);
-    final defaultLeaveConfig = await LeaveConfig.db.findFirstRow(session);
+    final allColors = await SystemColor.db.find(session);
+    if (allColors.isEmpty) {
+      print('Error: Missing SystemColors. Ensure they are seeded.');
+      exit(1);
+    }
+    final colorsList = allColors.toList()..shuffle();
 
-    if (defaultColor == null || defaultLeaveConfig == null) {
-      print('Error: Missing default SystemColor or LeaveConfig.');
+    final defaultLeaveConfig = await LeaveConfig.db.findFirstRow(session);
+    if (defaultLeaveConfig == null) {
+      print('Error: Missing LeaveConfig.');
       exit(1);
     }
 
-    print('\nCreating user...');
+    // --- PHASE 1: INTERACTIVE ADMIN CREATION ---
 
-    // Construct User object
-    // Note: IDs for organization, color, etc, will be effectively set/overridden or used as defaults
-    // UserService.createUserWithAuth handles some logic, but expects a User object with some fields.
-    final newUser = User(
-      userName: username,
-      email: email,
-      organizationId: organization.id!,
-      colorId: defaultColor.id!,
-      userTypeId: userType.id!,
-      leaveConfigId: defaultLeaveConfig.id!,
-      firstName: username, // Default to username
-      lastName: '',
-      gender: 'unspecified',
-      phone: '',
-      performance: 0,
-      online: false,
-      onsite: false,
-      deleted: false,
-    );
+    print('\n[Step 1/2] Create Main Admin User');
+    stdout.write('Enter Username: ');
+    final adminUsername = stdin.readLineSync()?.trim();
+    if (adminUsername == null || adminUsername.isEmpty) {
+      print('Username is required.');
+      exit(1);
+    }
 
-    // Call the service
-    await UserService.createUserWithAuth(
-      session,
-      newUser,
-      password,
-    );
+    stdout.write('Enter Email: ');
+    final adminEmail = stdin.readLineSync()?.trim();
+    if (adminEmail == null || adminEmail.isEmpty) {
+      print('Email is required.');
+      exit(1);
+    }
 
-    print('\nUser created successfully! You can now log in.');
+    stdout.write('Enter Password (min 8 chars): ');
+    final adminPassword = stdin.readLineSync()?.trim();
+    if (adminPassword == null || adminPassword.length < 8) {
+      print('Password must be at least 8 characters.');
+      exit(1);
+    }
+
+    try {
+      print('\nChecking/Creating admin user "$adminUsername"...');
+      final existingAdmin = await User.db.findFirstRow(
+        session,
+        where: (t) => t.userName.equals(adminUsername),
+      );
+
+      if (existingAdmin == null) {
+        final adminUser = User(
+          userName: adminUsername,
+          email: adminEmail,
+          organizationId: organization.id!,
+          colorId: colorsList.first.id!,
+          userTypeId: adminType.id!,
+          leaveConfigId: defaultLeaveConfig.id!,
+          firstName: adminUsername,
+          lastName: '',
+          gender: 'unspecified',
+          phone: '',
+          performance: 0,
+          online: false,
+          onsite: false,
+          deleted: false,
+        );
+
+        await UserService.createUserWithAuth(session, adminUser, adminPassword);
+        print('Admin user "$adminUsername" created successfully!');
+      } else {
+        print('Admin user "$adminUsername" already exists, skipping creation.');
+      }
+    } catch (e) {
+      print('Error creating admin user: $e');
+      print('Proceeding to automatic seeding...');
+    }
+
+    // --- PHASE 2: AUTOMATIC TEST USERS ---
+
+    print('\n[Step 2/2] Automatically Seeding Test Users...');
+    final testUsers = ['Altair', 'Ravix', 'Ilyon', 'Aethera', 'Nyvora', 'Lumis'];
+    final defaultPassword = '0007!Asd'; // Consistent test password
+
+    int colorIndex = 1; // Start from next color
+    for (final username in testUsers) {
+      final email = '${username.toLowerCase()}@crewboard.com';
+      
+      // Check if exists
+      final existing = await User.db.findFirstRow(
+        session,
+        where: (t) => t.userName.equals(username),
+      );
+      if (existing != null) {
+        print(' - Skipping $username: Already exists.');
+        continue;
+      }
+
+      print(' - Seeding $username ($email)...');
+      final userColor = colorsList[colorIndex % colorsList.length];
+      colorIndex++;
+
+      final newUser = User(
+        userName: username,
+        email: email,
+        organizationId: organization.id!,
+        colorId: userColor.id!,
+        userTypeId: adminType.id!, // Seed all as admins per user request "needs to be admin with all permissions"
+        leaveConfigId: defaultLeaveConfig.id!,
+        firstName: username,
+        lastName: '',
+        gender: 'unspecified',
+        phone: '',
+        performance: 0,
+        online: false,
+        onsite: false,
+        deleted: false,
+      );
+
+      await UserService.createUserWithAuth(session, newUser, defaultPassword);
+    }
+
+    print('\nAll users seeded successfully! You can now log in.');
 
     await session.close();
   } catch (e) {
-    print('\nError creating user: $e');
+    print('\nError during seeding: $e');
   } finally {
     await pod.shutdown();
   }

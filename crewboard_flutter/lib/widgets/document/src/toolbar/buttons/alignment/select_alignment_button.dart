@@ -24,17 +24,21 @@ class QuillToolbarSelectAlignmentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuAnchor(
-      menuChildren: _AlignmentOptions.values
-          .map(
-            (e) => MenuItemButton(
-              child: Text(e.name),
-              onPressed: () {
-                controller.formatSelection(e.attribute);
-              },
-            ),
-          )
-          .toList(),
+    return PopupMenuButton<_AlignmentOptions>(
+      onSelected: (e) {
+        controller.formatSelection(e.attribute);
+      },
+      itemBuilder: (context) {
+        return _AlignmentOptions.values
+            .map(
+              (e) => PopupMenuItem<_AlignmentOptions>(
+                value: e,
+                child: Text(e.name),
+              ),
+            )
+            .toList();
+      },
+      child: const Icon(Icons.align_horizontal_left), // Adding a fallback child if missing
     );
   }
 }

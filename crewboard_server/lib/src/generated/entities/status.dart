@@ -17,11 +17,15 @@ abstract class Status
   Status._({
     this.id,
     required this.statusName,
+    required this.working,
+    required this.completed,
   });
 
   factory Status({
     _i1.UuidValue? id,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) = _StatusImpl;
 
   factory Status.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -30,6 +34,8 @@ abstract class Status
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       statusName: jsonSerialization['statusName'] as String,
+      working: _i1.BoolJsonExtension.fromJson(jsonSerialization['working']),
+      completed: _i1.BoolJsonExtension.fromJson(jsonSerialization['completed']),
     );
   }
 
@@ -42,6 +48,10 @@ abstract class Status
 
   String statusName;
 
+  bool working;
+
+  bool completed;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -51,6 +61,8 @@ abstract class Status
   Status copyWith({
     _i1.UuidValue? id,
     String? statusName,
+    bool? working,
+    bool? completed,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -58,6 +70,8 @@ abstract class Status
       '__className__': 'Status',
       if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
+      'working': working,
+      'completed': completed,
     };
   }
 
@@ -67,6 +81,8 @@ abstract class Status
       '__className__': 'Status',
       if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
+      'working': working,
+      'completed': completed,
     };
   }
 
@@ -106,9 +122,13 @@ class _StatusImpl extends Status {
   _StatusImpl({
     _i1.UuidValue? id,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) : super._(
          id: id,
          statusName: statusName,
+         working: working,
+         completed: completed,
        );
 
   /// Returns a shallow copy of this [Status]
@@ -118,10 +138,14 @@ class _StatusImpl extends Status {
   Status copyWith({
     Object? id = _Undefined,
     String? statusName,
+    bool? working,
+    bool? completed,
   }) {
     return Status(
       id: id is _i1.UuidValue? ? id : this.id,
       statusName: statusName ?? this.statusName,
+      working: working ?? this.working,
+      completed: completed ?? this.completed,
     );
   }
 }
@@ -133,6 +157,16 @@ class StatusUpdateTable extends _i1.UpdateTable<StatusTable> {
     table.statusName,
     value,
   );
+
+  _i1.ColumnValue<bool, bool> working(bool value) => _i1.ColumnValue(
+    table.working,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> completed(bool value) => _i1.ColumnValue(
+    table.completed,
+    value,
+  );
 }
 
 class StatusTable extends _i1.Table<_i1.UuidValue?> {
@@ -142,16 +176,30 @@ class StatusTable extends _i1.Table<_i1.UuidValue?> {
       'statusName',
       this,
     );
+    working = _i1.ColumnBool(
+      'working',
+      this,
+    );
+    completed = _i1.ColumnBool(
+      'completed',
+      this,
+    );
   }
 
   late final StatusUpdateTable updateTable;
 
   late final _i1.ColumnString statusName;
 
+  late final _i1.ColumnBool working;
+
+  late final _i1.ColumnBool completed;
+
   @override
   List<_i1.Column> get columns => [
     id,
     statusName,
+    working,
+    completed,
   ];
 }
 
@@ -211,7 +259,7 @@ class StatusRepository {
   /// );
   /// ```
   Future<List<Status>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<StatusTable>? where,
     int? limit,
     int? offset,
@@ -219,6 +267,8 @@ class StatusRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<StatusTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Status>(
       where: where?.call(Status.t),
@@ -228,6 +278,8 @@ class StatusRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -249,13 +301,15 @@ class StatusRepository {
   /// );
   /// ```
   Future<Status?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<StatusTable>? where,
     int? offset,
     _i1.OrderByBuilder<StatusTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<StatusTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Status>(
       where: where?.call(Status.t),
@@ -264,18 +318,24 @@ class StatusRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Status] by its [id] or null if no such row exists.
   Future<Status?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Status>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -285,14 +345,20 @@ class StatusRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Status>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Status> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Status>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -300,7 +366,7 @@ class StatusRepository {
   ///
   /// The returned [Status] will have its `id` field set.
   Future<Status> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Status row, {
     _i1.Transaction? transaction,
   }) async {
@@ -316,7 +382,7 @@ class StatusRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Status>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Status> rows, {
     _i1.ColumnSelections<StatusTable>? columns,
     _i1.Transaction? transaction,
@@ -332,7 +398,7 @@ class StatusRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Status> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Status row, {
     _i1.ColumnSelections<StatusTable>? columns,
     _i1.Transaction? transaction,
@@ -347,7 +413,7 @@ class StatusRepository {
   /// Updates a single [Status] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Status?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<StatusUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -362,7 +428,7 @@ class StatusRepository {
   /// Updates all [Status]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Status>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<StatusUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<StatusTable> where,
     int? limit,
@@ -388,7 +454,7 @@ class StatusRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Status>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Status> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -400,7 +466,7 @@ class StatusRepository {
 
   /// Deletes a single [Status].
   Future<Status> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Status row, {
     _i1.Transaction? transaction,
   }) async {
@@ -412,7 +478,7 @@ class StatusRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Status>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<StatusTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -425,7 +491,7 @@ class StatusRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<StatusTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -433,6 +499,22 @@ class StatusRepository {
     return session.db.count<Status>(
       where: where?.call(Status.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Status] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<StatusTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Status>(
+      where: where(Status.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

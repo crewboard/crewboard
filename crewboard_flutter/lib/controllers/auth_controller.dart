@@ -1,59 +1,72 @@
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthController extends GetxController {
-  RxBool isAuthenticated = false.obs;
-  Rx<UuidValue?> currentUserId = Rx<UuidValue?>(null);
+class AuthState {
+  final bool isAuthenticated;
+  final UuidValue? currentUserId;
 
+  AuthState({required this.isAuthenticated, this.currentUserId});
+
+  AuthState copyWith({bool? isAuthenticated, UuidValue? currentUserId}) {
+    return AuthState(
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      currentUserId: currentUserId ?? this.currentUserId,
+    );
+  }
+}
+
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+
+class AuthNotifier extends Notifier<AuthState> {
   @override
-  void onInit() {
-    super.onInit();
+  AuthState build() {
     // Initialize with current session state
-    isAuthenticated.value = sessionManager.isAuthenticated;
-    _updateUserId();
+    final initialState = AuthState(
+      isAuthenticated: sessionManager.isAuthenticated,
+      currentUserId: _getUserId(),
+    );
 
     // Listen to session changes
     sessionManager.authInfoListenable.addListener(_onSessionChanged);
+
+    // Cleanup when provider is disposed
+    ref.onDispose(() {
+      sessionManager.authInfoListenable.removeListener(_onSessionChanged);
+    });
+
+    return initialState;
   }
 
   void _onSessionChanged() {
     print('AUTH: Session changed event received.');
-    print('AUTH: IsAuthenticated status: ${sessionManager.isAuthenticated}');
-    isAuthenticated.value = sessionManager.isAuthenticated;
-    _updateUserId();
+    state = state.copyWith(
+      isAuthenticated: sessionManager.isAuthenticated,
+      currentUserId: _getUserId(),
+    );
+  }
+
+  UuidValue? _getUserId() {
+    if (sessionManager.isAuthenticated) {
+      final authInfo = sessionManager.authInfoListenable.value;
+      return authInfo?.authUserId;
+    }
+    return null;
   }
 
   void checkStatus() {
     print('AUTH: Manual status check requested.');
-    // Don't override if already authenticated (forced login)
-    if (!isAuthenticated.value) {
-      isAuthenticated.value = sessionManager.isAuthenticated;
-    }
-    _updateUserId();
-  }
-
-  void _updateUserId() {
-    if (sessionManager.isAuthenticated) {
-      // serverpod_auth_core_flutter's sessionManager stores the user ID in the auth info
-      final authInfo = sessionManager.authInfoListenable.value;
-      if (authInfo != null) {
-        currentUserId.value = authInfo.authUserId;
-      }
-    } else {
-      currentUserId.value = null;
+    if (!state.isAuthenticated) {
+      state = state.copyWith(
+        isAuthenticated: sessionManager.isAuthenticated,
+        currentUserId: _getUserId(),
+      );
     }
   }
 
   void forceAuthenticated() {
     print('AUTH: Forcing authenticated state to true.');
-    isAuthenticated.value = true;
-  }
-
-  @override
-  void onClose() {
-    sessionManager.authInfoListenable.removeListener(_onSessionChanged);
-    super.onClose();
+    state = state.copyWith(isAuthenticated: true);
   }
 
   Future<void> logout() async {

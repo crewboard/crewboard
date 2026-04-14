@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:crewboard_client/crewboard_client.dart';
 
 import '../../config/palette.dart';
 import '../../screens/chats/widgets/emoji_button.dart';
+import '../../main.dart'; // For sessionManager
 
 // Assuming Emoji type comes from one of these or define a placeholder if not sure.
 // Based on chat_screen.dart it was using `autocompleteEmojis` list of `Emoji`.
@@ -19,6 +21,8 @@ class ChatInputKeyboard extends StatelessWidget {
   final VoidCallback? onAttachPressed;
   final VoidCallback? onSendPressed;
   final List<String> typingUserNames;
+  final ChatMessage? reply;
+  final VoidCallback? onCancelReply;
 
   // Autocomplete props
   final bool showAutocomplete;
@@ -40,6 +44,8 @@ class ChatInputKeyboard extends StatelessWidget {
     this.autocompleteEmojis = const [],
     this.onAutocompleteSelected,
     this.selectedAutocompleteIndex = 0,
+    this.reply,
+    this.onCancelReply,
   });
 
   @override
@@ -73,7 +79,9 @@ class ChatInputKeyboard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 40),
                   child: showAutocomplete
                       ? _buildAutocompleteBar()
-                      : const SizedBox.shrink(),
+                      : reply != null
+                          ? _buildReplyPreview()
+                          : const SizedBox.shrink(),
                 ),
                 Container(
                   margin: const EdgeInsets.only(
@@ -110,6 +118,7 @@ class ChatInputKeyboard extends StatelessWidget {
                           ),
                           onChanged: onChanged,
                           onSubmitted: onSubmitted,
+                          contextMenuBuilder: (context, editableTextState) => const SizedBox.shrink(),
                           decoration: InputDecoration(
                             hintText: 'Type a message...',
                             hintStyle: TextStyle(
@@ -218,6 +227,64 @@ class ChatInputKeyboard extends StatelessWidget {
             );
           }),
         ),
+      ),
+    );
+  }
+
+  Widget _buildReplyPreview() {
+    if (reply == null) return const SizedBox.shrink();
+
+    String content = reply!.message;
+    if (reply!.messageType == MessageType.image) content = "📷 Image";
+    if (reply!.messageType == MessageType.video) content = "🎥 Video";
+    if (reply!.messageType == MessageType.audio) content = "🎵 Audio";
+
+    // Try to get user name if possible, or just say 'Replying to'
+    // For now we assume the caller might want to pass the name, but we can also use a generic label
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5, right: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border(
+          left: BorderSide(color: Pallet.inside1, width: 4),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Replying to",
+                  style: TextStyle(
+                    color: Pallet.inside1,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  content,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Pallet.font3,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onCancelReply,
+            icon: Icon(Icons.close, size: 16, color: Pallet.font3),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
       ),
     );
   }

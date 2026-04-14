@@ -193,7 +193,7 @@ class FlowGenerator {
       _createNode(
         id: 1,
         value: "Submit Feature Idea",
-        type: FlowType.user,
+        type: FlowType.process,
         pid: 0,
         direction: Direction.down,
       ),
@@ -205,6 +205,7 @@ class FlowGenerator {
         type: FlowType.condition,
         pid: 1,
         direction: Direction.down,
+        yesDirection: Direction.down,
       ),
     );
     data.add(
@@ -214,6 +215,7 @@ class FlowGenerator {
         type: FlowType.process,
         pid: 2,
         direction: Direction.left,
+        width: 150.0,
       ),
     );
     data.add(
@@ -223,6 +225,7 @@ class FlowGenerator {
         type: FlowType.process,
         pid: 2,
         direction: Direction.down,
+        width: 150.0,
       ),
     );
     data.add(
@@ -357,12 +360,14 @@ class FlowGenerator {
     required FlowType type,
     int? pid,
     Direction? direction,
+    double? width,
+    Direction? yesDirection,
   }) {
     return {
       'id': id,
       'pid': pid,
-      'width': 100.0,
-      'height': type == FlowType.condition ? 100.0 : 40.0,
+      'width': width ?? 100.0,
+      'height': type == FlowType.condition || type == FlowType.user ? 100.0 : 40.0,
       'x': 0.0,
       'y': 0.0,
       'value': value,
@@ -371,7 +376,7 @@ class FlowGenerator {
       'down': {'lineHeight': 25.0, 'hasChild': false},
       'left': {'lineHeight': 25.0, 'hasChild': false},
       'right': {'lineHeight': 25.0, 'hasChild': false},
-      'yes': type == FlowType.condition ? 0 : null,
+      'yes': type == FlowType.condition ? (yesDirection?.index ?? 0) : null,
     };
   }
 }
@@ -398,7 +403,8 @@ void main(List<String> args) async {
   );
 
   try {
-    await pod.start();
+    print('Skipping pod.start() to avoid port conflicts...');
+    // await pod.start();
   } catch (e) {
     print(
       'Warning: Failed to start server listeners (likely port conflict), attempting to continue with database session: $e',

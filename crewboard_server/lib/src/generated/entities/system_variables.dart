@@ -61,10 +61,18 @@ abstract class SystemVariables
       processWidth: (jsonSerialization['processWidth'] as num?)?.toDouble(),
       conditionWidth: (jsonSerialization['conditionWidth'] as num?)?.toDouble(),
       terminalWidth: (jsonSerialization['terminalWidth'] as num?)?.toDouble(),
-      allowEdit: jsonSerialization['allowEdit'] as bool?,
-      showEdit: jsonSerialization['showEdit'] as bool?,
-      allowDelete: jsonSerialization['allowDelete'] as bool?,
-      showDelete: jsonSerialization['showDelete'] as bool?,
+      allowEdit: jsonSerialization['allowEdit'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['allowEdit']),
+      showEdit: jsonSerialization['showEdit'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['showEdit']),
+      allowDelete: jsonSerialization['allowDelete'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['allowDelete']),
+      showDelete: jsonSerialization['showDelete'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['showDelete']),
       googleFonts: jsonSerialization['googleFonts'] == null
           ? null
           : _i2.Protocol().deserialize<List<String>>(
@@ -565,7 +573,7 @@ class SystemVariablesRepository {
   /// );
   /// ```
   Future<List<SystemVariables>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemVariablesTable>? where,
     int? limit,
     int? offset,
@@ -573,6 +581,8 @@ class SystemVariablesRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SystemVariablesTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SystemVariables>(
       where: where?.call(SystemVariables.t),
@@ -582,6 +592,8 @@ class SystemVariablesRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -603,13 +615,15 @@ class SystemVariablesRepository {
   /// );
   /// ```
   Future<SystemVariables?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemVariablesTable>? where,
     int? offset,
     _i1.OrderByBuilder<SystemVariablesTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<SystemVariablesTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SystemVariables>(
       where: where?.call(SystemVariables.t),
@@ -618,18 +632,24 @@ class SystemVariablesRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [SystemVariables] by its [id] or null if no such row exists.
   Future<SystemVariables?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SystemVariables>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -639,14 +659,20 @@ class SystemVariablesRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<SystemVariables>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemVariables> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<SystemVariables>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -654,7 +680,7 @@ class SystemVariablesRepository {
   ///
   /// The returned [SystemVariables] will have its `id` field set.
   Future<SystemVariables> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemVariables row, {
     _i1.Transaction? transaction,
   }) async {
@@ -670,7 +696,7 @@ class SystemVariablesRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<SystemVariables>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemVariables> rows, {
     _i1.ColumnSelections<SystemVariablesTable>? columns,
     _i1.Transaction? transaction,
@@ -686,7 +712,7 @@ class SystemVariablesRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<SystemVariables> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemVariables row, {
     _i1.ColumnSelections<SystemVariablesTable>? columns,
     _i1.Transaction? transaction,
@@ -701,7 +727,7 @@ class SystemVariablesRepository {
   /// Updates a single [SystemVariables] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<SystemVariables?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<SystemVariablesUpdateTable>
     columnValues,
@@ -717,7 +743,7 @@ class SystemVariablesRepository {
   /// Updates all [SystemVariables]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<SystemVariables>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<SystemVariablesUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<SystemVariablesTable> where,
@@ -744,7 +770,7 @@ class SystemVariablesRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<SystemVariables>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemVariables> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -756,7 +782,7 @@ class SystemVariablesRepository {
 
   /// Deletes a single [SystemVariables].
   Future<SystemVariables> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemVariables row, {
     _i1.Transaction? transaction,
   }) async {
@@ -768,7 +794,7 @@ class SystemVariablesRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<SystemVariables>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<SystemVariablesTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -781,7 +807,7 @@ class SystemVariablesRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemVariablesTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -789,6 +815,22 @@ class SystemVariablesRepository {
     return session.db.count<SystemVariables>(
       where: where?.call(SystemVariables.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [SystemVariables] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<SystemVariablesTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<SystemVariables>(
+      where: where(SystemVariables.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

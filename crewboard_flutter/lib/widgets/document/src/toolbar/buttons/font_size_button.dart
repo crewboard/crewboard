@@ -40,7 +40,7 @@ class QuillToolbarFontSizeButtonState
           QuillToolbarFontSizeButtonExtraOptions,
           String
         > {
-  final _menuController = MenuController();
+
 
   Map<String, String> get _items {
     final fontSizes =
@@ -95,15 +95,6 @@ class QuillToolbarFontSizeButtonState
   @override
   IconData get defaultIconData => Icons.format_size_outlined;
 
-  void _onDropdownButtonPressed() {
-    if (_menuController.isOpen) {
-      _menuController.close();
-    } else {
-      _menuController.open();
-    }
-    afterButtonPressed?.call();
-  }
-
   @override
   Widget build(BuildContext context) {
     final childBuilder = this.childBuilder;
@@ -115,50 +106,51 @@ class QuillToolbarFontSizeButtonState
           currentValue: currentValue,
           defaultDisplayText: _defaultDisplayText,
           context: context,
-          onPressed: _onDropdownButtonPressed,
+          onPressed: () {},
         ),
       );
     }
-    return MenuAnchor(
-      controller: _menuController,
-      menuChildren: _items.entries.map((fontSize) {
-        return MenuItemButton(
-          key: ValueKey(fontSize.key),
-          onPressed: () {
-            final newValue = fontSize.value;
-
-            final keyName = _getKeyName(newValue);
-            setState(() {
-              if (keyName != context.loc.clear) {
-                currentValue = keyName ?? _defaultDisplayText;
-              } else {
-                currentValue = _defaultDisplayText;
-              }
-              if (keyName != null) {
-                controller.formatSelection(
-                  Attribute.fromKeyValue(
-                    Attribute.size.key,
-                    newValue == '0' ? null : getFontSize(newValue),
-                  ),
-                );
-                options.onSelected?.call(newValue);
-              }
-            });
-          },
-          child: Text(
-            fontSize.key.toString(),
-            style: TextStyle(
-              color: fontSize.value == '0' ? options.defaultItemColor : null,
+    return PopupMenuButton<String>(
+      tooltip: tooltip,
+      onSelected: (newValue) {
+        final keyName = _getKeyName(newValue);
+        setState(() {
+          if (keyName != context.loc.clear) {
+            currentValue = keyName ?? _defaultDisplayText;
+          } else {
+            currentValue = _defaultDisplayText;
+          }
+          if (keyName != null) {
+            controller.formatSelection(
+              Attribute.fromKeyValue(
+                Attribute.size.key,
+                newValue == '0' ? null : getFontSize(newValue),
+              ),
+            );
+            options.onSelected?.call(newValue);
+          }
+        });
+        afterButtonPressed?.call();
+      },
+      itemBuilder: (context) {
+        return _items.entries.map((fontSize) {
+          return PopupMenuItem<String>(
+            value: fontSize.value,
+            child: Text(
+              fontSize.key.toString(),
+              style: TextStyle(
+                color: fontSize.value == '0' ? options.defaultItemColor : null,
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList();
+      },
       child: Builder(
         builder: (context) {
           final isMaterial3 = Theme.of(context).useMaterial3;
           if (!isMaterial3) {
             return RawMaterialButton(
-              onPressed: _onDropdownButtonPressed,
+              onPressed: null,
               child: _buildContent(context),
             );
           }
@@ -166,7 +158,7 @@ class QuillToolbarFontSizeButtonState
             tooltip: tooltip,
             isSelected: false,
             iconTheme: iconTheme,
-            onPressed: _onDropdownButtonPressed,
+            onPressed: null,
             icon: _buildContent(context),
           );
         },

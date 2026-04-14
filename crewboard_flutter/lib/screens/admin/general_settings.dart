@@ -1,16 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 import '../../config/palette.dart';
 import '../../controllers/theme_controller.dart';
-import '../../main.dart'; // For sessionManager access if needed, or just use singleton
+import '../../main.dart'; // For sessionManager access
 
-class GeneralSettings extends StatelessWidget {
+class GeneralSettings extends ConsumerWidget {
   const GeneralSettings({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeAsync = ref.watch(themeProvider);
+    final themeNotifier = ref.read(themeProvider.notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,7 +38,9 @@ class GeneralSettings extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: () async {
             await sessionManager.signOutDevice();
-            Get.offAllNamed('/'); // Navigate to root/login
+            if (context.mounted) {
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+            }
           },
           icon: const Icon(
             Icons.logout,
@@ -67,13 +72,13 @@ class GeneralSettings extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 15),
-        GetX<ThemeController>(
-          builder: (controller) {
+        themeAsync.when(
+          data: (currentTheme) {
             return Wrap(
               spacing: 15,
               runSpacing: 15,
               children: AppTheme.values.map((theme) {
-                final isSelected = controller.currentTheme == theme;
+                final isSelected = currentTheme == theme;
 
                 // Define preview colors based on theme
                 Color previewBg;
@@ -83,14 +88,14 @@ class GeneralSettings extends StatelessWidget {
 
                 switch (theme) {
                   case AppTheme.glassDark:
-                    previewBg = Colors.black.withOpacity(0.3);
-                    previewAccent = Colors.white.withOpacity(0.2);
+                    previewBg = Colors.black.withValues(alpha: 0.3);
+                    previewAccent = Colors.white.withValues(alpha: 0.2);
                     textColor = Colors.white;
                     isGlass = true;
                     break;
                   case AppTheme.glassLight:
-                    previewBg = Colors.white.withOpacity(0.3);
-                    previewAccent = Colors.black.withOpacity(0.1);
+                    previewBg = Colors.white.withValues(alpha: 0.3);
+                    previewAccent = Colors.black.withValues(alpha: 0.1);
                     textColor = Colors.black87;
                     isGlass = true;
                     break;
@@ -109,7 +114,7 @@ class GeneralSettings extends StatelessWidget {
                 }
 
                 return GestureDetector(
-                  onTap: () => controller.setTheme(theme),
+                  onTap: () => themeNotifier.setTheme(theme),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
@@ -120,8 +125,8 @@ class GeneralSettings extends StatelessWidget {
                           color: isSelected
                               ? Colors.blueAccent
                               : (isGlass
-                                    ? Colors.white.withOpacity(0.2)
-                                    : Colors.grey.withOpacity(0.3)),
+                                    ? Colors.white.withValues(alpha: 0.2)
+                                    : Colors.grey.withValues(alpha: 0.3)),
                           width: isSelected ? 3 : 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -173,8 +178,8 @@ class GeneralSettings extends StatelessWidget {
                                 ),
                                 child: Container(
                                   color: theme == AppTheme.glassDark
-                                      ? Colors.black.withOpacity(0.5)
-                                      : Colors.white.withOpacity(0.5),
+                                      ? Colors.black.withValues(alpha: 0.5)
+                                      : Colors.white.withValues(alpha: 0.5),
                                 ),
                               ),
                             ),
@@ -240,7 +245,7 @@ class GeneralSettings extends StatelessWidget {
                             top: 8,
                             left: 8,
                             child: Text(
-                              controller.getThemeName(theme),
+                              themeNotifier.getThemeName(theme),
                               style: TextStyle(
                                 color: textColor,
                                 fontSize: 11,
@@ -258,7 +263,7 @@ class GeneralSettings extends StatelessWidget {
                                   : Icons.circle_outlined,
                               color: isSelected
                                   ? Colors.blueAccent
-                                  : textColor.withOpacity(0.4),
+                                  : textColor.withValues(alpha: 0.4),
                               size: 20,
                             ),
                           ),
@@ -270,6 +275,8 @@ class GeneralSettings extends StatelessWidget {
               }).toList(),
             );
           },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Text('Error: $err'),
         ),
       ],
     );

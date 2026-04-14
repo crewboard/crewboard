@@ -23,7 +23,7 @@ abstract class CheckOrganizationResponse
     Map<String, dynamic> jsonSerialization,
   ) {
     return CheckOrganizationResponse(
-      exists: jsonSerialization['exists'] as bool,
+      exists: _i1.BoolJsonExtension.fromJson(jsonSerialization['exists']),
     );
   }
 

@@ -39,7 +39,9 @@ abstract class BucketModel
       tickets: _i3.Protocol().deserialize<List<_i2.PlannerTicket>>(
         jsonSerialization['tickets'],
       ),
-      isDefault: jsonSerialization['isDefault'] as bool?,
+      isDefault: jsonSerialization['isDefault'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
     );
   }
 

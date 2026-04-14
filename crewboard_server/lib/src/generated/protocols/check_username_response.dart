@@ -22,7 +22,9 @@ abstract class CheckUsernameResponse
   factory CheckUsernameResponse.fromJson(
     Map<String, dynamic> jsonSerialization,
   ) {
-    return CheckUsernameResponse(exists: jsonSerialization['exists'] as bool);
+    return CheckUsernameResponse(
+      exists: _i1.BoolJsonExtension.fromJson(jsonSerialization['exists']),
+    );
   }
 
   bool exists;

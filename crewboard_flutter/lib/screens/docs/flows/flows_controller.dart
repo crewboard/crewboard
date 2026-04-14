@@ -1,153 +1,267 @@
 import 'dart:convert';
-
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'types.dart';
 import 'package:crewboard_flutter/main.dart'; // For client
 import 'package:crewboard_client/crewboard_client.dart'; // For generated models
 import '../docs_sidebar.dart'; // For enums
 import '../document_editor_provider.dart';
+import 'package:flutter/material.dart';
 
-class FlowsController extends GetxController {
-  // Observable flows list for the canvas
-  final RxList<FlowClass> flows = <FlowClass>[].obs;
+class FlowsState {
+  final List<FlowClass> flows;
+  final List<FlowModel> savedFlows;
+  final List<PlannerApp> apps;
+  final UuidValue? selectedAppId;
+  final SidebarMode sidebarMode;
+  final FlowSubPage currentSubPage;
+  final bool isLoadingApps;
+  final bool isLoadingFlows;
+  final String window;
+  final FlowType? selectedType;
+  final Direction? selectedDirection;
+  final int selectedId;
+  final String widthText;
+  final String valueText;
+  final String downText;
+  final String leftText;
+  final String rightText;
+  final double stageWidth;
+  final double windowHeight;
+  final String widgetKey;
+  final UuidValue? currentFlowId;
+  final String currentFlowName;
+  final bool isLightMode;
+  final int hoveredProcessId;
+  final String hoveredSide;
+  final bool isMouseOverDot;
+  final bool showAddHandles;
+  final int flowCanvasRefreshCounter;
+  final bool isDraggingLineHeight;
+  final int draggedFlowId;
+  final double initialDragX;
+  final double initialDragY;
+  final double initialLineHeight;
+  final bool isPanning;
+  final bool isSelectingLoop;
+  final List<LoopLink> loopLinks;
+  final int loopFrom;
+  final int loopTo;
+  final bool isPickingLoopFrom;
+  final bool isPickingLoopTo;
+  final int loopHoverId;
+  final double loopPad;
+  final String hoveredLoopPadAxis;
+  final bool isDraggingLoopPad;
+  final double initialLoopPadDragPos;
+  final double initialLoopPadValue;
+  final SystemVariables? systemVariables;
+  final bool isLoadingSettings;
 
-  // Observable saved flows list (from API, for Sidebar)
-  final RxList<FlowModel> savedFlows = <FlowModel>[].obs;
+  FlowsState({
+    this.flows = const [],
+    this.savedFlows = const [],
+    this.apps = const [],
+    this.selectedAppId,
+    this.sidebarMode = SidebarMode.apps,
+    this.currentSubPage = FlowSubPage.flows,
+    this.isLoadingApps = false,
+    this.isLoadingFlows = false,
+    this.window = "none",
+    this.selectedType,
+    this.selectedDirection,
+    this.selectedId = -1,
+    this.widthText = "",
+    this.valueText = "",
+    this.downText = "",
+    this.leftText = "",
+    this.rightText = "",
+    this.stageWidth = 0.0,
+    this.windowHeight = 0.0,
+    this.widgetKey = "",
+    this.currentFlowId,
+    this.currentFlowName = "",
+    this.isLightMode = false,
+    this.hoveredProcessId = -1,
+    this.hoveredSide = "",
+    this.isMouseOverDot = false,
+    this.showAddHandles = true,
+    this.flowCanvasRefreshCounter = 0,
+    this.isDraggingLineHeight = false,
+    this.draggedFlowId = -1,
+    this.initialDragX = 0.0,
+    this.initialDragY = 0.0,
+    this.initialLineHeight = 0.0,
+    this.isPanning = false,
+    this.isSelectingLoop = false,
+    this.loopLinks = const [],
+    this.loopFrom = -1,
+    this.loopTo = -1,
+    this.isPickingLoopFrom = false,
+    this.isPickingLoopTo = false,
+    this.loopHoverId = -1,
+    this.loopPad = 40.0,
+    this.hoveredLoopPadAxis = "",
+    this.isDraggingLoopPad = false,
+    this.initialLoopPadDragPos = 0.0,
+    this.initialLoopPadValue = 40.0,
+    this.systemVariables,
+    this.isLoadingSettings = false,
+  });
 
-  // Observable apps list
-  final RxList<PlannerApp> apps = <PlannerApp>[].obs;
+  FlowsState copyWith({
+    List<FlowClass>? flows,
+    List<FlowModel>? savedFlows,
+    List<PlannerApp>? apps,
+    UuidValue? selectedAppId,
+    SidebarMode? sidebarMode,
+    FlowSubPage? currentSubPage,
+    bool? isLoadingApps,
+    bool? isLoadingFlows,
+    String? window,
+    FlowType? selectedType,
+    Direction? selectedDirection,
+    int? selectedId,
+    String? widthText,
+    String? valueText,
+    String? downText,
+    String? leftText,
+    String? rightText,
+    double? stageWidth,
+    double? windowHeight,
+    String? widgetKey,
+    UuidValue? currentFlowId,
+    String? currentFlowName,
+    bool? isLightMode,
+    int? hoveredProcessId,
+    String? hoveredSide,
+    bool? isMouseOverDot,
+    bool? showAddHandles,
+    int? flowCanvasRefreshCounter,
+    bool? isDraggingLineHeight,
+    int? draggedFlowId,
+    double? initialDragX,
+    double? initialDragY,
+    double? initialLineHeight,
+    bool? isPanning,
+    bool? isSelectingLoop,
+    List<LoopLink>? loopLinks,
+    int? loopFrom,
+    int? loopTo,
+    bool? isPickingLoopFrom,
+    bool? isPickingLoopTo,
+    int? loopHoverId,
+    double? loopPad,
+    String? hoveredLoopPadAxis,
+    bool? isDraggingLoopPad,
+    double? initialLoopPadDragPos,
+    double? initialLoopPadValue,
+    SystemVariables? systemVariables,
+    bool? isLoadingSettings,
+  }) {
+    return FlowsState(
+      flows: flows ?? this.flows,
+      savedFlows: savedFlows ?? this.savedFlows,
+      apps: apps ?? this.apps,
+      selectedAppId: selectedAppId ?? this.selectedAppId,
+      sidebarMode: sidebarMode ?? this.sidebarMode,
+      currentSubPage: currentSubPage ?? this.currentSubPage,
+      isLoadingApps: isLoadingApps ?? this.isLoadingApps,
+      isLoadingFlows: isLoadingFlows ?? this.isLoadingFlows,
+      window: window ?? this.window,
+      selectedType: selectedType ?? this.selectedType,
+      selectedDirection: selectedDirection ?? this.selectedDirection,
+      selectedId: selectedId ?? this.selectedId,
+      widthText: widthText ?? this.widthText,
+      valueText: valueText ?? this.valueText,
+      downText: downText ?? this.downText,
+      leftText: leftText ?? this.leftText,
+      rightText: rightText ?? this.rightText,
+      stageWidth: stageWidth ?? this.stageWidth,
+      windowHeight: windowHeight ?? this.windowHeight,
+      widgetKey: widgetKey ?? this.widgetKey,
+      currentFlowId: currentFlowId ?? this.currentFlowId,
+      currentFlowName: currentFlowName ?? this.currentFlowName,
+      isLightMode: isLightMode ?? this.isLightMode,
+      hoveredProcessId: hoveredProcessId ?? this.hoveredProcessId,
+      hoveredSide: hoveredSide ?? this.hoveredSide,
+      isMouseOverDot: isMouseOverDot ?? this.isMouseOverDot,
+      showAddHandles: showAddHandles ?? this.showAddHandles,
+      flowCanvasRefreshCounter: flowCanvasRefreshCounter ?? this.flowCanvasRefreshCounter,
+      isDraggingLineHeight: isDraggingLineHeight ?? this.isDraggingLineHeight,
+      draggedFlowId: draggedFlowId ?? this.draggedFlowId,
+      initialDragX: initialDragX ?? this.initialDragX,
+      initialDragY: initialDragY ?? this.initialDragY,
+      initialLineHeight: initialLineHeight ?? this.initialLineHeight,
+      isPanning: isPanning ?? this.isPanning,
+      isSelectingLoop: isSelectingLoop ?? this.isSelectingLoop,
+      loopLinks: loopLinks ?? this.loopLinks,
+      loopFrom: loopFrom ?? this.loopFrom,
+      loopTo: loopTo ?? this.loopTo,
+      isPickingLoopFrom: isPickingLoopFrom ?? this.isPickingLoopFrom,
+      isPickingLoopTo: isPickingLoopTo ?? this.isPickingLoopTo,
+      loopHoverId: loopHoverId ?? this.loopHoverId,
+      loopPad: loopPad ?? this.loopPad,
+      hoveredLoopPadAxis: hoveredLoopPadAxis ?? this.hoveredLoopPadAxis,
+      isDraggingLoopPad: isDraggingLoopPad ?? this.isDraggingLoopPad,
+      initialLoopPadDragPos: initialLoopPadDragPos ?? this.initialLoopPadDragPos,
+      initialLoopPadValue: initialLoopPadValue ?? this.initialLoopPadValue,
+      systemVariables: systemVariables ?? this.systemVariables,
+      isLoadingSettings: isLoadingSettings ?? this.isLoadingSettings,
+    );
+  }
+}
 
-  // Observable selected app ID
-  final Rx<UuidValue?> selectedAppId = Rx<UuidValue?>(null);
+final flowsProvider = NotifierProvider<FlowsNotifier, FlowsState>(FlowsNotifier.new);
 
-  // Observable sidebar mode
-  final Rx<SidebarMode> sidebarMode = SidebarMode.apps.obs;
-
-  // Observable current subpage
-  final Rx<FlowSubPage> currentSubPage = FlowSubPage.flows.obs;
-
-  // Observable loading state for apps
-  final RxBool isLoadingApps = false.obs;
-
-  // Observable loading state
-  final RxBool isLoadingFlows = false.obs;
-
-  // Observable window mode (add, edit, none)
-  final RxString window = "none".obs;
-
-  // Observable selected flow properties
-  final Rx<FlowType?> selectedType = Rx<FlowType?>(null);
-  final Rx<Direction?> selectedDirection = Rx<Direction?>(null);
-  final RxInt selectedId = (-1).obs;
-
-  // Observable flow properties for editing
-  final RxString widthText = "".obs;
-  final RxString valueText = "".obs;
-  final RxString downText = "".obs;
-  final RxString leftText = "".obs;
-  final RxString rightText = "".obs;
-
-  // Observable window dimensions
-  final RxDouble stageWidth = 0.0.obs;
-  final RxDouble windowHeight = 0.0.obs;
-
-  // Observable widget key for positioning
-  final RxString widgetKey = "".obs;
-
-  // Current Flow properties
-  final Rx<UuidValue?> currentFlowId = Rx<UuidValue?>(null);
-  final RxString currentFlowName = "".obs;
-
-  // Observable palette settings (simplified for now)
-  final RxBool isLightMode = false.obs;
-
-  // Observable hover state for process flows
-  final RxInt hoveredProcessId = (-1).obs;
-  final RxString hoveredSide = "".obs; // "left", "right", or ""
-
-  // Observable mouse over dot state
-  final RxBool isMouseOverDot = false.obs;
-
-  // Toggle to show/hide add handles (dots and hover lines)
-  final RxBool showAddHandles = true.obs;
-
-  // Observable refresh counter to force UI updates
-  final RxInt flowCanvasRefreshCounter = 0.obs;
-
-  // Drag states
-  final RxBool isDraggingLineHeight = false.obs;
-  final RxInt draggedFlowId = (-1).obs;
-  final RxDouble initialDragX = 0.0.obs;
-  final RxDouble initialDragY = 0.0.obs;
-  final RxDouble initialLineHeight = 0.0.obs;
-
-  final RxBool isPanning = false.obs;
-
-  // Loop selection state
-  final RxBool isSelectingLoop = false.obs;
-  final RxList<LoopLink> loopLinks = <LoopLink>[].obs;
-  final RxInt loopFrom = (-1).obs;
-  final RxInt loopTo = (-1).obs;
-  final RxBool isPickingLoopFrom = false.obs;
-  final RxBool isPickingLoopTo = false.obs;
-  final RxInt loopHoverId = (-1).obs;
-
-  final RxDouble loopPad = 40.0.obs;
-  final RxString hoveredLoopPadAxis = "".obs;
-  final RxBool isDraggingLoopPad = false.obs;
-  final RxDouble initialLoopPadDragPos = 0.0.obs;
-  final RxDouble initialLoopPadValue = 40.0.obs;
-
-  // Observable system variables for settings
-  final Rx<SystemVariables?> systemVariables = Rx<SystemVariables?>(null);
-  final RxBool isLoadingSettings = false.obs;
-
+class FlowsNotifier extends Notifier<FlowsState> {
   Timer? _saveDebounce;
 
   @override
-  void onInit() {
-    super.onInit();
-    // Load settings and apps
-    loadSettings();
-    loadApps();
+  FlowsState build() {
+    Future.microtask(() {
+      loadSettings();
+      loadApps();
+    });
+    ref.onDispose(() {
+      _saveDebounce?.cancel();
+    });
+    return FlowsState();
   }
 
   Future<void> loadSettings() async {
     try {
-      isLoadingSettings.value = true;
+      state = state.copyWith(isLoadingSettings: true);
       final result = await client.admin.getSystemVariables();
-      systemVariables.value = result;
+      state = state.copyWith(systemVariables: result, isLoadingSettings: false);
 
-      // Update Defaults
       if (result != null) {
         if (result.lineHeight != null) Defaults.lineHeight = result.lineHeight!;
-        // Note: flowWidth is a base value, each node can have its own width.
-        // We use processWidth as the default for new nodes if applicable.
       }
     } catch (e) {
-      print('Error loading settings: $e');
-    } finally {
-      isLoadingSettings.value = false;
+      debugPrint('Error loading settings: $e');
+      state = state.copyWith(isLoadingSettings: false);
     }
   }
 
   void refreshUI() {
-    flowCanvasRefreshCounter.value++;
-    update();
+    state = state.copyWith(flowCanvasRefreshCounter: state.flowCanvasRefreshCounter + 1);
   }
 
-  // --- API Methods ---
+  void setDimensions(double width, double height) {
+    if (state.stageWidth == width && state.windowHeight == height) return;
+    state = state.copyWith(stageWidth: width, windowHeight: height);
+    updateFlowsReactive();
+  }
 
   Future<void> loadApps() async {
     try {
-      isLoadingApps.value = true;
+      state = state.copyWith(isLoadingApps: true);
       final result = await client.admin.getApps();
-      apps.value = result;
+      state = state.copyWith(apps: result, isLoadingApps: false);
     } catch (e) {
-      print('Error loading apps: $e');
-    } finally {
-      isLoadingApps.value = false;
+      debugPrint('Error loading apps: $e');
+      state = state.copyWith(isLoadingApps: false);
     }
   }
 
@@ -156,61 +270,63 @@ class FlowsController extends GetxController {
       await client.admin.addApp(name, colorId);
       await loadApps();
     } catch (e) {
-      print('Error adding app: $e');
+      debugPrint('Error adding app: $e');
     }
   }
 
   void selectApp(UuidValue appId) {
-    selectedAppId.value = appId;
-    sidebarMode.value = SidebarMode.flows;
+    state = state.copyWith(selectedAppId: appId, sidebarMode: SidebarMode.flows);
     loadSavedFlows();
   }
 
+  void setSidebarMode(SidebarMode mode) {
+    state = state.copyWith(sidebarMode: mode);
+  }
+
+  void setSubPage(FlowSubPage subPage) {
+    state = state.copyWith(currentSubPage: subPage);
+  }
+
   void backToApps() {
-    selectedAppId.value = null;
-    sidebarMode.value = SidebarMode.apps;
-    savedFlows.clear();
-    flows.clear();
-    currentFlowId.value = null;
+    state = state.copyWith(
+      selectedAppId: null,
+      sidebarMode: SidebarMode.apps,
+      savedFlows: [],
+      flows: [],
+      currentFlowId: null,
+    );
   }
 
   void changeSubPage(String subPage) {
     if (subPage == "docs") {
-      currentSubPage.value = FlowSubPage.docs;
-      // Load docs when switching to docs tab
-      if (selectedAppId.value != null) {
-        if (!Get.isRegistered<DocumentEditorProvider>()) {
-          Get.put(DocumentEditorProvider());
-        }
-        final docProvider = Get.find<DocumentEditorProvider>();
-        docProvider.loadSavedDocs(selectedAppId.value!);
+      state = state.copyWith(currentSubPage: FlowSubPage.docs);
+      if (state.selectedAppId != null) {
+        ref.read(documentEditorProvider.notifier).loadSavedDocs(state.selectedAppId!);
       }
     } else if (subPage == "flows") {
-      currentSubPage.value = FlowSubPage.flows;
+      state = state.copyWith(currentSubPage: FlowSubPage.flows);
     }
   }
 
   Future<void> loadSavedFlows() async {
-    if (selectedAppId.value == null) return;
+    if (state.selectedAppId == null) return;
     try {
-      isLoadingFlows.value = true;
-      final result = await client.docs.getFlows(selectedAppId.value!);
-      savedFlows.value = result;
+      state = state.copyWith(isLoadingFlows: true);
+      final result = await client.docs.getFlows(state.selectedAppId!);
+      state = state.copyWith(savedFlows: result, isLoadingFlows: false);
     } catch (e) {
-      print('Error loading flows: $e');
-      Get.snackbar("Error", "Failed to load flows");
-    } finally {
-      isLoadingFlows.value = false;
+      debugPrint('Error loading flows: $e');
+      state = state.copyWith(isLoadingFlows: false);
     }
   }
 
   Future<void> createNewFlow(String name) async {
-    if (selectedAppId.value == null) return;
+    if (state.selectedAppId == null) return;
     try {
       final newFlow = FlowModel(
-        appId: selectedAppId.value!,
+        appId: state.selectedAppId!,
         name: name,
-        flow: jsonEncode([]), // Empty flow
+        flow: jsonEncode([]),
         lastUpdated: DateTime.now(),
       );
 
@@ -219,625 +335,447 @@ class FlowsController extends GetxController {
         await loadSavedFlows();
       }
     } catch (e) {
-      print('Error creating flow: $e');
+      debugPrint('Error creating flow: $e');
     }
   }
 
   Future<void> loadFlow(UuidValue id) async {
     try {
-      isLoadingFlows.value = true;
+      state = state.copyWith(isLoadingFlows: true);
       final flowModel = await client.docs.getFlow(id);
       if (flowModel != null) {
-        currentFlowId.value = flowModel.id!;
-        currentFlowName.value = flowModel.name;
-
-        flows.clear();
-        loopLinks.clear();
+        final List<FlowClass> newFlows = [];
+        final List<LoopLink> newLoopLinks = [];
+        double newLoopPad = 40.0;
 
         if (flowModel.flow.isNotEmpty) {
           final List<dynamic> jsonList = jsonDecode(flowModel.flow);
           for (var item in jsonList) {
-            // Handle special loops payload
             if (item is Map && item.containsKey("_loops")) {
               final loops = item["_loops"] as List?;
               if (loops != null) {
                 for (var l in loops) {
-                  if (l is Map &&
-                      l.containsKey("fromId") &&
-                      l.containsKey("toId")) {
+                  if (l is Map && l.containsKey("fromId") && l.containsKey("toId")) {
                     final fromId = l["fromId"];
                     final toId = l["toId"];
                     if (fromId is int && toId is int) {
-                      loopLinks.add(LoopLink(fromId: fromId, toId: toId));
+                      newLoopLinks.add(LoopLink(fromId: fromId, toId: toId));
                     }
                   }
                 }
               }
               continue;
             }
-            // Handle loop pad value payload
             if (item is Map && item.containsKey("_loopPad")) {
               final pad = item["_loopPad"];
-              if (pad is num) {
-                loopPad.value = pad.toDouble();
-              }
+              if (pad is num) newLoopPad = pad.toDouble();
               continue;
             }
-
-            flows.add(FlowClass.fromJson(item));
+            newFlows.add(FlowClass.fromJson(item));
           }
         }
 
-        // Reset view
-        window.value = flows.isEmpty ? "add" : "none";
-        refreshUI();
+        state = state.copyWith(
+          currentFlowId: flowModel.id,
+          currentFlowName: flowModel.name,
+          flows: newFlows,
+          loopLinks: newLoopLinks,
+          loopPad: newLoopPad,
+          window: newFlows.isEmpty ? "add" : "none",
+          isLoadingFlows: false,
+        );
+        updateFlowsReactive();
       }
     } catch (e) {
-      print('Error loading flow detail: $e');
-    } finally {
-      isLoadingFlows.value = false;
+      debugPrint('Error loading flow detail: $e');
+      state = state.copyWith(isLoadingFlows: false);
     }
   }
 
   Future<void> save() async {
-    if (currentFlowId.value == null) return;
+    if (state.currentFlowId == null) return;
 
-    // Debounce save
     if (_saveDebounce?.isActive ?? false) _saveDebounce?.cancel();
     _saveDebounce = Timer(const Duration(milliseconds: 500), () async {
       try {
-        final List<dynamic> flowData = flows.map((e) => e.toJson()).toList();
-
-        // Append loops payload
-        if (loopLinks.isNotEmpty) {
-          final List<Map<String, int>> loops = loopLinks
+        final List<dynamic> flowData = state.flows.map((e) => e.toJson()).toList();
+        if (state.loopLinks.isNotEmpty) {
+          final List<Map<String, int>> loops = state.loopLinks
               .map((e) => {"fromId": e.fromId, "toId": e.toId})
               .toList();
           flowData.add({"_loops": loops});
         }
-        // Append loop pad value
-        flowData.add({"_loopPad": loopPad.value});
+        flowData.add({"_loopPad": state.loopPad});
 
         final jsonString = jsonEncode(flowData);
-
         final flowModel = FlowModel(
-          id: currentFlowId.value,
-          appId: selectedAppId.value!,
-          name: currentFlowName.value,
+          id: state.currentFlowId,
+          appId: state.selectedAppId!,
+          name: state.currentFlowName,
           flow: jsonString,
           lastUpdated: DateTime.now(),
         );
 
         await client.docs.updateFlow(flowModel);
-        print("Flow saved");
       } catch (e) {
-        print('Error saving flow: $e');
+        debugPrint('Error saving flow: $e');
       }
     });
   }
 
-  Future<void> deleteCurrentFlow() async {
-    if (currentFlowId.value == null) return;
-    try {
-      final success = await client.docs.deleteFlow(currentFlowId.value!);
-      if (success) {
-        flows.clear();
-        currentFlowId.value = null;
-        currentFlowName.value = "";
-        await loadSavedFlows();
-      }
-    } catch (e) {
-      print('Error deleting flow: $e');
-    }
-  }
-
-  // --- Logic Methods (Ported from old controller) ---
-
-  // ... (Paste logic methods, simplified/cleaned)
-  // Need to include updateFlowsReactive, forceRepositionAllFlows, etc.
-
-  // --- Logic Methods ---
-
-  // Update flow positions (canvas paint helper)
   void updateFlows() {
-    if (flows.isEmpty) return;
+    if (state.flows.isEmpty) return;
 
-    // 1. Reset hasChild flags
-    for (var flow in flows) {
-      flow.down.hasChild = false;
-      flow.left.hasChild = false;
-      flow.right.hasChild = false;
-    }
+    // Create deep copies of all flows to avoid mutating state in-place
+    final List<FlowClass> updatedFlows = state.flows.map((f) => f.copyWith(
+      down: f.down.copyWith(hasChild: false),
+      left: f.left.copyWith(hasChild: false),
+      right: f.right.copyWith(hasChild: false),
+    )).toList();
 
-    // 2. Map for quick lookup
-    final Map<int, FlowClass> nodeMap = {for (var f in flows) f.id: f};
+    final Map<int, FlowClass> nodeMap = {for (var f in updatedFlows) f.id: f};
 
-    // 3. Update hasChild based on parent IDs
-    for (var flow in flows) {
-      if (flow.pid != null) {
-        final parent = nodeMap[flow.pid];
+    // Update hasChild flags
+    for (var flow in updatedFlows) {
+      final pid = flow.pid;
+      if (pid != null) {
+        final parent = nodeMap[pid];
         if (parent != null) {
-          if (flow.direction == Direction.down)
-            parent.down.hasChild = true;
-          else if (flow.direction == Direction.right)
-            parent.right.hasChild = true;
-          else if (flow.direction == Direction.left)
-            parent.left.hasChild = true;
+          if (flow.direction == Direction.down) {
+            nodeMap[pid] = parent.copyWith(down: parent.down.copyWith(hasChild: true));
+          } else if (flow.direction == Direction.right) {
+            nodeMap[pid] = parent.copyWith(right: parent.right.copyWith(hasChild: true));
+          } else if (flow.direction == Direction.left) {
+            nodeMap[pid] = parent.copyWith(left: parent.left.copyWith(hasChild: true));
+          }
         }
       }
     }
 
-    // 4. Find root(s)
-    final roots = flows.where((f) => f.pid == null).toList();
+    // Refresh updatedFlows from nodeMap because we replaced objects
+    final List<FlowClass> finalFlows = nodeMap.values.toList();
+
+    final roots = finalFlows.where((f) => f.pid == null).toList();
     if (roots.isEmpty) return;
 
-    // 5. Initial horizontal position for roots
-    // For now, let's just use the first root as the main one, or space them out
-    double currentRootX = stageWidth.value / 2;
-    for (var root in roots) {
-      root.x = currentRootX - root.width / 2;
-      root.y = 20; // Default top padding
+    // Position roots with spacing if multiple exist
+    const double rootSpacing = 200.0;
+    double totalRootsWidth = (roots.length - 1) * rootSpacing;
+    for (var root in roots) totalRootsWidth += root.width;
+    
+    double currentRootX = (state.stageWidth - totalRootsWidth) / 2;
 
-      // 6. Recursively position children
-      _positionChildren(nodeMap, root, currentRootX);
-
-      // If we had multiple roots, we'd shift currentRootX here
+    for (var i = 0; i < roots.length; i++) {
+        final root = roots[i];
+        final rootIdx = finalFlows.indexWhere((f) => f.id == root.id);
+        
+        finalFlows[rootIdx].x = currentRootX;
+        finalFlows[rootIdx].y = 20;
+        
+        _positionChildren(finalFlows, nodeMap, finalFlows[rootIdx], currentRootX + root.width / 2);
+        currentRootX += root.width + rootSpacing;
     }
 
-    // 7. Calculate bounding box and center
-    _centerFlows();
+    _centerFlows(finalFlows);
+    state = state.copyWith(flows: finalFlows);
   }
 
-  void _positionChildren(
-    Map<int, FlowClass> nodeMap,
-    FlowClass parent,
-    double x,
-  ) {
-    // Collect children mapping to their directions
-    final children = flows.where((f) => f.pid == parent.id).toList();
-
+  void _positionChildren(List<FlowClass> allFlows, Map<int, FlowClass> nodeMap, FlowClass parent, double centerX) {
+    final children = allFlows.where((f) => f.pid == parent.id).toList();
     for (var child in children) {
+      final childIdx = allFlows.indexWhere((f) => f.id == child.id);
+      if (childIdx == -1) continue;
+
       if (child.direction == Direction.down) {
-        child.y = parent.y + parent.height + parent.down.lineHeight;
-        child.x = x - child.width / 2;
-        _positionChildren(nodeMap, child, x);
+        allFlows[childIdx].y = parent.y + parent.height + parent.down.lineHeight;
+        allFlows[childIdx].x = centerX - child.width / 2;
+        _positionChildren(allFlows, nodeMap, allFlows[childIdx], centerX);
       } else if (child.direction == Direction.right) {
-        child.y = parent.y + parent.height / 2 - child.height / 2;
-        child.x = parent.x + parent.width + parent.right.lineHeight;
-        _positionChildren(nodeMap, child, child.x + child.width / 2);
+        allFlows[childIdx].y = parent.y + parent.height / 2 - child.height / 2;
+        allFlows[childIdx].x = parent.x + parent.width + parent.right.lineHeight;
+        _positionChildren(allFlows, nodeMap, allFlows[childIdx], allFlows[childIdx].x + child.width / 2);
       } else if (child.direction == Direction.left) {
-        child.y = parent.y + parent.height / 2 - child.height / 2;
-        child.x = parent.x - parent.left.lineHeight - child.width;
-        _positionChildren(nodeMap, child, child.x + child.width / 2);
+        allFlows[childIdx].y = parent.y + parent.height / 2 - child.height / 2;
+        allFlows[childIdx].x = parent.x - parent.left.lineHeight - child.width;
+        _positionChildren(allFlows, nodeMap, allFlows[childIdx], allFlows[childIdx].x + child.width / 2);
       }
     }
   }
 
-  void _centerFlows() {
-    if (flows.isEmpty) return;
-
+  void _centerFlows(List<FlowClass> allFlows) {
+    if (allFlows.isEmpty) return;
     double minX = double.infinity, minY = double.infinity;
     double maxX = -double.infinity, maxY = -double.infinity;
 
-    for (var flow in flows) {
+    for (var flow in allFlows) {
       if (flow.x < minX) minX = flow.x;
       if (flow.y < minY) minY = flow.y;
       if (flow.x + flow.width > maxX) maxX = flow.x + flow.width;
       if (flow.y + flow.height > maxY) maxY = flow.y + flow.height;
     }
 
-    final double contentWidth = maxX - minX;
-    final double contentHeight = maxY - minY;
+    final offsetX = (state.stageWidth - (maxX - minX)) / 2 - minX;
+    final offsetY = (state.windowHeight - (maxY - minY)) / 2 - minY;
 
-    final double offsetX = (stageWidth.value - contentWidth) / 2 - minX;
-    final double offsetY = (windowHeight.value - contentHeight) / 2 - minY;
-
-    for (var flow in flows) {
+    for (var flow in allFlows) {
       flow.x += offsetX;
       flow.y += offsetY;
     }
   }
 
-  // Reactive methods for state updates
   void updateFlowsReactive() {
     updateFlows();
     refreshUI();
   }
 
   void forceRepositionAllFlows() {
-    if (flows.isEmpty) return;
+    if (state.flows.isEmpty) return;
     updateFlowsReactive();
   }
 
   void addFlow(FlowType type) {
-    double y = 20;
+    final updatedFlows = List<FlowClass>.from(state.flows);
+    
+    // Generate a unique ID (max ID + 1)
+    final id = updatedFlows.isEmpty 
+        ? 0 
+        : updatedFlows.fold<int>(0, (maxId, flow) => flow.id > maxId ? flow.id : maxId) + 1;
+    
+    double defaultWidth = Defaults.flowWidth;
+    if (state.systemVariables != null) {
+      if (type == FlowType.process) defaultWidth = state.systemVariables!.processWidth ?? Defaults.flowWidth;
+      else if (type == FlowType.condition) defaultWidth = state.systemVariables!.conditionWidth ?? Defaults.flowWidth;
+      else if (type == FlowType.terminal) defaultWidth = state.systemVariables!.terminalWidth ?? Defaults.flowWidth;
+    }
+
     FlowClass flow = FlowClass(
-      id: flows.length,
-      width: (type == FlowType.process)
-          ? (systemVariables.value?.processWidth ?? Defaults.flowWidth)
-          : (type == FlowType.condition)
-          ? (systemVariables.value?.conditionWidth ?? Defaults.flowWidth)
-          : (type == FlowType.terminal)
-          ? (systemVariables.value?.terminalWidth ?? Defaults.flowWidth)
-          : Defaults.flowWidth,
-      height: (type == FlowType.condition || type == FlowType.user)
-          ? Defaults.flowWidth
-          : 40,
-      x: stageWidth.value / 2 - Defaults.flowWidth / 2,
-      y: y,
+      id: id,
+      width: defaultWidth,
+      height: (type == FlowType.condition || type == FlowType.user) ? Defaults.flowWidth : 40,
+      x: state.stageWidth / 2 - defaultWidth / 2,
+      y: 20,
       type: type,
       value: "start",
-      down: Line(
-        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
-      ),
-      left: Line(
-        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
-      ),
-      right: Line(
-        lineHeight: systemVariables.value?.lineHeight ?? Defaults.lineHeight,
-      ),
-      pid: selectedId.value >= 0 ? selectedId.value : null,
-      direction: selectedDirection.value,
+      down: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
+      left: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
+      right: Line(lineHeight: state.systemVariables?.lineHeight ?? Defaults.lineHeight),
+      pid: state.selectedId >= 0 ? state.selectedId : null,
+      direction: state.selectedDirection,
     );
 
-    if (selectedId.value >= 0 && selectedId.value < flows.length) {
-      if (flows[selectedId.value].type == FlowType.condition &&
-          flows[selectedId.value].yes == null) {
-        flows[selectedId.value].yes = selectedDirection.value;
+    if (state.selectedId >= 0) {
+      final parentIdx = updatedFlows.indexWhere((f) => f.id == state.selectedId);
+      if (parentIdx != -1) {
+        if (updatedFlows[parentIdx].type == FlowType.condition && updatedFlows[parentIdx].yes == null) {
+          updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(yes: state.selectedDirection);
+        }
       }
     }
 
-    selectedId.value = flows.length;
-    selectedType.value = type;
-    flows.add(flow);
+    updatedFlows.add(flow);
+    state = state.copyWith(
+      flows: updatedFlows,
+      selectedId: id,
+      selectedType: type,
+      window: "edit",
+    );
 
     updateFlowsReactive();
     onProcessUnhover();
     save();
-
-    window.value = "edit";
   }
 
   void selectFlow(int id, Direction? direction, FlowType type) {
-    if (isSelectingLoop.value) {
-      if (isPickingLoopFrom.value) {
-        loopFrom.value = id;
-        isPickingLoopFrom.value = false;
-        Future.delayed(Duration(milliseconds: 500), () {
-          if (isSelectingLoop.value &&
-              loopFrom.value >= 0 &&
-              loopTo.value < 0) {
-            isPickingLoopTo.value = true;
-          }
-        });
-      } else if (isPickingLoopTo.value) {
-        if (loopFrom.value != id) {
-          loopTo.value = id;
-          commitPendingLoop();
-        }
-        isPickingLoopTo.value = false;
-      } else {
-        if (loopFrom.value < 0) {
-          loopFrom.value = id;
-          Future.delayed(Duration(milliseconds: 500), () {
-            if (isSelectingLoop.value &&
-                loopFrom.value >= 0 &&
-                loopTo.value < 0) {
-              isPickingLoopTo.value = true;
-            }
-          });
-        } else if (loopTo.value < 0 && loopFrom.value != id) {
-          loopTo.value = id;
-          commitPendingLoop();
-        }
-      }
+    if (state.isSelectingLoop) {
+      _handleLoopSelection(id);
       return;
     }
 
-    window.value = "edit";
-    selectedId.value = id;
-    selectedDirection.value = direction;
-    selectedType.value = type;
-
+    final flowIdx = state.flows.indexWhere((f) => f.id == id);
+    if (flowIdx != -1) {
+      final f = state.flows[flowIdx];
+      state = state.copyWith(
+        window: "edit",
+        selectedId: id,
+        selectedDirection: direction,
+        selectedType: type,
+        widthText: f.width.toString(),
+        valueText: f.value,
+        downText: f.down.lineHeight.toString(),
+        leftText: f.left.lineHeight.toString(),
+        rightText: f.right.lineHeight.toString(),
+      );
+    }
+    
     onProcessUnhover();
-
-    if (id >= 0 && id < flows.length) {
-      widthText.value = flows[id].width.toString();
-      valueText.value = flows[id].value;
-      downText.value = flows[id].down.lineHeight.toString();
-      leftText.value = flows[id].left.lineHeight.toString();
-      rightText.value = flows[id].right.lineHeight.toString();
-    }
     refreshUI();
   }
 
-  void deleteFlow(int id) {
-    if (id < 0 || id >= flows.length) return;
+  void startLoopSelection(bool isFrom) {
+    state = state.copyWith(
+      isSelectingLoop: true,
+      isPickingLoopFrom: isFrom,
+      isPickingLoopTo: !isFrom,
+      window: "none",
+    );
+  }
 
-    FlowClass selectedFlow = flows[id];
-    for (var flow in flows) {
-      if (flow.id == selectedFlow.pid) {
-        if (selectedFlow.direction == Direction.down) {
-          flow.down.hasChild = false;
-        }
-        if (selectedFlow.direction == Direction.left) {
-          flow.left.hasChild = false;
-        }
-        if (selectedFlow.direction == Direction.right) {
-          flow.right.hasChild = false;
-        }
-      }
-    }
+  void closeWindow() {
+    state = state.copyWith(window: "none");
+  }
 
-    flows.removeAt(id);
-
-    List<int> children = getChildIds(id);
-    // Remove children recursively
-    // Note: Iterating backwards or collecting indices is safer when removing
-    for (var child in children) {
-      flows.removeWhere((f) => f.id == child);
-    }
-
-    // Fix IDs
-    for (var i = 0; i < flows.length; i++) {
-      int oldId = flows[i].id;
-      flows[i].id = i;
-      for (var flow in flows) {
-        if (flow.pid == oldId) {
-          flow.pid = i;
-        }
-      }
-      // Also fix loop links
-      for (var link in loopLinks) {
-        if (link.fromId == oldId) link.fromId = i;
-        if (link.toId == oldId) link.toId = i;
-      }
-    }
-
-    deleteAllLoopsForFlow(
-      id,
-    ); // Actually old ID is gone, but we might need to cleanup by index if logic wasn't perfect
-    // In this basic re-index logic, we should probably clear loops for removed items first.
-
-    updateFlowsReactive();
-    save();
-    window.value = "none";
+  void startAddingFlow(int parentId, Direction direction) {
+    state = state.copyWith(
+      window: "add",
+      selectedId: parentId,
+      selectedDirection: direction,
+    );
     refreshUI();
-  }
-
-  List<int> getChildIds(int id) {
-    List<int> flowIds = [];
-    for (var flow in flows) {
-      if (flow.pid == id) {
-        flowIds.add(flow.id);
-        flowIds.addAll(getChildIds(flow.id));
-      }
-    }
-    return flowIds;
-  }
-
-  // Line height dragging implementation
-  void startLineHeightDrag(int flowId, double startX, double startY) {
-    if (flowId < 0 || flowId >= flows.length) return;
-
-    final flow = flows[flowId];
-    if (flow.pid == null) return; // Can't drag root flow
-
-    final parentFlow = flows.firstWhere((f) => f.id == flow.pid);
-
-    // Determine which line height to adjust based on flow direction
-    double currentLineHeight = 0.0;
-    if (flow.direction == Direction.down) {
-      currentLineHeight = parentFlow.down.lineHeight;
-    } else if (flow.direction == Direction.left) {
-      currentLineHeight = parentFlow.left.lineHeight;
-    } else if (flow.direction == Direction.right) {
-      currentLineHeight = parentFlow.right.lineHeight;
-    }
-
-    isDraggingLineHeight.value = true;
-    draggedFlowId.value = flowId;
-    initialDragX.value = startX;
-    initialDragY.value = startY;
-    initialLineHeight.value = currentLineHeight;
-  }
-
-  void updateLineHeightDrag(double currentX, double currentY) {
-    if (!isDraggingLineHeight.value || draggedFlowId.value < 0) return;
-
-    final flowId = draggedFlowId.value;
-    if (flowId >= flows.length) return;
-
-    final flow = flows[flowId];
-    if (flow.pid == null) return;
-
-    final parentFlow = flows.firstWhere((f) => f.id == flow.pid);
-    final deltaY = currentY - initialDragY.value;
-    final deltaX = currentX - initialDragX.value;
-
-    // Apply drag sensitivity (reduce sensitivity for smoother control)
-    final adjustedDeltaY = deltaY * 0.5;
-    final adjustedDeltaX = deltaX * 0.5;
-
-    // Calculate new line height (minimum 10px, maximum 500px)
-    double newLineHeight = initialLineHeight.value;
-    if (flow.direction == Direction.down) {
-      newLineHeight = (initialLineHeight.value + adjustedDeltaY).clamp(
-        10.0,
-        500.0,
-      );
-      parentFlow.down.lineHeight = newLineHeight;
-    } else if (flow.direction == Direction.left) {
-      // Moving left (decreasing X) should increase line height
-      newLineHeight = (initialLineHeight.value + (-adjustedDeltaX)).clamp(
-        10.0,
-        500.0,
-      );
-      parentFlow.left.lineHeight = newLineHeight;
-    } else if (flow.direction == Direction.right) {
-      // Moving right (increasing X) should increase line height
-      newLineHeight = (initialLineHeight.value + adjustedDeltaX).clamp(
-        10.0,
-        500.0,
-      );
-      parentFlow.right.lineHeight = newLineHeight;
-    }
-
-    // Reposition all flows to reflect the new line height
-    forceRepositionAllFlows();
-  }
-
-  void endLineHeightDrag() {
-    if (isDraggingLineHeight.value) {
-      isDraggingLineHeight.value = false;
-      draggedFlowId.value = -1;
-      initialDragY.value = 0.0;
-      initialDragX.value = 0.0;
-      initialLineHeight.value = 0.0;
-
-      // Save the changes
-      save();
-    }
-  }
-
-  // Hover logic
-  void onProcessHover(int id, String side) {
-    hoveredProcessId.value = id;
-    hoveredSide.value = side;
-  }
-
-  void onProcessUnhover() {
-    hoveredProcessId.value = -1;
-    hoveredSide.value = "";
-  }
-
-  void updateMouseOverDot(bool v) {
-    isMouseOverDot.value = v;
-  }
-
-  void setHoveredLoopPadAxis(String axis) {
-    hoveredLoopPadAxis.value = axis;
-  }
-
-  // Loop pad dragging implementation
-  void startLoopPadDrag(double pointerX, double pointerY) {
-    if (hoveredLoopPadAxis.value.isEmpty) return;
-    isDraggingLoopPad.value = true;
-    initialLoopPadValue.value = loopPad.value;
-    initialLoopPadDragPos.value = hoveredLoopPadAxis.value == "vertical"
-        ? pointerY
-        : pointerX;
-  }
-
-  void updateLoopPadDrag(double pointerX, double pointerY) {
-    if (!isDraggingLoopPad.value) return;
-    const double minPad = 10.0;
-    const double maxPad = 300.0;
-    final currentPos = hoveredLoopPadAxis.value == "vertical"
-        ? pointerY
-        : pointerX;
-    final delta = currentPos - initialLoopPadDragPos.value;
-    final newValue = (initialLoopPadValue.value + delta).clamp(minPad, maxPad);
-    loopPad.value = newValue;
-    // Trigger repaint
-    flowCanvasRefreshCounter.value++;
-    update();
-  }
-
-  void endLoopPadDrag() {
-    if (!isDraggingLoopPad.value) return;
-    isDraggingLoopPad.value = false;
-    // Persist loop corridor/lanes offset changes
-    save();
-  }
-
-  // Loop selection implementation
-  void startLoopSelection() {
-    isSelectingLoop.value = true;
-    loopFrom.value = -1;
-    loopTo.value = -1;
-    isPickingLoopFrom.value = true; // auto-start picking from
-    isPickingLoopTo.value = false;
-    loopHoverId.value = -1;
-    // Make sure edit panel is shown for loop controls
-    window.value = "edit";
   }
 
   void cancelLoopSelection() {
-    if (!isSelectingLoop.value &&
-        !isPickingLoopFrom.value &&
-        !isPickingLoopTo.value) {
-      return;
-    }
-    isSelectingLoop.value = false;
-    isPickingLoopFrom.value = false;
-    isPickingLoopTo.value = false;
-    loopFrom.value = -1;
-    loopTo.value = -1;
-    loopHoverId.value = -1;
-    update();
-  }
-
-  void setLoopFrom(int id) {
-    if (id >= 0 && id < flows.length) {
-      loopFrom.value = id;
-    }
-  }
-
-  void setLoopTo(int id) {
-    if (id >= 0 && id < flows.length) {
-      loopTo.value = id;
-    }
+    state = state.copyWith(
+      isSelectingLoop: false,
+      isPickingLoopFrom: false,
+      isPickingLoopTo: false,
+      loopFrom: -1,
+      loopTo: -1,
+    );
   }
 
   void flipPendingLoop() {
-    // If a committed link exists for current selection, flip it in place
-    if (loopFrom.value >= 0 && loopTo.value >= 0) {
-      final int from = loopFrom.value;
-      final int to = loopTo.value;
-      final int existingIndex = loopLinks.indexWhere(
-        (l) => l.fromId == from && l.toId == to,
-      );
-      if (existingIndex >= 0) {
-        loopLinks[existingIndex] = LoopLink(fromId: to, toId: from);
-        update();
-        save();
-      }
-    }
-    // Always swap the pending endpoints for the UI
-    final int tmp = loopFrom.value;
-    loopFrom.value = loopTo.value;
-    loopTo.value = tmp;
-  }
-
-  void setLoopHover(int id) {
-    if (isSelectingLoop.value) {
-      loopHoverId.value = id;
-    }
-  }
-
-  void commitPendingLoop() {
-    if (loopFrom.value >= 0 &&
-        loopTo.value >= 0 &&
-        loopFrom.value != loopTo.value) {
-      loopLinks.add(LoopLink(fromId: loopFrom.value, toId: loopTo.value));
-      isSelectingLoop.value = false;
-      update();
-      save();
+    if (state.loopFrom >= 0 && state.loopTo >= 0) {
+      final from = state.loopFrom;
+      final to = state.loopTo;
+      state = state.copyWith(loopFrom: to, loopTo: from);
     }
   }
 
   void deleteLoop(int fromId, int toId) {
-    loopLinks.removeWhere((link) => link.fromId == fromId && link.toId == toId);
-    update();
+    state = state.copyWith(
+      loopLinks: state.loopLinks
+          .where((l) => !(l.fromId == fromId && l.toId == toId))
+          .toList(),
+    );
     save();
   }
 
-  void deleteAllLoopsForFlow(int flowId) {
-    loopLinks.removeWhere(
-      (link) => link.fromId == flowId || link.toId == flowId,
-    );
-    update();
+  void _handleLoopSelection(int id) {
+    if (state.isPickingLoopFrom) {
+      state = state.copyWith(loopFrom: id, isPickingLoopFrom: false);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (state.isSelectingLoop && state.loopFrom >= 0 && state.loopTo < 0) {
+          state = state.copyWith(isPickingLoopTo: true);
+        }
+      });
+    } else if (state.isPickingLoopTo) {
+      if (state.loopFrom != id) {
+        state = state.copyWith(loopTo: id, isPickingLoopTo: false);
+        commitPendingLoop();
+      }
+    }
+  }
+
+  void deleteFlow(int id) {
+    final updatedFlows = List<FlowClass>.from(state.flows);
+    final flowIdx = updatedFlows.indexWhere((f) => f.id == id);
+    if (flowIdx == -1) return;
+
+    FlowClass selectedFlow = updatedFlows[flowIdx];
+    
+    // Cleanup children recursively
+    void removeChildren(int parentId) {
+      final childrenIds = updatedFlows.where((f) => f.pid == parentId).map((f) => f.id).toList();
+      for (var cid in childrenIds) {
+        removeChildren(cid);
+        updatedFlows.removeWhere((f) => f.id == cid);
+      }
+    }
+
+    removeChildren(id);
+    updatedFlows.removeAt(flowIdx);
+    
+    state = state.copyWith(flows: updatedFlows, window: "none", selectedId: -1);
+    updateFlowsReactive();
     save();
+  }
+
+  void startLineHeightDrag(int flowId, double startX, double startY) {
+    final flowIdx = state.flows.indexWhere((f) => f.id == flowId);
+    if (flowIdx == -1) return;
+    final flow = state.flows[flowIdx];
+    if (flow.pid == null) return;
+
+    final parentIdx = state.flows.indexWhere((f) => f.id == flow.pid);
+    if (parentIdx == -1) return;
+    final parentFlow = state.flows[parentIdx];
+
+    double initialLH = 0.0;
+    if (flow.direction == Direction.down) initialLH = parentFlow.down.lineHeight;
+    else if (flow.direction == Direction.left) initialLH = parentFlow.left.lineHeight;
+    else if (flow.direction == Direction.right) initialLH = parentFlow.right.lineHeight;
+
+    state = state.copyWith(
+      isDraggingLineHeight: true,
+      draggedFlowId: flowId,
+      initialDragX: startX,
+      initialDragY: startY,
+      initialLineHeight: initialLH,
+    );
+  }
+
+  void updateLineHeightDrag(double currentX, double currentY) {
+    if (!state.isDraggingLineHeight || state.draggedFlowId < 0) return;
+    
+    final flowIdx = state.flows.indexWhere((f) => f.id == state.draggedFlowId);
+    if (flowIdx == -1) return;
+    final flow = state.flows[flowIdx];
+    
+    final parentIdx = state.flows.indexWhere((f) => f.id == flow.pid);
+    if (parentIdx == -1) return;
+    
+    final deltaY = (currentY - state.initialDragY) * 0.5;
+    final deltaX = (currentX - state.initialDragX) * 0.5;
+
+    final updatedFlows = List<FlowClass>.from(state.flows);
+    
+    if (flow.direction == Direction.down) {
+      updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
+        down: updatedFlows[parentIdx].down.copyWith(lineHeight: (state.initialLineHeight + deltaY).clamp(10.0, 500.0))
+      );
+    } else if (flow.direction == Direction.left) {
+      updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
+        left: updatedFlows[parentIdx].left.copyWith(lineHeight: (state.initialLineHeight - deltaX).clamp(10.0, 500.0))
+      );
+    } else if (flow.direction == Direction.right) {
+      updatedFlows[parentIdx] = updatedFlows[parentIdx].copyWith(
+        right: updatedFlows[parentIdx].right.copyWith(lineHeight: (state.initialLineHeight + deltaX).clamp(10.0, 500.0))
+      );
+    }
+
+    state = state.copyWith(flows: updatedFlows);
+    updateFlowsReactive();
+  }
+
+  void endLineHeightDrag() {
+    state = state.copyWith(isDraggingLineHeight: false, draggedFlowId: -1);
+    save();
+  }
+
+  void onProcessHover(int id, String side) => state = state.copyWith(hoveredProcessId: id, hoveredSide: side);
+  void onProcessUnhover() => state = state.copyWith(hoveredProcessId: -1, hoveredSide: "");
+  void updateMouseOverDot(bool v) => state = state.copyWith(isMouseOverDot: v);
+
+  void commitPendingLoop() {
+    if (state.loopFrom >= 0 && state.loopTo >= 0) {
+      final updatedLoops = List<LoopLink>.from(state.loopLinks);
+      updatedLoops.add(LoopLink(fromId: state.loopFrom, toId: state.loopTo));
+      state = state.copyWith(loopLinks: updatedLoops, isSelectingLoop: false);
+      save();
+    }
+  }
+
+  void deleteAllLoopsForFlow(int id) {
+    state = state.copyWith(loopLinks: state.loopLinks.where((l) => l.fromId != id && l.toId != id).toList());
   }
 }

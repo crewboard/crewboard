@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_flutter/config/palette.dart';
 import 'package:crewboard_flutter/widgets/glass_morph.dart';
 
 import 'types.dart';
 import 'flows_controller.dart';
 
-class AddFlow extends StatelessWidget {
+class AddFlow extends ConsumerWidget {
   const AddFlow({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final FlowsController controller = Get.find<FlowsController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(flowsProvider.notifier);
 
     return SizedBox(
       width: 200,
@@ -24,31 +24,31 @@ class AddFlow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Button(
+              _Button(
                 label: "Add Terminal",
                 onPress: () {
-                  controller.addFlow(FlowType.terminal);
+                  notifier.addFlow(FlowType.terminal);
                 },
               ),
               const SizedBox(height: 10),
-              Button(
+              _Button(
                 label: "Add Process",
                 onPress: () {
-                  controller.addFlow(FlowType.process);
+                  notifier.addFlow(FlowType.process);
                 },
               ),
               const SizedBox(height: 10),
-              Button(
+              _Button(
                 label: "Add Condition",
                 onPress: () {
-                  controller.addFlow(FlowType.condition);
+                  notifier.addFlow(FlowType.condition);
                 },
               ),
               const SizedBox(height: 10),
-              Button(
+              _Button(
                 label: "Add Loop",
                 onPress: () {
-                  controller.startLoopSelection();
+                  notifier.startLoopSelection(true);
                 },
               ),
             ],
@@ -59,17 +59,15 @@ class AddFlow extends StatelessWidget {
   }
 }
 
-class Button extends StatelessWidget {
-  const Button({super.key, required this.label, required this.onPress});
+class _Button extends StatelessWidget {
+  const _Button({required this.label, required this.onPress});
   final String label;
-  final Function onPress;
+  final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onPress();
-      },
+      onTap: onPress,
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: label.toLowerCase().contains("loop") ? 8 : 10,
@@ -89,7 +87,7 @@ class Button extends StatelessWidget {
             ),
             if (label.toLowerCase().contains("condition"))
               Transform.rotate(
-                angle: 40,
+                angle: 40 * (math.pi / 180), // Correct angle in radians
                 child: Container(
                   width: 12,
                   height: 12,
@@ -130,4 +128,8 @@ class Button extends StatelessWidget {
       ),
     );
   }
+}
+
+class math {
+  static const double pi = 3.1415926535897932;
 }

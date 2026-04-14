@@ -251,6 +251,13 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
       'newPassword': newPassword,
     },
   );
+
+  @override
+  _i3.Future<bool> hasAccount() => caller.callServerEndpoint<bool>(
+    'emailIdp',
+    'hasAccount',
+    {},
+  );
 }
 
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
@@ -385,6 +392,12 @@ class EndpointAdmin extends _i2.EndpointRef {
         'addColor',
         {'hex': hex},
       );
+
+  _i3.Future<void> updateUser(_i7.User user) => caller.callServerEndpoint<void>(
+    'admin',
+    'updateUser',
+    {'user': user},
+  );
 
   _i3.Future<_i12.RegisterAdminResponse> createUser(
     _i7.User user,
@@ -806,12 +819,16 @@ class EndpointPlanner extends _i2.EndpointRef {
   _i3.Future<bool> addStatus(
     _i2.UuidValue? id,
     String name,
+    bool working,
+    bool completed,
   ) => caller.callServerEndpoint<bool>(
     'planner',
     'addStatus',
     {
       'id': id,
       'name': name,
+      'working': working,
+      'completed': completed,
     },
   );
 

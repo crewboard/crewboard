@@ -30,7 +30,7 @@ abstract class RegisterAdminResponse
     Map<String, dynamic> jsonSerialization,
   ) {
     return RegisterAdminResponse(
-      success: jsonSerialization['success'] as bool,
+      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
       message: jsonSerialization['message'] as String,
       userId: jsonSerialization['userId'] as String?,
     );

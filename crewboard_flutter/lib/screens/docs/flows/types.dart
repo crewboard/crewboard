@@ -47,6 +47,38 @@ class FlowClass {
     this.yes,
   });
 
+  FlowClass copyWith({
+    int? id,
+    int? pid,
+    double? width,
+    double? height,
+    double? x,
+    double? y,
+    String? value,
+    FlowType? type,
+    Direction? direction,
+    Line? down,
+    Line? right,
+    Line? left,
+    Direction? yes,
+  }) {
+    return FlowClass(
+      id: id ?? this.id,
+      pid: pid ?? this.pid,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      x: x ?? this.x,
+      y: y ?? this.y,
+      value: value ?? this.value,
+      type: type ?? this.type,
+      direction: direction ?? this.direction,
+      down: down ?? this.down,
+      right: right ?? this.right,
+      left: left ?? this.left,
+      yes: yes ?? this.yes,
+    );
+  }
+
   // Serialization needed for storing as JSON in Serverpod
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -93,6 +125,16 @@ class Line {
     if (lineHeight == 0) {
       lineHeight = Defaults.lineHeight;
     }
+  }
+
+  Line copyWith({
+    double? lineHeight,
+    bool? hasChild,
+  }) {
+    return Line(
+      lineHeight: lineHeight ?? this.lineHeight,
+      hasChild: hasChild ?? this.hasChild,
+    );
   }
 
   Map<String, dynamic> toJson() => {

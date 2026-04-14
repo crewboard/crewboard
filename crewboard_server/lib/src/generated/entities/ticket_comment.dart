@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -386,7 +385,7 @@ class TicketCommentRepository {
   /// );
   /// ```
   Future<List<TicketComment>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketCommentTable>? where,
     int? limit,
     int? offset,
@@ -395,6 +394,8 @@ class TicketCommentRepository {
     _i1.OrderByListBuilder<TicketCommentTable>? orderByList,
     _i1.Transaction? transaction,
     TicketCommentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<TicketComment>(
       where: where?.call(TicketComment.t),
@@ -405,6 +406,8 @@ class TicketCommentRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -426,7 +429,7 @@ class TicketCommentRepository {
   /// );
   /// ```
   Future<TicketComment?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketCommentTable>? where,
     int? offset,
     _i1.OrderByBuilder<TicketCommentTable>? orderBy,
@@ -434,6 +437,8 @@ class TicketCommentRepository {
     _i1.OrderByListBuilder<TicketCommentTable>? orderByList,
     _i1.Transaction? transaction,
     TicketCommentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<TicketComment>(
       where: where?.call(TicketComment.t),
@@ -443,20 +448,26 @@ class TicketCommentRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [TicketComment] by its [id] or null if no such row exists.
   Future<TicketComment?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketCommentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<TicketComment>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -466,14 +477,20 @@ class TicketCommentRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<TicketComment>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketComment> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<TicketComment>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -481,7 +498,7 @@ class TicketCommentRepository {
   ///
   /// The returned [TicketComment] will have its `id` field set.
   Future<TicketComment> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketComment row, {
     _i1.Transaction? transaction,
   }) async {
@@ -497,7 +514,7 @@ class TicketCommentRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<TicketComment>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketComment> rows, {
     _i1.ColumnSelections<TicketCommentTable>? columns,
     _i1.Transaction? transaction,
@@ -513,7 +530,7 @@ class TicketCommentRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<TicketComment> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketComment row, {
     _i1.ColumnSelections<TicketCommentTable>? columns,
     _i1.Transaction? transaction,
@@ -528,7 +545,7 @@ class TicketCommentRepository {
   /// Updates a single [TicketComment] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketComment?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketCommentUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -543,7 +560,7 @@ class TicketCommentRepository {
   /// Updates all [TicketComment]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<TicketComment>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TicketCommentUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<TicketCommentTable> where,
     int? limit,
@@ -569,7 +586,7 @@ class TicketCommentRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<TicketComment>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketComment> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -581,7 +598,7 @@ class TicketCommentRepository {
 
   /// Deletes a single [TicketComment].
   Future<TicketComment> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketComment row, {
     _i1.Transaction? transaction,
   }) async {
@@ -593,7 +610,7 @@ class TicketCommentRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<TicketComment>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TicketCommentTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -606,7 +623,7 @@ class TicketCommentRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketCommentTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -614,6 +631,22 @@ class TicketCommentRepository {
     return session.db.count<TicketComment>(
       where: where?.call(TicketComment.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [TicketComment] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<TicketCommentTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<TicketComment>(
+      where: where(TicketComment.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -625,7 +658,7 @@ class TicketCommentAttachRowRepository {
   /// Creates a relation between the given [TicketComment] and [Ticket]
   /// by setting the [TicketComment]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketComment ticketComment,
     _i2.Ticket ticket, {
     _i1.Transaction? transaction,
@@ -648,7 +681,7 @@ class TicketCommentAttachRowRepository {
   /// Creates a relation between the given [TicketComment] and [User]
   /// by setting the [TicketComment]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketComment ticketComment,
     _i3.User user, {
     _i1.Transaction? transaction,

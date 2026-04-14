@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -40,6 +39,7 @@ abstract class Ticket
     required this.creds,
     this.deadline,
     this.createdAt,
+    this.completedAt,
   });
 
   factory Ticket({
@@ -60,6 +60,7 @@ abstract class Ticket
     required int creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   }) = _TicketImpl;
 
   factory Ticket.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -107,6 +108,11 @@ abstract class Ticket
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      completedAt: jsonSerialization['completedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['completedAt'],
+            ),
     );
   }
 
@@ -149,6 +155,8 @@ abstract class Ticket
 
   DateTime? createdAt;
 
+  DateTime? completedAt;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -173,6 +181,7 @@ abstract class Ticket
     int? creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -196,6 +205,7 @@ abstract class Ticket
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
+      if (completedAt != null) 'completedAt': completedAt?.toJson(),
     };
   }
 
@@ -223,6 +233,7 @@ abstract class Ticket
       'creds': creds,
       if (deadline != null) 'deadline': deadline?.toJson(),
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
+      if (completedAt != null) 'completedAt': completedAt?.toJson(),
     };
   }
 
@@ -287,6 +298,7 @@ class _TicketImpl extends Ticket {
     required int creds,
     DateTime? deadline,
     DateTime? createdAt,
+    DateTime? completedAt,
   }) : super._(
          id: id,
          userId: userId,
@@ -305,6 +317,7 @@ class _TicketImpl extends Ticket {
          creds: creds,
          deadline: deadline,
          createdAt: createdAt,
+         completedAt: completedAt,
        );
 
   /// Returns a shallow copy of this [Ticket]
@@ -329,6 +342,7 @@ class _TicketImpl extends Ticket {
     int? creds,
     Object? deadline = _Undefined,
     Object? createdAt = _Undefined,
+    Object? completedAt = _Undefined,
   }) {
     return Ticket(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -352,6 +366,7 @@ class _TicketImpl extends Ticket {
       creds: creds ?? this.creds,
       deadline: deadline is DateTime? ? deadline : this.deadline,
       createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
+      completedAt: completedAt is DateTime? ? completedAt : this.completedAt,
     );
   }
 }
@@ -428,6 +443,12 @@ class TicketUpdateTable extends _i1.UpdateTable<TicketTable> {
         table.createdAt,
         value,
       );
+
+  _i1.ColumnValue<DateTime, DateTime> completedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.completedAt,
+        value,
+      );
 }
 
 class TicketTable extends _i1.Table<_i1.UuidValue?> {
@@ -481,6 +502,10 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
       'createdAt',
       this,
     );
+    completedAt = _i1.ColumnDateTime(
+      'completedAt',
+      this,
+    );
   }
 
   late final TicketUpdateTable updateTable;
@@ -516,6 +541,8 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
   late final _i1.ColumnDateTime deadline;
 
   late final _i1.ColumnDateTime createdAt;
+
+  late final _i1.ColumnDateTime completedAt;
 
   _i2.UserTable get user {
     if (_user != null) return _user!;
@@ -584,6 +611,7 @@ class TicketTable extends _i1.Table<_i1.UuidValue?> {
     creds,
     deadline,
     createdAt,
+    completedAt,
   ];
 
   @override
@@ -685,7 +713,7 @@ class TicketRepository {
   /// );
   /// ```
   Future<List<Ticket>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketTable>? where,
     int? limit,
     int? offset,
@@ -694,6 +722,8 @@ class TicketRepository {
     _i1.OrderByListBuilder<TicketTable>? orderByList,
     _i1.Transaction? transaction,
     TicketInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Ticket>(
       where: where?.call(Ticket.t),
@@ -704,6 +734,8 @@ class TicketRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -725,7 +757,7 @@ class TicketRepository {
   /// );
   /// ```
   Future<Ticket?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketTable>? where,
     int? offset,
     _i1.OrderByBuilder<TicketTable>? orderBy,
@@ -733,6 +765,8 @@ class TicketRepository {
     _i1.OrderByListBuilder<TicketTable>? orderByList,
     _i1.Transaction? transaction,
     TicketInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Ticket>(
       where: where?.call(Ticket.t),
@@ -742,20 +776,26 @@ class TicketRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Ticket] by its [id] or null if no such row exists.
   Future<Ticket?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Ticket>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -765,14 +805,20 @@ class TicketRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Ticket>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Ticket> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Ticket>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -780,7 +826,7 @@ class TicketRepository {
   ///
   /// The returned [Ticket] will have its `id` field set.
   Future<Ticket> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket row, {
     _i1.Transaction? transaction,
   }) async {
@@ -796,7 +842,7 @@ class TicketRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Ticket>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Ticket> rows, {
     _i1.ColumnSelections<TicketTable>? columns,
     _i1.Transaction? transaction,
@@ -812,7 +858,7 @@ class TicketRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Ticket> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket row, {
     _i1.ColumnSelections<TicketTable>? columns,
     _i1.Transaction? transaction,
@@ -827,7 +873,7 @@ class TicketRepository {
   /// Updates a single [Ticket] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Ticket?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -842,7 +888,7 @@ class TicketRepository {
   /// Updates all [Ticket]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Ticket>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TicketUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<TicketTable> where,
     int? limit,
@@ -868,7 +914,7 @@ class TicketRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Ticket>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Ticket> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -880,7 +926,7 @@ class TicketRepository {
 
   /// Deletes a single [Ticket].
   Future<Ticket> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket row, {
     _i1.Transaction? transaction,
   }) async {
@@ -892,7 +938,7 @@ class TicketRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Ticket>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TicketTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -905,7 +951,7 @@ class TicketRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -913,6 +959,22 @@ class TicketRepository {
     return session.db.count<Ticket>(
       where: where?.call(Ticket.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Ticket] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<TicketTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Ticket>(
+      where: where(Ticket.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -924,7 +986,7 @@ class TicketAttachRowRepository {
   /// Creates a relation between the given [Ticket] and [User]
   /// by setting the [Ticket]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket ticket,
     _i2.User user, {
     _i1.Transaction? transaction,
@@ -947,7 +1009,7 @@ class TicketAttachRowRepository {
   /// Creates a relation between the given [Ticket] and [Status]
   /// by setting the [Ticket]'s foreign key `statusId` to refer to the [Status].
   Future<void> status(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket ticket,
     _i3.Status status, {
     _i1.Transaction? transaction,
@@ -970,7 +1032,7 @@ class TicketAttachRowRepository {
   /// Creates a relation between the given [Ticket] and [Priority]
   /// by setting the [Ticket]'s foreign key `priorityId` to refer to the [Priority].
   Future<void> priority(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket ticket,
     _i4.Priority priority, {
     _i1.Transaction? transaction,
@@ -993,7 +1055,7 @@ class TicketAttachRowRepository {
   /// Creates a relation between the given [Ticket] and [TicketType]
   /// by setting the [Ticket]'s foreign key `typeId` to refer to the [TicketType].
   Future<void> type(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Ticket ticket,
     _i5.TicketType type, {
     _i1.Transaction? transaction,

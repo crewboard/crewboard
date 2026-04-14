@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:serverpod/serverpod.dart';
+import 'dart:convert';
 import 'package:path/path.dart' as p;
 
 class UploadEndpoint extends Endpoint {
@@ -24,6 +25,7 @@ class UploadEndpoint extends Endpoint {
         '.webp',
         '.mp4',
         '.mov',
+        '.avi',
         '.pdf',
       };
       if (!allowedExtensions.contains(ext)) {
@@ -37,8 +39,6 @@ class UploadEndpoint extends Endpoint {
 
       // 3. Define storage path (web/public/uploads)
       final publicUrl = 'http://localhost:8082/uploads/$filename';
-      // Adjust if running in production or different config
-      // Ideally read from config, but for now hardcode or infer
 
       // Ensure directory exists
       final uploadDir = Directory(
@@ -52,6 +52,35 @@ class UploadEndpoint extends Endpoint {
 
       // 4. Write data
       await file.writeAsBytes(data.buffer.asUint8List());
+
+      // 5. If it's a video, generate thumbnail
+      if (ext == '.mp4' || ext == '.mov' || ext == '.avi') {
+        final thumbFilename = '${filename.split('.').first}_thumb.jpg';
+        final thumbPath = p.join(uploadDir.path, thumbFilename);
+
+        try {
+          // ffmpeg -i input -ss 00:00:01 -vframes 1 output.jpg
+          final result = await Process.run('ffmpeg', [
+            '-i',
+            file.path,
+            '-ss',
+            '00:00:01',
+            '-vframes',
+            '1',
+            thumbPath,
+          ]);
+
+          if (result.exitCode == 0) {
+            final thumbnailUrl = 'http://localhost:8082/uploads/$thumbFilename';
+            return jsonEncode({
+              'value': publicUrl,
+              'thumbnail': thumbnailUrl,
+            });
+          }
+        } catch (e) {
+          session.log('Thumbnail generation failed: $e', level: LogLevel.error);
+        }
+      }
 
       return publicUrl;
     } catch (e, stack) {

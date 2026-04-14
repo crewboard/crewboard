@@ -33,7 +33,7 @@ abstract class UserModel
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userName: jsonSerialization['userName'] as String,
       color: jsonSerialization['color'] as String,
-      selected: jsonSerialization['selected'] as bool,
+      selected: _i1.BoolJsonExtension.fromJson(jsonSerialization['selected']),
     );
   }
 

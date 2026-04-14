@@ -11,13 +11,13 @@ class MultiSelect extends StatefulWidget {
     required this.selected,
     this.width = 150,
     this.label = "Assignees",
-    this.onChanged,
+    this.onSelected,
   });
   final List<dynamic> items;
   final List<dynamic> selected;
   final double width;
   final String label;
-  final VoidCallback? onChanged;
+  final Function(List<dynamic>)? onSelected;
 
   @override
   State<MultiSelect> createState() => _MultiSelectState();
@@ -38,17 +38,27 @@ class _MultiSelectState extends State<MultiSelect> {
     return widget.selected.contains(item);
   }
 
-  void _toggleSelection(dynamic item) {
-    if (_isSelected(item)) {
+  void _handleToggle(dynamic item) {
+    final newList = List<dynamic>.from(widget.selected);
+    bool isSel = false;
+    if (item is UserModel) {
+      isSel = newList.any((element) => element is UserModel && element.userId == item.userId);
+    } else {
+      isSel = newList.contains(item);
+    }
+
+    if (isSel) {
       if (item is UserModel) {
-        widget.selected.removeWhere(
-          (element) => element is UserModel && element.userId == item.userId,
-        );
+        newList.removeWhere((element) => element is UserModel && element.userId == item.userId);
       } else {
-        widget.selected.remove(item);
+        newList.remove(item);
       }
     } else {
-      widget.selected.add(item);
+      newList.add(item);
+    }
+
+    if (widget.onSelected != null) {
+      widget.onSelected!(newList);
     }
   }
 
@@ -94,10 +104,7 @@ class _MultiSelectState extends State<MultiSelect> {
                               for (var item in widget.items)
                                 InkWell(
                                   onTap: () {
-                                    _toggleSelection(item);
-                                    if (widget.onChanged != null) {
-                                      widget.onChanged!();
-                                    }
+                                    _handleToggle(item);
                                     setState(() {
                                       dropdown?.markNeedsBuild();
                                     });
@@ -195,34 +202,36 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return SizedBox(
       key: actionKey,
-      onTap: () {
-        if (isOpen) {
-          close();
-        } else {
-          findDropDownData();
-          dropdown = _createDropDown();
-          Overlay.of(context).insert(dropdown!);
-          isOpen = true;
-          setState(() {});
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-          color: Pallet.inside1,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                widget.label,
-                style: TextStyle(color: Pallet.font1, fontSize: 12),
+      child: InkWell(
+        onTap: () {
+          if (isOpen) {
+            close();
+          } else {
+            findDropDownData();
+            dropdown = _createDropDown();
+            Overlay.of(context).insert(dropdown!);
+            isOpen = true;
+            setState(() {});
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: Pallet.inside1,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  widget.label,
+                  style: TextStyle(color: Pallet.font1, fontSize: 12),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

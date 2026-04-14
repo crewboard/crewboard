@@ -35,7 +35,7 @@ abstract class SystemColor
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       colorName: jsonSerialization['colorName'] as String?,
       color: jsonSerialization['color'] as String,
-      isDefault: jsonSerialization['isDefault'] as bool,
+      isDefault: _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
     );
   }
 
@@ -259,7 +259,7 @@ class SystemColorRepository {
   /// );
   /// ```
   Future<List<SystemColor>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemColorTable>? where,
     int? limit,
     int? offset,
@@ -267,6 +267,8 @@ class SystemColorRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SystemColorTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SystemColor>(
       where: where?.call(SystemColor.t),
@@ -276,6 +278,8 @@ class SystemColorRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -297,13 +301,15 @@ class SystemColorRepository {
   /// );
   /// ```
   Future<SystemColor?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemColorTable>? where,
     int? offset,
     _i1.OrderByBuilder<SystemColorTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<SystemColorTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SystemColor>(
       where: where?.call(SystemColor.t),
@@ -312,18 +318,24 @@ class SystemColorRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [SystemColor] by its [id] or null if no such row exists.
   Future<SystemColor?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SystemColor>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -333,14 +345,20 @@ class SystemColorRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<SystemColor>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemColor> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<SystemColor>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -348,7 +366,7 @@ class SystemColorRepository {
   ///
   /// The returned [SystemColor] will have its `id` field set.
   Future<SystemColor> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemColor row, {
     _i1.Transaction? transaction,
   }) async {
@@ -364,7 +382,7 @@ class SystemColorRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<SystemColor>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemColor> rows, {
     _i1.ColumnSelections<SystemColorTable>? columns,
     _i1.Transaction? transaction,
@@ -380,7 +398,7 @@ class SystemColorRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<SystemColor> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemColor row, {
     _i1.ColumnSelections<SystemColorTable>? columns,
     _i1.Transaction? transaction,
@@ -395,7 +413,7 @@ class SystemColorRepository {
   /// Updates a single [SystemColor] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<SystemColor?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<SystemColorUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -410,7 +428,7 @@ class SystemColorRepository {
   /// Updates all [SystemColor]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<SystemColor>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<SystemColorUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<SystemColorTable> where,
     int? limit,
@@ -436,7 +454,7 @@ class SystemColorRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<SystemColor>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SystemColor> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -448,7 +466,7 @@ class SystemColorRepository {
 
   /// Deletes a single [SystemColor].
   Future<SystemColor> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SystemColor row, {
     _i1.Transaction? transaction,
   }) async {
@@ -460,7 +478,7 @@ class SystemColorRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<SystemColor>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<SystemColorTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -473,7 +491,7 @@ class SystemColorRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SystemColorTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -481,6 +499,22 @@ class SystemColorRepository {
     return session.db.count<SystemColor>(
       where: where?.call(SystemColor.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [SystemColor] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<SystemColorTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<SystemColor>(
+      where: where(SystemColor.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

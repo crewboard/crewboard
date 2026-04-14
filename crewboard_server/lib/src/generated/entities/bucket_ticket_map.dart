@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -361,7 +360,7 @@ class BucketTicketMapRepository {
   /// );
   /// ```
   Future<List<BucketTicketMap>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<BucketTicketMapTable>? where,
     int? limit,
     int? offset,
@@ -370,6 +369,8 @@ class BucketTicketMapRepository {
     _i1.OrderByListBuilder<BucketTicketMapTable>? orderByList,
     _i1.Transaction? transaction,
     BucketTicketMapInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<BucketTicketMap>(
       where: where?.call(BucketTicketMap.t),
@@ -380,6 +381,8 @@ class BucketTicketMapRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -401,7 +404,7 @@ class BucketTicketMapRepository {
   /// );
   /// ```
   Future<BucketTicketMap?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<BucketTicketMapTable>? where,
     int? offset,
     _i1.OrderByBuilder<BucketTicketMapTable>? orderBy,
@@ -409,6 +412,8 @@ class BucketTicketMapRepository {
     _i1.OrderByListBuilder<BucketTicketMapTable>? orderByList,
     _i1.Transaction? transaction,
     BucketTicketMapInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<BucketTicketMap>(
       where: where?.call(BucketTicketMap.t),
@@ -418,20 +423,26 @@ class BucketTicketMapRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [BucketTicketMap] by its [id] or null if no such row exists.
   Future<BucketTicketMap?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     BucketTicketMapInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<BucketTicketMap>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -441,14 +452,20 @@ class BucketTicketMapRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<BucketTicketMap>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<BucketTicketMap> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<BucketTicketMap>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -456,7 +473,7 @@ class BucketTicketMapRepository {
   ///
   /// The returned [BucketTicketMap] will have its `id` field set.
   Future<BucketTicketMap> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     BucketTicketMap row, {
     _i1.Transaction? transaction,
   }) async {
@@ -472,7 +489,7 @@ class BucketTicketMapRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<BucketTicketMap>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<BucketTicketMap> rows, {
     _i1.ColumnSelections<BucketTicketMapTable>? columns,
     _i1.Transaction? transaction,
@@ -488,7 +505,7 @@ class BucketTicketMapRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<BucketTicketMap> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     BucketTicketMap row, {
     _i1.ColumnSelections<BucketTicketMapTable>? columns,
     _i1.Transaction? transaction,
@@ -503,7 +520,7 @@ class BucketTicketMapRepository {
   /// Updates a single [BucketTicketMap] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<BucketTicketMap?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<BucketTicketMapUpdateTable>
     columnValues,
@@ -519,7 +536,7 @@ class BucketTicketMapRepository {
   /// Updates all [BucketTicketMap]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<BucketTicketMap>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<BucketTicketMapUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<BucketTicketMapTable> where,
@@ -546,7 +563,7 @@ class BucketTicketMapRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<BucketTicketMap>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<BucketTicketMap> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -558,7 +575,7 @@ class BucketTicketMapRepository {
 
   /// Deletes a single [BucketTicketMap].
   Future<BucketTicketMap> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     BucketTicketMap row, {
     _i1.Transaction? transaction,
   }) async {
@@ -570,7 +587,7 @@ class BucketTicketMapRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<BucketTicketMap>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<BucketTicketMapTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -583,7 +600,7 @@ class BucketTicketMapRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<BucketTicketMapTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -591,6 +608,22 @@ class BucketTicketMapRepository {
     return session.db.count<BucketTicketMap>(
       where: where?.call(BucketTicketMap.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [BucketTicketMap] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<BucketTicketMapTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<BucketTicketMap>(
+      where: where(BucketTicketMap.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -602,7 +635,7 @@ class BucketTicketMapAttachRowRepository {
   /// Creates a relation between the given [BucketTicketMap] and [Bucket]
   /// by setting the [BucketTicketMap]'s foreign key `bucketId` to refer to the [Bucket].
   Future<void> bucket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     BucketTicketMap bucketTicketMap,
     _i2.Bucket bucket, {
     _i1.Transaction? transaction,
@@ -625,7 +658,7 @@ class BucketTicketMapAttachRowRepository {
   /// Creates a relation between the given [BucketTicketMap] and [Ticket]
   /// by setting the [BucketTicketMap]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     BucketTicketMap bucketTicketMap,
     _i3.Ticket ticket, {
     _i1.Transaction? transaction,

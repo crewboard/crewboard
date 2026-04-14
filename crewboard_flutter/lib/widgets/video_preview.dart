@@ -7,12 +7,14 @@ import 'full_screen_video_preview.dart';
 class VideoPreview extends StatefulWidget {
   final File? file;
   final String? url;
+  final String? thumbnailUrl;
   final double? height;
 
   const VideoPreview({
     super.key,
     this.file,
     this.url,
+    this.thumbnailUrl,
     this.height,
   }) : assert(
          file != null || url != null,
@@ -113,9 +115,19 @@ class _VideoPreviewState extends State<VideoPreview> {
     if (!_initialized) {
       return Container(
         height: widget.height ?? 200,
+        width: widget.height != null ? (widget.height! * 16 / 9) : null,
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
         decoration: BoxDecoration(
           color: Pallet.inside2,
           borderRadius: BorderRadius.circular(12),
+          image: widget.thumbnailUrl != null
+              ? DecorationImage(
+                  image: NetworkImage(widget.thumbnailUrl!),
+                  fit: BoxFit.cover,
+                )
+              : null,
         ),
         child: const Center(
           child: CircularProgressIndicator(strokeWidth: 2),

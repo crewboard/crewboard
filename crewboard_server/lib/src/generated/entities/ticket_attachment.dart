@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -363,7 +362,7 @@ class TicketAttachmentRepository {
   /// );
   /// ```
   Future<List<TicketAttachment>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketAttachmentTable>? where,
     int? limit,
     int? offset,
@@ -372,6 +371,8 @@ class TicketAttachmentRepository {
     _i1.OrderByListBuilder<TicketAttachmentTable>? orderByList,
     _i1.Transaction? transaction,
     TicketAttachmentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<TicketAttachment>(
       where: where?.call(TicketAttachment.t),
@@ -382,6 +383,8 @@ class TicketAttachmentRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -403,7 +406,7 @@ class TicketAttachmentRepository {
   /// );
   /// ```
   Future<TicketAttachment?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketAttachmentTable>? where,
     int? offset,
     _i1.OrderByBuilder<TicketAttachmentTable>? orderBy,
@@ -411,6 +414,8 @@ class TicketAttachmentRepository {
     _i1.OrderByListBuilder<TicketAttachmentTable>? orderByList,
     _i1.Transaction? transaction,
     TicketAttachmentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<TicketAttachment>(
       where: where?.call(TicketAttachment.t),
@@ -420,20 +425,26 @@ class TicketAttachmentRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [TicketAttachment] by its [id] or null if no such row exists.
   Future<TicketAttachment?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketAttachmentInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<TicketAttachment>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -443,14 +454,20 @@ class TicketAttachmentRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<TicketAttachment>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketAttachment> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<TicketAttachment>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -458,7 +475,7 @@ class TicketAttachmentRepository {
   ///
   /// The returned [TicketAttachment] will have its `id` field set.
   Future<TicketAttachment> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketAttachment row, {
     _i1.Transaction? transaction,
   }) async {
@@ -474,7 +491,7 @@ class TicketAttachmentRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<TicketAttachment>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketAttachment> rows, {
     _i1.ColumnSelections<TicketAttachmentTable>? columns,
     _i1.Transaction? transaction,
@@ -490,7 +507,7 @@ class TicketAttachmentRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<TicketAttachment> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketAttachment row, {
     _i1.ColumnSelections<TicketAttachmentTable>? columns,
     _i1.Transaction? transaction,
@@ -505,7 +522,7 @@ class TicketAttachmentRepository {
   /// Updates a single [TicketAttachment] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketAttachment?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketAttachmentUpdateTable>
     columnValues,
@@ -521,7 +538,7 @@ class TicketAttachmentRepository {
   /// Updates all [TicketAttachment]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<TicketAttachment>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TicketAttachmentUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<TicketAttachmentTable> where,
@@ -548,7 +565,7 @@ class TicketAttachmentRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<TicketAttachment>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketAttachment> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -560,7 +577,7 @@ class TicketAttachmentRepository {
 
   /// Deletes a single [TicketAttachment].
   Future<TicketAttachment> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketAttachment row, {
     _i1.Transaction? transaction,
   }) async {
@@ -572,7 +589,7 @@ class TicketAttachmentRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<TicketAttachment>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TicketAttachmentTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -585,7 +602,7 @@ class TicketAttachmentRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketAttachmentTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -593,6 +610,22 @@ class TicketAttachmentRepository {
     return session.db.count<TicketAttachment>(
       where: where?.call(TicketAttachment.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [TicketAttachment] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<TicketAttachmentTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<TicketAttachment>(
+      where: where(TicketAttachment.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -604,7 +637,7 @@ class TicketAttachmentAttachRowRepository {
   /// Creates a relation between the given [TicketAttachment] and [Ticket]
   /// by setting the [TicketAttachment]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketAttachment ticketAttachment,
     _i2.Ticket ticket, {
     _i1.Transaction? transaction,

@@ -60,10 +60,18 @@ abstract class SystemVariables implements _i1.SerializableModel {
       processWidth: (jsonSerialization['processWidth'] as num?)?.toDouble(),
       conditionWidth: (jsonSerialization['conditionWidth'] as num?)?.toDouble(),
       terminalWidth: (jsonSerialization['terminalWidth'] as num?)?.toDouble(),
-      allowEdit: jsonSerialization['allowEdit'] as bool?,
-      showEdit: jsonSerialization['showEdit'] as bool?,
-      allowDelete: jsonSerialization['allowDelete'] as bool?,
-      showDelete: jsonSerialization['showDelete'] as bool?,
+      allowEdit: jsonSerialization['allowEdit'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['allowEdit']),
+      showEdit: jsonSerialization['showEdit'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['showEdit']),
+      allowDelete: jsonSerialization['allowDelete'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['allowDelete']),
+      showDelete: jsonSerialization['showDelete'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['showDelete']),
       googleFonts: jsonSerialization['googleFonts'] == null
           ? null
           : _i2.Protocol().deserialize<List<String>>(

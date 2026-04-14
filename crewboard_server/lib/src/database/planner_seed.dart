@@ -12,11 +12,11 @@ class PlannerSeed {
 
     if (existingStatuses.isEmpty) {
       final statuses = [
-        Status(statusName: 'New'),
-        Status(statusName: 'In Progress'),
-        Status(statusName: 'Review'),
-        Status(statusName: 'Done'),
-        Status(statusName: 'Blocked'),
+        Status(statusName: 'New', working: false, completed: false),
+        Status(statusName: 'In Progress', working: true, completed: false),
+        Status(statusName: 'Review', working: false, completed: false),
+        Status(statusName: 'Done', working: false, completed: true),
+        Status(statusName: 'Blocked', working: false, completed: false),
       ];
 
       for (final status in statuses) {

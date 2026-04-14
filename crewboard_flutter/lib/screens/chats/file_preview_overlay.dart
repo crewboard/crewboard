@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../widgets/image_editor/pro_image_editor.dart';
@@ -10,14 +10,14 @@ import '../../config/palette.dart';
 import '../../widgets/video_preview.dart';
 import '../../widgets/audio_preview.dart';
 
-class FilePreviewOverlay extends StatefulWidget {
+class FilePreviewOverlay extends ConsumerStatefulWidget {
   const FilePreviewOverlay({super.key});
 
   @override
-  State<FilePreviewOverlay> createState() => _FilePreviewOverlayState();
+  ConsumerState<FilePreviewOverlay> createState() => _FilePreviewOverlayState();
 }
 
-class _FilePreviewOverlayState extends State<FilePreviewOverlay> {
+class _FilePreviewOverlayState extends ConsumerState<FilePreviewOverlay> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
@@ -29,124 +29,123 @@ class _FilePreviewOverlayState extends State<FilePreviewOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final messagesController = Get.find<MessagesController>();
+    final state = ref.watch(messagesProvider);
+    final notifier = ref.read(messagesProvider.notifier);
 
-    return Obx(() {
-      if (!messagesController.showFilePreview.value) {
-        return const SizedBox.shrink();
-      }
+    if (!state.showFilePreview) {
+      return const SizedBox.shrink();
+    }
 
-      final files = messagesController.attachedFiles;
+    final files = state.attachedFiles;
 
-      if (files.isEmpty) return const SizedBox.shrink();
+    if (files.isEmpty) return const SizedBox.shrink();
 
-      return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.file_copy_outlined, color: Pallet.font3),
-                const SizedBox(width: 12),
-                Text(
-                  "Preview Files (${files.length})",
-                  style: TextStyle(
-                    color: Pallet.font3,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.file_copy_outlined, color: Pallet.font3),
+              const SizedBox(width: 12),
+              Text(
+                "Preview Files (${files.length})",
+                style: TextStyle(
+                  color: Pallet.font3,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
-                const Spacer(),
-                InkWell(
-                  onTap: messagesController.closeFilePreview,
-                  child: Icon(Icons.close, color: Pallet.font3),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: files.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final file = files[index];
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Center(
-                      child: _FilePreviewItem(
-                        file: file,
-                        onRemove: () {},
-                      ),
-                    ),
-                  );
-                },
               ),
-            ),
-            if (files.length > 1) ...[
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 60,
-                child: Center(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: files.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      final file = files[index];
-                      final isSelected = index == _currentIndex;
-                      return GestureDetector(
-                        onTap: () {
-                          _pageController.animateToPage(
-                            index,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            border: isSelected
-                                ? Border.all(color: Colors.blue, width: 2)
-                                : null,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: _ThumbnailItem(file: file),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+              const Spacer(),
+              InkWell(
+                onTap: () => notifier.clearAttachedFiles(),
+                child: Icon(Icons.close, color: Pallet.font3),
               ),
             ],
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: files.length,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              itemBuilder: (context, index) {
+                final file = files[index];
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: _FilePreviewItem(
+                      file: file,
+                      onRemove: () {},
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (files.length > 1) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 60,
+              child: Center(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: files.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    final file = files[index];
+                    final isSelected = index == _currentIndex;
+                    return GestureDetector(
+                      onTap: () {
+                        _pageController.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          border: isSelected
+                              ? Border.all(color: Colors.blue, width: 2)
+                              : null,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: _ThumbnailItem(file: file),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
-        ),
-      );
-    });
+        ],
+      ),
+    );
   }
 }
 
-class _ThumbnailItem extends StatelessWidget {
+class _ThumbnailItem extends ConsumerWidget {
   final File file;
 
   const _ThumbnailItem({required this.file});
 
   @override
-  Widget build(BuildContext context) {
-    final messagesController = Get.find<MessagesController>();
-    final type = messagesController.getMessageTypeFromFile(file);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(messagesProvider.notifier);
+    final type = notifier.getMessageTypeFromFile(file);
 
     if (type == MessageType.image) {
       return Image.file(
@@ -171,16 +170,17 @@ class _ThumbnailItem extends StatelessWidget {
   }
 }
 
-class _FilePreviewItem extends StatelessWidget {
+class _FilePreviewItem extends ConsumerWidget {
   final File file;
   final VoidCallback onRemove;
 
   const _FilePreviewItem({required this.file, required this.onRemove});
 
   @override
-  Widget build(BuildContext context) {
-    final messagesController = Get.find<MessagesController>();
-    final type = messagesController.getMessageTypeFromFile(file);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(messagesProvider);
+    final notifier = ref.read(messagesProvider.notifier);
+    final type = notifier.getMessageTypeFromFile(file);
 
     if (type != MessageType.image) {
       Widget content;
@@ -238,14 +238,11 @@ class _FilePreviewItem extends StatelessWidget {
               final newFile = File('${tempDir.path}/$fileName');
               await newFile.writeAsBytes(bytes);
 
-              final messagesController = Get.find<MessagesController>();
-              final index = messagesController.attachedFiles.indexOf(file);
+              final index = state.attachedFiles.indexOf(file);
               if (index != -1) {
-                // Determine if we are updating the list or creating a new one to force refresh
-                // messagesController.attachedFiles[index] = newFile;
-                // Using set range or similar might be safer for Obx
-                messagesController.attachedFiles[index] = newFile;
-                messagesController.attachedFiles.refresh();
+                final newFiles = List<File>.from(state.attachedFiles);
+                newFiles[index] = newFile;
+                notifier.updateAttachedFiles(newFiles);
               }
             } catch (e) {
               debugPrint('Error saving edited image: $e');

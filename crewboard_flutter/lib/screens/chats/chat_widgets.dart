@@ -1,9 +1,9 @@
 import 'dart:convert';
-// import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 
 import '../../config/palette.dart';
@@ -16,6 +16,7 @@ import '../../controllers/rooms_controller.dart';
 import '../../widgets/video_preview.dart';
 import '../../widgets/audio_preview.dart';
 import '../../widgets/full_screen_image_preview.dart';
+import '../../controllers/menu_controller.dart';
 
 // Placeholder for RoomProfile if not defined elsewhere
 class RoomProfile {
@@ -47,9 +48,9 @@ addMemory(context, {String? text}) async {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        contentPadding: EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.all(10),
         backgroundColor: Pallet.inside2,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         content: Column(
@@ -64,7 +65,7 @@ addMemory(context, {String? text}) async {
                       color: Pallet.inside3,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 15,
                     ),
@@ -72,7 +73,7 @@ addMemory(context, {String? text}) async {
                       controller: title,
                       style: TextStyle(fontSize: 12, color: Pallet.font3),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: const EdgeInsets.all(0),
                         hintStyle: TextStyle(
                           fontSize: 12,
                           color: Pallet.font3,
@@ -83,13 +84,13 @@ addMemory(context, {String? text}) async {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       color: Pallet.inside3,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 15,
                     ),
@@ -98,7 +99,7 @@ addMemory(context, {String? text}) async {
                       controller: body,
                       style: TextStyle(fontSize: 12, color: Pallet.font3),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: const EdgeInsets.all(0),
                         hintStyle: TextStyle(
                           fontSize: 12,
                           color: Pallet.font3,
@@ -124,7 +125,7 @@ addMemory(context, {String? text}) async {
                   Navigator.of(context).pop();
                 },
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               frontend_button.SmallButton(
                 label: "save",
                 onPress: () async {
@@ -140,48 +141,30 @@ addMemory(context, {String? text}) async {
   );
 }
 
-class MessageBubble extends StatelessWidget {
-  final String message;
-  final bool isMe;
-  final UuidValue userId;
+class MessageBubble extends ConsumerWidget {
+  final ChatMessage chatMessage;
   final bool sameUser;
-  final DateTime createdAt;
-  final MessageType? type;
-  // Temporary: reconstruct a ChatMessage or modify calling code to pass ChatMessage
-  // For now, I will use this widget as a dispatcher to new widgets
 
   const MessageBubble({
     super.key,
-    required this.message,
-    required this.isMe, // This might be overridden by internal check if I create ChatMessage
-    required this.userId,
+    required this.chatMessage,
     required this.sameUser,
-    required this.createdAt,
-    this.type,
   });
 
   @override
-  Widget build(BuildContext context) {
-    // Reconstruct a temporary ChatMessage object to work with new widgets
-    // This is a bridge. ideally ChatScreen should pass ChatMessage object.
-    final msgObj = ChatMessage(
-      roomId: UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-      userId: userId,
-      message: message,
-      messageType: type ?? MessageType.text,
-      seenUserList: [],
-      sameUser: sameUser, // Passed from parent list
-      deleted: false,
-      createdAt: createdAt,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final msgObj = chatMessage.copyWith(sameUser: sameUser);
+    final isMe = chatMessage.isMe;
+    final userId = chatMessage.userId;
+    final type = chatMessage.messageType;
 
     // Lookup user profile from RoomsController
     String senderName = isMe ? "Me" : "Other";
     Color senderColor = isMe ? Colors.blue : Colors.grey;
 
     if (!isMe) {
-      final roomsController = Get.find<RoomsController>();
-      final room = roomsController.selectedRoom.value;
+      final roomsState = ref.watch(roomsProvider);
+      final room = roomsState.selectedRoom;
       if (room != null && room.roomUsers != null) {
         try {
           final user = room.roomUsers!.firstWhere((u) => u.id == userId);
@@ -191,19 +174,19 @@ class MessageBubble extends StatelessWidget {
       }
     } else {
       // For "Me", try to get current user color from RoomsController users list
-      final roomsController = Get.find<RoomsController>();
+      final roomsState = ref.watch(roomsProvider);
       final currentUserId = sessionManager.authInfo?.authUserId;
       if (currentUserId != null) {
         try {
           // Try to find in the users list (search results or loaded users)
-          final me = roomsController.users.firstWhereOrNull(
+          final me = roomsState.users.firstWhereOrNull(
             (u) => u.id == currentUserId,
           );
           if (me != null) {
             senderColor = Pallet.getUserColor(me);
           } else {
             // Also check room users of all rooms
-            for (var room in roomsController.rooms) {
+            for (var room in roomsState.rooms) {
               final meInRoom = room.roomUsers?.firstWhereOrNull(
                 (u) => u.id == currentUserId,
               );
@@ -234,7 +217,7 @@ class MessageBubble extends StatelessWidget {
   }
 }
 
-class MessageWidget extends StatefulWidget {
+class MessageWidget extends ConsumerStatefulWidget {
   const MessageWidget({
     super.key,
     required this.user,
@@ -243,19 +226,16 @@ class MessageWidget extends StatefulWidget {
   });
   final RoomProfile user;
   final Widget child;
-  // final bool selected;
   final ChatMessage message;
 
   @override
-  State<MessageWidget> createState() => _MessageState();
+  ConsumerState<MessageWidget> createState() => _MessageState();
 }
 
-class _MessageState extends State<MessageWidget> {
+class _MessageState extends ConsumerState<MessageWidget> {
   GlobalKey actionKey = GlobalKey();
   double height = 0, width = 0, initX = 0, initY = 0, parentWidth = 0;
 
-  OverlayEntry? dropdown;
-  bool isOpen = false;
   final ValueNotifier<int?> hoveredIdx = ValueNotifier<int?>(null);
 
   void getDropDownData() {
@@ -300,7 +280,7 @@ class _MessageState extends State<MessageWidget> {
                       onTap: () {},
                       behavior: HitTestBehavior.opaque,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 6),
                         decoration: BoxDecoration(
                           color: Pallet.inside2,
                           borderRadius: BorderRadius.circular(10),
@@ -327,17 +307,14 @@ class _MessageState extends State<MessageWidget> {
                                       },
                                       child: InkWell(
                                         onTap: () {
-                                          Get.find<MessagesController>()
-                                                  .reply
-                                                  .value =
-                                              widget.message;
+                                          ref.read(messagesProvider.notifier).setReply(widget.message);
                                           close();
                                         },
                                         child: Container(
                                           color: (_hoveredIdx == 0)
                                               ? Pallet.inside1
                                               : Colors.transparent,
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 10,
                                             vertical: 5,
                                           ),
@@ -381,7 +358,7 @@ class _MessageState extends State<MessageWidget> {
                                           color: (_hoveredIdx == 1)
                                               ? Pallet.inside1
                                               : Colors.transparent,
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 10,
                                             vertical: 5,
                                           ),
@@ -415,7 +392,6 @@ class _MessageState extends State<MessageWidget> {
                                       },
                                       child: InkWell(
                                         onTap: () {
-                                          // Logic to extract text and add memory
                                           String copy = _extractTextFromMessage(
                                             widget.message.message,
                                           );
@@ -426,7 +402,7 @@ class _MessageState extends State<MessageWidget> {
                                           color: (_hoveredIdx == 2)
                                               ? Pallet.inside1
                                               : Colors.transparent,
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 10,
                                             vertical: 5,
                                           ),
@@ -472,7 +448,7 @@ class _MessageState extends State<MessageWidget> {
                                           color: (_hoveredIdx == 3)
                                               ? Pallet.inside1
                                               : Colors.transparent,
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 10,
                                             vertical: 5,
                                           ),
@@ -497,7 +473,7 @@ class _MessageState extends State<MessageWidget> {
                                         ),
                                       ),
                                     ),
-                                    if (widget.message.sameUser == true)
+                                    if (widget.message.isMe)
                                       MouseRegion(
                                         onEnter: (details) {
                                           hoveredIdx.value = 4;
@@ -507,17 +483,14 @@ class _MessageState extends State<MessageWidget> {
                                         },
                                         child: InkWell(
                                           onTap: () {
-                                            Get.find<MessagesController>()
-                                                    .edit
-                                                    .value =
-                                                widget.message;
+                                            ref.read(messagesProvider.notifier).setEdit(widget.message);
                                             close();
                                           },
                                           child: Container(
                                             color: (_hoveredIdx == 4)
                                                 ? Pallet.inside1
                                                 : Colors.transparent,
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               horizontal: 10,
                                               vertical: 5,
                                             ),
@@ -543,7 +516,7 @@ class _MessageState extends State<MessageWidget> {
                                           ),
                                         ),
                                       ),
-                                    if (widget.message.sameUser == true)
+                                    if (widget.message.isMe)
                                       MouseRegion(
                                         onEnter: (details) {
                                           hoveredIdx.value = 5;
@@ -557,7 +530,7 @@ class _MessageState extends State<MessageWidget> {
                                             color: (_hoveredIdx == 5)
                                                 ? Pallet.inside1
                                                 : Colors.transparent,
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               horizontal: 10,
                                               vertical: 5,
                                             ),
@@ -620,24 +593,55 @@ class _MessageState extends State<MessageWidget> {
   }
 
   void close() {
-    if (isOpen) {
-      dropdown!.remove();
-      isOpen = false;
-    }
+    ref.read(menuProvider.notifier).close();
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Widget _buildReplyHeader() {
+    final messagesState = ref.watch(messagesProvider);
+    final parentMessage = messagesState.messages.firstWhereOrNull(
+      (m) => m.id == widget.message.parentMessageId,
+    );
+
+    if (parentMessage == null) return const SizedBox.shrink();
+
+    String content = parentMessage.message;
+    if (parentMessage.messageType == MessageType.image) content = "📷 Image";
+    if (parentMessage.messageType == MessageType.video) content = "🎥 Video";
+    if (parentMessage.messageType == MessageType.audio) content = "🎵 Audio";
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Pallet.inside2.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border(
+          left: BorderSide(color: Pallet.inside1, width: 3),
+        ),
+      ),
+      constraints: BoxConstraints(maxWidth: Window.width * 0.4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Pallet.font3,
+              fontSize: 11,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      color: (widget.message.selected)
-          ? Pallet.inside3.withOpacity(0.5)
-          : Colors.transparent,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Padding(
         padding: EdgeInsets.only(
           top: (widget.message.isMe && widget.message.sameUser == false)
@@ -658,11 +662,10 @@ class _MessageState extends State<MessageWidget> {
                   name: widget.user.userName,
                   color: widget.user.color,
                   borderRadius: 10,
-                  style: ProfileIconStyle.outlined,
                 )
               else
-                SizedBox(height: 30, width: 30),
-            SizedBox(width: 2),
+                const SizedBox(height: 30, width: 30),
+            const SizedBox(width: 2),
             Column(
               crossAxisAlignment: (widget.message.isMe)
                   ? CrossAxisAlignment.end
@@ -677,17 +680,21 @@ class _MessageState extends State<MessageWidget> {
                     ),
                   ),
                 const SizedBox(height: 5),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  key: actionKey,
-                  onLongPress: () {
-                    // Platform check simulation
-                    openMenu();
+                if (widget.message.parentMessageId != null) _buildReplyHeader(),
+                Listener(
+                  onPointerDown: (event) {
+                    if (event.buttons == kSecondaryButton) {
+                      openMenu();
+                    }
                   },
-                  onSecondaryTap: () {
-                    openMenu();
-                  },
-                  child: widget.child,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    key: actionKey,
+                    onLongPress: () {
+                      openMenu();
+                    },
+                    child: widget.child,
+                  ),
                 ),
               ],
             ),
@@ -699,10 +706,8 @@ class _MessageState extends State<MessageWidget> {
 
   openMenu() {
     getDropDownData();
-    dropdown = _createDropDown();
-    Overlay.of(context).insert(dropdown!);
-    isOpen = true;
-    setState(() {});
+    final entry = _createDropDown();
+    ref.read(menuProvider.notifier).show(context, entry);
   }
 }
 
@@ -741,13 +746,11 @@ class ImageMessage extends StatelessWidget {
       if (decoded is List) {
         images = decoded;
       } else {
-        // Handle non-list JSON (single object?) or primitives
         images = [
           {"value": message.message},
         ];
       }
     } catch (e) {
-      // Fallback if not JSON or generic error
       images = [
         {"value": message.message},
       ];
@@ -763,9 +766,7 @@ class ImageMessage extends StatelessWidget {
               children: [
                 for (var image in images)
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top: 4,
-                    ), // Small padding between images
+                    padding: const EdgeInsets.only(top: 4),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -790,10 +791,8 @@ class ImageMessage extends StatelessWidget {
                               width: 280,
                               height: 187,
                               color: Pallet.inside2,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Pallet.font1,
-                                ),
+                              child: const Center(
+                                child: CircularProgressIndicator(),
                               ),
                             );
                           },
@@ -817,73 +816,61 @@ class ImageMessage extends StatelessWidget {
               ],
             )
           else
-            InkWell(
-              onTap: () {
-                // For the grid view, we might want to open a gallery view
-                // For now, let's open the first image or do nothing?
-                // Or maybe the user tapped a specific one in the grid?
-                // The wrap children don't have individual tap handlers in current code.
-                // Let's make individual children tappable.
-              },
-              child: SizedBox(
-                width: 280,
-                height: 280,
-                child: Wrap(
-                  spacing: 2,
-                  runSpacing: 2,
-                  children: [
-                    for (var i = 0; i < 4; i++)
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImagePreview(
-                                imageUrl: images[i]["value"] ?? "",
-                              ),
+            SizedBox(
+              width: 280,
+              height: 280,
+              child: Wrap(
+                spacing: 2,
+                runSpacing: 2,
+                children: [
+                  for (var i = 0; i < 4; i++)
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FullScreenImagePreview(
+                              imageUrl: images[i]["value"] ?? "",
                             ),
-                          );
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.network(
-                            images[i]["value"] ?? "",
-                            width: 139,
-                            height: 139,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                width: 139,
-                                height: 139,
-                                color: Pallet.inside2,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Pallet.font1,
-                                  ),
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: 139,
-                                height: 139,
-                                color: Pallet.inside2,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    size: 20,
-                                    color: Pallet.font3,
-                                  ),
-                                ),
-                              );
-                            },
                           ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          images[i]["value"] ?? "",
+                          width: 139,
+                          height: 139,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              width: 139,
+                              height: 139,
+                              color: Pallet.inside2,
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 139,
+                              height: 139,
+                              color: Pallet.inside2,
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  size: 20,
+                                  color: Pallet.font3,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
         ],
@@ -900,12 +887,14 @@ class VideoMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String url = message.message;
+    String? thumbnailUrl;
     try {
       final decoded = jsonDecode(url);
       if (decoded is List && decoded.isNotEmpty) {
         url = decoded[0]["value"] ?? url;
       } else if (decoded is Map) {
         url = decoded["value"] ?? url;
+        thumbnailUrl = decoded["thumbnail"];
       }
     } catch (_) {}
 
@@ -914,6 +903,7 @@ class VideoMessage extends StatelessWidget {
       message: message,
       child: VideoPreview(
         url: url,
+        thumbnailUrl: thumbnailUrl,
         height: 240,
       ),
     );
@@ -943,17 +933,15 @@ class TextPreview extends StatelessWidget {
   final String message;
   @override
   Widget build(BuildContext context) {
-    dynamic parsedMessage; // Changed to dynamic
+    dynamic parsedMessage;
     try {
       parsedMessage = jsonDecode(message);
     } catch (e) {
-      // Not JSON, treat as single text block
       parsedMessage = [
         {"type": "text", "value": message},
       ];
     }
 
-    // Ensure it's a list
     if (parsedMessage is! List) {
       parsedMessage = [
         {"type": "text", "value": message},
@@ -961,6 +949,7 @@ class TextPreview extends StatelessWidget {
     }
 
     return SelectionArea(
+      contextMenuBuilder: (context, selectableRegionState) => const SizedBox.shrink(),
       child: Text.rich(
         TextSpan(
           text: '',

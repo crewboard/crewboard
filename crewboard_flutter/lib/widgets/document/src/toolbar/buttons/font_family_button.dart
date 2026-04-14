@@ -86,17 +86,6 @@ class QuillToolbarFontFamilyButtonState
   @override
   IconData get defaultIconData => Icons.font_download_outlined;
 
-  void _onPressed() {
-    if (_menuController.isOpen) {
-      _menuController.close();
-    } else {
-      _menuController.open();
-    }
-    afterButtonPressed?.call();
-  }
-
-  final _menuController = MenuController();
-
   @override
   Widget build(BuildContext context) {
     final childBuilder = this.childBuilder;
@@ -108,7 +97,7 @@ class QuillToolbarFontFamilyButtonState
           defaultDisplayText: _defaultDisplayText,
           controller: controller,
           context: context,
-          onPressed: _onPressed,
+          onPressed: () {},
         ),
       );
     }
@@ -123,58 +112,60 @@ class QuillToolbarFontFamilyButtonState
         }
         return Tooltip(message: effectiveTooltip, child: child);
       },
-      child: MenuAnchor(
-        controller: _menuController,
-        menuChildren: [
-          for (final MapEntry<String, String> fontFamily in _items.entries)
-            MenuItemButton(
-              key: ValueKey(fontFamily.key),
-              onPressed: () {
-                final newValue = fontFamily.value;
-                final keyName = _getKeyName(newValue);
-                setState(() {
-                  if (keyName != 'Clear') {
-                    currentValue = keyName ?? _defaultDisplayText;
-                  } else {
-                    currentValue = _defaultDisplayText;
-                  }
-                  if (keyName != null) {
-                    controller.formatSelection(
-                      Attribute.fromKeyValue(
-                        Attribute.font.key,
-                        newValue == 'Clear' ? null : newValue,
-                      ),
-                    );
-                    options.onSelected?.call(newValue);
-                  }
-                });
-              },
-              child: Text(
-                fontFamily.key.toString(),
-                style: TextStyle(
-                  fontFamily: options.renderFontFamilies
-                      ? fontFamily.value
-                      : null,
-                  color: fontFamily.value == 'Clear'
-                      ? options.defaultItemColor
-                      : null,
+      child: PopupMenuButton<String>(
+        tooltip: '',
+        onSelected: (newValue) {
+          final keyName = _getKeyName(newValue);
+          setState(() {
+            if (keyName != 'Clear') {
+              currentValue = keyName ?? _defaultDisplayText;
+            } else {
+              currentValue = _defaultDisplayText;
+            }
+            if (keyName != null) {
+              controller.formatSelection(
+                Attribute.fromKeyValue(
+                  Attribute.font.key,
+                  newValue == 'Clear' ? null : newValue,
+                ),
+              );
+              options.onSelected?.call(newValue);
+            }
+          });
+          afterButtonPressed?.call();
+        },
+        itemBuilder: (context) {
+          return [
+            for (final MapEntry<String, String> fontFamily in _items.entries)
+              PopupMenuItem<String>(
+                value: fontFamily.value,
+                child: Text(
+                  fontFamily.key.toString(),
+                  style: TextStyle(
+                    fontFamily: options.renderFontFamilies
+                        ? fontFamily.value
+                        : null,
+                    color: fontFamily.value == 'Clear'
+                        ? options.defaultItemColor
+                        : null,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ];
+        },
         child: Builder(
           builder: (context) {
             final isMaterial3 = Theme.of(context).useMaterial3;
             if (!isMaterial3) {
               return RawMaterialButton(
-                onPressed: _onPressed,
+                onPressed: null,
                 child: _buildContent(context),
               );
             }
             return QuillToolbarIconButton(
               isSelected: false,
               iconTheme: iconTheme,
-              onPressed: _onPressed,
+              onPressed: null,
               icon: _buildContent(context),
             );
           },

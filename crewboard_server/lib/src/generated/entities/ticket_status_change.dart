@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -512,7 +511,7 @@ class TicketStatusChangeRepository {
   /// );
   /// ```
   Future<List<TicketStatusChange>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketStatusChangeTable>? where,
     int? limit,
     int? offset,
@@ -521,6 +520,8 @@ class TicketStatusChangeRepository {
     _i1.OrderByListBuilder<TicketStatusChangeTable>? orderByList,
     _i1.Transaction? transaction,
     TicketStatusChangeInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<TicketStatusChange>(
       where: where?.call(TicketStatusChange.t),
@@ -531,6 +532,8 @@ class TicketStatusChangeRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -552,7 +555,7 @@ class TicketStatusChangeRepository {
   /// );
   /// ```
   Future<TicketStatusChange?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketStatusChangeTable>? where,
     int? offset,
     _i1.OrderByBuilder<TicketStatusChangeTable>? orderBy,
@@ -560,6 +563,8 @@ class TicketStatusChangeRepository {
     _i1.OrderByListBuilder<TicketStatusChangeTable>? orderByList,
     _i1.Transaction? transaction,
     TicketStatusChangeInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<TicketStatusChange>(
       where: where?.call(TicketStatusChange.t),
@@ -569,20 +574,26 @@ class TicketStatusChangeRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [TicketStatusChange] by its [id] or null if no such row exists.
   Future<TicketStatusChange?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketStatusChangeInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<TicketStatusChange>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -592,14 +603,20 @@ class TicketStatusChangeRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<TicketStatusChange>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketStatusChange> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<TicketStatusChange>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -607,7 +624,7 @@ class TicketStatusChangeRepository {
   ///
   /// The returned [TicketStatusChange] will have its `id` field set.
   Future<TicketStatusChange> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange row, {
     _i1.Transaction? transaction,
   }) async {
@@ -623,7 +640,7 @@ class TicketStatusChangeRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<TicketStatusChange>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketStatusChange> rows, {
     _i1.ColumnSelections<TicketStatusChangeTable>? columns,
     _i1.Transaction? transaction,
@@ -639,7 +656,7 @@ class TicketStatusChangeRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<TicketStatusChange> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange row, {
     _i1.ColumnSelections<TicketStatusChangeTable>? columns,
     _i1.Transaction? transaction,
@@ -654,7 +671,7 @@ class TicketStatusChangeRepository {
   /// Updates a single [TicketStatusChange] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketStatusChange?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketStatusChangeUpdateTable>
     columnValues,
@@ -670,7 +687,7 @@ class TicketStatusChangeRepository {
   /// Updates all [TicketStatusChange]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<TicketStatusChange>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TicketStatusChangeUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<TicketStatusChangeTable> where,
@@ -697,7 +714,7 @@ class TicketStatusChangeRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<TicketStatusChange>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketStatusChange> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -709,7 +726,7 @@ class TicketStatusChangeRepository {
 
   /// Deletes a single [TicketStatusChange].
   Future<TicketStatusChange> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange row, {
     _i1.Transaction? transaction,
   }) async {
@@ -721,7 +738,7 @@ class TicketStatusChangeRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<TicketStatusChange>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TicketStatusChangeTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -734,7 +751,7 @@ class TicketStatusChangeRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketStatusChangeTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -742,6 +759,22 @@ class TicketStatusChangeRepository {
     return session.db.count<TicketStatusChange>(
       where: where?.call(TicketStatusChange.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [TicketStatusChange] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<TicketStatusChangeTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<TicketStatusChange>(
+      where: where(TicketStatusChange.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -753,7 +786,7 @@ class TicketStatusChangeAttachRowRepository {
   /// Creates a relation between the given [TicketStatusChange] and [Ticket]
   /// by setting the [TicketStatusChange]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange ticketStatusChange,
     _i2.Ticket ticket, {
     _i1.Transaction? transaction,
@@ -776,7 +809,7 @@ class TicketStatusChangeAttachRowRepository {
   /// Creates a relation between the given [TicketStatusChange] and [User]
   /// by setting the [TicketStatusChange]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange ticketStatusChange,
     _i3.User user, {
     _i1.Transaction? transaction,
@@ -799,7 +832,7 @@ class TicketStatusChangeAttachRowRepository {
   /// Creates a relation between the given [TicketStatusChange] and [Status]
   /// by setting the [TicketStatusChange]'s foreign key `oldStatusId` to refer to the [Status].
   Future<void> oldStatus(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange ticketStatusChange,
     _i4.Status oldStatus, {
     _i1.Transaction? transaction,
@@ -824,7 +857,7 @@ class TicketStatusChangeAttachRowRepository {
   /// Creates a relation between the given [TicketStatusChange] and [Status]
   /// by setting the [TicketStatusChange]'s foreign key `newStatusId` to refer to the [Status].
   Future<void> newStatus(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange ticketStatusChange,
     _i4.Status newStatus, {
     _i1.Transaction? transaction,
@@ -856,7 +889,7 @@ class TicketStatusChangeDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> oldStatus(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketStatusChange ticketStatusChange, {
     _i1.Transaction? transaction,
   }) async {

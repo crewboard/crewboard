@@ -3,6 +3,7 @@ import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart';
 import 'generated/protocol.dart';
 import 'dart:io';
+import 'dart:convert';
 
 /// Helper class for authentication-related operations
 class AuthHelper {
@@ -30,7 +31,10 @@ class AuthHelper {
       user = await User.db.findById(
         session,
         uuid,
-        include: User.include(color: SystemColor.include()),
+        include: User.include(
+          color: SystemColor.include(),
+          userType: UserTypes.include(),
+        ),
       );
     } catch (e) {
       // Not a UUID or not found by ID
@@ -51,7 +55,10 @@ class AuthHelper {
         user = await User.db.findFirstRow(
           session,
           where: (t) => t.email.equals(profile.email!),
-          include: User.include(color: SystemColor.include()),
+          include: User.include(
+            color: SystemColor.include(),
+            userType: UserTypes.include(),
+          ),
         );
 
         if (user != null) {
@@ -82,7 +89,10 @@ class AuthHelper {
         user = await User.db.findFirstRow(
           session,
           where: (t) => t.email.equals(userInfo!.email!),
-          include: User.include(color: SystemColor.include()),
+          include: User.include(
+            color: SystemColor.include(),
+            userType: UserTypes.include(),
+          ),
         );
 
         if (user != null) return user;
@@ -92,5 +102,22 @@ class AuthHelper {
     }
 
     throw Exception('User record not found for auth identifier: $identifier');
+  }
+
+  /// Check if the user has a specific permission
+  static bool hasPermission(User user, String permissionKey) {
+    if (user.userType == null) return false;
+
+    // Admin override
+    if (user.userType!.isAdmin) return true;
+
+    try {
+      final permissionsJson = user.userType!.permissions;
+      final Map<String, dynamic> permissions = jsonDecode(permissionsJson);
+      return permissions[permissionKey] == true;
+    } catch (e) {
+      stdout.writeln('Error parsing permissions for user ${user.id}: $e');
+      return false;
+    }
   }
 }

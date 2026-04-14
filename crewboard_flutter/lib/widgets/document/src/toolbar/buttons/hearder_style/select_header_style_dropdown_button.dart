@@ -49,7 +49,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
 
   Attribute<dynamic> _selectedItem = Attribute.header;
 
-  final _menuController = MenuController();
+
   @override
   void initState() {
     super.initState();
@@ -145,18 +145,22 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
       );
     }
 
-    return MenuAnchor(
-      controller: _menuController,
-      menuChildren: headerAttributes
-          .map(
-            (e) => MenuItemButton(
-              onPressed: () {
-                _onPressed(e);
-              },
-              child: Text(_label(e)),
-            ),
-          )
-          .toList(),
+    return PopupMenuButton<Attribute<int?>>(
+      tooltip: tooltip,
+      onSelected: (e) {
+        _onPressed(e);
+        afterButtonPressed?.call();
+      },
+      itemBuilder: (context) {
+        return headerAttributes
+            .map(
+              (e) => PopupMenuItem<Attribute<int?>>(
+                value: e,
+                child: Text(_label(e)),
+              ),
+            )
+            .toList();
+      },
       child: Builder(
         builder: (context) {
           final isMaterial3 = Theme.of(context).useMaterial3;
@@ -180,12 +184,12 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
           );
           if (!isMaterial3) {
             return RawMaterialButton(
-              onPressed: _onDropdownButtonPressed,
+              onPressed: null,
               child: child,
             );
           }
           return QuillToolbarIconButton(
-            onPressed: _onDropdownButtonPressed,
+            onPressed: () {},
             icon: child,
             isSelected: false,
             iconTheme: iconTheme,
@@ -194,14 +198,5 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
         },
       ),
     );
-  }
-
-  void _onDropdownButtonPressed() {
-    if (_menuController.isOpen) {
-      _menuController.close();
-    } else {
-      _menuController.open();
-    }
-    afterButtonPressed?.call();
   }
 }

@@ -311,7 +311,7 @@ class DocRepository {
   /// );
   /// ```
   Future<List<Doc>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<DocTable>? where,
     int? limit,
     int? offset,
@@ -319,6 +319,8 @@ class DocRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<DocTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Doc>(
       where: where?.call(Doc.t),
@@ -328,6 +330,8 @@ class DocRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -349,13 +353,15 @@ class DocRepository {
   /// );
   /// ```
   Future<Doc?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<DocTable>? where,
     int? offset,
     _i1.OrderByBuilder<DocTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<DocTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Doc>(
       where: where?.call(Doc.t),
@@ -364,18 +370,24 @@ class DocRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Doc] by its [id] or null if no such row exists.
   Future<Doc?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Doc>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -385,14 +397,20 @@ class DocRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Doc>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Doc> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Doc>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -400,7 +418,7 @@ class DocRepository {
   ///
   /// The returned [Doc] will have its `id` field set.
   Future<Doc> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Doc row, {
     _i1.Transaction? transaction,
   }) async {
@@ -416,7 +434,7 @@ class DocRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Doc>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Doc> rows, {
     _i1.ColumnSelections<DocTable>? columns,
     _i1.Transaction? transaction,
@@ -432,7 +450,7 @@ class DocRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Doc> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Doc row, {
     _i1.ColumnSelections<DocTable>? columns,
     _i1.Transaction? transaction,
@@ -447,7 +465,7 @@ class DocRepository {
   /// Updates a single [Doc] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Doc?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<DocUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -462,7 +480,7 @@ class DocRepository {
   /// Updates all [Doc]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Doc>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<DocUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<DocTable> where,
     int? limit,
@@ -488,7 +506,7 @@ class DocRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Doc>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Doc> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -500,7 +518,7 @@ class DocRepository {
 
   /// Deletes a single [Doc].
   Future<Doc> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Doc row, {
     _i1.Transaction? transaction,
   }) async {
@@ -512,7 +530,7 @@ class DocRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Doc>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<DocTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -525,7 +543,7 @@ class DocRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<DocTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -533,6 +551,22 @@ class DocRepository {
     return session.db.count<Doc>(
       where: where?.call(Doc.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Doc] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<DocTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Doc>(
+      where: where(Doc.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

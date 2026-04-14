@@ -45,15 +45,14 @@ void main(List<String> args) async {
     ],
   );
 
-  try {
-    await pod.start();
-  } catch (e) {
-    print('Warning: Failed to start server listeners: $e');
-  }
+  // Skip starting listeners to avoid port conflicts with the main server
 
   try {
     final session = await pod.createSession();
     final random = Random();
+
+    // Track statistics per user to guarantee the 80% on-time ratio
+    final userStats = <UuidValue, _UserDoneStats>{};
 
     print('\n--- Ticket Seeder (Existing Projects) ---');
 
@@ -82,9 +81,9 @@ void main(List<String> args) async {
 
     // 3. Ensure Global Ticket Types
     final typeData = {
-      'Task': '#3B82F6', // Blue
       'Bug': '#EF4444', // Red
-      'Story': '#10B981', // Green
+      'Feature': '#10B981', // Green
+      'Task': '#3B82F6', // Blue
     };
     final ticketTypes = <String, TicketType>{};
 
@@ -128,62 +127,101 @@ void main(List<String> args) async {
       }
       print('  Found ${users.length} users.');
 
-      // Ensure Buckets for this App
-      final buckets = <String, Bucket>{};
-      for (var name in statuses.keys) {
-        var bucket = await Bucket.db.findFirstRow(
-          session,
-          where: (t) => t.bucketName.equals(name) & t.appId.equals(app.id!),
-        );
-        if (bucket == null) {
-          print('  Creating Bucket: $name');
-          bucket = await Bucket.db.insertRow(
+      // Ensure Buckets for ALL Users in this App
+      final userBuckets = <UuidValue, Map<String, Bucket>>{};
+      for (var user in users) {
+        userBuckets[user.id!] = {};
+        for (var name in statuses.keys) {
+          var bucket = await Bucket.db.findFirstRow(
             session,
-            Bucket(
-              userId: users.first.id!,
-              appId: app.id!,
-              bucketName: name,
-              isDefault: name == 'To Do',
-            ),
+            where: (t) => t.bucketName.equals(name) & t.appId.equals(app.id!) & t.userId.equals(user.id!),
           );
+          if (bucket == null) {
+            print('  Creating Bucket: $name for user: ${user.userName}');
+            bucket = await Bucket.db.insertRow(
+              session,
+              Bucket(
+                userId: user.id!,
+                appId: app.id!,
+                bucketName: name,
+                isDefault: name == 'To Do',
+              ),
+            );
+          }
+          userBuckets[user.id!]![name] = bucket;
         }
-        buckets[name] = bucket;
+
+        // Initialize user stats by checking existing Done tickets in DB
+        final doneStatus = allStatuses.firstWhere((s) => s.completed, orElse: () => allStatuses.last);
+        final userDoneTickets = await BucketTicketMap.db.find(
+          session,
+          where: (t) => t.bucketId.equals(userBuckets[user.id!]![doneStatus.statusName]!.id!),
+          include: BucketTicketMap.include(ticket: Ticket.include()),
+        );
+        
+        int userOnTime = 0;
+        for (var map in userDoneTickets) {
+          final ticket = map.ticket;
+          if (ticket == null || ticket.deadline == null) continue;
+          final lastChange = await TicketStatusChange.db.findFirstRow(
+            session,
+            where: (t) => t.ticketId.equals(ticket.id!) & t.newStatusId.equals(doneStatus.id!),
+            orderBy: (t) => t.changedAt,
+            orderDescending: true,
+          );
+          if (lastChange != null && lastChange.changedAt != null && lastChange.changedAt!.isBefore(ticket.deadline!)) {
+            userOnTime++;
+          }
+        }
+        userStats[user.id!] = _UserDoneStats(done: userDoneTickets.length, onTime: userOnTime);
       }
 
-      // Seed Tickets - Randomly 2 or 3 per bucket
+      // Seed Tickets - Randomly 2 or 3 per status
       print(
-        '  Seeding tickets (randomly 2 or 3 per bucket) for ${app.appName}...',
+        '  Seeding tickets (randomly 2 or 3 per status) for ${app.appName}...',
       );
       final verbs = [
-        'Fix',
-        'Implement',
-        'Design',
-        'Refactor',
-        'Debug',
-        'Test',
-        'Deploy',
-        'Review',
+        'Fix', 'Implement', 'Design', 'Refactor', 'Debug', 'Test', 'Deploy', 'Review',
       ];
       final nouns = [
-        'Login',
-        'Dashboard',
-        'Sidebar',
-        'API',
-        'Database',
-        'Cache',
-        'Footer',
-        'Header',
+        'Login', 'Dashboard', 'Sidebar', 'API', 'Database', 'Cache', 'Footer', 'Header',
       ];
 
-      for (var bucketEntry in buckets.entries) {
-        final statusName = bucketEntry.key;
-        final bucket = bucketEntry.value;
+      for (var statusName in statuses.keys) {
         final status = statuses[statusName]!;
 
-        // Create 2 or 3 tickets for this bucket
-        final ticketCount = 2 + random.nextInt(2);
-        for (var i = 0; i < ticketCount; i++) {
-          final user = users[random.nextInt(users.length)];
+        // Identify which users need a ticket in this status to ensure no empty buckets
+        final usersNeedsTicket = <User>[];
+        for (var user in users) {
+          final bucket = userBuckets[user.id!]![statusName]!;
+          final count = await BucketTicketMap.db.count(
+            session,
+            where: (t) => t.bucketId.equals(bucket.id!),
+          );
+          if (count == 0) {
+            usersNeedsTicket.add(user);
+          }
+        }
+
+        if (usersNeedsTicket.isEmpty) {
+          print('  Status "$statusName": All users already have tickets. Adding 1-2 random ones for density.');
+        } else {
+          print('  Status "$statusName": ${usersNeedsTicket.length} users have empty buckets. Filling gaps...');
+        }
+
+        // We will create tickets until everyone who needs one is covered,
+        // or at least a minimum number of tickets are created for this status.
+        // For 'Done' status, we increase density to ensure statistical convergence (ratio 80%).
+        final isDoneStatus = status.completed;
+        final baseDensity = isDoneStatus ? (usersNeedsTicket.length / 1).ceil() : (usersNeedsTicket.length / 3).ceil();
+        final minTickets = usersNeedsTicket.isEmpty ? (isDoneStatus ? 4 : 1 + random.nextInt(2)) : (isDoneStatus ? 4 : 0);
+        final ticketsToCreate = max(minTickets, baseDensity);
+
+        final remainingToCover = List<User>.from(usersNeedsTicket)..shuffle(random);
+
+        for (var i = 0; i < ticketsToCreate; i++) {
+          // Selector creator (random user from the project)
+          final creator = users[random.nextInt(users.length)];
 
           final typeName = typeData.keys.elementAt(
             random.nextInt(typeData.length),
@@ -214,10 +252,20 @@ void main(List<String> args) async {
             (_) => sentences[random.nextInt(sentences.length)],
           ).join(' ');
 
+          // --- TIMELINE GENERATION (For Gantt Chart) ---
+          // createdAt: 15-40 days ago
+          final createdAt = DateTime.now().subtract(
+            Duration(days: 15 + random.nextInt(25)),
+          );
+          
+          // deadline: 40-70 days AFTER createdAt (Mostly in the future)
+          final durationDays = 40 + random.nextInt(30);
+          final deadline = createdAt.add(Duration(days: durationDays));
+
           final ticket = await Ticket.db.insertRow(
             session,
             Ticket(
-              userId: user.id!,
+              userId: creator.id!,
               appId: app.id!,
               ticketName: ticketName,
               ticketBody: ticketBody,
@@ -226,21 +274,208 @@ void main(List<String> args) async {
               typeId: type.id!,
               flows: '',
               creds: 0,
-              createdAt: DateTime.now().subtract(
-                Duration(days: random.nextInt(30)),
-              ),
-              deadline: DateTime.now().add(Duration(days: random.nextInt(30))),
+              createdAt: createdAt,
+              deadline: deadline,
             ),
           );
 
-          await BucketTicketMap.db.insertRow(
+          // Assignees: 
+          // 1. Take up to 3 users who still need a ticket in this bucket
+          final assignees = <User>[];
+          if (remainingToCover.isNotEmpty) {
+            final count = min(3, remainingToCover.length);
+            for (int k = 0; k < count; k++) {
+              assignees.add(remainingToCover.removeLast());
+            }
+          }
+          
+          // 2. Add some random users who already have tickets for extra overlap (if batch is small)
+          if (assignees.length < 3 && users.length > assignees.length) {
+            final shuffledAll = List<User>.from(users)..shuffle(random);
+            for (var u in shuffledAll) {
+              if (assignees.length >= 3) break;
+              if (!assignees.any((a) => a.id == u.id)) {
+                assignees.add(u);
+              }
+            }
+          }
+
+          for (final assignee in assignees) {
+            final assigneeBucket = userBuckets[assignee.id!]![statusName]!;
+            
+            // Duplicate check: ensure we don't assign the same user to the same ticket twice
+            final existingMap = await BucketTicketMap.db.findFirstRow(
+              session,
+              where: (t) => t.bucketId.equals(assigneeBucket.id!) & t.ticketId.equals(ticket.id!),
+            );
+
+            if (existingMap == null) {
+              // Find max order in this bucket to place it at the end
+              final currentMaps = await BucketTicketMap.db.find(
+                session,
+                where: (t) => t.bucketId.equals(assigneeBucket.id!),
+              );
+              int nextOrder = 1;
+              if (currentMaps.isNotEmpty) {
+                nextOrder = currentMaps.map((m) => m.order).reduce(max) + 1;
+              }
+
+              await BucketTicketMap.db.insertRow(
+                session,
+                BucketTicketMap(
+                  bucketId: assigneeBucket.id!,
+                  ticketId: ticket.id!,
+                  order: nextOrder,
+                ),
+              );
+            }
+          }
+
+          // --- SEED STATUS HISTORY & ACTIVITIES ---
+          
+          // 1. Initial Creation
+          await TicketStatusChange.db.insertRow(
             session,
-            BucketTicketMap(
-              bucketId: bucket.id!,
+            TicketStatusChange(
               ticketId: ticket.id!,
-              order: i + 1,
+              userId: creator.id!,
+              oldStatusId: null,
+              newStatusId: status.id!,
+              changedAt: createdAt,
             ),
           );
+
+          await PlannerActivity.db.insertRow(
+            session,
+            PlannerActivity(
+              ticketId: ticket.id!,
+              ticketName: ticket.ticketName,
+              userName: creator.userName,
+              userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+              action: 'created ticket',
+              details: 'Initial status: ${status.statusName}',
+              createdAt: createdAt,
+            ),
+          );
+
+          // 2. If Working or Completed, add transitions lifecycle
+          if (status.working || status.completed) {
+            // Find a status that is 'Working' to use as the intermediate step
+            final workingStatus = allStatuses.firstWhere(
+              (s) => s.working,
+              orElse: () => status,
+            );
+
+            // Find a status that is 'Initial' (neither working nor completed)
+            final initialStatus = allStatuses.firstWhere(
+              (s) => !s.working && !s.completed,
+              orElse: () => allStatuses.first,
+            );
+
+            // Transition: Created -> Working (occurs 1-2 days after creation)
+            final workStartedAt = createdAt.add(Duration(days: 1 + random.nextInt(2)));
+            
+            if (workStartedAt.isBefore(DateTime.now())) {
+              await TicketStatusChange.db.insertRow(
+                session,
+                TicketStatusChange(
+                  ticketId: ticket.id!,
+                  userId: creator.id!,
+                  oldStatusId: initialStatus.id!,
+                  newStatusId: workingStatus.id!,
+                  changedAt: workStartedAt,
+                ),
+              );
+
+              await PlannerActivity.db.insertRow(
+                session,
+                PlannerActivity(
+                  ticketId: ticket.id!,
+                  ticketName: ticket.ticketName,
+                  userName: creator.userName,
+                  userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+                  action: 'changed status',
+                  details: 'from ${initialStatus.statusName} to ${workingStatus.statusName}',
+                  createdAt: workStartedAt,
+                ),
+              );
+
+              // Transition: Working -> Completed
+              if (status.completed) {
+                // Determine if it should be "on time" based on avg of assignees
+                double totalDone = 0;
+                double totalOnTime = 0;
+                for (var assignee in assignees) {
+                  final stats = userStats[assignee.id!]!;
+                  totalDone += stats.done;
+                  totalOnTime += stats.onTime;
+                }
+
+                bool isOnTime;
+                if (totalDone == 0) {
+                  isOnTime = random.nextDouble() < 0.8;
+                } else {
+                  final currentRatio = totalOnTime / totalDone;
+                  if (currentRatio < 0.8) {
+                    isOnTime = true;
+                  } else if (currentRatio > 0.85) {
+                    isOnTime = false;
+                  } else {
+                    isOnTime = random.nextDouble() < 0.8;
+                  }
+                }
+                
+                DateTime completedAt;
+                if (isOnTime) {
+                  // Must be between workStartedAt and deadline
+                  final diff = deadline.difference(workStartedAt).inDays;
+                  final maxDays = max(1, diff);
+                  completedAt = workStartedAt.add(Duration(days: random.nextInt(maxDays)));
+                } else {
+                  // After deadline
+                  completedAt = deadline.add(Duration(days: 1 + random.nextInt(5)));
+                }
+
+                // IMPORTANT: Ensure Done tickets are actually in the past
+                if (completedAt.isAfter(DateTime.now())) {
+                  completedAt = DateTime.now().subtract(Duration(minutes: 5 + random.nextInt(60)));
+                }
+
+                if (completedAt.isBefore(DateTime.now())) {
+                  // Update stats for all assignees
+                  for (var assignee in assignees) {
+                    final stats = userStats[assignee.id!]!;
+                    stats.done++;
+                    if (isOnTime) stats.onTime++;
+                  }
+
+                  await TicketStatusChange.db.insertRow(
+                    session,
+                    TicketStatusChange(
+                      ticketId: ticket.id!,
+                      userId: creator.id!,
+                      oldStatusId: workingStatus.id!,
+                      newStatusId: status.id!,
+                      changedAt: completedAt,
+                    ),
+                  );
+
+                  await PlannerActivity.db.insertRow(
+                    session,
+                    PlannerActivity(
+                      ticketId: ticket.id!,
+                      ticketName: ticket.ticketName,
+                      userName: creator.userName,
+                      userColor: (await SystemColor.db.findById(session, creator.colorId))?.color ?? '#000000',
+                      action: 'changed status',
+                      details: 'from ${workingStatus.statusName} to ${status.statusName}',
+                      createdAt: completedAt,
+                    ),
+                  );
+                }
+              }
+            }
+          }
 
           // Add random image attachment (50% chance)
           if (random.nextBool()) {
@@ -272,4 +507,10 @@ void main(List<String> args) async {
   } finally {
     await pod.shutdown();
   }
+}
+
+class _UserDoneStats {
+  int done;
+  int onTime;
+  _UserDoneStats({required this.done, required this.onTime});
 }

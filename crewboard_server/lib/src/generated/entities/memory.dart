@@ -284,7 +284,7 @@ class MemoryRepository {
   /// );
   /// ```
   Future<List<Memory>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<MemoryTable>? where,
     int? limit,
     int? offset,
@@ -292,6 +292,8 @@ class MemoryRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<MemoryTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Memory>(
       where: where?.call(Memory.t),
@@ -301,6 +303,8 @@ class MemoryRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -322,13 +326,15 @@ class MemoryRepository {
   /// );
   /// ```
   Future<Memory?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<MemoryTable>? where,
     int? offset,
     _i1.OrderByBuilder<MemoryTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<MemoryTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Memory>(
       where: where?.call(Memory.t),
@@ -337,18 +343,24 @@ class MemoryRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Memory] by its [id] or null if no such row exists.
   Future<Memory?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Memory>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -358,14 +370,20 @@ class MemoryRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Memory>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Memory> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Memory>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -373,7 +391,7 @@ class MemoryRepository {
   ///
   /// The returned [Memory] will have its `id` field set.
   Future<Memory> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Memory row, {
     _i1.Transaction? transaction,
   }) async {
@@ -389,7 +407,7 @@ class MemoryRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Memory>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Memory> rows, {
     _i1.ColumnSelections<MemoryTable>? columns,
     _i1.Transaction? transaction,
@@ -405,7 +423,7 @@ class MemoryRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Memory> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Memory row, {
     _i1.ColumnSelections<MemoryTable>? columns,
     _i1.Transaction? transaction,
@@ -420,7 +438,7 @@ class MemoryRepository {
   /// Updates a single [Memory] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Memory?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<MemoryUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -435,7 +453,7 @@ class MemoryRepository {
   /// Updates all [Memory]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Memory>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<MemoryUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<MemoryTable> where,
     int? limit,
@@ -461,7 +479,7 @@ class MemoryRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Memory>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Memory> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -473,7 +491,7 @@ class MemoryRepository {
 
   /// Deletes a single [Memory].
   Future<Memory> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Memory row, {
     _i1.Transaction? transaction,
   }) async {
@@ -485,7 +503,7 @@ class MemoryRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Memory>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<MemoryTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -498,7 +516,7 @@ class MemoryRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<MemoryTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -506,6 +524,22 @@ class MemoryRepository {
     return session.db.count<Memory>(
       where: where?.call(Memory.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Memory] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<MemoryTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Memory>(
+      where: where(Memory.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

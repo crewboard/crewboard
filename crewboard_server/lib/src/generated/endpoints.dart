@@ -292,6 +292,16 @@ class Endpoints extends _i1.EndpointDispatch {
                     newPassword: params['newPassword'],
                   ),
         ),
+        'hasAccount': _i1.MethodConnector(
+          name: 'hasAccount',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+                  .hasAccount(session),
+        ),
       },
     );
     connectors['jwtRefresh'] = _i1.EndpointConnector(
@@ -498,6 +508,24 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['admin'] as _i4.AdminEndpoint).addColor(
                 session,
                 params['hex'],
+              ),
+        ),
+        'updateUser': _i1.MethodConnector(
+          name: 'updateUser',
+          params: {
+            'user': _i1.ParameterDescription(
+              name: 'user',
+              type: _i1.getType<_i15.User>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i4.AdminEndpoint).updateUser(
+                session,
+                params['user'],
               ),
         ),
         'createUser': _i1.MethodConnector(
@@ -1381,6 +1409,16 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String>(),
               nullable: false,
             ),
+            'working': _i1.ParameterDescription(
+              name: 'working',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+            'completed': _i1.ParameterDescription(
+              name: 'completed',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
           },
           call:
               (
@@ -1391,6 +1429,8 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['id'],
                     params['name'],
+                    params['working'],
+                    params['completed'],
                   ),
         ),
         'addPriority': _i1.MethodConnector(

@@ -79,9 +79,7 @@ class _CreateItemOverlayButtonState extends State<CreateItemOverlayButton> {
                             ColorPicker(
                               selectedColorId: _selectedColorId,
                               onColorSelected: (systemColor) {
-                                setState(() {
-                                  _selectedColorId = systemColor.id;
-                                });
+                                _selectedColorId = systemColor.id;
                                 _overlayEntry?.markNeedsBuild();
                               },
                             ),
@@ -144,9 +142,11 @@ class _CreateItemOverlayButtonState extends State<CreateItemOverlayButton> {
 
   @override
   Widget build(BuildContext context) {
-    return AddButton(
+    return SizedBox(
       key: _actionKey,
-      onPress: _toggle,
+      child: AddButton(
+        onPress: _toggle,
+      ),
     );
   }
 }

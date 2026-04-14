@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -361,7 +360,7 @@ class TicketViewRepository {
   /// );
   /// ```
   Future<List<TicketView>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketViewTable>? where,
     int? limit,
     int? offset,
@@ -370,6 +369,8 @@ class TicketViewRepository {
     _i1.OrderByListBuilder<TicketViewTable>? orderByList,
     _i1.Transaction? transaction,
     TicketViewInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<TicketView>(
       where: where?.call(TicketView.t),
@@ -380,6 +381,8 @@ class TicketViewRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -401,7 +404,7 @@ class TicketViewRepository {
   /// );
   /// ```
   Future<TicketView?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketViewTable>? where,
     int? offset,
     _i1.OrderByBuilder<TicketViewTable>? orderBy,
@@ -409,6 +412,8 @@ class TicketViewRepository {
     _i1.OrderByListBuilder<TicketViewTable>? orderByList,
     _i1.Transaction? transaction,
     TicketViewInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<TicketView>(
       where: where?.call(TicketView.t),
@@ -418,20 +423,26 @@ class TicketViewRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [TicketView] by its [id] or null if no such row exists.
   Future<TicketView?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     TicketViewInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<TicketView>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -441,14 +452,20 @@ class TicketViewRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<TicketView>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketView> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<TicketView>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -456,7 +473,7 @@ class TicketViewRepository {
   ///
   /// The returned [TicketView] will have its `id` field set.
   Future<TicketView> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketView row, {
     _i1.Transaction? transaction,
   }) async {
@@ -472,7 +489,7 @@ class TicketViewRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<TicketView>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketView> rows, {
     _i1.ColumnSelections<TicketViewTable>? columns,
     _i1.Transaction? transaction,
@@ -488,7 +505,7 @@ class TicketViewRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<TicketView> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketView row, {
     _i1.ColumnSelections<TicketViewTable>? columns,
     _i1.Transaction? transaction,
@@ -503,7 +520,7 @@ class TicketViewRepository {
   /// Updates a single [TicketView] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<TicketView?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<TicketViewUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -518,7 +535,7 @@ class TicketViewRepository {
   /// Updates all [TicketView]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<TicketView>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TicketViewUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<TicketViewTable> where,
     int? limit,
@@ -544,7 +561,7 @@ class TicketViewRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<TicketView>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TicketView> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -556,7 +573,7 @@ class TicketViewRepository {
 
   /// Deletes a single [TicketView].
   Future<TicketView> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketView row, {
     _i1.Transaction? transaction,
   }) async {
@@ -568,7 +585,7 @@ class TicketViewRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<TicketView>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TicketViewTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -581,7 +598,7 @@ class TicketViewRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TicketViewTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -589,6 +606,22 @@ class TicketViewRepository {
     return session.db.count<TicketView>(
       where: where?.call(TicketView.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [TicketView] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<TicketViewTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<TicketView>(
+      where: where(TicketView.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -600,7 +633,7 @@ class TicketViewAttachRowRepository {
   /// Creates a relation between the given [TicketView] and [Ticket]
   /// by setting the [TicketView]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketView ticketView,
     _i2.Ticket ticket, {
     _i1.Transaction? transaction,
@@ -623,7 +656,7 @@ class TicketViewAttachRowRepository {
   /// Creates a relation between the given [TicketView] and [User]
   /// by setting the [TicketView]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TicketView ticketView,
     _i3.User user, {
     _i1.Transaction? transaction,

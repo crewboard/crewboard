@@ -29,15 +29,14 @@ dependencies:
     sdk: flutter
   crewboard_client:
     path: ../crewboard_client
-  serverpod_flutter: 3.1.1
-  serverpod_auth_client: 3.1.1
-  serverpod_auth_idp_flutter: 3.1.1
-  serverpod_auth_shared_flutter: 3.1.1
-  serverpod_auth_core_flutter: 3.1.1
-  serverpod_auth_core_client: 3.1.1
+  serverpod_flutter: 3.4.2
+  serverpod_auth_client: 3.4.2
+  serverpod_auth_idp_flutter: 3.4.2
+  serverpod_auth_shared_flutter: 3.4.2
+  serverpod_auth_core_flutter: 3.4.2
+  serverpod_auth_core_client: 3.4.2
 
   # UI Dependencies
-  get: ^4.6.6
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.9
   flutter_animate: ^4.5.0
@@ -71,6 +70,9 @@ dependencies:
   giphy_get: ^3.6.1+1
   gradient_borders: ^1.0.2
   flutter_colorpicker: ^1.1.0
+  flutter_riverpod: ^3.3.1
+  get: ^4.7.3
+
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:crewboard_flutter/main.dart'; // For client
@@ -7,22 +8,21 @@ import 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart';
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart';
 import 'package:serverpod_auth_client/serverpod_auth_client.dart';
 import 'package:crewboard_client/crewboard_client.dart';
-import 'package:serverpod_client/serverpod_client.dart';
-import 'package:get/get.dart';
-import 'package:crewboard_flutter/controllers/auth_controller.dart';
+import '../../controllers/auth_controller.dart';
+import '../../controllers/theme_controller.dart';
 import 'signup_page.dart';
 import 'widgets.dart';
 import '../../config/palette.dart';
 
-class SignInPage extends StatefulWidget {
+class SignInPage extends ConsumerStatefulWidget {
   final VoidCallback? onSignIn;
   const SignInPage({super.key, this.onSignIn});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  ConsumerState<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageState extends ConsumerState<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController =
       TextEditingController(); // Serverpod uses Email usually
@@ -145,8 +145,12 @@ class _SignInPageState extends State<SignInPage> {
         await sessionManager.updateSignedInUser(authSuccess);
 
         // Manually set authenticated state to trigger navigation
-        final authController = Get.find<AuthController>();
-        authController.forceAuthenticated();
+        ref.read(authProvider.notifier).forceAuthenticated();
+
+        // Pop all Navigator routes back to root so AppEntry's rebuild is visible
+        if (mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
 
         widget.onSignIn?.call();
       } else {
@@ -166,6 +170,9 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch themeProvider to react to theme changes (which update Pallet static fields)
+    ref.watch(themeProvider);
+    
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -207,14 +214,12 @@ class _SignInPageState extends State<SignInPage> {
           Positioned(
             top: 8,
             right: 8,
-            child: Obx(
-              () => Row(
-                children: [
-                  MinimizeWindowButton(colors: Pallet.windowButtonColors),
-                  MaximizeWindowButton(colors: Pallet.windowButtonColors),
-                  CloseWindowButton(colors: Pallet.closeWindowButtonColors),
-                ],
-              ),
+            child: Row(
+              children: [
+                MinimizeWindowButton(colors: Pallet.windowButtonColors),
+                MaximizeWindowButton(colors: Pallet.windowButtonColors),
+                CloseWindowButton(colors: Pallet.closeWindowButtonColors),
+              ],
             ),
           ),
         ],
@@ -244,10 +249,10 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to sign up
+                    // Navigate to sign up, pass onSignIn callback
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const SignupPage(),
+                        builder: (context) => SignupPage(onSignIn: widget.onSignIn),
                       ),
                     );
                   },

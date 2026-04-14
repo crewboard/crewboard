@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -140,9 +139,9 @@ abstract class User
       attachments: jsonSerialization['attachments'] as String?,
       performance: jsonSerialization['performance'] as int,
       plannerVariables: jsonSerialization['plannerVariables'] as String?,
-      online: jsonSerialization['online'] as bool,
-      onsite: jsonSerialization['onsite'] as bool,
-      deleted: jsonSerialization['deleted'] as bool,
+      online: _i1.BoolJsonExtension.fromJson(jsonSerialization['online']),
+      onsite: _i1.BoolJsonExtension.fromJson(jsonSerialization['onsite']),
+      deleted: _i1.BoolJsonExtension.fromJson(jsonSerialization['deleted']),
       $password: jsonSerialization['password'] as String?,
     );
   }
@@ -1105,7 +1104,7 @@ class UserRepository {
   /// );
   /// ```
   Future<List<User>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? limit,
     int? offset,
@@ -1114,6 +1113,8 @@ class UserRepository {
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
     UserInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<User>(
       where: where?.call(User.t),
@@ -1124,6 +1125,8 @@ class UserRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -1145,7 +1148,7 @@ class UserRepository {
   /// );
   /// ```
   Future<User?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? offset,
     _i1.OrderByBuilder<UserTable>? orderBy,
@@ -1153,6 +1156,8 @@ class UserRepository {
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
     UserInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<User>(
       where: where?.call(User.t),
@@ -1162,20 +1167,26 @@ class UserRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [User] by its [id] or null if no such row exists.
   Future<User?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<User>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -1185,14 +1196,20 @@ class UserRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<User>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<User> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<User>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -1200,7 +1217,7 @@ class UserRepository {
   ///
   /// The returned [User] will have its `id` field set.
   Future<User> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User row, {
     _i1.Transaction? transaction,
   }) async {
@@ -1216,7 +1233,7 @@ class UserRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<User>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<User> rows, {
     _i1.ColumnSelections<UserTable>? columns,
     _i1.Transaction? transaction,
@@ -1232,7 +1249,7 @@ class UserRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<User> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User row, {
     _i1.ColumnSelections<UserTable>? columns,
     _i1.Transaction? transaction,
@@ -1247,7 +1264,7 @@ class UserRepository {
   /// Updates a single [User] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<User?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -1262,7 +1279,7 @@ class UserRepository {
   /// Updates all [User]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<User>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<UserTable> where,
     int? limit,
@@ -1288,7 +1305,7 @@ class UserRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<User>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<User> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -1300,7 +1317,7 @@ class UserRepository {
 
   /// Deletes a single [User].
   Future<User> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User row, {
     _i1.Transaction? transaction,
   }) async {
@@ -1312,7 +1329,7 @@ class UserRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<User>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<UserTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -1325,7 +1342,7 @@ class UserRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -1333,6 +1350,22 @@ class UserRepository {
     return session.db.count<User>(
       where: where?.call(User.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [User] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<UserTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<User>(
+      where: where(User.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -1344,7 +1377,7 @@ class UserAttachRowRepository {
   /// Creates a relation between the given [User] and [Organization]
   /// by setting the [User]'s foreign key `organizationId` to refer to the [Organization].
   Future<void> organization(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User user,
     _i2.Organization organization, {
     _i1.Transaction? transaction,
@@ -1367,7 +1400,7 @@ class UserAttachRowRepository {
   /// Creates a relation between the given [User] and [SystemColor]
   /// by setting the [User]'s foreign key `colorId` to refer to the [SystemColor].
   Future<void> color(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User user,
     _i3.SystemColor color, {
     _i1.Transaction? transaction,
@@ -1390,7 +1423,7 @@ class UserAttachRowRepository {
   /// Creates a relation between the given [User] and [UserTypes]
   /// by setting the [User]'s foreign key `userTypeId` to refer to the [UserTypes].
   Future<void> userType(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User user,
     _i4.UserTypes userType, {
     _i1.Transaction? transaction,
@@ -1413,7 +1446,7 @@ class UserAttachRowRepository {
   /// Creates a relation between the given [User] and [LeaveConfig]
   /// by setting the [User]'s foreign key `leaveConfigId` to refer to the [LeaveConfig].
   Future<void> leaveConfig(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     User user,
     _i5.LeaveConfig leaveConfig, {
     _i1.Transaction? transaction,

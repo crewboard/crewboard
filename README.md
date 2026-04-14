@@ -68,7 +68,7 @@ Before you begin, ensure you have the following installed:
 
 3.  Run the app:
     ```bash
-    flutter run
+    flutter run -d windows
     ```
 
 ### 3. Run the Landing Page

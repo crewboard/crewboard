@@ -1,39 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:crewboard_client/crewboard_client.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/palette.dart';
 import '../../widgets/widgets.dart';
-import '../../widgets/glass_morph.dart';
 import '../../widgets/document/src/editor_toolbar_shared/color.dart';
-import '../../main.dart'; // For client
+import '../../controllers/users_controller.dart';
 import 'add_user.dart'; // Import the add_user dialog function
+import 'add_user_type.dart'; // Import the add_user_type dialog function
 
-class UsersController extends GetxController {
-  RxList<User> users = <User>[].obs;
-  RxList<UserTypes> userTypes = <UserTypes>[].obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    try {
-      users.value = await client.admin.getUsers();
-      userTypes.value = await client.admin.getUserTypes();
-    } catch (e) {
-      print("Error fetching users data: $e");
-    }
-  }
-}
-
-class UsersSettings extends StatelessWidget {
+class UsersSettings extends ConsumerWidget {
   const UsersSettings({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(UsersController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final usersState = ref.watch(usersProvider);
 
     return Row(
       children: [
@@ -133,56 +112,100 @@ class UsersSettings extends StatelessWidget {
               ),
               // List
               Expanded(
-                child: Obx(
-                  () => ListView.builder(
-                    itemCount: controller.users.length,
-                    itemBuilder: (context, index) {
-                      final user = controller.users[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Pallet.inside1,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
+                child: usersState.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        itemCount: usersState.users.length,
+                        itemBuilder: (context, index) {
+                          final user = usersState.users[index];
+                          return InkWell(
+                            onTap: () => addUser(context, user),
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Pallet.inside1,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Row(
                                 children: [
-                                  ProfileIcon(
-                                    name: user.userName,
-                                    color: hexToColor(user.color?.color),
-                                    size: 30,
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        ProfileIcon(
+                                          name: user.userName,
+                                          color: hexToColor(user.color?.color),
+                                          size: 30,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(user.userName),
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(user.userName),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        CustomBadge(
+                                          label: user.userType?.userType ?? 'N/A',
+                                          color: user.userType?.color?.color != null
+                                              ? hexToColor(user.userType?.color?.color)
+                                              : Colors.green,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2, child: Text(user.gender ?? '-')),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () => ref
+                                              .read(usersProvider.notifier)
+                                              .toggleUserStatus(user),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 5,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: user.deleted
+                                                  ? Colors.green.withValues(alpha: 0.2)
+                                                  : Colors.red.withValues(alpha: 0.2),
+                                              border: Border.all(
+                                                color: user.deleted
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Text(
+                                              user.deleted ? "Activate" : "Deactivate",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: user.deleted
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            // ... other columns
-                            Expanded(
-                              flex: 2,
-                              child: CustomBadge(
-                                label: user.userType?.userType ?? 'N/A',
-                                color: Colors.green, // TODO: Parse color
-                              ),
-                            ),
-                            Expanded(flex: 2, child: Text(user.gender ?? '-')),
-                            Expanded(
-                              flex: 1,
-                              child: const Icon(Icons.more_vert, size: 16),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -197,27 +220,44 @@ class UsersSettings extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("User Types", style: TextStyle(color: Pallet.font3)),
-                  AddButton(onPress: () {}), // TODO: Add User Type dialog
+                  AddButton(onPress: () => addUserType(context)),
                 ],
               ),
               const SizedBox(height: 10),
               Expanded(
-                child: Obx(
-                  () => ListView.builder(
-                    itemCount: controller.userTypes.length,
-                    itemBuilder: (context, index) {
-                      final type = controller.userTypes[index];
-                      return Container(
+                child: ListView.builder(
+                  itemCount: usersState.userTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = usersState.userTypes[index];
+                    return InkWell(
+                      onTap: () => addUserType(context, type),
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
                         margin: const EdgeInsets.only(bottom: 5),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Pallet.inside1,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(type.userType),
-                      );
-                    },
-                  ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: type.color?.color != null
+                                    ? hexToColor(type.color?.color)
+                                    : Colors.grey,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(type.userType),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -227,3 +267,4 @@ class UsersSettings extends StatelessWidget {
     );
   }
 }
+

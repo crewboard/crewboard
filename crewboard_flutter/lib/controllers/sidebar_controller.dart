@@ -1,24 +1,57 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../config/palette.dart';
 
-class SidebarController extends GetxController {
-  var isOpen = true.obs;
-  var closeOnExit = false.obs;
-  var currentPage = CurrentPage.chat.obs;
+class SidebarState {
+  final bool isOpen;
+  final bool closeOnExit;
+  final CurrentPage currentPage;
+  final String subPage;
+
+  SidebarState({
+    this.isOpen = true,
+    this.closeOnExit = false,
+    this.currentPage = CurrentPage.chat,
+    this.subPage = '',
+  });
+
+  SidebarState copyWith({
+    bool? isOpen,
+    bool? closeOnExit,
+    CurrentPage? currentPage,
+    String? subPage,
+  }) {
+    return SidebarState(
+      isOpen: isOpen ?? this.isOpen,
+      closeOnExit: closeOnExit ?? this.closeOnExit,
+      currentPage: currentPage ?? this.currentPage,
+      subPage: subPage ?? this.subPage,
+    );
+  }
+}
+
+final sidebarProvider = NotifierProvider<SidebarNotifier, SidebarState>(SidebarNotifier.new);
+
+class SidebarNotifier extends Notifier<SidebarState> {
+  @override
+  SidebarState build() => SidebarState();
 
   void toggleSidebar() {
-    isOpen.value = !isOpen.value;
+    state = state.copyWith(isOpen: !state.isOpen);
   }
 
   void openSidebar() {
-    isOpen.value = true;
+    state = state.copyWith(isOpen: true);
   }
 
   void closeSidebar() {
-    isOpen.value = false;
+    state = state.copyWith(isOpen: false);
   }
 
   void navigate(CurrentPage page) {
-    currentPage.value = page;
+    state = state.copyWith(currentPage: page);
+  }
+
+  void setSubPage(String subPage) {
+    state = state.copyWith(subPage: subPage);
   }
 }

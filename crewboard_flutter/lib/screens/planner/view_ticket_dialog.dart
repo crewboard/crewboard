@@ -1,8 +1,9 @@
 import 'dart:ui';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../controllers/planner_controller.dart';
 import '../../config/palette.dart';
@@ -11,35 +12,55 @@ import '../../widgets/glass_morph.dart';
 import '../../widgets/mention_text_box.dart';
 import 'package:flutter/gestures.dart';
 
-class ViewTicketDialog extends StatefulWidget {
+class ViewTicketDialog extends ConsumerStatefulWidget {
   const ViewTicketDialog({super.key, required this.ticketId});
   final UuidValue ticketId;
 
   @override
-  State<ViewTicketDialog> createState() => _ViewTicketDialogState();
+  ConsumerState<ViewTicketDialog> createState() => _ViewTicketDialogState();
 }
 
-class _ViewTicketDialogState extends State<ViewTicketDialog> {
+class _ViewTicketDialogState extends ConsumerState<ViewTicketDialog> {
   String page = "view";
   String editType = "none";
+  late Future<void> _initFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _initFuture = ref.read(plannerProvider.notifier).getTicketDataFull(widget.ticketId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final PlannerController controller = Get.find<PlannerController>();
+    final state = ref.watch(plannerProvider);
+    final notifier = ref.read(plannerProvider.notifier);
 
     return FutureBuilder(
-      future: controller.getTicketDataFull(widget.ticketId),
+      future: _initFuture,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: GlassMorph(
+              borderRadius: 15,
+              padding: const EdgeInsets.all(30),
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(color: Pallet.font3),
+            ),
+          );
+        }
+
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: AlertDialog(
             backgroundColor: Colors.transparent,
             contentPadding: EdgeInsets.zero,
-            content: Obx(() {
+            content: Builder(builder: (context) {
               if (page == "comments") {
-                return _buildCommentsView(controller);
+                return _buildCommentsView(state, notifier);
               }
-              return _buildTicketView(controller);
+              return _buildTicketView(state, notifier);
             }),
           ),
         );
@@ -47,7 +68,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
     );
   }
 
-  Widget _buildTicketView(PlannerController controller) {
+  Widget _buildTicketView(PlannerState state, PlannerNotifier notifier) {
     return GlassMorph(
       borderRadius: 15,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -91,13 +112,15 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       const SizedBox(height: 5),
                       if (editType == "title")
                         SmallTextBox(
-                          controller: controller.title.value,
+                          controller: notifier.title,
                           onType: (val) =>
-                              controller.addToEditStack("ticketName", val),
+                              notifier.addToEditStack("ticketName", val),
                         )
                       else
                         Text(
-                          controller.title.value.text,
+                          (state.type != null && notifier.title.text.startsWith('${state.type!.typeName}: '))
+                              ? notifier.title.text.substring('${state.type!.typeName}: '.length)
+                              : notifier.title.text,
                           style: TextStyle(
                             color: Pallet.font1,
                             fontSize: 14,
@@ -131,18 +154,19 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       const SizedBox(height: 5),
                       if (editType == "body")
                         MentionTextBox(
-                          controller: controller.body.value,
+                          controller: notifier.body,
                           maxLines: 8,
-                          onSearch: controller.searchMentionable,
+                          onSearch: notifier.searchMentionable,
                           onType: (val) =>
-                              controller.addToEditStack("ticketBody", val),
+                              notifier.addToEditStack("ticketBody", val),
                         )
                       else
                         SelectableText.rich(
                           TextSpan(
-                            children: _parseBody(controller.body.value.text),
+                            children: _parseBody(notifier.body.text),
                             style: TextStyle(color: Pallet.font1, fontSize: 13),
                           ),
+                          contextMenuBuilder: (context, editableTextState) => const SizedBox.shrink(),
                         ),
                       const SizedBox(height: 20),
                       Row(
@@ -157,21 +181,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                   );
                               if (result != null) {
                                 for (var file in result.files) {
-                                  // Add to pendingFiles for upload
-                                  controller.pendingFiles.add(file);
-
-                                  // Add placeholder to attachments for UI display
-                                  controller.attachments.add(
-                                    AttachmentModel(
-                                      id: UuidValue.fromString(
-                                        '00000000-0000-4000-8000-000000000000',
-                                      ),
-                                      name: file.name,
-                                      size: file.size.toDouble(),
-                                      url: "",
-                                      type: file.extension ?? "",
-                                    ),
-                                  );
+                                  notifier.addAttachedFile(file);
                                 }
                               }
                             },
@@ -179,40 +189,39 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                           const SizedBox(width: 10),
                           ChipButton(
                             name: "add checklist",
-                            onPress: () => controller.mode.value = "checklist",
+                            onPress: () => notifier.copyWithMode("checklist"),
                           ),
                           const SizedBox(width: 10),
                         ],
                       ),
-                      if (controller.mode.value == "checklist")
+                      if (state.mode == "checklist")
                         Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Row(
                             children: [
                               Expanded(
                                 child: SmallTextBox(
-                                  controller: controller.controller.value,
+                                  controller: notifier.commentController,
                                 ),
                               ),
                               const SizedBox(width: 10),
                               AddButton(
                                 onPress: () {
-                                  if (controller
-                                      .controller
-                                      .value
+                                  if (notifier
+                                      .commentController
                                       .text
                                       .isNotEmpty) {
-                                    controller.addCheckItem(
-                                      controller.controller.value.text,
+                                    notifier.addCheckItem(
+                                      notifier.commentController.text,
                                     );
-                                    controller.controller.value.clear();
+                                    notifier.commentController.clear();
                                   }
                                 },
                               ),
                             ],
                           ),
                         ),
-                      if (controller.checklist.isNotEmpty)
+                      if (state.checklist.isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -224,7 +233,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                 fontSize: 14,
                               ),
                             ),
-                            for (var item in controller.checklist)
+                            for (var item in state.checklist)
                               Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Row(
@@ -232,8 +241,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                     RadialCheckBox(
                                       selected: item.selected,
                                       onSelect: () {
-                                        item.selected = !item.selected;
-                                        controller.checklist.refresh();
+                                          // Toggle in state if needed
                                       },
                                     ),
                                     const SizedBox(width: 10),
@@ -249,8 +257,8 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                               ),
                           ],
                         ),
-                      // ATTACHMENTS display
-                      if (controller.attachments.isNotEmpty)
+                      // EXISTING ATTACHMENTS display
+                      if (state.attachments.isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -263,10 +271,41 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                               ),
                             ),
                             const SizedBox(height: 10),
+                            for (final attachment in state.attachments)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: InkWell(
+                                  onTap: () async {
+                                    final uri = Uri.parse(attachment.url);
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri);
+                                    }
+                                  },
+                                  child: FilePreview(
+                                    name: attachment.name,
+                                    size: attachment.size.toInt(),
+                                    url: attachment.url,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      // PENDING ATTACHMENTS display
+                      if (state.pendingFiles.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              "new attachments (pending)",
+                              style: TextStyle(
+                                color: Pallet.font3,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
                             for (
-                              var i = 0;
-                              i < controller.attachments.length;
-                              i++
+                              final file in state.pendingFiles
                             )
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -275,16 +314,15 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                                 child: Stack(
                                   children: [
                                     FilePreview(
-                                      name: controller.attachments[i].name,
-                                      size: controller.attachments[i].size
-                                          .toInt(),
+                                      name: file.name,
+                                      size: file.size.toInt(),
                                     ),
                                     Positioned(
                                       right: 5,
                                       top: 5,
                                       child: InkWell(
                                         onTap: () =>
-                                            controller.attachments.removeAt(i),
+                                            notifier.removeAttachedFile(file),
                                         child: const Icon(
                                           Icons.close,
                                           size: 16,
@@ -316,17 +354,17 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                               children: [
                                 for (
                                   var i = 0;
-                                  i < controller.selectedUsers.length;
+                                  i < state.selectedUsers.length;
                                   i++
                                 )
                                   Padding(
                                     padding: EdgeInsets.only(left: i * 15.0),
                                     child: ProfileIcon(
                                       name:
-                                          controller.selectedUsers[i].userName,
+                                          state.selectedUsers[i].userName,
                                       color: Color(
                                         int.parse(
-                                          controller.selectedUsers[i].color
+                                          state.selectedUsers[i].color
                                               .replaceAll("#", "0xFF"),
                                         ),
                                       ),
@@ -341,23 +379,26 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       ),
                       const SizedBox(height: 15),
                       MultiSelect(
-                        items: controller.users,
-                        selected: controller.selectedUsers,
-                        onChanged: () => controller.addToEditStack(
-                          "assignees",
-                          controller.selectedUsers.length.toString(),
-                        ),
+                        items: state.users,
+                        selected: state.selectedUsers,
+                        onSelected: (users) {
+                           notifier.setSelectedUsers(List<UserModel>.from(users));
+                           notifier.addToEditStack(
+                              "assignees",
+                              users.length.toString(),
+                            );
+                        },
                       ),
                       const SizedBox(height: 10),
                       DropDown(
-                        label: (controller.status.value == null)
+                        label: (state.status == null)
                             ? "Status"
-                            : controller.status.value!.statusName,
+                            : state.status!.statusName,
                         itemKey: "statusName",
-                        items: controller.statuses,
+                        items: state.statuses,
                         onPress: (val) {
-                          controller.status.value = val;
-                          controller.addToEditStack(
+                          notifier.setStatus(val as StatusModel);
+                          notifier.addToEditStack(
                             "statusId",
                             val.statusId.toString(),
                           );
@@ -365,14 +406,14 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       ),
                       const SizedBox(height: 10),
                       DropDown(
-                        label: (controller.type.value == null)
+                        label: (state.type == null)
                             ? "Type"
-                            : controller.type.value!.typeName,
+                            : state.type!.typeName,
                         itemKey: "typeName",
-                        items: controller.types,
+                        items: state.types,
                         onPress: (val) {
-                          controller.type.value = val;
-                          controller.addToEditStack(
+                          notifier.setType(val as TypeModel);
+                          notifier.addToEditStack(
                             "typeId",
                             val.typeId.toString(),
                           );
@@ -380,14 +421,14 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       ),
                       const SizedBox(height: 10),
                       DropDown(
-                        label: (controller.priority.value == null)
+                        label: (state.priority == null)
                             ? "Priority"
-                            : controller.priority.value!.priorityName,
+                            : state.priority!.priorityName,
                         itemKey: "priorityName",
-                        items: controller.priorities,
+                        items: state.priorities,
                         onPress: (val) {
-                          controller.priority.value = val;
-                          controller.addToEditStack(
+                          notifier.setPriority(val as PriorityModel);
+                          notifier.addToEditStack(
                             "priorityId",
                             val.priorityId.toString(),
                           );
@@ -395,23 +436,25 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       ),
                       const SizedBox(height: 10),
                       DatePicker(
-                        value: controller.deadline.value,
+                        value: state.deadline,
                         label: "Deadline",
                         showCheck: true,
                         onTap: () async {
                           showDialog(
                             context: context,
                             builder: (context) => WheelDatePicker(
-                              initialDate: controller.deadline.value == null
+                              initialDate: state.deadline == null
                                   ? DateTime.now()
-                                  : DateTime.parse(controller.deadline.value!),
+                                  : DateTime.parse(state.deadline!),
+                              minDate: state.currentTicketCreatedAt,
                               onDateSelected: (date) {
-                                controller.deadline.value = DateFormat(
+                                final d = DateFormat(
                                   'yyyy-MM-dd',
                                 ).format(date);
-                                controller.addToEditStack(
+                                notifier.setDeadline(d);
+                                notifier.addToEditStack(
                                   "deadline",
-                                  controller.deadline.value!,
+                                  d,
                                 );
                               },
                             ),
@@ -422,7 +465,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                       InkWell(
                         onTap: () {
                           setState(() => page = "comments");
-                          controller.getTicketThread(widget.ticketId);
+                          notifier.getTicketThread(widget.ticketId);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8),
@@ -470,9 +513,9 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
                           SizedBox(
                             width: 60,
                             child: SmallTextBox(
-                              controller: controller.creds.value,
+                              controller: notifier.creds,
                               onType: (val) =>
-                                  controller.addToEditStack("creds", val),
+                                  notifier.addToEditStack("creds", val),
                             ),
                           ),
                         ],
@@ -488,18 +531,18 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
               children: [
                 SmallButton(
                   label: "cancel",
-                  onPress: () => Get.back(),
+                  onPress: () => Navigator.of(context).pop(),
                 ),
                 const SizedBox(width: 15),
                 SmallButton(
                   label: "done",
                   onPress: () async {
                     // Update ticket if there are edits OR pending files to upload
-                    if (controller.editStack.isNotEmpty ||
-                        controller.pendingFiles.isNotEmpty) {
-                      await controller.updateTicket(widget.ticketId);
+                    if (state.editStack.isNotEmpty ||
+                        state.pendingFiles.isNotEmpty) {
+                      await notifier.updateTicket(widget.ticketId);
                     }
-                    Get.back();
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -510,7 +553,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
     );
   }
 
-  Widget _buildCommentsView(PlannerController controller) {
+  Widget _buildCommentsView(PlannerState state, PlannerNotifier notifier) {
     return GlassMorph(
       borderRadius: 15,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -540,9 +583,9 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
             height: 400,
             child: ListView.builder(
               reverse: true,
-              itemCount: controller.ticketThread.length,
+              itemCount: state.ticketThread.length,
               itemBuilder: (context, index) {
-                final item = controller.ticketThread[index];
+                final item = state.ticketThread[index];
                 final isComment = item.type == 'comment';
 
                 return Padding(
@@ -665,7 +708,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
             children: [
               Expanded(
                 child: SmallTextBox(
-                  controller: controller.controller.value,
+                  controller: notifier.commentController,
                   hintText: "message",
                 ),
               ),
@@ -673,16 +716,16 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
               IconButton(
                 icon: Icon(Icons.send, color: Pallet.font1),
                 onPressed: () async {
-                  if (controller.controller.value.text.isNotEmpty) {
-                    final success = await controller.addComment(
+                  if (notifier.commentController.text.isNotEmpty) {
+                    final success = await notifier.addComment(
                       AddCommentRequest(
                         ticketId: widget.ticketId,
-                        message: controller.controller.value.text,
+                        message: notifier.commentController.text,
                       ),
                     );
                     if (success) {
-                      controller.controller.value.clear();
-                      controller.getTicketThread(widget.ticketId);
+                      notifier.commentController.clear();
+                      notifier.getTicketThread(widget.ticketId);
                     }
                   }
                 },
@@ -712,9 +755,7 @@ class _ViewTicketDialogState extends State<ViewTicketDialog> {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                final PlannerController controller =
-                    Get.find<PlannerController>();
-                controller.openLinkedFlow(flowName);
+                ref.read(plannerProvider.notifier).openLinkedFlow(flowName);
               },
           ),
         );

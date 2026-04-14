@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -355,7 +354,7 @@ class UserBreakRepository {
   /// );
   /// ```
   Future<List<UserBreak>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserBreakTable>? where,
     int? limit,
     int? offset,
@@ -364,6 +363,8 @@ class UserBreakRepository {
     _i1.OrderByListBuilder<UserBreakTable>? orderByList,
     _i1.Transaction? transaction,
     UserBreakInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<UserBreak>(
       where: where?.call(UserBreak.t),
@@ -374,6 +375,8 @@ class UserBreakRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -395,7 +398,7 @@ class UserBreakRepository {
   /// );
   /// ```
   Future<UserBreak?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserBreakTable>? where,
     int? offset,
     _i1.OrderByBuilder<UserBreakTable>? orderBy,
@@ -403,6 +406,8 @@ class UserBreakRepository {
     _i1.OrderByListBuilder<UserBreakTable>? orderByList,
     _i1.Transaction? transaction,
     UserBreakInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<UserBreak>(
       where: where?.call(UserBreak.t),
@@ -412,20 +417,26 @@ class UserBreakRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [UserBreak] by its [id] or null if no such row exists.
   Future<UserBreak?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserBreakInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<UserBreak>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -435,14 +446,20 @@ class UserBreakRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<UserBreak>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserBreak> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<UserBreak>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -450,7 +467,7 @@ class UserBreakRepository {
   ///
   /// The returned [UserBreak] will have its `id` field set.
   Future<UserBreak> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserBreak row, {
     _i1.Transaction? transaction,
   }) async {
@@ -466,7 +483,7 @@ class UserBreakRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<UserBreak>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserBreak> rows, {
     _i1.ColumnSelections<UserBreakTable>? columns,
     _i1.Transaction? transaction,
@@ -482,7 +499,7 @@ class UserBreakRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<UserBreak> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserBreak row, {
     _i1.ColumnSelections<UserBreakTable>? columns,
     _i1.Transaction? transaction,
@@ -497,7 +514,7 @@ class UserBreakRepository {
   /// Updates a single [UserBreak] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserBreak?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserBreakUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -512,7 +529,7 @@ class UserBreakRepository {
   /// Updates all [UserBreak]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<UserBreak>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<UserBreakUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<UserBreakTable> where,
     int? limit,
@@ -538,7 +555,7 @@ class UserBreakRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<UserBreak>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserBreak> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -550,7 +567,7 @@ class UserBreakRepository {
 
   /// Deletes a single [UserBreak].
   Future<UserBreak> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserBreak row, {
     _i1.Transaction? transaction,
   }) async {
@@ -562,7 +579,7 @@ class UserBreakRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<UserBreak>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<UserBreakTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -575,7 +592,7 @@ class UserBreakRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserBreakTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -583,6 +600,22 @@ class UserBreakRepository {
     return session.db.count<UserBreak>(
       where: where?.call(UserBreak.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [UserBreak] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<UserBreakTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<UserBreak>(
+      where: where(UserBreak.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -594,7 +627,7 @@ class UserBreakAttachRowRepository {
   /// Creates a relation between the given [UserBreak] and [User]
   /// by setting the [UserBreak]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserBreak userBreak,
     _i2.User user, {
     _i1.Transaction? transaction,

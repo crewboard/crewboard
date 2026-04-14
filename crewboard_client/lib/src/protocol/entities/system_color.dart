@@ -34,7 +34,7 @@ abstract class SystemColor implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       colorName: jsonSerialization['colorName'] as String?,
       color: jsonSerialization['color'] as String,
-      isDefault: jsonSerialization['isDefault'] as bool,
+      isDefault: _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
     );
   }
 

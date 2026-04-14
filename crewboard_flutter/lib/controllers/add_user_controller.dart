@@ -1,44 +1,162 @@
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
-import '../../main.dart'; // Access to client
+import '../main.dart'; // Access to client
 
 class Gender {
   final String? value;
-
   const Gender({required this.value});
-
-  Gender.empty() : value = null;
-
+  const Gender.empty() : value = null;
   Map<String, dynamic> toJson() => {'name': value};
-
   @override
   String toString() => value ?? "Select";
 }
 
 class BloodGroup {
   final String? value;
-
   const BloodGroup({required this.value});
-  BloodGroup.empty() : value = null;
-
+  const BloodGroup.empty() : value = null;
   Map<String, dynamic> toJson() => {'name': value};
-
   @override
   String toString() => value ?? "Select";
 }
 
-class AddUserController extends GetxController {
-  // Page management
-  RxInt currentPage = 1.obs;
-  RxBool isEdited = false.obs;
+class AddUserState {
+  final int currentPage;
+  final bool isEdited;
+  final Gender selectedGender;
+  final String dateOfBirth;
+  final BloodGroup selectedBloodGroup;
+  final UserTypes? selectedUserType;
+  final LeaveConfig? selectedLeaveConfig;
+  final SystemColor? selectedColor;
+  final FilePickerResult? imageResult;
+  final FilePickerResult? verificationFilesResult;
+  final Uint8List? profilePreviewBytes;
+  final List<Map<String, dynamic>> attachments;
+  final String userNameError;
+  final String passwordError;
+  final String userTypeError;
+  final String leaveConfigError;
+  final String firstNameError;
+  final String lastNameError;
+  final String genderError;
+  final String dateOfBirthError;
+  final String phoneError;
+  final String emailError;
+  final String bloodGroupError;
+  final bool isLoading;
+  final bool isCheckingUsername;
+  final List<UserTypes> userTypesList;
+  final List<LeaveConfig> leaveConfigsList;
+  final List<SystemColor> colorsList;
+  final User? editingUser;
 
-  // Form controllers
+  AddUserState({
+    this.currentPage = 1,
+    this.isEdited = false,
+    this.selectedGender = const Gender.empty(),
+    this.dateOfBirth = '',
+    this.selectedBloodGroup = const BloodGroup.empty(),
+    this.selectedUserType,
+    this.selectedLeaveConfig,
+    this.selectedColor,
+    this.imageResult,
+    this.verificationFilesResult,
+    this.profilePreviewBytes,
+    this.attachments = const [],
+    this.userNameError = '',
+    this.passwordError = '',
+    this.userTypeError = '',
+    this.leaveConfigError = '',
+    this.firstNameError = '',
+    this.lastNameError = '',
+    this.genderError = '',
+    this.dateOfBirthError = '',
+    this.phoneError = '',
+    this.emailError = '',
+    this.bloodGroupError = '',
+    this.isLoading = false,
+    this.isCheckingUsername = false,
+    this.userTypesList = const [],
+    this.leaveConfigsList = const [],
+    this.colorsList = const [],
+    this.editingUser,
+  });
+
+  AddUserState copyWith({
+    int? currentPage,
+    bool? isEdited,
+    Gender? selectedGender,
+    String? dateOfBirth,
+    BloodGroup? selectedBloodGroup,
+    UserTypes? selectedUserType,
+    LeaveConfig? selectedLeaveConfig,
+    SystemColor? selectedColor,
+    FilePickerResult? imageResult,
+    FilePickerResult? verificationFilesResult,
+    Uint8List? profilePreviewBytes,
+    List<Map<String, dynamic>>? attachments,
+    String? userNameError,
+    String? passwordError,
+    String? userTypeError,
+    String? leaveConfigError,
+    String? firstNameError,
+    String? lastNameError,
+    String? genderError,
+    String? dateOfBirthError,
+    String? phoneError,
+    String? emailError,
+    String? bloodGroupError,
+    bool? isLoading,
+    bool? isCheckingUsername,
+    List<UserTypes>? userTypesList,
+    List<LeaveConfig>? leaveConfigsList,
+    List<SystemColor>? colorsList,
+    User? editingUser,
+    bool clearEditingUser = false,
+  }) {
+    return AddUserState(
+      currentPage: currentPage ?? this.currentPage,
+      isEdited: isEdited ?? this.isEdited,
+      selectedGender: selectedGender ?? this.selectedGender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      selectedBloodGroup: selectedBloodGroup ?? this.selectedBloodGroup,
+      selectedUserType: selectedUserType ?? this.selectedUserType,
+      selectedLeaveConfig: selectedLeaveConfig ?? this.selectedLeaveConfig,
+      selectedColor: selectedColor ?? this.selectedColor,
+      imageResult: imageResult ?? this.imageResult,
+      verificationFilesResult: verificationFilesResult ?? this.verificationFilesResult,
+      profilePreviewBytes: profilePreviewBytes ?? this.profilePreviewBytes,
+      attachments: attachments ?? this.attachments,
+      userNameError: userNameError ?? this.userNameError,
+      passwordError: passwordError ?? this.passwordError,
+      userTypeError: userTypeError ?? this.userTypeError,
+      leaveConfigError: leaveConfigError ?? this.leaveConfigError,
+      firstNameError: firstNameError ?? this.firstNameError,
+      lastNameError: lastNameError ?? this.lastNameError,
+      genderError: genderError ?? this.genderError,
+      dateOfBirthError: dateOfBirthError ?? this.dateOfBirthError,
+      phoneError: phoneError ?? this.phoneError,
+      emailError: emailError ?? this.emailError,
+      bloodGroupError: bloodGroupError ?? this.bloodGroupError,
+      isLoading: isLoading ?? this.isLoading,
+      isCheckingUsername: isCheckingUsername ?? this.isCheckingUsername,
+      userTypesList: userTypesList ?? this.userTypesList,
+      leaveConfigsList: leaveConfigsList ?? this.leaveConfigsList,
+      colorsList: colorsList ?? this.colorsList,
+      editingUser: clearEditingUser ? null : (editingUser ?? this.editingUser),
+    );
+  }
+}
+
+final addUserProvider = NotifierProvider<AddUserNotifier, AddUserState>(AddUserNotifier.new);
+
+class AddUserNotifier extends Notifier<AddUserState> {
   final userNameController = TextEditingController();
-  final passwordController =
-      TextEditingController(); // NOTE: In prod, handle passwords securely
+  final passwordController = TextEditingController();
   final punchIdController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -47,322 +165,236 @@ class AddUserController extends GetxController {
   final salaryController = TextEditingController();
   final experienceController = TextEditingController();
 
-  // Form data
-  Rx<Gender> selectedGender = Gender.empty().obs;
-  RxString dateOfBirth = ''.obs;
-  Rx<BloodGroup> selectedBloodGroup = BloodGroup.empty().obs;
-  Rx<UserTypes?> selectedUserType = Rx<UserTypes?>(null);
-  Rx<LeaveConfig?> selectedLeaveConfig = Rx<LeaveConfig?>(null);
-  Rx<SystemColor?> selectedColor = Rx<SystemColor?>(null);
-
-  // File data
-  Rx<FilePickerResult?> image = Rx<FilePickerResult?>(null);
-  Rx<FilePickerResult?> verificationFiles = Rx<FilePickerResult?>(null);
-  Rx<Uint8List?> profilePreviewBytes = Rx<Uint8List?>(null);
-  RxList<Map<String, dynamic>> attachments = <Map<String, dynamic>>[].obs;
-
-  // Validation errors
-  RxString userNameError = ''.obs;
-  RxString passwordError = ''.obs;
-  RxString userTypeError = ''.obs;
-  RxString leaveConfigError = ''.obs;
-  RxString firstNameError = ''.obs;
-  RxString lastNameError = ''.obs;
-  RxString genderError = ''.obs;
-  RxString dateOfBirthError = ''.obs;
-  RxString phoneError = ''.obs;
-  RxString emailError = ''.obs;
-  RxString bloodGroupError = ''.obs;
-
-  // Loading states
-  RxBool isLoading = false.obs;
-  RxBool isCheckingUsername = false.obs;
-
-  // Data lists
-  RxList<UserTypes> userTypes = <UserTypes>[].obs;
-  RxList<LeaveConfig> leaveConfigs = <LeaveConfig>[].obs;
-  RxList<SystemColor> colors = <SystemColor>[].obs;
-  final List<Gender> genders = [
+  final List<Gender> genders = const [
     Gender(value: "male"),
     Gender(value: "female"),
     Gender(value: "others"),
   ];
-  final List<BloodGroup> bloodGroups = [
-    BloodGroup(value: "A+"),
-    BloodGroup(value: "A-"),
-    BloodGroup(value: "B+"),
-    BloodGroup(value: "B-"),
-    BloodGroup(value: "O+"),
-    BloodGroup(value: "O-"),
-    BloodGroup(value: "AB+"),
-    BloodGroup(value: "AB-"),
+  
+  final List<BloodGroup> bloodGroups = const [
+    BloodGroup(value: "A+"), BloodGroup(value: "A-"),
+    BloodGroup(value: "B+"), BloodGroup(value: "B-"),
+    BloodGroup(value: "O+"), BloodGroup(value: "O-"),
+    BloodGroup(value: "AB+"), BloodGroup(value: "AB-"),
   ];
 
   @override
-  void onInit() {
-    super.onInit();
-    loadInitialData();
-  }
-
-  @override
-  void onClose() {
-    userNameController.dispose();
-    passwordController.dispose();
-    punchIdController.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    salaryController.dispose();
-    experienceController.dispose();
-    super.onClose();
+  AddUserState build() {
+    Future.microtask(() => loadInitialData());
+    ref.onDispose(() {
+      userNameController.dispose();
+      passwordController.dispose();
+      punchIdController.dispose();
+      firstNameController.dispose();
+      lastNameController.dispose();
+      phoneController.dispose();
+      emailController.dispose();
+      salaryController.dispose();
+      experienceController.dispose();
+    });
+    return AddUserState();
   }
 
   Future<void> loadInitialData() async {
-    await loadUserTypes();
-    await loadLeaveConfigs();
-    await loadColors();
+    await Future.wait([
+      loadUserTypes(),
+      loadLeaveConfigs(),
+      loadColors(),
+    ]);
   }
 
   Future<void> loadUserTypes() async {
     try {
       final types = await client.admin.getUserTypes();
-      userTypes.value = types;
-      if (types.isNotEmpty && selectedUserType.value == null) {
-        selectedUserType.value = types.first;
-      }
+      state = state.copyWith(
+        userTypesList: types,
+        selectedUserType: state.selectedUserType ?? (types.isNotEmpty ? types.first : null),
+      );
     } catch (e) {
-      print("Error fetching user types: $e");
+      debugPrint("Error fetching user types: $e");
     }
   }
 
   Future<void> loadLeaveConfigs() async {
     try {
       final configs = await client.admin.getLeaveConfigs();
-      leaveConfigs.value = configs;
-      if (configs.isNotEmpty && selectedLeaveConfig.value == null) {
-        selectedLeaveConfig.value = configs.first;
-      }
+      state = state.copyWith(
+        leaveConfigsList: configs,
+        selectedLeaveConfig: state.selectedLeaveConfig ?? (configs.isNotEmpty ? configs.first : null),
+      );
     } catch (e) {
-      print("Error fetching leave configs: $e");
+      debugPrint("Error fetching leave configs: $e");
     }
   }
 
   Future<void> loadColors() async {
     try {
       final fetchedColors = await client.admin.getColors();
-      colors.value = fetchedColors;
+      SystemColor? defaultColor;
       if (fetchedColors.isNotEmpty) {
-        final defaultColor = fetchedColors.firstWhere(
-          (c) => c.isDefault,
-          orElse: () => fetchedColors.first,
-        );
-        selectedColor.value = defaultColor;
+        defaultColor = fetchedColors.firstWhere((c) => c.isDefault, orElse: () => fetchedColors.first);
       }
+      state = state.copyWith(colorsList: fetchedColors, selectedColor: defaultColor);
     } catch (e) {
-      print("Error fetching colors: $e");
+      debugPrint("Error fetching colors: $e");
     }
   }
 
   Future<void> checkUsername(String username) async {
     if (username.isEmpty || username.length < 2) {
-      userNameError.value = '';
+      state = state.copyWith(userNameError: '');
       return;
     }
-    isCheckingUsername.value = true;
+    state = state.copyWith(isCheckingUsername: true);
     try {
       final response = await client.auth.checkUsername(username);
-      userNameError.value = response.exists ? "user name exists" : "";
+      state = state.copyWith(userNameError: response.exists ? "user name exists" : "", isCheckingUsername: false);
     } catch (e) {
-      print("Error checking username: $e");
-    } finally {
-      isCheckingUsername.value = false;
+      debugPrint("Error checking username: $e");
+      state = state.copyWith(isCheckingUsername: false);
     }
   }
 
-  void setFormData(Map? data) {
-    if (data == null) return;
-    userNameController.text = data["userName"] ?? '';
-    punchIdController.text = data["punchId"] ?? '';
-    firstNameController.text = data["firstName"] ?? '';
-    lastNameController.text = data["lastName"] ?? '';
-    phoneController.text = data["phone"] ?? '';
-    emailController.text = data["email"] ?? '';
-    salaryController.text = data["salary"]?.toString() ?? '';
-    experienceController.text = data["experience"]?.toString() ?? '';
+  void setCurrentPage(int page) => state = state.copyWith(currentPage: page);
+  
+  void setEdited(bool edited) => state = state.copyWith(isEdited: edited);
+  void setPasswordError(String error) => state = state.copyWith(passwordError: error);
 
-    if (data["gender"] != null) {
-      selectedGender.value = genders.firstWhere(
-        (g) => g.value == data["gender"],
-        orElse: () => Gender.empty(),
-      );
+  void setFormData(User? user) {
+    if (user == null) return;
+    userNameController.text = user.userName;
+    firstNameController.text = user.firstName;
+    lastNameController.text = user.lastName;
+    emailController.text = user.email;
+    phoneController.text = user.phone;
+    punchIdController.text = user.punchId ?? '';
+    salaryController.text = user.salary ?? '';
+    experienceController.text = user.experience ?? '';
+    
+    if (user.dateOfBirth != null) {
+       state = state.copyWith(dateOfBirth: user.dateOfBirth.toString().split(' ')[0]);
     }
-    dateOfBirth.value = data["dateOfBirth"] ?? '';
-    if (data["bloodGroup"] != null) {
-      selectedBloodGroup.value = bloodGroups.firstWhere(
-        (b) => b.value == data["bloodGroup"],
-        orElse: () => BloodGroup.empty(),
-      );
+ 
+    state = state.copyWith(selectedGender: genders.firstWhere((g) => g.value == user.gender, orElse: () => const Gender.empty()));
+ 
+    if (user.bloodGroup != null) {
+      state = state.copyWith(selectedBloodGroup: bloodGroups.firstWhere((b) => b.value == user.bloodGroup, orElse: () => const BloodGroup.empty()));
     }
-
-    if (data["userTypeId"] != null) {
-      selectedUserType.value = userTypes.firstWhereOrNull(
-        (t) => t.id == data["userTypeId"],
-      );
-    }
-    if (data["leaveConfigId"] != null) {
-      selectedLeaveConfig.value = leaveConfigs.firstWhereOrNull(
-        (c) => c.id == data["leaveConfigId"],
-      );
-    }
+    
+    // Set relations
+    state = state.copyWith(
+      selectedUserType: user.userType,
+      selectedLeaveConfig: user.leaveConfig,
+      selectedColor: user.color,
+      editingUser: user,
+    );
   }
+  
+  void selectGender(Gender gender) => state = state.copyWith(selectedGender: gender, isEdited: true);
+  void selectBloodGroup(BloodGroup bg) => state = state.copyWith(selectedBloodGroup: bg, isEdited: true);
+  void selectUserType(UserTypes type) => state = state.copyWith(selectedUserType: type, isEdited: true);
+  void selectLeaveConfig(LeaveConfig config) => state = state.copyWith(selectedLeaveConfig: config, isEdited: true);
+  void selectColor(SystemColor color) => state = state.copyWith(selectedColor: color, isEdited: true);
+  void setDateOfBirth(String dob) => state = state.copyWith(dateOfBirth: dob, isEdited: true);
 
   Future<void> pickImage() async {
-    image.value = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      withData: true,
-    );
-    if (image.value != null &&
-        image.value!.files.isNotEmpty &&
-        image.value!.files.first.bytes != null) {
-      profilePreviewBytes.value = image.value!.files.first.bytes;
+    final result = await FilePicker.platform.pickFiles(type: FileType.image, withData: true);
+    if (result != null && result.files.isNotEmpty) {
+      state = state.copyWith(imageResult: result, profilePreviewBytes: result.files.first.bytes, isEdited: true);
     }
-    isEdited.value = true;
   }
 
   Future<void> pickVerificationFiles() async {
-    final picked = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      withData: true,
-    );
-    if (picked != null && picked.files.isNotEmpty) {
-      verificationFiles.value = picked;
-      attachments.value = picked.files
-          .map(
-            (f) => {
-              "name": f.name,
-              "size": f.size,
-            },
-          )
-          .toList();
+    final result = await FilePicker.platform.pickFiles(allowMultiple: true, withData: true);
+    if (result != null && result.files.isNotEmpty) {
+      final attachments = result.files.map((f) => {"name": f.name, "size": f.size}).toList();
+      state = state.copyWith(verificationFilesResult: result, attachments: attachments, isEdited: true);
     }
-    isEdited.value = true;
   }
 
   bool validatePage1() {
-    userNameError.value = userNameController.text.isEmpty
-        ? "username is required"
-        : "";
-    passwordError.value = passwordController.text.isEmpty
-        ? "password is required"
-        : "";
-    userTypeError.value = selectedUserType.value == null
-        ? "user type is required"
-        : "";
-    leaveConfigError.value = selectedLeaveConfig.value == null
-        ? "leave config is required"
-        : "";
+    final uError = userNameController.text.isEmpty ? "username is required" : "";
+    final pError = passwordController.text.isEmpty ? "password is required" : "";
+    final utError = state.selectedUserType == null ? "user type is required" : "";
+    final lcError = state.selectedLeaveConfig == null ? "leave config is required" : "";
 
-    return userNameError.value.isEmpty &&
-        passwordError.value.isEmpty &&
-        userTypeError.value.isEmpty &&
-        leaveConfigError.value.isEmpty;
+    state = state.copyWith(
+      userNameError: uError,
+      passwordError: pError,
+      userTypeError: utError,
+      leaveConfigError: lcError,
+    );
+
+    return uError.isEmpty && pError.isEmpty && utError.isEmpty && lcError.isEmpty;
   }
 
   bool validatePage2() {
-    firstNameError.value = firstNameController.text.isEmpty
-        ? "first name is required"
-        : "";
-    lastNameError.value = lastNameController.text.isEmpty
-        ? "last name is required"
-        : "";
-    genderError.value = selectedGender.value.value == null
-        ? "gender is required"
-        : "";
-    dateOfBirthError.value = dateOfBirth.value.isEmpty
-        ? "please select date of birth"
-        : "";
-    phoneError.value = phoneController.text.isEmpty ? "phone is required" : "";
-    emailError.value = emailController.text.isEmpty
-        ? "email id is required"
-        : "";
+    final fError = firstNameController.text.isEmpty ? "first name is required" : "";
+    final lError = lastNameController.text.isEmpty ? "last name is required" : "";
+    final gError = state.selectedGender.value == null ? "gender is required" : "";
+    final dError = state.dateOfBirth.isEmpty ? "please select date of birth" : "";
+    final phError = phoneController.text.isEmpty ? "phone is required" : "";
+    final eError = emailController.text.isEmpty ? "email id is required" : "";
 
-    return firstNameError.value.isEmpty &&
-        lastNameError.value.isEmpty &&
-        genderError.value.isEmpty &&
-        dateOfBirthError.value.isEmpty &&
-        phoneError.value.isEmpty &&
-        emailError.value.isEmpty;
+    state = state.copyWith(
+      firstNameError: fError,
+      lastNameError: lError,
+      genderError: gError,
+      dateOfBirthError: dError,
+      phoneError: phError,
+      emailError: eError,
+    );
+
+    return fError.isEmpty && lError.isEmpty && gError.isEmpty && dError.isEmpty && phError.isEmpty && eError.isEmpty;
   }
 
-  Future<void> createUser() async {
-    isLoading.value = true;
+  Future<bool> createUser() async {
+    state = state.copyWith(isLoading: true);
     try {
       final user = User(
+        id: state.editingUser?.id,
         userName: userNameController.text,
         firstName: firstNameController.text,
         lastName: lastNameController.text,
         email: emailController.text,
         phone: phoneController.text,
-        gender: selectedGender.value.value ?? 'unspecified',
-        dateOfBirth: dateOfBirth.value.isNotEmpty
-            ? DateTime.parse(dateOfBirth.value)
-            : null,
-        bloodGroup: selectedBloodGroup.value.value,
+        gender: state.selectedGender.value ?? 'unspecified',
+        dateOfBirth: state.dateOfBirth.isNotEmpty ? DateTime.parse(state.dateOfBirth) : null,
+        bloodGroup: state.selectedBloodGroup.value,
         salary: salaryController.text,
         experience: experienceController.text,
         punchId: punchIdController.text,
-        userTypeId: selectedUserType.value!.id!,
-        leaveConfigId: selectedLeaveConfig.value!.id!,
-        colorId: selectedColor.value!.id!,
-        organizationId: UuidValue.fromString(
-          '00000000-0000-4000-8000-000000000000',
-        ), // Set by server
-        performance: 0,
-        online: false,
-        onsite: false,
-        deleted: false,
+        userTypeId: state.selectedUserType!.id!,
+        leaveConfigId: state.selectedLeaveConfig!.id!,
+        colorId: state.selectedColor!.id!,
+        organizationId: state.editingUser?.organizationId ?? UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        performance: state.editingUser?.performance ?? 0,
+        online: state.editingUser?.online ?? false,
+        onsite: state.editingUser?.onsite ?? false,
+        deleted: state.editingUser?.deleted ?? false,
       );
 
-      final response = await client.admin.createUser(
-        user,
-        passwordController.text,
-      );
+      if (state.editingUser != null) {
+        await client.admin.updateUser(user);
+        return true;
+      }
+
+      final response = await client.admin.createUser(user, passwordController.text);
       if (response.success) {
-        Get.back();
-        Get.snackbar(
-          "Success",
-          "User created successfully",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.withOpacity(0.1),
-          colorText: Colors.green,
-        );
+        return true;
       } else {
-        Get.snackbar(
-          "Error",
-          response.message,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red.withOpacity(0.1),
-          colorText: Colors.red,
-        );
+        debugPrint("Error creating user: ${response.message}");
+        return false;
       }
     } catch (e) {
-      print("Error creating user: $e");
-      Get.snackbar(
-        "Error",
-        "Failed to connect to server",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.1),
-        colorText: Colors.red,
-      );
+      debugPrint("Error creating user: $e");
+      return false;
     } finally {
-      isLoading.value = false;
+      state = state.copyWith(isLoading: false);
     }
   }
 
   void reset() {
-    currentPage.value = 1;
-    isEdited.value = false;
     userNameController.clear();
     passwordController.clear();
     punchIdController.clear();
@@ -372,28 +404,11 @@ class AddUserController extends GetxController {
     emailController.clear();
     salaryController.clear();
     experienceController.clear();
-    selectedGender.value = Gender.empty();
-    dateOfBirth.value = '';
-    selectedBloodGroup.value = BloodGroup.empty();
-    selectedUserType.value = null;
-    selectedLeaveConfig.value = null;
-    loadColors(); // Reset to default color
-    image.value = null;
-    verificationFiles.value = null;
-    profilePreviewBytes.value = null;
-    attachments.clear();
-
-    // Clear errors
-    userNameError.value = '';
-    passwordError.value = '';
-    userTypeError.value = '';
-    leaveConfigError.value = '';
-    firstNameError.value = '';
-    lastNameError.value = '';
-    genderError.value = '';
-    dateOfBirthError.value = '';
-    phoneError.value = '';
-    emailError.value = '';
-    bloodGroupError.value = '';
+    state = AddUserState(
+      userTypesList: state.userTypesList,
+      leaveConfigsList: state.leaveConfigsList,
+      colorsList: state.colorsList,
+    );
+    loadColors();
   }
 }

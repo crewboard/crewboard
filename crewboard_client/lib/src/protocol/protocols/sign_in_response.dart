@@ -35,7 +35,7 @@ abstract class SignInResponse implements _i1.SerializableModel {
 
   factory SignInResponse.fromJson(Map<String, dynamic> jsonSerialization) {
     return SignInResponse(
-      success: jsonSerialization['success'] as bool,
+      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
       message: jsonSerialization['message'] as String,
       userId: jsonSerialization['userId'] as String?,
       organizationId: jsonSerialization['organizationId'] as String?,

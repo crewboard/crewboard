@@ -137,9 +137,9 @@ abstract class User implements _i1.SerializableModel {
       attachments: jsonSerialization['attachments'] as String?,
       performance: jsonSerialization['performance'] as int,
       plannerVariables: jsonSerialization['plannerVariables'] as String?,
-      online: jsonSerialization['online'] as bool,
-      onsite: jsonSerialization['onsite'] as bool,
-      deleted: jsonSerialization['deleted'] as bool,
+      online: _i1.BoolJsonExtension.fromJson(jsonSerialization['online']),
+      onsite: _i1.BoolJsonExtension.fromJson(jsonSerialization['onsite']),
+      deleted: _i1.BoolJsonExtension.fromJson(jsonSerialization['deleted']),
     );
   }
 

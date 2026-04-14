@@ -10,6 +10,9 @@ class AdminEndpoint extends Endpoint {
 
   Future<List<PlannerApp>> getApps(Session session) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     return await PlannerApp.db.find(
       session,
       where: (t) => t.organizationId.equals(user.organizationId),
@@ -17,6 +20,10 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<SystemVariables?> getSystemVariables(Session session) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     return await SystemVariables.db.findFirstRow(session);
   }
 
@@ -24,6 +31,10 @@ class AdminEndpoint extends Endpoint {
     Session session,
     SystemVariables variables,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     final existing = await SystemVariables.db.findFirstRow(session);
     if (existing == null) {
       await SystemVariables.db.insertRow(session, variables);
@@ -39,6 +50,9 @@ class AdminEndpoint extends Endpoint {
     UuidValue colorId,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final app = PlannerApp(
       appName: name,
       colorId: colorId,
@@ -62,6 +76,9 @@ class AdminEndpoint extends Endpoint {
 
   Future<List<User>> getUsers(Session session) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_users')) {
+      throw Exception('Permission denied: manage_users');
+    }
     return await User.db.find(
       session,
       where: (t) => t.organizationId.equals(user.organizationId),
@@ -75,6 +92,10 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<List<UserTypes>> getUserTypes(Session session) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_users')) {
+      throw Exception('Permission denied: manage_users');
+    }
     return await UserTypes.db.find(
       session,
       include: UserTypes.include(color: SystemColor.include()),
@@ -82,11 +103,22 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<void> addUserType(Session session, UserTypes type) async {
-    await UserTypes.db.insertRow(session, type);
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_users')) {
+      throw Exception('Permission denied: manage_users');
+    }
+    if (type.id == null) {
+      await UserTypes.db.insertRow(session, type);
+    } else {
+      await UserTypes.db.updateRow(session, type);
+    }
   }
 
   Future<List<Attendance>> getAttendance(Session session, DateTime date) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(Duration(days: 1));
 
@@ -141,19 +173,37 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<List<LeaveConfig>> getLeaveConfigs(Session session) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     return await LeaveConfig.db.find(session);
   }
 
   Future<List<SystemColor>> getColors(Session session) async {
+    // Any authenticated user can read system colors (needed by color picker in various contexts)
+    await AuthHelper.getAuthenticatedUser(session);
     return await SystemColor.db.find(session);
   }
 
   Future<SystemColor> addColor(Session session, String hex) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     final color = SystemColor(
       color: hex,
       isDefault: false,
     );
     return await SystemColor.db.insertRow(session, color);
+  }
+
+  Future<void> updateUser(Session session, User user) async {
+    final userRec = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(userRec, 'manage_users')) {
+      throw Exception('Permission denied: manage_users');
+    }
+    await User.db.updateRow(session, user);
   }
 
   Future<RegisterAdminResponse> createUser(
@@ -162,16 +212,16 @@ class AdminEndpoint extends Endpoint {
     String password,
   ) async {
     try {
-      final AuthenticationInfo? authInfo = session.authenticated;
-      if (authInfo == null) {
+      final userRec = await AuthHelper.getAuthenticatedUser(session);
+      if (!AuthHelper.hasPermission(userRec, 'manage_users')) {
         return RegisterAdminResponse(
           success: false,
-          message: 'Not authenticated',
+          message: 'Permission denied: manage_users',
         );
       }
 
       // 1. Set Organization ID from the creator
-      final currentUser = await AuthHelper.getAuthenticatedUser(session);
+      final currentUser = userRec;
       user.organizationId = currentUser.organizationId;
 
       // 2. Create user with auth integration using unified service
@@ -200,6 +250,9 @@ class AdminEndpoint extends Endpoint {
     DateTime date,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(Duration(days: 1));
 
@@ -241,6 +294,10 @@ class AdminEndpoint extends Endpoint {
     Session session,
     LeaveConfig config,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     if (config.id == null) {
       return await LeaveConfig.db.insertRow(session, config);
     } else {
@@ -260,6 +317,10 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<List<FontSetting>> getFontSettings(Session session) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     return await FontSetting.db.find(
       session,
       orderBy: (t) => t.id,
@@ -270,6 +331,10 @@ class AdminEndpoint extends Endpoint {
     Session session,
     FontSetting setting,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     if (setting.id == null) {
       return await FontSetting.db.insertRow(session, setting);
     } else {
@@ -278,6 +343,10 @@ class AdminEndpoint extends Endpoint {
   }
 
   Future<void> deleteFontSetting(Session session, int id) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_user_data')) {
+      throw Exception('Permission denied: manage_user_data');
+    }
     await FontSetting.db.deleteWhere(session, where: (t) => t.id.equals(id));
   }
 }

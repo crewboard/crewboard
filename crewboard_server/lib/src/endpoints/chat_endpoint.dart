@@ -10,6 +10,9 @@ class ChatEndpoint extends Endpoint {
 
   Future<List<ChatRoom>> getRooms(Session session) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     final userId = user.id!;
 
     final roomMaps = await UserRoomMap.db.find(
@@ -89,6 +92,9 @@ class ChatEndpoint extends Endpoint {
 
   Future<List<User>> searchUsers(Session session, String query) async {
     final currentUser = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(currentUser, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     if (query.isEmpty) return [];
 
     return await User.db.find(
@@ -109,6 +115,9 @@ class ChatEndpoint extends Endpoint {
     UuidValue otherUserId,
   ) async {
     final currentUser = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(currentUser, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     final currentUserId = currentUser.id!;
 
     // 1. Check if a direct room already exists between these two users
@@ -180,6 +189,10 @@ class ChatEndpoint extends Endpoint {
     int limit = 50,
     int offset = 0,
   }) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     return await ChatMessage.db.find(
       session,
       where: (t) => t.roomId.equals(roomId),
@@ -192,6 +205,9 @@ class ChatEndpoint extends Endpoint {
 
   Future<void> sendMessage(Session session, ChatMessage message) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
 
     message.userId = user.id!;
     message.createdAt = DateTime.now();
@@ -227,6 +243,10 @@ class ChatEndpoint extends Endpoint {
     Session session,
     UuidValue roomId,
   ) async* {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     var stream = session.messages.createStream<ChatStreamEvent>('chat_$roomId');
     yield* stream;
   }
@@ -237,6 +257,9 @@ class ChatEndpoint extends Endpoint {
     UuidValue roomId,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     final indicator = TypingIndicator(
       userId: user.id!,
       roomId: roomId,
@@ -252,6 +275,9 @@ class ChatEndpoint extends Endpoint {
 
   Future<void> markAsRead(Session session, UuidValue roomId) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_chat')) {
+      throw Exception('Permission denied: manage_chat');
+    }
     final userMap = await UserRoomMap.db.findFirstRow(
       session,
       where: (t) => t.userId.equals(user.id!) & t.roomId.equals(roomId),

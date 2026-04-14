@@ -44,7 +44,9 @@ abstract class Bucket implements _i1.SerializableModel {
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       appId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['appId']),
       bucketName: jsonSerialization['bucketName'] as String,
-      isDefault: jsonSerialization['isDefault'] as bool,
+      isDefault: jsonSerialization['isDefault'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
     );
   }
 

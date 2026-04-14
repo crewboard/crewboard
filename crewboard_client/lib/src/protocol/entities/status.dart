@@ -16,11 +16,15 @@ abstract class Status implements _i1.SerializableModel {
   Status._({
     this.id,
     required this.statusName,
+    required this.working,
+    required this.completed,
   });
 
   factory Status({
     _i1.UuidValue? id,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) = _StatusImpl;
 
   factory Status.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -29,6 +33,8 @@ abstract class Status implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       statusName: jsonSerialization['statusName'] as String,
+      working: _i1.BoolJsonExtension.fromJson(jsonSerialization['working']),
+      completed: _i1.BoolJsonExtension.fromJson(jsonSerialization['completed']),
     );
   }
 
@@ -39,12 +45,18 @@ abstract class Status implements _i1.SerializableModel {
 
   String statusName;
 
+  bool working;
+
+  bool completed;
+
   /// Returns a shallow copy of this [Status]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Status copyWith({
     _i1.UuidValue? id,
     String? statusName,
+    bool? working,
+    bool? completed,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -52,6 +64,8 @@ abstract class Status implements _i1.SerializableModel {
       '__className__': 'Status',
       if (id != null) 'id': id?.toJson(),
       'statusName': statusName,
+      'working': working,
+      'completed': completed,
     };
   }
 
@@ -67,9 +81,13 @@ class _StatusImpl extends Status {
   _StatusImpl({
     _i1.UuidValue? id,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) : super._(
          id: id,
          statusName: statusName,
+         working: working,
+         completed: completed,
        );
 
   /// Returns a shallow copy of this [Status]
@@ -79,10 +97,14 @@ class _StatusImpl extends Status {
   Status copyWith({
     Object? id = _Undefined,
     String? statusName,
+    bool? working,
+    bool? completed,
   }) {
     return Status(
       id: id is _i1.UuidValue? ? id : this.id,
       statusName: statusName ?? this.statusName,
+      working: working ?? this.working,
+      completed: completed ?? this.completed,
     );
   }
 }

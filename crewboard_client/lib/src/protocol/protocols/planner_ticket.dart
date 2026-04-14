@@ -31,8 +31,13 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     this.createdAt,
     bool? hasNewActivity,
     this.latestActivity,
+    bool? working,
+    bool? completed,
+    this.completedAt,
     this.attachments,
-  }) : hasNewActivity = hasNewActivity ?? false;
+  }) : hasNewActivity = hasNewActivity ?? false,
+       working = working ?? false,
+       completed = completed ?? false;
 
   factory PlannerTicket({
     required _i1.UuidValue id,
@@ -49,6 +54,9 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    bool? working,
+    bool? completed,
+    DateTime? completedAt,
     List<_i3.AttachmentModel>? attachments,
   }) = _PlannerTicketImpl;
 
@@ -70,8 +78,21 @@ abstract class PlannerTicket implements _i1.SerializableModel {
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      hasNewActivity: jsonSerialization['hasNewActivity'] as bool,
+      hasNewActivity: jsonSerialization['hasNewActivity'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['hasNewActivity']),
       latestActivity: jsonSerialization['latestActivity'] as String?,
+      working: jsonSerialization['working'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['working']),
+      completed: jsonSerialization['completed'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['completed']),
+      completedAt: jsonSerialization['completedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['completedAt'],
+            ),
       attachments: jsonSerialization['attachments'] == null
           ? null
           : _i4.Protocol().deserialize<List<_i3.AttachmentModel>>(
@@ -108,6 +129,12 @@ abstract class PlannerTicket implements _i1.SerializableModel {
 
   String? latestActivity;
 
+  bool working;
+
+  bool completed;
+
+  DateTime? completedAt;
+
   List<_i3.AttachmentModel>? attachments;
 
   /// Returns a shallow copy of this [PlannerTicket]
@@ -128,6 +155,9 @@ abstract class PlannerTicket implements _i1.SerializableModel {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    bool? working,
+    bool? completed,
+    DateTime? completedAt,
     List<_i3.AttachmentModel>? attachments,
   });
   @override
@@ -148,6 +178,9 @@ abstract class PlannerTicket implements _i1.SerializableModel {
       if (createdAt != null) 'createdAt': createdAt?.toJson(),
       'hasNewActivity': hasNewActivity,
       if (latestActivity != null) 'latestActivity': latestActivity,
+      'working': working,
+      'completed': completed,
+      if (completedAt != null) 'completedAt': completedAt?.toJson(),
       if (attachments != null)
         'attachments': attachments?.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -177,6 +210,9 @@ class _PlannerTicketImpl extends PlannerTicket {
     DateTime? createdAt,
     bool? hasNewActivity,
     String? latestActivity,
+    bool? working,
+    bool? completed,
+    DateTime? completedAt,
     List<_i3.AttachmentModel>? attachments,
   }) : super._(
          id: id,
@@ -193,6 +229,9 @@ class _PlannerTicketImpl extends PlannerTicket {
          createdAt: createdAt,
          hasNewActivity: hasNewActivity,
          latestActivity: latestActivity,
+         working: working,
+         completed: completed,
+         completedAt: completedAt,
          attachments: attachments,
        );
 
@@ -215,6 +254,9 @@ class _PlannerTicketImpl extends PlannerTicket {
     Object? createdAt = _Undefined,
     bool? hasNewActivity,
     Object? latestActivity = _Undefined,
+    bool? working,
+    bool? completed,
+    Object? completedAt = _Undefined,
     Object? attachments = _Undefined,
   }) {
     return PlannerTicket(
@@ -235,6 +277,9 @@ class _PlannerTicketImpl extends PlannerTicket {
       latestActivity: latestActivity is String?
           ? latestActivity
           : this.latestActivity,
+      working: working ?? this.working,
+      completed: completed ?? this.completed,
+      completedAt: completedAt is DateTime? ? completedAt : this.completedAt,
       attachments: attachments is List<_i3.AttachmentModel>?
           ? attachments
           : this.attachments?.map((e0) => e0.copyWith()).toList(),

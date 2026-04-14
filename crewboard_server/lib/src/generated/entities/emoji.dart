@@ -384,7 +384,7 @@ class EmojiRepository {
   /// );
   /// ```
   Future<List<Emoji>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmojiTable>? where,
     int? limit,
     int? offset,
@@ -392,6 +392,8 @@ class EmojiRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmojiTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Emoji>(
       where: where?.call(Emoji.t),
@@ -401,6 +403,8 @@ class EmojiRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -422,13 +426,15 @@ class EmojiRepository {
   /// );
   /// ```
   Future<Emoji?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmojiTable>? where,
     int? offset,
     _i1.OrderByBuilder<EmojiTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmojiTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Emoji>(
       where: where?.call(Emoji.t),
@@ -437,18 +443,24 @@ class EmojiRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Emoji] by its [id] or null if no such row exists.
   Future<Emoji?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Emoji>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -458,14 +470,20 @@ class EmojiRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Emoji>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Emoji> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Emoji>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -473,7 +491,7 @@ class EmojiRepository {
   ///
   /// The returned [Emoji] will have its `id` field set.
   Future<Emoji> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Emoji row, {
     _i1.Transaction? transaction,
   }) async {
@@ -489,7 +507,7 @@ class EmojiRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Emoji>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Emoji> rows, {
     _i1.ColumnSelections<EmojiTable>? columns,
     _i1.Transaction? transaction,
@@ -505,7 +523,7 @@ class EmojiRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Emoji> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Emoji row, {
     _i1.ColumnSelections<EmojiTable>? columns,
     _i1.Transaction? transaction,
@@ -520,7 +538,7 @@ class EmojiRepository {
   /// Updates a single [Emoji] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Emoji?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<EmojiUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -535,7 +553,7 @@ class EmojiRepository {
   /// Updates all [Emoji]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Emoji>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<EmojiUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<EmojiTable> where,
     int? limit,
@@ -561,7 +579,7 @@ class EmojiRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Emoji>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Emoji> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -573,7 +591,7 @@ class EmojiRepository {
 
   /// Deletes a single [Emoji].
   Future<Emoji> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Emoji row, {
     _i1.Transaction? transaction,
   }) async {
@@ -585,7 +603,7 @@ class EmojiRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Emoji>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EmojiTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -598,7 +616,7 @@ class EmojiRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmojiTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -606,6 +624,22 @@ class EmojiRepository {
     return session.db.count<Emoji>(
       where: where?.call(Emoji.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [Emoji] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<EmojiTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<Emoji>(
+      where: where(Emoji.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

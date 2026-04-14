@@ -43,7 +43,9 @@ abstract class LeaveRequest implements _i1.SerializableModel {
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       request: jsonSerialization['request'] as String,
-      accepted: jsonSerialization['accepted'] as bool?,
+      accepted: jsonSerialization['accepted'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['accepted']),
       date: jsonSerialization['date'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),

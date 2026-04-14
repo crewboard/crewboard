@@ -1,44 +1,83 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart'; // For client
 
-class RoomsController extends GetxController {
-  final RxList<ChatRoom> rooms = <ChatRoom>[].obs;
-  final RxList<User> users = <User>[].obs;
-  final RxList<ChatRoom> _backup = <ChatRoom>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxBool isSearchingUsers = false.obs;
-  final Rx<ChatRoom?> selectedRoom = Rx<ChatRoom?>(null);
-  final RxString searchQuery = "".obs;
+class RoomsState {
+  final List<ChatRoom> rooms;
+  final List<User> users;
+  final List<ChatRoom> backup;
+  final bool isLoading;
+  final bool isSearchingUsers;
+  final ChatRoom? selectedRoom;
+  final String searchQuery;
 
+  RoomsState({
+    this.rooms = const [],
+    this.users = const [],
+    this.backup = const [],
+    this.isLoading = false,
+    this.isSearchingUsers = false,
+    this.selectedRoom,
+    this.searchQuery = "",
+  });
+
+  RoomsState copyWith({
+    List<ChatRoom>? rooms,
+    List<User>? users,
+    List<ChatRoom>? backup,
+    bool? isLoading,
+    bool? isSearchingUsers,
+    ChatRoom? selectedRoom,
+    String? searchQuery,
+    bool clearSelectedRoom = false,
+  }) {
+    return RoomsState(
+      rooms: rooms ?? this.rooms,
+      users: users ?? this.users,
+      backup: backup ?? this.backup,
+      isLoading: isLoading ?? this.isLoading,
+      isSearchingUsers: isSearchingUsers ?? this.isSearchingUsers,
+      selectedRoom: clearSelectedRoom ? null : (selectedRoom ?? this.selectedRoom),
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
+}
+
+final roomsProvider = NotifierProvider<RoomsNotifier, RoomsState>(RoomsNotifier.new);
+
+class RoomsNotifier extends Notifier<RoomsState> {
   @override
-  void onInit() {
-    super.onInit();
-    loadRooms();
+  RoomsState build() {
+    Future.microtask(() => loadRooms());
+    return RoomsState();
   }
 
   Future<void> loadRooms() async {
     try {
-      isLoading.value = true;
+      state = state.copyWith(isLoading: true);
       final response = await client.chat.getRooms();
-      rooms.assignAll(response);
-      _backup.assignAll(response);
+      state = state.copyWith(
+        rooms: response,
+        backup: response,
+        isLoading: false,
+      );
     } catch (e) {
       debugPrint('Error getting rooms: $e');
-    } finally {
-      isLoading.value = false;
+      state = state.copyWith(isLoading: false);
     }
   }
 
   void resetSearch() {
-    searchQuery.value = "";
-    rooms.assignAll(_backup);
-    users.clear();
+    state = state.copyWith(
+      searchQuery: "",
+      rooms: state.backup,
+      users: [],
+    );
   }
 
   Future<void> searchRooms(String query) async {
-    searchQuery.value = query;
+    state = state.copyWith(searchQuery: query);
     if (query.isEmpty) {
       resetSearch();
       return;
@@ -46,60 +85,67 @@ class RoomsController extends GetxController {
 
     // 1. Filter existing rooms locally
     final lower = query.toLowerCase();
-    final filtered = _backup.where((room) {
+    final filtered = state.backup.where((room) {
       return (room.roomName ?? '').toLowerCase().contains(lower);
     }).toList();
-    rooms.assignAll(filtered);
+    
+    state = state.copyWith(rooms: filtered, isSearchingUsers: true);
 
     // 2. Search for users on the server
-    isSearchingUsers.value = true;
     try {
       final foundUsers = await client.chat.searchUsers(query);
 
       // Filter out users who already have a direct room visible in the room list
-      final existingRoomUserNames = _backup
+      final existingRoomUserNames = state.backup
           .where((r) => r.roomType == 'direct')
           .map((r) => r.roomName?.toLowerCase())
           .toSet();
 
-      users.assignAll(
-        foundUsers.where(
-          (u) => !existingRoomUserNames.contains(u.userName.toLowerCase()),
-        ),
-      );
+      final filteredUsers = foundUsers.where(
+        (u) => !existingRoomUserNames.contains(u.userName.toLowerCase()),
+      ).toList();
+
+      state = state.copyWith(users: filteredUsers, isSearchingUsers: false);
     } catch (e) {
       debugPrint('Error searching users: $e');
-    } finally {
-      isSearchingUsers.value = false;
+      state = state.copyWith(isSearchingUsers: false);
     }
   }
 
-  void selectRoom(ChatRoom room) {
-    selectedRoom.value = room;
+  void selectRoom(ChatRoom? room) {
+    if (room == null) {
+      state = state.copyWith(clearSelectedRoom: true);
+    } else {
+      state = state.copyWith(selectedRoom: room);
+    }
   }
 
   Future<void> startDirectChat(User user) async {
     try {
-      isLoading.value = true;
+      state = state.copyWith(isLoading: true);
       final room = await client.chat.createDirectRoom(user.id!);
 
       // Update local lists
-      int index = _backup.indexWhere((r) => r.id == room.id);
+      final updatedBackup = List<ChatRoom>.from(state.backup);
+      int index = updatedBackup.indexWhere((r) => r.id == room.id);
       if (index != -1) {
-        _backup[index] = room;
+        updatedBackup[index] = room;
       } else {
-        _backup.add(room);
+        updatedBackup.add(room);
       }
-      _backup.sort((a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''));
+      updatedBackup.sort((a, b) => (a.roomName ?? '').compareTo(b.roomName ?? ''));
 
-      resetSearch();
-      selectRoom(room);
-
-      // The Rooms widget will handle navigation to "messages" via Window.subPage
+      state = state.copyWith(
+        backup: updatedBackup,
+        isLoading: false,
+        selectedRoom: room,
+        searchQuery: "",
+        rooms: updatedBackup,
+        users: [],
+      );
     } catch (e) {
       debugPrint('Error starting direct chat: $e');
-    } finally {
-      isLoading.value = false;
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -107,31 +153,37 @@ class RoomsController extends GetxController {
     try {
       await client.chat.markAsRead(room.id!);
       // Update local state to immediately hide the badge
-      int index = rooms.indexWhere((r) => r.id == room.id);
-      if (index != -1) {
-        rooms[index] = rooms[index].copyWith(messageCount: 0);
-        rooms.refresh();
-      }
+      final updatedRooms = state.rooms.map((r) {
+        if (r.id == room.id) {
+          return r.copyWith(messageCount: 0);
+        }
+        return r;
+      }).toList();
+      state = state.copyWith(rooms: updatedRooms);
     } catch (e) {
       debugPrint('Error marking room as read: $e');
     }
   }
 
   void updateLastMessage(UuidValue roomId, ChatMessage message) {
-    int index = rooms.indexWhere((r) => r.id == roomId);
+    final updatedRooms = List<ChatRoom>.from(state.rooms);
+    int index = updatedRooms.indexWhere((r) => r.id == roomId);
     if (index != -1) {
-      var updatedRoom = rooms[index].copyWith(lastMessage: message);
-      rooms.removeAt(index);
-      rooms.insert(0, updatedRoom);
+      var updatedRoom = updatedRooms[index].copyWith(lastMessage: message);
+      updatedRooms.removeAt(index);
+      updatedRooms.insert(0, updatedRoom);
     }
 
-    int backupIndex = _backup.indexWhere((r) => r.id == roomId);
+    final updatedBackup = List<ChatRoom>.from(state.backup);
+    int backupIndex = updatedBackup.indexWhere((r) => r.id == roomId);
     if (backupIndex != -1) {
-      var updatedBackupRoom = _backup[backupIndex].copyWith(
+      var updatedBackupRoom = updatedBackup[backupIndex].copyWith(
         lastMessage: message,
       );
-      _backup.removeAt(backupIndex);
-      _backup.insert(0, updatedBackupRoom);
+      updatedBackup.removeAt(backupIndex);
+      updatedBackup.insert(0, updatedBackupRoom);
     }
+
+    state = state.copyWith(rooms: updatedRooms, backup: updatedBackup);
   }
 }

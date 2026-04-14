@@ -14,3 +14,4 @@ fields:
   creds: int
   deadline: DateTime?
   createdAt: DateTime?
+  completedAt: DateTime?

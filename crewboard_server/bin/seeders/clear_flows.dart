@@ -37,9 +37,8 @@ void main(List<String> args) async {
       ],
     );
     try {
-      print('Attempting to start Serverpod...');
-      await pod.start();
-      print('Serverpod started.');
+      print('Skipping pod.start() to avoid port conflicts...');
+      // await pod.start();
     } catch (e) {
       print('Warning: Port conflict or other start error (ignoring): $e');
     }

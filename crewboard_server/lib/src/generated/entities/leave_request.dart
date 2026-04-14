@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -46,7 +45,9 @@ abstract class LeaveRequest
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       request: jsonSerialization['request'] as String,
-      accepted: jsonSerialization['accepted'] as bool?,
+      accepted: jsonSerialization['accepted'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['accepted']),
       date: jsonSerialization['date'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
@@ -333,7 +334,7 @@ class LeaveRequestRepository {
   /// );
   /// ```
   Future<List<LeaveRequest>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveRequestTable>? where,
     int? limit,
     int? offset,
@@ -342,6 +343,8 @@ class LeaveRequestRepository {
     _i1.OrderByListBuilder<LeaveRequestTable>? orderByList,
     _i1.Transaction? transaction,
     LeaveRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<LeaveRequest>(
       where: where?.call(LeaveRequest.t),
@@ -352,6 +355,8 @@ class LeaveRequestRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -373,7 +378,7 @@ class LeaveRequestRepository {
   /// );
   /// ```
   Future<LeaveRequest?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveRequestTable>? where,
     int? offset,
     _i1.OrderByBuilder<LeaveRequestTable>? orderBy,
@@ -381,6 +386,8 @@ class LeaveRequestRepository {
     _i1.OrderByListBuilder<LeaveRequestTable>? orderByList,
     _i1.Transaction? transaction,
     LeaveRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<LeaveRequest>(
       where: where?.call(LeaveRequest.t),
@@ -390,20 +397,26 @@ class LeaveRequestRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [LeaveRequest] by its [id] or null if no such row exists.
   Future<LeaveRequest?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     LeaveRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<LeaveRequest>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -413,14 +426,20 @@ class LeaveRequestRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<LeaveRequest>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveRequest> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<LeaveRequest>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -428,7 +447,7 @@ class LeaveRequestRepository {
   ///
   /// The returned [LeaveRequest] will have its `id` field set.
   Future<LeaveRequest> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveRequest row, {
     _i1.Transaction? transaction,
   }) async {
@@ -444,7 +463,7 @@ class LeaveRequestRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<LeaveRequest>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveRequest> rows, {
     _i1.ColumnSelections<LeaveRequestTable>? columns,
     _i1.Transaction? transaction,
@@ -460,7 +479,7 @@ class LeaveRequestRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<LeaveRequest> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveRequest row, {
     _i1.ColumnSelections<LeaveRequestTable>? columns,
     _i1.Transaction? transaction,
@@ -475,7 +494,7 @@ class LeaveRequestRepository {
   /// Updates a single [LeaveRequest] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<LeaveRequest?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<LeaveRequestUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -490,7 +509,7 @@ class LeaveRequestRepository {
   /// Updates all [LeaveRequest]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<LeaveRequest>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<LeaveRequestUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<LeaveRequestTable> where,
     int? limit,
@@ -516,7 +535,7 @@ class LeaveRequestRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<LeaveRequest>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveRequest> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -528,7 +547,7 @@ class LeaveRequestRepository {
 
   /// Deletes a single [LeaveRequest].
   Future<LeaveRequest> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveRequest row, {
     _i1.Transaction? transaction,
   }) async {
@@ -540,7 +559,7 @@ class LeaveRequestRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<LeaveRequest>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<LeaveRequestTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -553,7 +572,7 @@ class LeaveRequestRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveRequestTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -561,6 +580,22 @@ class LeaveRequestRepository {
     return session.db.count<LeaveRequest>(
       where: where?.call(LeaveRequest.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [LeaveRequest] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<LeaveRequestTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<LeaveRequest>(
+      where: where(LeaveRequest.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -572,7 +607,7 @@ class LeaveRequestAttachRowRepository {
   /// Creates a relation between the given [LeaveRequest] and [User]
   /// by setting the [LeaveRequest]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveRequest leaveRequest,
     _i2.User user, {
     _i1.Transaction? transaction,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../../../controllers/emoji_controller.dart';
 import '../../../config/palette.dart';
 
-class EmojiPickerWidget extends StatefulWidget {
+class EmojiPickerWidget extends ConsumerStatefulWidget {
   final Function(Emoji) onEmojiSelected;
   final String searchQuery;
 
@@ -15,11 +15,10 @@ class EmojiPickerWidget extends StatefulWidget {
   });
 
   @override
-  State<EmojiPickerWidget> createState() => _EmojiPickerWidgetState();
+  ConsumerState<EmojiPickerWidget> createState() => _EmojiPickerWidgetState();
 }
 
-class _EmojiPickerWidgetState extends State<EmojiPickerWidget> {
-  final EmojiController emojiController = Get.find<EmojiController>();
+class _EmojiPickerWidgetState extends ConsumerState<EmojiPickerWidget> {
   List<Emoji> searchResults = [];
   List<String> categories = [];
   final Map<String, List<Emoji>> categoryEmojis = {};
@@ -34,7 +33,8 @@ class _EmojiPickerWidgetState extends State<EmojiPickerWidget> {
   }
 
   Future<void> _loadInitialData() async {
-    final groups = await emojiController.getGroups();
+    final emojiNotifier = ref.read(emojiProvider.notifier);
+    final groups = await emojiNotifier.getGroups();
     if (mounted) {
       setState(() {
         categories = groups;
@@ -54,7 +54,8 @@ class _EmojiPickerWidgetState extends State<EmojiPickerWidget> {
 
   void _filterEmojis(String query) async {
     if (query.isNotEmpty) {
-      final results = await emojiController.searchEmojis(query);
+      final emojiNotifier = ref.read(emojiProvider.notifier);
+      final results = await emojiNotifier.searchEmojis(query);
       if (mounted) {
         setState(() {
           searchResults = results;
@@ -67,7 +68,8 @@ class _EmojiPickerWidgetState extends State<EmojiPickerWidget> {
     if (categoryEmojis.containsKey(category)) {
       return categoryEmojis[category]!;
     }
-    final emojis = await emojiController.getEmojisByGroup(category);
+    final emojiNotifier = ref.read(emojiProvider.notifier);
+    final emojis = await emojiNotifier.getEmojisByGroup(category);
     categoryEmojis[category] = emojis;
     return emojis;
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../config/palette.dart';
 import '../../widgets/glass_morph.dart';
-import '../chats/chat_widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MemoryBankScreen extends StatelessWidget {
@@ -25,7 +23,7 @@ class MemoryBankScreen extends StatelessWidget {
         'title': 'Todo',
         'body': 'Implement the addMemory functionality in the next session.',
       },
-    ].obs;
+    ];
 
     return GlassMorph(
       borderRadius: 24,
@@ -34,29 +32,20 @@ class MemoryBankScreen extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              bottom: 15,
-              left: 20,
-              right: 20,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
             child: Row(
               children: [
-                const SizedBox(width: 10),
-                const Icon(Icons.memory, color: Colors.blue, size: 32),
-                const SizedBox(width: 12),
                 Text(
-                  "Memory Bank",
+                  "Memory",
                   style: GoogleFonts.poppins(
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Pallet.font1,
                   ),
                 ),
-                const Expanded(child: SizedBox()),
+                const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.add, color: Colors.blue),
+                  icon: const Icon(Icons.add),
                   onPressed: () {
                     // TODO: Implement addMemory dialog
                   },
@@ -64,19 +53,47 @@ class MemoryBankScreen extends StatelessWidget {
               ],
             ),
           ),
+          // Stack(
+          //   alignment: Alignment.center,
+          //   children: [
+          //     // Divider(color: Colors.white.withValues(alpha: 0.1)),
+          //     Container(
+          //       padding: const EdgeInsets.symmetric(horizontal: 12),
+          //       color: const Color(0xff121212),
+          //       child: Row(
+          //         mainAxisSize: MainAxisSize.min,
+          //         children: [
+          //           Icon(
+          //             Icons.keyboard_arrow_down,
+          //             size: 16,
+          //             color: Pallet.font3,
+          //           ),
+          //           const SizedBox(width: 4),
+          //           Text(
+          //             "Saved Memories",
+          //             style: GoogleFonts.poppins(
+          //               fontSize: 12,
+          //               color: Pallet.font3,
+          //               fontWeight: FontWeight.w500,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          const SizedBox(height: 20),
           Expanded(
-            child: Obx(
-              () => ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: memories.length,
-                itemBuilder: (context, index) {
-                  final memory = memories[index];
-                  return MemoryListItem(
-                    title: memory['title'] ?? '',
-                    body: memory['body'] ?? '',
-                  );
-                },
-              ),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: memories.length,
+              itemBuilder: (context, index) {
+                final memory = memories[index];
+                return MemoryListItem(
+                  title: memory['title'] ?? '',
+                  body: memory['body'] ?? '',
+                );
+              },
             ),
           ),
         ],

@@ -147,8 +147,6 @@ class StatusesSection extends StatefulWidget {
 }
 
 class _StatusesSectionState extends State<StatusesSection> {
-  int? editIdx;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -186,34 +184,36 @@ class _StatusesSectionState extends State<StatusesSection> {
                         color: Pallet.inside1,
                         child: Row(
                           children: [
-                            if (editIdx == i)
-                              Expanded(
-                                child: SmallTextBox(
-                                  controller: TextEditingController(
-                                    text: item.statusName,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.statusName,
+                                    style: const TextStyle(fontSize: 13),
                                   ),
-                                  onEnter: (val) async {
-                                    await client.planner.addStatus(
-                                      item.statusId,
-                                      val,
-                                    );
-                                    refreshSink.add("get_admin_planner_data");
-                                    setState(() => editIdx = null);
-                                  },
-                                ),
-                              )
-                            else
-                              Expanded(
-                                child: Text(
-                                  item.statusName,
-                                  style: const TextStyle(fontSize: 13),
-                                ),
+                                  Row(
+                                    children: [
+                                      _buildSmallIndicator(
+                                        "W",
+                                        item.working ? Colors.blue : null,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      _buildSmallIndicator(
+                                        "C",
+                                        item.completed ? Colors.green : null,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-
-                            InkWell(
-                              onTap: () => setState(
-                                () => editIdx = (editIdx == i ? null : i),
-                              ),
+                            ),
+                            AddController(
+                              type: "status",
+                              id: item.statusId,
+                              initialName: item.statusName,
+                              initialWorking: item.working,
+                              initialCompleted: item.completed,
                               child: const Icon(Icons.edit, size: 16),
                             ),
                             const SizedBox(width: 8),
@@ -240,6 +240,40 @@ class _StatusesSectionState extends State<StatusesSection> {
       ],
     );
   }
+
+  Widget _buildSmallIndicator(String label, Color? color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: color?.withOpacity(0.2) ?? Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(
+          color: color?.withOpacity(0.5) ?? Colors.white.withOpacity(0.1),
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 8,
+          color: color ?? Colors.grey,
+          fontWeight: color != null ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmallToggle(bool value, Function(bool) onChanged, Color color) {
+    return Transform.scale(
+      scale: 0.6,
+      child: Switch(
+        value: value,
+        onChanged: onChanged,
+        activeColor: color,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+    );
+  }
 }
 
 class TicketTypesSection extends StatefulWidget {
@@ -251,8 +285,6 @@ class TicketTypesSection extends StatefulWidget {
 }
 
 class _TicketTypesSectionState extends State<TicketTypesSection> {
-  int? editIdx;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -290,31 +322,13 @@ class _TicketTypesSectionState extends State<TicketTypesSection> {
                         color: Pallet.inside1,
                         child: Row(
                           children: [
-                            if (editIdx == i)
-                              Expanded(
-                                child: SmallTextBox(
-                                  controller: TextEditingController(
-                                    text: item.typeName,
-                                  ),
-                                  onEnter: (val) async {
-                                    await client.planner.addTicketType(
-                                      item.typeId,
-                                      val,
-                                      item.colorId,
-                                    );
-                                    refreshSink.add("get_admin_planner_data");
-                                    setState(() => editIdx = null);
-                                  },
-                                ),
-                              )
-                            else
-                              Expanded(
-                                child: Text(
-                                  item.typeName,
-                                  style: const TextStyle(fontSize: 13),
-                                ),
+                            Expanded(
+                              child: Text(
+                                item.typeName,
+                                style: const TextStyle(fontSize: 13),
                               ),
-
+                            ),
+ 
                             const SizedBox(width: 5),
                             ColorPicker(
                               selectedColorId: item.colorId,
@@ -328,10 +342,11 @@ class _TicketTypesSectionState extends State<TicketTypesSection> {
                               },
                             ),
                             const SizedBox(width: 5),
-                            InkWell(
-                              onTap: () => setState(
-                                () => editIdx = (editIdx == i ? null : i),
-                              ),
+                            AddController(
+                              type: "type",
+                              id: item.typeId,
+                              initialName: item.typeName,
+                              initialColorId: item.colorId,
                               child: const Icon(Icons.edit, size: 16),
                             ),
                             const SizedBox(width: 8),
@@ -369,9 +384,8 @@ class PrioritiesSection extends StatefulWidget {
 }
 
 class _PrioritiesSectionState extends State<PrioritiesSection> {
-  int? editIdx;
   int? selectedIdx;
-
+ 
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -425,37 +439,17 @@ class _PrioritiesSectionState extends State<PrioritiesSection> {
                                       ),
                                     ),
                                     const SizedBox(width: 5),
-                                    if (editIdx == i)
-                                      Expanded(
-                                        child: SmallTextBox(
-                                          controller: TextEditingController(
-                                            text: item.priorityName,
-                                          ),
-                                          onEnter: (val) async {
-                                            await client.planner.addPriority(
-                                              item.priorityId,
-                                              val,
-                                            );
-                                            refreshSink.add(
-                                              "get_admin_planner_data",
-                                            );
-                                            setState(() => editIdx = null);
-                                          },
-                                        ),
-                                      )
-                                    else
-                                      Expanded(
-                                        child: Text(
-                                          item.priorityName,
-                                          style: const TextStyle(fontSize: 13),
-                                        ),
+                                    Expanded(
+                                      child: Text(
+                                        item.priorityName,
+                                        style: const TextStyle(fontSize: 13),
                                       ),
-
-                                    InkWell(
-                                      onTap: () => setState(
-                                        () =>
-                                            editIdx = (editIdx == i ? null : i),
-                                      ),
+                                    ),
+ 
+                                    AddController(
+                                      type: "priority",
+                                      id: item.priorityId,
+                                      initialName: item.priorityName,
                                       child: const Icon(Icons.edit, size: 16),
                                     ),
                                     const SizedBox(width: 8),

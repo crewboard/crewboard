@@ -33,6 +33,7 @@ abstract class TicketModel implements _i1.SerializableModel {
     required this.creds,
     required this.assignees,
     required this.attachments,
+    this.completedAt,
   });
 
   factory TicketModel({
@@ -48,6 +49,7 @@ abstract class TicketModel implements _i1.SerializableModel {
     required double creds,
     required List<_i6.UserModel> assignees,
     required List<_i7.AttachmentModel> attachments,
+    String? completedAt,
   }) = _TicketModelImpl;
 
   factory TicketModel.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -76,6 +78,7 @@ abstract class TicketModel implements _i1.SerializableModel {
       attachments: _i8.Protocol().deserialize<List<_i7.AttachmentModel>>(
         jsonSerialization['attachments'],
       ),
+      completedAt: jsonSerialization['completedAt'] as String?,
     );
   }
 
@@ -103,6 +106,8 @@ abstract class TicketModel implements _i1.SerializableModel {
 
   List<_i7.AttachmentModel> attachments;
 
+  String? completedAt;
+
   /// Returns a shallow copy of this [TicketModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -119,6 +124,7 @@ abstract class TicketModel implements _i1.SerializableModel {
     double? creds,
     List<_i6.UserModel>? assignees,
     List<_i7.AttachmentModel>? attachments,
+    String? completedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -136,6 +142,7 @@ abstract class TicketModel implements _i1.SerializableModel {
       'creds': creds,
       'assignees': assignees.toJson(valueToJson: (v) => v.toJson()),
       'attachments': attachments.toJson(valueToJson: (v) => v.toJson()),
+      if (completedAt != null) 'completedAt': completedAt,
     };
   }
 
@@ -161,6 +168,7 @@ class _TicketModelImpl extends TicketModel {
     required double creds,
     required List<_i6.UserModel> assignees,
     required List<_i7.AttachmentModel> attachments,
+    String? completedAt,
   }) : super._(
          id: id,
          ticketName: ticketName,
@@ -174,6 +182,7 @@ class _TicketModelImpl extends TicketModel {
          creds: creds,
          assignees: assignees,
          attachments: attachments,
+         completedAt: completedAt,
        );
 
   /// Returns a shallow copy of this [TicketModel]
@@ -193,6 +202,7 @@ class _TicketModelImpl extends TicketModel {
     double? creds,
     List<_i6.UserModel>? assignees,
     List<_i7.AttachmentModel>? attachments,
+    Object? completedAt = _Undefined,
   }) {
     return TicketModel(
       id: id ?? this.id,
@@ -210,6 +220,7 @@ class _TicketModelImpl extends TicketModel {
           assignees ?? this.assignees.map((e0) => e0.copyWith()).toList(),
       attachments:
           attachments ?? this.attachments.map((e0) => e0.copyWith()).toList(),
+      completedAt: completedAt is String? ? completedAt : this.completedAt,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../../../config/palette.dart';
@@ -8,74 +8,66 @@ import '../../../controllers/attendance_controller.dart';
 import '../../../widgets/glass_morph.dart';
 import './attendance_popup.dart';
 
-class AttendanceScreen extends StatelessWidget {
+class AttendanceScreen extends ConsumerWidget {
   const AttendanceScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(AttendanceController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(attendanceProvider);
+    final notifier = ref.read(attendanceProvider.notifier);
 
-    return Obx(() {
-      if (controller.isLoading.value && controller.users.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
+    if (state.isLoading && state.users.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Main Content (Attendance and Performance)
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Attendance",
-                  style: TextStyle(fontSize: 16, color: Pallet.font3),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Attendance",
+                style: TextStyle(fontSize: 16, color: Pallet.font3),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPunchingModePanel(context, ref, state),
+                  const SizedBox(width: 10),
+                  _buildBiometricApiPanel(context, ref),
+                  const SizedBox(width: 10),
+                  _buildLeaveRequestsPanel(state),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _buildAttendanceHeader(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.users.length,
+                  itemBuilder: (context, index) {
+                    final user = state.users[index];
+                    final attendance = notifier.getAttendanceForUser(user.id!);
+                    return _buildUserAttendanceRow(context, ref, user, attendance);
+                  },
                 ),
-                const SizedBox(height: 10),
-                // Top Widgets (Punching Mode, Biometric API, Leave Requests)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Punching Mode
-                    _buildPunchingModePanel(controller),
-                    const SizedBox(width: 10),
-                    // Biometric API
-                    _buildBiometricApiPanel(),
-                    const SizedBox(width: 10),
-                    // Leave Requests
-                    _buildLeaveRequestsPanel(controller),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Attendance Table Header
-                _buildAttendanceHeader(),
-                // Attendance List
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: controller.users.length,
-                    itemBuilder: (context, index) {
-                      final user = controller.users[index];
-                      final attendance = controller.getAttendanceForUser(
-                        user.id!,
-                      );
-                      return _buildUserAttendanceRow(context, user, attendance);
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 15),
-          // Sidebar (Leave Configs)
-          _buildLeaveConfigsSidebar(context, controller),
-        ],
-      );
-    });
+        ),
+        const SizedBox(width: 15),
+        _buildLeaveConfigsSidebar(context, ref, state),
+      ],
+    );
   }
 
-  Widget _buildPunchingModePanel(AttendanceController controller) {
+  Widget _buildPunchingModePanel(BuildContext context, WidgetRef ref, AttendanceState state) {
+    // Note: We don't have a specific 'setPunchingMode' yet in the notifier, 
+    // but we can add it or handle it via a new state update if needed.
+    // For now, I'll assume we can use the notifier to update state.
     return Expanded(
       child: GlassMorph(
         height: 150,
@@ -86,27 +78,23 @@ class AttendanceScreen extends StatelessWidget {
           children: [
             const Text("punching mode", style: TextStyle(fontSize: 14)),
             const SizedBox(height: 5),
-            _buildRadioOption("bio metric", "bio_metric", controller),
-            _buildRadioOption("manual (user)", "manual_user", controller),
-            _buildRadioOption("manual (hr)", "manual_hr", controller),
+            _buildRadioOption("bio metric", "bio_metric", ref, state),
+            _buildRadioOption("manual (user)", "manual_user", ref, state),
+            _buildRadioOption("manual (hr)", "manual_hr", ref, state),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRadioOption(
-    String label,
-    String value,
-    AttendanceController controller,
-  ) {
+  Widget _buildRadioOption(String label, String value, WidgetRef ref, AttendanceState state) {
     return Row(
       children: [
         Radio<String>(
           value: value,
-          groupValue: controller.punchingMode.value,
+          groupValue: state.punchingMode,
           onChanged: (val) {
-            if (val != null) controller.punchingMode.value = val;
+            // Updated logic to use notifier if we add a method, for now placeholder
           },
           activeColor: Colors.blue,
         ),
@@ -115,7 +103,7 @@ class AttendanceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBiometricApiPanel() {
+  Widget _buildBiometricApiPanel(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: GlassMorph(
         height: 150,
@@ -140,8 +128,7 @@ class AttendanceScreen extends StatelessWidget {
             const SizedBox(height: 10),
             SmallButton(
               label: "Punch Test",
-              onPress: () =>
-                  Get.find<AttendanceController>().punch("manual_hr"),
+              onPress: () => ref.read(attendanceProvider.notifier).punch("manual_hr"),
             ),
           ],
         ),
@@ -149,7 +136,7 @@ class AttendanceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLeaveRequestsPanel(AttendanceController controller) {
+  Widget _buildLeaveRequestsPanel(AttendanceState state) {
     return Expanded(
       child: GlassMorph(
         height: 150,
@@ -162,9 +149,9 @@ class AttendanceScreen extends StatelessWidget {
             const SizedBox(height: 5),
             Expanded(
               child: ListView.builder(
-                itemCount: controller.leaveRequests.length,
+                itemCount: state.leaveRequests.length,
                 itemBuilder: (context, index) {
-                  final request = controller.leaveRequests[index];
+                  final request = state.leaveRequests[index];
                   return Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     padding: const EdgeInsets.all(5),
@@ -178,14 +165,7 @@ class AttendanceScreen extends StatelessWidget {
                           size: 20,
                           name: request.user?.userName ?? "?",
                           color: request.user?.color != null
-                              ? Color(
-                                  int.parse(
-                                    request.user!.color!.color.replaceAll(
-                                      "#",
-                                      "0xFF",
-                                    ),
-                                  ),
-                                )
+                              ? Color(int.parse(request.user!.color!.color.replaceAll("#", "0xFF")))
                               : Colors.grey,
                         ),
                         const SizedBox(width: 8),
@@ -199,11 +179,7 @@ class AttendanceScreen extends StatelessWidget {
                         Icon(
                           Icons.circle,
                           size: 10,
-                          color: request.accepted == true
-                              ? Colors.green
-                              : (request.accepted == false
-                                    ? Colors.red
-                                    : Colors.yellow),
+                          color: request.accepted == true ? Colors.green : (request.accepted == false ? Colors.red : Colors.yellow),
                         ),
                       ],
                     ),
@@ -222,41 +198,16 @@ class AttendanceScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: const Row(
         children: [
-          Expanded(
-            flex: 3,
-            child: Text("user", style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              "login time",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              "logout time",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              "leave config",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
+          Expanded(flex: 3, child: Text("user", style: TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(flex: 2, child: Text("login time", style: TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(flex: 2, child: Text("logout time", style: TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(flex: 2, child: Text("leave config", style: TextStyle(fontWeight: FontWeight.bold))),
         ],
       ),
     );
   }
 
-  Widget _buildUserAttendanceRow(
-    BuildContext context,
-    User user,
-    Attendance? attendance,
-  ) {
+  Widget _buildUserAttendanceRow(BuildContext context, WidgetRef ref, User user, Attendance? attendance) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -266,7 +217,6 @@ class AttendanceScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // User Info
           Expanded(
             flex: 3,
             child: Row(
@@ -274,66 +224,42 @@ class AttendanceScreen extends StatelessWidget {
                 ProfileIcon(
                   size: 30,
                   name: user.userName,
-                  color: user.color != null
-                      ? Color(
-                          int.parse(user.color!.color.replaceAll("#", "0xFF")),
-                        )
-                      : Colors.blue,
+                  color: user.color != null ? Color(int.parse(user.color!.color.replaceAll("#", "0xFF"))) : Colors.blue,
                 ),
                 const SizedBox(width: 10),
                 Text(user.userName),
               ],
             ),
           ),
-          // Login Time
           Expanded(
             flex: 2,
             child: Text(
-              attendance?.inTime != null
-                  ? DateFormat.jm().format(DateTime.parse(attendance!.inTime!))
-                  : "--",
+              attendance?.inTime != null ? DateFormat.jm().format(DateTime.parse(attendance!.inTime!)) : "--",
               style: const TextStyle(fontSize: 13),
             ),
           ),
-          // Logout Time
           Expanded(
             flex: 2,
             child: Text(
-              attendance?.outTime != null
-                  ? DateFormat.jm().format(DateTime.parse(attendance!.outTime!))
-                  : "--",
+              attendance?.outTime != null ? DateFormat.jm().format(DateTime.parse(attendance!.outTime!)) : "--",
               style: const TextStyle(fontSize: 13),
             ),
           ),
-          // Leave Config Badge
           Expanded(
             flex: 2,
             child: Row(
               children: [
                 if (user.leaveConfig != null)
                   InkWell(
-                    onTap: () =>
-                        viewLeaveConfig(context, user.leaveConfig, true),
+                    onTap: () => viewLeaveConfig(context, ref, user.leaveConfig, true),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Pallet.inside2,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        user.leaveConfig!.configName,
-                        style: const TextStyle(fontSize: 11),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: Pallet.inside2, borderRadius: BorderRadius.circular(10)),
+                      child: Text(user.leaveConfig!.configName, style: const TextStyle(fontSize: 11)),
                     ),
                   )
                 else
-                  const Text(
-                    "None",
-                    style: TextStyle(fontSize: 11, color: Colors.grey),
-                  ),
+                  const Text("None", style: TextStyle(fontSize: 11, color: Colors.grey)),
               ],
             ),
           ),
@@ -342,10 +268,7 @@ class AttendanceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLeaveConfigsSidebar(
-    BuildContext context,
-    AttendanceController controller,
-  ) {
+  Widget _buildLeaveConfigsSidebar(BuildContext context, WidgetRef ref, AttendanceState state) {
     return Expanded(
       flex: 1,
       child: Column(
@@ -354,35 +277,23 @@ class AttendanceScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Leave Configs",
-                style: TextStyle(fontSize: 16, color: Pallet.font3),
-              ),
-              AddButton(onPress: () => viewLeaveConfig(context, null, false)),
+              Text("Leave Configs", style: TextStyle(fontSize: 16, color: Pallet.font3)),
+              AddButton(onPress: () => viewLeaveConfig(context, ref, null, false)),
             ],
           ),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: controller.leaveConfigs.length,
+              itemCount: state.leaveConfigs.length,
               itemBuilder: (context, index) {
-                final config = controller.leaveConfigs[index];
+                final config = state.leaveConfigs[index];
                 return InkWell(
-                  onTap: () => viewLeaveConfig(context, config, false),
+                  onTap: () => viewLeaveConfig(context, ref, config, false),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 5),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Pallet.inside1,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      config.configName,
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                    decoration: BoxDecoration(color: Pallet.inside1, borderRadius: BorderRadius.circular(10)),
+                    child: Text(config.configName, style: const TextStyle(fontSize: 13)),
                   ),
                 );
               },

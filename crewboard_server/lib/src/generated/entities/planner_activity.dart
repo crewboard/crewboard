@@ -362,7 +362,7 @@ class PlannerActivityRepository {
   /// );
   /// ```
   Future<List<PlannerActivity>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerActivityTable>? where,
     int? limit,
     int? offset,
@@ -370,6 +370,8 @@ class PlannerActivityRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<PlannerActivityTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<PlannerActivity>(
       where: where?.call(PlannerActivity.t),
@@ -379,6 +381,8 @@ class PlannerActivityRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -400,13 +404,15 @@ class PlannerActivityRepository {
   /// );
   /// ```
   Future<PlannerActivity?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerActivityTable>? where,
     int? offset,
     _i1.OrderByBuilder<PlannerActivityTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<PlannerActivityTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<PlannerActivity>(
       where: where?.call(PlannerActivity.t),
@@ -415,18 +421,24 @@ class PlannerActivityRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [PlannerActivity] by its [id] or null if no such row exists.
   Future<PlannerActivity?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<PlannerActivity>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -436,14 +448,20 @@ class PlannerActivityRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<PlannerActivity>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerActivity> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<PlannerActivity>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -451,7 +469,7 @@ class PlannerActivityRepository {
   ///
   /// The returned [PlannerActivity] will have its `id` field set.
   Future<PlannerActivity> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerActivity row, {
     _i1.Transaction? transaction,
   }) async {
@@ -467,7 +485,7 @@ class PlannerActivityRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<PlannerActivity>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerActivity> rows, {
     _i1.ColumnSelections<PlannerActivityTable>? columns,
     _i1.Transaction? transaction,
@@ -483,7 +501,7 @@ class PlannerActivityRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<PlannerActivity> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerActivity row, {
     _i1.ColumnSelections<PlannerActivityTable>? columns,
     _i1.Transaction? transaction,
@@ -498,7 +516,7 @@ class PlannerActivityRepository {
   /// Updates a single [PlannerActivity] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<PlannerActivity?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<PlannerActivityUpdateTable>
     columnValues,
@@ -514,7 +532,7 @@ class PlannerActivityRepository {
   /// Updates all [PlannerActivity]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<PlannerActivity>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<PlannerActivityUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<PlannerActivityTable> where,
@@ -541,7 +559,7 @@ class PlannerActivityRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<PlannerActivity>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerActivity> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -553,7 +571,7 @@ class PlannerActivityRepository {
 
   /// Deletes a single [PlannerActivity].
   Future<PlannerActivity> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerActivity row, {
     _i1.Transaction? transaction,
   }) async {
@@ -565,7 +583,7 @@ class PlannerActivityRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<PlannerActivity>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<PlannerActivityTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -578,7 +596,7 @@ class PlannerActivityRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerActivityTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -586,6 +604,22 @@ class PlannerActivityRepository {
     return session.db.count<PlannerActivity>(
       where: where?.call(PlannerActivity.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [PlannerActivity] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<PlannerActivityTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<PlannerActivity>(
+      where: where(PlannerActivity.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

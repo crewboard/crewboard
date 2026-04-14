@@ -62,8 +62,8 @@ abstract class ChatMessage implements _i1.SerializableModel {
       seenUserList: _i3.Protocol().deserialize<List<_i1.UuidValue>>(
         jsonSerialization['seenUserList'],
       ),
-      sameUser: jsonSerialization['sameUser'] as bool,
-      deleted: jsonSerialization['deleted'] as bool,
+      sameUser: _i1.BoolJsonExtension.fromJson(jsonSerialization['sameUser']),
+      deleted: _i1.BoolJsonExtension.fromJson(jsonSerialization['deleted']),
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),

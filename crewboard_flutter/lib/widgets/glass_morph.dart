@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/theme_controller.dart';
 
-class GlassMorph extends StatelessWidget {
+class GlassMorph extends ConsumerWidget {
   final Widget child;
   final double borderRadius;
   final double? width;
@@ -28,56 +28,58 @@ class GlassMorph extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeAsync = ref.watch(themeProvider);
 
-    return Obx(() {
-      final currentTheme = themeController.currentTheme;
-
-      if (currentTheme == AppTheme.glassDark ||
-          currentTheme == AppTheme.glassLight) {
-        return SizedBox(
-          width: width,
-          height: height,
-          child: Padding(
-            padding: margin,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(borderRadius),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
-                child: Container(padding: padding, color: color, child: child),
-              ),
-            ),
-          ),
-        );
-      } else {
-        // Classic Light or Dark Mode (Solid Design)
-        final isDark = currentTheme == AppTheme.classicDark;
-        final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
-        return SizedBox(
-          width: width,
-          height: height,
-          child: Padding(
-            padding: margin,
-            child: Container(
-              padding: padding,
-              decoration: BoxDecoration(
-                color: backgroundColor,
+    return themeAsync.when(
+      loading: () => const SizedBox.shrink(),
+      error: (e, s) => const SizedBox.shrink(),
+      data: (currentTheme) {
+        if (currentTheme == AppTheme.glassDark ||
+            currentTheme == AppTheme.glassLight) {
+          return SizedBox(
+            width: width,
+            height: height,
+            child: Padding(
+              padding: margin,
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(borderRadius),
-                boxShadow: [
-                  if (!isDark)
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                ],
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
+                  child: Container(padding: padding, color: color, child: child),
+                ),
               ),
-              child: child,
             ),
-          ),
-        );
-      }
-    });
+          );
+        } else {
+          // Classic Light or Dark Mode (Solid Design)
+          final isDark = currentTheme == AppTheme.classicDark;
+          final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+          return SizedBox(
+            width: width,
+            height: height,
+            child: Padding(
+              padding: margin,
+              child: Container(
+                padding: padding,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  boxShadow: [
+                    if (!isDark)
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                  ],
+                ),
+                child: child,
+              ),
+            ),
+          );
+        }
+      },
+    );
   }
 }

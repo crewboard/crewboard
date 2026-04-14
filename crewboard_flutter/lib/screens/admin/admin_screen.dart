@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/admin_controller.dart';
 
-class AdminScreen extends StatelessWidget {
+class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Ensure controller is available
-    final AdminController controller = Get.put(AdminController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPageWidget = ref.watch(adminPageWidgetProvider);
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Obx(() => controller.currentPageWidget),
+      child: currentPageWidget,
     );
   }
 }

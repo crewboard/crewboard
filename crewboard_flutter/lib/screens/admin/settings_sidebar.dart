@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/palette.dart';
 import '../../controllers/admin_controller.dart';
 
-class SettingsSidebar extends StatelessWidget {
+class SettingsSidebar extends ConsumerWidget {
   const SettingsSidebar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Ensure controller is available
-    final AdminController controller = Get.put(AdminController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPage = ref.watch(adminProvider);
+    final notifier = ref.read(adminProvider.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,49 +27,39 @@ class SettingsSidebar extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        Obx(
-          () => SideBarButton(
-            label: 'General',
-            isActive: controller.currentPage.value == AdminPage.general,
-            onTap: () => controller.navigateTo(AdminPage.general),
-            icon: Icons.settings,
-          ),
+        SideBarButton(
+          label: 'General',
+          isActive: currentPage == AdminPage.general,
+          onTap: () => notifier.navigateTo(AdminPage.general),
+          icon: Icons.settings,
         ),
         const SizedBox(height: 10),
-        Obx(
-          () => SideBarButton(
-            label: 'Users',
-            isActive: controller.currentPage.value == AdminPage.users,
-            onTap: () => controller.navigateTo(AdminPage.users),
-            icon: Icons.people,
-          ),
+        SideBarButton(
+          label: 'Users',
+          isActive: currentPage == AdminPage.users,
+          onTap: () => notifier.navigateTo(AdminPage.users),
+          icon: Icons.people,
         ),
         const SizedBox(height: 10),
-        Obx(
-          () => SideBarButton(
-            label: 'Attendance',
-            isActive: controller.currentPage.value == AdminPage.attendance,
-            onTap: () => controller.navigateTo(AdminPage.attendance),
-            icon: Icons.access_time,
-          ),
+        SideBarButton(
+          label: 'Attendance',
+          isActive: currentPage == AdminPage.attendance,
+          onTap: () => notifier.navigateTo(AdminPage.attendance),
+          icon: Icons.access_time,
         ),
         const SizedBox(height: 10),
-        Obx(
-          () => SideBarButton(
-            label: 'Planner',
-            isActive: controller.currentPage.value == AdminPage.planner,
-            onTap: () => controller.navigateTo(AdminPage.planner),
-            icon: Icons.event_note,
-          ),
+        SideBarButton(
+          label: 'Planner',
+          isActive: currentPage == AdminPage.planner,
+          onTap: () => notifier.navigateTo(AdminPage.planner),
+          icon: Icons.event_note,
         ),
         const SizedBox(height: 10),
-        Obx(
-          () => SideBarButton(
-            label: 'Documentation',
-            isActive: controller.currentPage.value == AdminPage.documentation,
-            onTap: () => controller.navigateTo(AdminPage.documentation),
-            icon: Icons.description,
-          ),
+        SideBarButton(
+          label: 'Documentation',
+          isActive: currentPage == AdminPage.documentation,
+          onTap: () => notifier.navigateTo(AdminPage.documentation),
+          icon: Icons.description,
         ),
       ],
     );

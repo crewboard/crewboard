@@ -16,11 +16,15 @@ abstract class StatusModel implements _i1.SerializableModel {
   StatusModel._({
     required this.statusId,
     required this.statusName,
+    required this.working,
+    required this.completed,
   });
 
   factory StatusModel({
     required _i1.UuidValue statusId,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) = _StatusModelImpl;
 
   factory StatusModel.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -29,6 +33,8 @@ abstract class StatusModel implements _i1.SerializableModel {
         jsonSerialization['statusId'],
       ),
       statusName: jsonSerialization['statusName'] as String,
+      working: _i1.BoolJsonExtension.fromJson(jsonSerialization['working']),
+      completed: _i1.BoolJsonExtension.fromJson(jsonSerialization['completed']),
     );
   }
 
@@ -36,12 +42,18 @@ abstract class StatusModel implements _i1.SerializableModel {
 
   String statusName;
 
+  bool working;
+
+  bool completed;
+
   /// Returns a shallow copy of this [StatusModel]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   StatusModel copyWith({
     _i1.UuidValue? statusId,
     String? statusName,
+    bool? working,
+    bool? completed,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -49,6 +61,8 @@ abstract class StatusModel implements _i1.SerializableModel {
       '__className__': 'StatusModel',
       'statusId': statusId.toJson(),
       'statusName': statusName,
+      'working': working,
+      'completed': completed,
     };
   }
 
@@ -62,9 +76,13 @@ class _StatusModelImpl extends StatusModel {
   _StatusModelImpl({
     required _i1.UuidValue statusId,
     required String statusName,
+    required bool working,
+    required bool completed,
   }) : super._(
          statusId: statusId,
          statusName: statusName,
+         working: working,
+         completed: completed,
        );
 
   /// Returns a shallow copy of this [StatusModel]
@@ -74,10 +92,14 @@ class _StatusModelImpl extends StatusModel {
   StatusModel copyWith({
     _i1.UuidValue? statusId,
     String? statusName,
+    bool? working,
+    bool? completed,
   }) {
     return StatusModel(
       statusId: statusId ?? this.statusId,
       statusName: statusName ?? this.statusName,
+      working: working ?? this.working,
+      completed: completed ?? this.completed,
     );
   }
 }

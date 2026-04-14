@@ -1,56 +1,37 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../config/palette.dart';
 
 enum AppTheme { glassDark, glassLight, classicLight, classicDark }
 
-class ThemeController extends GetxController {
-  final _currentTheme = AppTheme.glassDark.obs;
-  AppTheme get currentTheme => _currentTheme.value;
+final themeProvider = AsyncNotifierProvider<ThemeNotifier, AppTheme>(ThemeNotifier.new);
 
+class ThemeNotifier extends AsyncNotifier<AppTheme> {
   static const String _themeKey = 'app_theme';
 
   @override
-  void onInit() {
-    super.onInit();
-    _loadTheme();
-  }
-
-  Future<void> _loadTheme() async {
+  FutureOr<AppTheme> build() async {
     final prefs = await SharedPreferences.getInstance();
     final themeString = prefs.getString(_themeKey);
-    if (themeString != null) {
-      _currentTheme.value = AppTheme.values.firstWhere(
-        (e) => e.toString() == themeString,
-        orElse: () => AppTheme.glassDark,
-      );
-    }
+    final theme = themeString != null
+        ? AppTheme.values.firstWhere(
+            (e) => e.toString() == themeString,
+            orElse: () => AppTheme.glassDark,
+          )
+        : AppTheme.glassDark;
+
+    // Sync static Pallet
+    Pallet.setTheme(theme);
+    return theme;
   }
 
   Future<void> setTheme(AppTheme theme) async {
-    _currentTheme.value = theme;
+    state = AsyncData(theme);
+    Pallet.setTheme(theme);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_themeKey, theme.toString());
-
-    // Update Global Theme if needed
-    _updateGlobalTheme();
-  }
-
-  void _updateGlobalTheme() {
-    switch (_currentTheme.value) {
-      case AppTheme.classicLight:
-        Get.changeTheme(ThemeData.light());
-        break;
-      case AppTheme.classicDark:
-        Get.changeTheme(ThemeData.dark());
-        break;
-      case AppTheme.glassDark:
-        Get.changeTheme(ThemeData.dark());
-        break;
-      case AppTheme.glassLight:
-        Get.changeTheme(ThemeData.light());
-        break;
-    }
   }
 
   String getThemeName(AppTheme theme) {

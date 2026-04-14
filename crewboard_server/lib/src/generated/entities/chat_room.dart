@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -367,7 +366,7 @@ class ChatRoomRepository {
   /// );
   /// ```
   Future<List<ChatRoom>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChatRoomTable>? where,
     int? limit,
     int? offset,
@@ -376,6 +375,8 @@ class ChatRoomRepository {
     _i1.OrderByListBuilder<ChatRoomTable>? orderByList,
     _i1.Transaction? transaction,
     ChatRoomInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<ChatRoom>(
       where: where?.call(ChatRoom.t),
@@ -386,6 +387,8 @@ class ChatRoomRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -407,7 +410,7 @@ class ChatRoomRepository {
   /// );
   /// ```
   Future<ChatRoom?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChatRoomTable>? where,
     int? offset,
     _i1.OrderByBuilder<ChatRoomTable>? orderBy,
@@ -415,6 +418,8 @@ class ChatRoomRepository {
     _i1.OrderByListBuilder<ChatRoomTable>? orderByList,
     _i1.Transaction? transaction,
     ChatRoomInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<ChatRoom>(
       where: where?.call(ChatRoom.t),
@@ -424,20 +429,26 @@ class ChatRoomRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [ChatRoom] by its [id] or null if no such row exists.
   Future<ChatRoom?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     ChatRoomInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<ChatRoom>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -447,14 +458,20 @@ class ChatRoomRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<ChatRoom>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChatRoom> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<ChatRoom>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -462,7 +479,7 @@ class ChatRoomRepository {
   ///
   /// The returned [ChatRoom] will have its `id` field set.
   Future<ChatRoom> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChatRoom row, {
     _i1.Transaction? transaction,
   }) async {
@@ -478,7 +495,7 @@ class ChatRoomRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<ChatRoom>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChatRoom> rows, {
     _i1.ColumnSelections<ChatRoomTable>? columns,
     _i1.Transaction? transaction,
@@ -494,7 +511,7 @@ class ChatRoomRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<ChatRoom> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChatRoom row, {
     _i1.ColumnSelections<ChatRoomTable>? columns,
     _i1.Transaction? transaction,
@@ -509,7 +526,7 @@ class ChatRoomRepository {
   /// Updates a single [ChatRoom] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<ChatRoom?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<ChatRoomUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -524,7 +541,7 @@ class ChatRoomRepository {
   /// Updates all [ChatRoom]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<ChatRoom>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<ChatRoomUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<ChatRoomTable> where,
     int? limit,
@@ -550,7 +567,7 @@ class ChatRoomRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<ChatRoom>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChatRoom> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -562,7 +579,7 @@ class ChatRoomRepository {
 
   /// Deletes a single [ChatRoom].
   Future<ChatRoom> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChatRoom row, {
     _i1.Transaction? transaction,
   }) async {
@@ -574,7 +591,7 @@ class ChatRoomRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<ChatRoom>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<ChatRoomTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -587,7 +604,7 @@ class ChatRoomRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChatRoomTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -595,6 +612,22 @@ class ChatRoomRepository {
     return session.db.count<ChatRoom>(
       where: where?.call(ChatRoom.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [ChatRoom] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<ChatRoomTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<ChatRoom>(
+      where: where(ChatRoom.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -606,7 +639,7 @@ class ChatRoomAttachRowRepository {
   /// Creates a relation between the given [ChatRoom] and [ChatMessage]
   /// by setting the [ChatRoom]'s foreign key `lastMessageId` to refer to the [ChatMessage].
   Future<void> lastMessage(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChatRoom chatRoom,
     _i2.ChatMessage lastMessage, {
     _i1.Transaction? transaction,
@@ -636,7 +669,7 @@ class ChatRoomDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> lastMessage(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChatRoom chatRoom, {
     _i1.Transaction? transaction,
   }) async {

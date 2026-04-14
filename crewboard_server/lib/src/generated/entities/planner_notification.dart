@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -413,7 +412,7 @@ class PlannerNotificationRepository {
   /// );
   /// ```
   Future<List<PlannerNotification>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerNotificationTable>? where,
     int? limit,
     int? offset,
@@ -422,6 +421,8 @@ class PlannerNotificationRepository {
     _i1.OrderByListBuilder<PlannerNotificationTable>? orderByList,
     _i1.Transaction? transaction,
     PlannerNotificationInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<PlannerNotification>(
       where: where?.call(PlannerNotification.t),
@@ -432,6 +433,8 @@ class PlannerNotificationRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -453,7 +456,7 @@ class PlannerNotificationRepository {
   /// );
   /// ```
   Future<PlannerNotification?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerNotificationTable>? where,
     int? offset,
     _i1.OrderByBuilder<PlannerNotificationTable>? orderBy,
@@ -461,6 +464,8 @@ class PlannerNotificationRepository {
     _i1.OrderByListBuilder<PlannerNotificationTable>? orderByList,
     _i1.Transaction? transaction,
     PlannerNotificationInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<PlannerNotification>(
       where: where?.call(PlannerNotification.t),
@@ -470,20 +475,26 @@ class PlannerNotificationRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [PlannerNotification] by its [id] or null if no such row exists.
   Future<PlannerNotification?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     PlannerNotificationInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<PlannerNotification>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -493,14 +504,20 @@ class PlannerNotificationRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<PlannerNotification>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerNotification> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<PlannerNotification>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -508,7 +525,7 @@ class PlannerNotificationRepository {
   ///
   /// The returned [PlannerNotification] will have its `id` field set.
   Future<PlannerNotification> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerNotification row, {
     _i1.Transaction? transaction,
   }) async {
@@ -524,7 +541,7 @@ class PlannerNotificationRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<PlannerNotification>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerNotification> rows, {
     _i1.ColumnSelections<PlannerNotificationTable>? columns,
     _i1.Transaction? transaction,
@@ -540,7 +557,7 @@ class PlannerNotificationRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<PlannerNotification> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerNotification row, {
     _i1.ColumnSelections<PlannerNotificationTable>? columns,
     _i1.Transaction? transaction,
@@ -555,7 +572,7 @@ class PlannerNotificationRepository {
   /// Updates a single [PlannerNotification] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<PlannerNotification?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<PlannerNotificationUpdateTable>
     columnValues,
@@ -571,7 +588,7 @@ class PlannerNotificationRepository {
   /// Updates all [PlannerNotification]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<PlannerNotification>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<PlannerNotificationUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<PlannerNotificationTable> where,
@@ -598,7 +615,7 @@ class PlannerNotificationRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<PlannerNotification>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<PlannerNotification> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -610,7 +627,7 @@ class PlannerNotificationRepository {
 
   /// Deletes a single [PlannerNotification].
   Future<PlannerNotification> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerNotification row, {
     _i1.Transaction? transaction,
   }) async {
@@ -622,7 +639,7 @@ class PlannerNotificationRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<PlannerNotification>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<PlannerNotificationTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -635,7 +652,7 @@ class PlannerNotificationRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<PlannerNotificationTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -643,6 +660,22 @@ class PlannerNotificationRepository {
     return session.db.count<PlannerNotification>(
       where: where?.call(PlannerNotification.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [PlannerNotification] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<PlannerNotificationTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<PlannerNotification>(
+      where: where(PlannerNotification.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -654,7 +687,7 @@ class PlannerNotificationAttachRowRepository {
   /// Creates a relation between the given [PlannerNotification] and [Ticket]
   /// by setting the [PlannerNotification]'s foreign key `ticketId` to refer to the [Ticket].
   Future<void> ticket(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerNotification plannerNotification,
     _i2.Ticket ticket, {
     _i1.Transaction? transaction,
@@ -679,7 +712,7 @@ class PlannerNotificationAttachRowRepository {
   /// Creates a relation between the given [PlannerNotification] and [User]
   /// by setting the [PlannerNotification]'s foreign key `userId` to refer to the [User].
   Future<void> user(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     PlannerNotification plannerNotification,
     _i3.User user, {
     _i1.Transaction? transaction,

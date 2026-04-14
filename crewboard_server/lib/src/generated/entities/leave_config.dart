@@ -283,7 +283,7 @@ class LeaveConfigRepository {
   /// );
   /// ```
   Future<List<LeaveConfig>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveConfigTable>? where,
     int? limit,
     int? offset,
@@ -291,6 +291,8 @@ class LeaveConfigRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<LeaveConfigTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<LeaveConfig>(
       where: where?.call(LeaveConfig.t),
@@ -300,6 +302,8 @@ class LeaveConfigRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -321,13 +325,15 @@ class LeaveConfigRepository {
   /// );
   /// ```
   Future<LeaveConfig?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveConfigTable>? where,
     int? offset,
     _i1.OrderByBuilder<LeaveConfigTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<LeaveConfigTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<LeaveConfig>(
       where: where?.call(LeaveConfig.t),
@@ -336,18 +342,24 @@ class LeaveConfigRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [LeaveConfig] by its [id] or null if no such row exists.
   Future<LeaveConfig?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<LeaveConfig>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -357,14 +369,20 @@ class LeaveConfigRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<LeaveConfig>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveConfig> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<LeaveConfig>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -372,7 +390,7 @@ class LeaveConfigRepository {
   ///
   /// The returned [LeaveConfig] will have its `id` field set.
   Future<LeaveConfig> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveConfig row, {
     _i1.Transaction? transaction,
   }) async {
@@ -388,7 +406,7 @@ class LeaveConfigRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<LeaveConfig>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveConfig> rows, {
     _i1.ColumnSelections<LeaveConfigTable>? columns,
     _i1.Transaction? transaction,
@@ -404,7 +422,7 @@ class LeaveConfigRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<LeaveConfig> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveConfig row, {
     _i1.ColumnSelections<LeaveConfigTable>? columns,
     _i1.Transaction? transaction,
@@ -419,7 +437,7 @@ class LeaveConfigRepository {
   /// Updates a single [LeaveConfig] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<LeaveConfig?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<LeaveConfigUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -434,7 +452,7 @@ class LeaveConfigRepository {
   /// Updates all [LeaveConfig]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<LeaveConfig>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<LeaveConfigUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<LeaveConfigTable> where,
     int? limit,
@@ -460,7 +478,7 @@ class LeaveConfigRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<LeaveConfig>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<LeaveConfig> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -472,7 +490,7 @@ class LeaveConfigRepository {
 
   /// Deletes a single [LeaveConfig].
   Future<LeaveConfig> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     LeaveConfig row, {
     _i1.Transaction? transaction,
   }) async {
@@ -484,7 +502,7 @@ class LeaveConfigRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<LeaveConfig>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<LeaveConfigTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -497,7 +515,7 @@ class LeaveConfigRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<LeaveConfigTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -505,6 +523,22 @@ class LeaveConfigRepository {
     return session.db.count<LeaveConfig>(
       where: where?.call(LeaveConfig.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [LeaveConfig] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<LeaveConfigTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<LeaveConfig>(
+      where: where(LeaveConfig.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

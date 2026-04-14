@@ -14,4 +14,7 @@ fields:
   createdAt: DateTime?
   hasNewActivity: bool, default=false
   latestActivity: String?
+  working: bool, default=false
+  completed: bool, default=false
+  completedAt: DateTime?
   attachments: List<protocol:AttachmentModel>?

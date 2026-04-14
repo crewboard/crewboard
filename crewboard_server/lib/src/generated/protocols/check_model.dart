@@ -27,7 +27,7 @@ abstract class CheckModel
   factory CheckModel.fromJson(Map<String, dynamic> jsonSerialization) {
     return CheckModel(
       label: jsonSerialization['label'] as String,
-      selected: jsonSerialization['selected'] as bool,
+      selected: _i1.BoolJsonExtension.fromJson(jsonSerialization['selected']),
     );
   }
 

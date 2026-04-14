@@ -287,7 +287,7 @@ class FlowModelRepository {
   /// );
   /// ```
   Future<List<FlowModel>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FlowModelTable>? where,
     int? limit,
     int? offset,
@@ -295,6 +295,8 @@ class FlowModelRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<FlowModelTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FlowModel>(
       where: where?.call(FlowModel.t),
@@ -304,6 +306,8 @@ class FlowModelRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -325,13 +329,15 @@ class FlowModelRepository {
   /// );
   /// ```
   Future<FlowModel?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FlowModelTable>? where,
     int? offset,
     _i1.OrderByBuilder<FlowModelTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<FlowModelTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FlowModel>(
       where: where?.call(FlowModel.t),
@@ -340,18 +346,24 @@ class FlowModelRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [FlowModel] by its [id] or null if no such row exists.
   Future<FlowModel?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FlowModel>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -361,14 +373,20 @@ class FlowModelRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<FlowModel>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FlowModel> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<FlowModel>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -376,7 +394,7 @@ class FlowModelRepository {
   ///
   /// The returned [FlowModel] will have its `id` field set.
   Future<FlowModel> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FlowModel row, {
     _i1.Transaction? transaction,
   }) async {
@@ -392,7 +410,7 @@ class FlowModelRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<FlowModel>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FlowModel> rows, {
     _i1.ColumnSelections<FlowModelTable>? columns,
     _i1.Transaction? transaction,
@@ -408,7 +426,7 @@ class FlowModelRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<FlowModel> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FlowModel row, {
     _i1.ColumnSelections<FlowModelTable>? columns,
     _i1.Transaction? transaction,
@@ -423,7 +441,7 @@ class FlowModelRepository {
   /// Updates a single [FlowModel] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<FlowModel?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<FlowModelUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -438,7 +456,7 @@ class FlowModelRepository {
   /// Updates all [FlowModel]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<FlowModel>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<FlowModelUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<FlowModelTable> where,
     int? limit,
@@ -464,7 +482,7 @@ class FlowModelRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<FlowModel>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FlowModel> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -476,7 +494,7 @@ class FlowModelRepository {
 
   /// Deletes a single [FlowModel].
   Future<FlowModel> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FlowModel row, {
     _i1.Transaction? transaction,
   }) async {
@@ -488,7 +506,7 @@ class FlowModelRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<FlowModel>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<FlowModelTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -501,7 +519,7 @@ class FlowModelRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FlowModelTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -509,6 +527,22 @@ class FlowModelRepository {
     return session.db.count<FlowModel>(
       where: where?.call(FlowModel.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [FlowModel] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<FlowModelTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<FlowModel>(
+      where: where(FlowModel.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

@@ -48,7 +48,7 @@ abstract class UserTypes implements _i1.SerializableModel {
               jsonSerialization['color'],
             ),
       permissions: jsonSerialization['permissions'] as String,
-      isAdmin: jsonSerialization['isAdmin'] as bool,
+      isAdmin: _i1.BoolJsonExtension.fromJson(jsonSerialization['isAdmin']),
     );
   }
 

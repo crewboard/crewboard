@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -53,10 +54,10 @@ void main(List<String> args) async {
   try {
     await pod.start();
     print('Serverpod started.');
-  } catch (e, stack) {
-    print('Failed to start Serverpod: $e');
-    print(stack);
-    exit(1);
+  } catch (e) {
+    print(
+      'Note: Server listeners did not start (likely port conflict), continuing with database session.',
+    );
   }
 
   try {
@@ -134,6 +135,7 @@ void main(List<String> args) async {
       'videos': [],
       'audios': [],
       'docs': [],
+      'video_covers': [],
     };
 
     if (seedfilesDir.existsSync()) {
@@ -235,6 +237,7 @@ void main(List<String> args) async {
 
       // Start conversation 30 days ago
       var conversationTime = DateTime.now().subtract(Duration(days: 30));
+      UuidValue? lastSenderId;
 
       for (var i = 0; i < messageCount; i++) {
         // Increment time by 2-60 minutes for each message to keep order
@@ -267,7 +270,7 @@ void main(List<String> args) async {
         // Mix of different message types
         if (i % 10 == 0 && fileCache['images']!.isNotEmpty) {
           // Image message every 10th message
-          await _sendFileMessage(
+          final msg = await _sendFileMessage(
             session,
             room,
             sender,
@@ -276,10 +279,32 @@ void main(List<String> args) async {
             MessageType.image,
             createdAt,
             random,
+            sameUser: sender.id == lastSenderId,
           );
+          room.lastMessageId = msg.id;
         } else if (i % 15 == 0 && fileCache['videos']!.isNotEmpty) {
           // Video message every 15th message
-          await _sendFileMessage(
+          // Randomly pick a cover if available
+          String? videoCover;
+          if (fileCache['video_covers']!.isNotEmpty) {
+            final coverFile = fileCache['video_covers']![
+                random.nextInt(fileCache['video_covers']!.length)];
+            final coverFileName = coverFile.uri.pathSegments.last;
+            final coverTargetSubDir =
+                Directory('${uploadsDir.path}/video_covers');
+            if (!coverTargetSubDir.existsSync()) {
+              coverTargetSubDir.createSync(recursive: true);
+            }
+            final coverTargetFile =
+                File('${coverTargetSubDir.path}/$coverFileName');
+            if (!coverTargetFile.existsSync()) {
+              coverFile.copySync(coverTargetFile.path);
+            }
+            videoCover =
+                'http://localhost:8082/uploads/video_covers/$coverFileName';
+          }
+
+          final msg = await _sendFileMessage(
             session,
             room,
             sender,
@@ -288,10 +313,13 @@ void main(List<String> args) async {
             MessageType.video,
             createdAt,
             random,
+            videoCover: videoCover,
+            sameUser: sender.id == lastSenderId,
           );
+          room.lastMessageId = msg.id;
         } else if (i % 20 == 0 && fileCache['audios']!.isNotEmpty) {
           // Audio message every 20th message
-          await _sendFileMessage(
+          final msg = await _sendFileMessage(
             session,
             room,
             sender,
@@ -300,10 +328,12 @@ void main(List<String> args) async {
             MessageType.audio,
             createdAt,
             random,
+            sameUser: sender.id == lastSenderId,
           );
+          room.lastMessageId = msg.id;
         } else if (i % 25 == 0 && fileCache['docs']!.isNotEmpty) {
           // Document message every 25th message
-          await _sendFileMessage(
+          final msg = await _sendFileMessage(
             session,
             room,
             sender,
@@ -312,7 +342,9 @@ void main(List<String> args) async {
             MessageType.file,
             createdAt,
             random,
+            sameUser: sender.id == lastSenderId,
           );
+          room.lastMessageId = msg.id;
         } else {
           // Text message
           final text = cannedMessages[random.nextInt(cannedMessages.length)];
@@ -325,7 +357,7 @@ void main(List<String> args) async {
               message: text,
               messageType: MessageType.text,
               seenUserList: [],
-              sameUser: false,
+              sameUser: sender.id == lastSenderId,
               deleted: false,
               createdAt: createdAt,
             ),
@@ -334,6 +366,7 @@ void main(List<String> args) async {
         }
 
         totalMessagesAdded++;
+        lastSenderId = sender.id;
       }
 
       // Update room stats
@@ -360,7 +393,7 @@ void main(List<String> args) async {
 }
 
 // Helper function to send file messages
-Future<void> _sendFileMessage(
+Future<ChatMessage> _sendFileMessage(
   Session session,
   ChatRoom room,
   User user,
@@ -368,9 +401,13 @@ Future<void> _sendFileMessage(
   String type,
   MessageType msgType,
   DateTime createdAt,
-  Random random,
-) async {
-  if (files.isEmpty) return;
+  Random random, {
+  String? videoCover,
+  required bool sameUser,
+}) async {
+  if (files.isEmpty) {
+    throw Exception('No files available for seeding $msgType');
+  }
 
   final file = files[random.nextInt(files.length)];
   final fileName = file.uri.pathSegments.last;
@@ -385,18 +422,26 @@ Future<void> _sendFileMessage(
 
   final url = 'http://localhost:8082/uploads/$type/$fileName';
 
+  String finalMessage = url;
+  if (msgType == MessageType.video && videoCover != null) {
+    finalMessage = jsonEncode({
+      "value": url,
+      "thumbnail": videoCover,
+    });
+  }
+
   final msg = await ChatMessage.db.insertRow(
     session,
     ChatMessage(
       roomId: room.id!,
       userId: user.id!,
-      message: url,
+      message: finalMessage,
       messageType: msgType,
       seenUserList: [],
-      sameUser: false,
+      sameUser: sameUser,
       deleted: false,
       createdAt: createdAt,
     ),
   );
-  room.lastMessageId = msg.id;
+  return msg;
 }

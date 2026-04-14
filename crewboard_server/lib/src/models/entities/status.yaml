@@ -3,3 +3,5 @@ table: status
 fields:
   id: UuidValue?, defaultPersist=random
   statusName: String
+  working: bool
+  completed: bool

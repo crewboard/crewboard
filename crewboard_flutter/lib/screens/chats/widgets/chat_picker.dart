@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../../../controllers/giphy_controller.dart';
 import '../../../controllers/messages_controller.dart';
@@ -10,19 +10,23 @@ import 'emoji_picker_widget.dart';
 
 enum PickerTab { emoji, gifs, stickers }
 
-class ChatPicker extends StatefulWidget {
+class ChatPicker extends ConsumerStatefulWidget {
   const ChatPicker({super.key});
 
   @override
-  State<ChatPicker> createState() => _ChatPickerState();
+  ConsumerState<ChatPicker> createState() => _ChatPickerState();
 }
 
-class _ChatPickerState extends State<ChatPicker> {
-  final GiphyController giphyController = Get.find<GiphyController>();
-  final MessagesController messagesController = Get.find<MessagesController>();
+class _ChatPickerState extends ConsumerState<ChatPicker> {
   final TextEditingController searchController = TextEditingController();
   PickerTab selectedTab = PickerTab.emoji;
   String searchQuery = "";
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class _ChatPickerState extends State<ChatPicker> {
                   searchQuery = value;
                 });
                 if (selectedTab == PickerTab.gifs) {
-                  giphyController.search(value);
+                  ref.read(giphyProvider.notifier).search(value);
                 }
               },
             ),
@@ -63,7 +67,7 @@ class _ChatPickerState extends State<ChatPicker> {
         return EmojiPickerWidget(
           searchQuery: searchQuery,
           onEmojiSelected: (Emoji emoji) {
-            messagesController.addEmojiToMessage(emoji.emoji);
+            ref.read(messagesProvider.notifier).addEmojiToMessage(emoji.emoji);
           },
         );
       case PickerTab.gifs:
@@ -83,64 +87,64 @@ class _ChatPickerState extends State<ChatPicker> {
   }
 
   Widget _buildGiphyBody() {
-    return Obx(() {
-      if (giphyController.isLoading.value &&
-          (giphyController.isSearching.value
-              ? giphyController.searchResults.isEmpty
-              : giphyController.trendingGifs.isEmpty)) {
-        return const Center(child: CircularProgressIndicator());
-      }
+    final giphyState = ref.watch(giphyProvider);
+    
+    if (giphyState.isLoading &&
+        (giphyState.isSearching
+            ? giphyState.searchResults.isEmpty
+            : giphyState.trendingGifs.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-      final List<Gif> gifs = giphyController.isSearching.value
-          ? giphyController.searchResults
-          : giphyController.trendingGifs;
+    final List<Gif> gifs = giphyState.isSearching
+        ? giphyState.searchResults
+        : giphyState.trendingGifs;
 
-      if (gifs.isEmpty) {
-        return Center(
-          child: Text(
-            giphyController.isSearching.value
-                ? "No GIFs found."
-                : "No trending GIFs.",
-            style: TextStyle(color: Pallet.font2),
+    if (gifs.isEmpty) {
+      return Center(
+        child: Text(
+          giphyState.isSearching
+              ? "No GIFs found."
+              : "No trending GIFs.",
+          style: TextStyle(color: Pallet.font2),
+        ),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(5),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 5,
+      ),
+      itemCount: gifs.length,
+      itemBuilder: (context, index) {
+        final gif = gifs[index];
+        return InkWell(
+          onTap: () => ref.read(messagesProvider.notifier).sendInlineGifMessage(gif),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image.network(
+              gif.previewUrl ?? gif.url,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+            ),
           ),
         );
-      }
-
-      return GridView.builder(
-        padding: const EdgeInsets.all(5),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.5,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-        ),
-        itemCount: gifs.length,
-        itemBuilder: (context, index) {
-          final gif = gifs[index];
-          return InkWell(
-            onTap: () => messagesController.sendInlineGifMessage(gif),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                gif.previewUrl ?? gif.url,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
-      );
-    });
+      },
+    );
   }
 
   Widget _buildTabs() {
@@ -163,7 +167,7 @@ class _ChatPickerState extends State<ChatPicker> {
             // Clear search or re-trigger search for the new tab?
             // For now, keep query and re-trigger if needed
             if (tab == PickerTab.gifs && searchQuery.isNotEmpty) {
-              giphyController.search(searchQuery);
+              ref.read(giphyProvider.notifier).search(searchQuery);
             }
           });
         },

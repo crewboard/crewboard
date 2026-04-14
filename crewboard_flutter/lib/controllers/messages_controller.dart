@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:mime/mime.dart';
@@ -11,22 +11,85 @@ import 'package:flutter/services.dart';
 import 'rooms_controller.dart';
 import 'emoji_controller.dart';
 import 'auth_controller.dart';
+import 'dart:convert';
 import 'package:waveform_extractor/waveform_extractor.dart';
 
-class MessagesController extends GetxController {
-  final RxList<ChatMessage> messages = <ChatMessage>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxBool isDragging = false.obs;
-  final RxList<File> attachedFiles = <File>[].obs;
-  final RxBool showFilePreview = false.obs;
+class MessagesState {
+  final List<ChatMessage> messages;
+  final bool isLoading;
+  final bool isDragging;
+  final List<File> attachedFiles;
+  final bool showFilePreview;
+  final List<Emoji> autocompleteEmojis;
+  final int selectedAutocompleteIndex;
+  final bool showAutocomplete;
+  final List<TypingIndicator> typingUsers;
+  final ChatMessage? reply;
+  final ChatMessage? edit;
 
-  // User cache for displaying message author info
+  MessagesState({
+    this.messages = const [],
+    this.isLoading = false,
+    this.isDragging = false,
+    this.attachedFiles = const [],
+    this.showFilePreview = false,
+    this.autocompleteEmojis = const [],
+    this.selectedAutocompleteIndex = 0,
+    this.showAutocomplete = false,
+    this.typingUsers = const [],
+    this.reply,
+    this.edit,
+  });
+
+  MessagesState copyWith({
+    List<ChatMessage>? messages,
+    bool? isLoading,
+    bool? isDragging,
+    List<File>? attachedFiles,
+    bool? showFilePreview,
+    List<Emoji>? autocompleteEmojis,
+    int? selectedAutocompleteIndex,
+    bool? showAutocomplete,
+    List<TypingIndicator>? typingUsers,
+    ChatMessage? reply,
+    ChatMessage? edit,
+    bool clearReply = false,
+    bool clearEdit = false,
+  }) {
+    return MessagesState(
+      messages: messages ?? this.messages,
+      isLoading: isLoading ?? this.isLoading,
+      isDragging: isDragging ?? this.isDragging,
+      attachedFiles: attachedFiles ?? this.attachedFiles,
+      showFilePreview: showFilePreview ?? this.showFilePreview,
+      autocompleteEmojis: autocompleteEmojis ?? this.autocompleteEmojis,
+      selectedAutocompleteIndex:
+          selectedAutocompleteIndex ?? this.selectedAutocompleteIndex,
+      showAutocomplete: showAutocomplete ?? this.showAutocomplete,
+      typingUsers: typingUsers ?? this.typingUsers,
+      reply: clearReply ? null : (reply ?? this.reply),
+      edit: clearEdit ? null : (edit ?? this.edit),
+    );
+  }
+}
+
+final messagesProvider = NotifierProvider<MessagesNotifier, MessagesState>(MessagesNotifier.new);
+
+class MessagesNotifier extends Notifier<MessagesState> {
   final Map<UuidValue, User> _userCache = {};
+  StreamSubscription<ChatStreamEvent>? _subscription;
+  Timer? _typingDebounce;
+  final TextEditingController messageController = TextEditingController();
 
-  // Autocomplete state
-  final RxList<Emoji> autocompleteEmojis = <Emoji>[].obs;
-  final RxInt selectedAutocompleteIndex = 0.obs;
-  final RxBool showAutocomplete = false.obs;
+  @override
+  MessagesState build() {
+    ref.onDispose(() {
+      _subscription?.cancel();
+      _typingDebounce?.cancel();
+      messageController.dispose();
+    });
+    return MessagesState();
+  }
 
   void addEmojiToMessage(String emoji) {
     print("Adding emoji: $emoji");
@@ -46,11 +109,31 @@ class MessagesController extends GetxController {
     }
   }
 
+  void setReply(ChatMessage? message) {
+    if (message == null) {
+      state = state.copyWith(clearReply: true);
+    } else {
+      state = state.copyWith(reply: message);
+    }
+  }
+
+  void setEdit(ChatMessage? message) {
+    if (message == null) {
+      state = state.copyWith(clearEdit: true);
+    } else {
+      state = state.copyWith(edit: message);
+    }
+  }
+
+  void setIsDragging(bool dragging) {
+    state = state.copyWith(isDragging: dragging);
+  }
+
   Future<void> sendGifMessage(GiphyGif gif) async {
     print("Sending GIF: ${gif.id}");
     if (gif.images?.original?.url != null) {
       sendMessage(
-        messageText: gif.images!.original!.url,
+        messageText: gif.images!.original!.url!,
         messageType: MessageType.image,
       );
     }
@@ -64,25 +147,19 @@ class MessagesController extends GetxController {
     );
   }
 
-  final Rx<ChatMessage?> reply = Rx<ChatMessage?>(null);
-  final Rx<ChatMessage?> edit = Rx<ChatMessage?>(null);
-
-  final TextEditingController messageController = TextEditingController();
-
   Future<void> loadInitialMessages({required UuidValue roomId}) async {
     try {
-      isLoading.value = true;
+      state = state.copyWith(isLoading: true);
       final response = await client.chat.getMessages(
         roomId,
         limit: 50,
         offset: 0,
       );
-      messages.assignAll(response);
+      state = state.copyWith(messages: response, isLoading: false);
       subscribeToRoom(roomId);
     } catch (e) {
       debugPrint('Error loading messages: $e');
-    } finally {
-      isLoading.value = false;
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -90,12 +167,15 @@ class MessagesController extends GetxController {
     required String messageText,
     required MessageType messageType,
     List<double>? waveform,
+    UuidValue? parentMessageId,
   }) async {
-    final roomsController = Get.find<RoomsController>();
-    final selectedRoom = roomsController.selectedRoom.value;
+    final roomsState = ref.read(roomsProvider);
+    final selectedRoom = roomsState.selectedRoom;
     if (selectedRoom == null) return;
 
     if (messageText.trim().isEmpty) return;
+
+    final authState = ref.read(authProvider);
 
     final chatMessage = ChatMessage(
       roomId: selectedRoom.id!,
@@ -105,31 +185,24 @@ class MessagesController extends GetxController {
       sameUser: false,
       deleted: false,
       createdAt: DateTime.now(),
-      userId:
-          Get.find<AuthController>().currentUserId.value ??
+      userId: authState.currentUserId ??
           UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
       waveform: waveform,
+      parentMessageId: parentMessageId ?? state.reply?.id,
     );
 
     try {
       await client.chat.sendMessage(chatMessage);
       messageController.clear();
+      // Clear reply state
+      if (state.reply != null) {
+        state = state.copyWith(clearReply: true);
+      }
       // Update the room's last message on the sidebar
-      roomsController.updateLastMessage(selectedRoom.id!, chatMessage);
+      ref.read(roomsProvider.notifier).updateLastMessage(selectedRoom.id!, chatMessage);
     } catch (e) {
       debugPrint('Error sending message: $e');
     }
-  }
-
-  StreamSubscription<ChatStreamEvent>? _subscription;
-  Timer? _typingDebounce;
-  final RxList<TypingIndicator> typingUsers = <TypingIndicator>[].obs;
-
-  @override
-  void onClose() {
-    _subscription?.cancel();
-    _typingDebounce?.cancel();
-    super.onClose();
   }
 
   void onTextChanged(String text) {
@@ -147,7 +220,7 @@ class MessagesController extends GetxController {
   void _checkAutocomplete(String text) async {
     final selection = messageController.selection;
     if (selection.baseOffset <= 0) {
-      showAutocomplete.value = false;
+      state = state.copyWith(showAutocomplete: false);
       return;
     }
 
@@ -159,48 +232,50 @@ class MessagesController extends GetxController {
       // Support queries like :smile, but only if there's no space after colon
       if (!query.contains(' ')) {
         if (query.length >= 1) {
-          final emojiController = Get.find<EmojiController>();
-          final results = await emojiController.searchEmojis(query);
-          autocompleteEmojis.assignAll(results.take(5).toList());
+          final emojiNotifier = ref.read(emojiProvider.notifier);
+          final results = await emojiNotifier.searchEmojis(query);
+          final autocompleteEmojis = results.take(5).toList();
+          
           if (autocompleteEmojis.isNotEmpty) {
-            showAutocomplete.value = true;
-            // Keep index in bounds if query changed
-            if (selectedAutocompleteIndex.value >= autocompleteEmojis.length) {
-              selectedAutocompleteIndex.value = 0;
-            }
+            state = state.copyWith(
+              autocompleteEmojis: autocompleteEmojis,
+              showAutocomplete: true,
+              selectedAutocompleteIndex: state.selectedAutocompleteIndex >= autocompleteEmojis.length ? 0 : state.selectedAutocompleteIndex,
+            );
           } else {
-            showAutocomplete.value = false;
+            state = state.copyWith(showAutocomplete: false);
           }
           return;
         }
       }
     }
-    showAutocomplete.value = false;
+    state = state.copyWith(showAutocomplete: false);
   }
 
   KeyEventResult handleKeyEvent(FocusNode node, KeyEvent event) {
-    if (!showAutocomplete.value || autocompleteEmojis.isEmpty)
+    if (!state.showAutocomplete || state.autocompleteEmojis.isEmpty)
       return KeyEventResult.ignored;
 
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        selectedAutocompleteIndex.value =
-            (selectedAutocompleteIndex.value + 1) % autocompleteEmojis.length;
+        state = state.copyWith(
+          selectedAutocompleteIndex: (state.selectedAutocompleteIndex + 1) % state.autocompleteEmojis.length,
+        );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        selectedAutocompleteIndex.value =
-            (selectedAutocompleteIndex.value - 1 + autocompleteEmojis.length) %
-            autocompleteEmojis.length;
+        state = state.copyWith(
+          selectedAutocompleteIndex: (state.selectedAutocompleteIndex - 1 + state.autocompleteEmojis.length) %
+            state.autocompleteEmojis.length,
+        );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.enter ||
           event.logicalKey == LogicalKeyboardKey.tab) {
         selectEmojiFromAutocomplete(
-          autocompleteEmojis[selectedAutocompleteIndex.value],
+          state.autocompleteEmojis[state.selectedAutocompleteIndex],
         );
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-        showAutocomplete.value = false;
-        autocompleteEmojis.clear();
+        state = state.copyWith(showAutocomplete: false, autocompleteEmojis: []);
         return KeyEventResult.handled;
       }
     }
@@ -223,14 +298,17 @@ class MessagesController extends GetxController {
       messageController.selection = TextSelection.fromPosition(
         TextPosition(offset: lastColonIndex + emoji.emoji.length),
       );
-      showAutocomplete.value = false;
-      autocompleteEmojis.clear();
-      selectedAutocompleteIndex.value = 0;
+      state = state.copyWith(
+        showAutocomplete: false,
+        autocompleteEmojis: [],
+        selectedAutocompleteIndex: 0,
+      );
     }
   }
 
   Future<void> _sendTypingStatus(bool isTyping) async {
-    final room = Get.find<RoomsController>().selectedRoom.value;
+    final roomsState = ref.read(roomsProvider);
+    final room = roomsState.selectedRoom;
     if (room == null) return;
     try {
       await client.chat.sendTyping(isTyping, room.id!);
@@ -244,45 +322,37 @@ class MessagesController extends GetxController {
     return _userCache[userId];
   }
 
-  /// Cache user information from room data
-  void cacheUserFromRoom(ChatRoom room, UuidValue userId) {
-    if (_userCache.containsKey(userId)) return;
-
-    // For direct rooms, extract username from room name (format: "User1 & User2")
-    if (room.roomType == 'direct' && room.roomName != null) {
-      final names = room.roomName!.split(' & ');
-      if (names.length == 2) {
-        // We don't know which user is which, so we'll need to handle this differently
-        // For now, just create placeholder users
-        // This is a limitation without a getRoomMembers endpoint
-      }
-    }
-  }
-
   void subscribeToRoom(UuidValue roomId) {
     _subscription?.cancel();
     _subscription = client.chat.subscribeToRoom(roomId).listen((event) {
       if (event.message != null) {
         final message = event.message!;
-        if (messages.any((m) => m.id == message.id)) return;
-        messages.insert(0, message);
-
-        // Remove typing indicator for this user if message received
-        typingUsers.removeWhere((t) => t.userId == message.userId);
+        if (state.messages.any((m) => m.id == message.id)) return;
+        
+        state = state.copyWith(
+          messages: [message, ...state.messages],
+          typingUsers: state.typingUsers.where((t) => t.userId != message.userId).toList(),
+        );
       } else if (event.typing != null) {
         final typing = event.typing!;
         if (typing.isTyping) {
           // Add if not exists
-          if (!typingUsers.any((t) => t.userId == typing.userId)) {
-            typingUsers.add(typing);
+          if (!state.typingUsers.any((t) => t.userId == typing.userId)) {
+            state = state.copyWith(
+              typingUsers: [...state.typingUsers, typing],
+            );
           }
 
           // Auto-remove after 3 seconds if no stop received or message
           Timer(const Duration(seconds: 3), () {
-            typingUsers.removeWhere((t) => t.userId == typing.userId);
+            state = state.copyWith(
+              typingUsers: state.typingUsers.where((t) => t.userId != typing.userId).toList(),
+            );
           });
         } else {
-          typingUsers.removeWhere((t) => t.userId == typing.userId);
+          state = state.copyWith(
+            typingUsers: state.typingUsers.where((t) => t.userId != typing.userId).toList(),
+          );
         }
       }
     });
@@ -298,23 +368,27 @@ class MessagesController extends GetxController {
           mimeType.startsWith('audio/');
     }).toList();
 
-    attachedFiles.addAll(validFiles);
-    if (validFiles.isNotEmpty) {
-      showFilePreview.value = true;
-    }
+    state = state.copyWith(
+      attachedFiles: [...state.attachedFiles, ...validFiles],
+      showFilePreview: validFiles.isNotEmpty || state.showFilePreview,
+    );
   }
 
   void removeAttachedFile(File file) {
-    attachedFiles.remove(file);
+    state = state.copyWith(
+      attachedFiles: state.attachedFiles.where((f) => f.path != file.path).toList(),
+    );
   }
 
   void clearAttachedFiles() {
-    attachedFiles.clear();
-    showFilePreview.value = false;
+    state = state.copyWith(
+      attachedFiles: [],
+      showFilePreview: false,
+    );
   }
 
-  void closeFilePreview() {
-    clearAttachedFiles();
+  void updateAttachedFiles(List<File> files) {
+    state = state.copyWith(attachedFiles: files);
   }
 
   MessageType getMessageTypeFromFile(File file) {
@@ -329,7 +403,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> sendMessageWithAttachments() async {
-    if (attachedFiles.isEmpty && messageController.text.trim().isEmpty) {
+    if (state.attachedFiles.isEmpty && messageController.text.trim().isEmpty) {
       return;
     }
 
@@ -342,7 +416,7 @@ class MessagesController extends GetxController {
     }
 
     // Send each file as a separate message
-    for (final file in attachedFiles) {
+    for (final file in state.attachedFiles) {
       final messageType = getMessageTypeFromFile(file);
 
       // Upload file to server and get URL
@@ -358,29 +432,16 @@ class MessagesController extends GetxController {
         }
       } catch (e) {
         debugPrint('Error uploading file: $e');
-        // Fallback to local path or handle error
       }
 
       List<double>? waveform;
       if (messageType == MessageType.audio) {
         try {
-          // Extract waveform
-          // This requires importing audio_waveforms
-          // We'll add the import in a separate chunk or just use dynamic if easy,
-          // but better to import.
           final extractor = WaveformExtractor();
           final result = await extractor.extractWaveform(
             file.path,
           );
-          // Result is List<double> but generic?
-          // Check package signature. usually returns List<double>.
-          // If result is expected to be simple list.
           if (result.waveformData.isNotEmpty) {
-            // Normalize if needed, but usually it's fine.
-            // Map to our expected range if raw values are huge?
-            // The package usually returns raw amplitude.
-            // We might need to normalization on UI side or here.
-            // Let's store raw integers/doubles.
             waveform = result.waveformData.map((e) => e.toDouble()).toList();
           }
         } catch (e) {
@@ -396,6 +457,5 @@ class MessagesController extends GetxController {
     }
 
     clearAttachedFiles();
-    showFilePreview.value = false;
   }
 }

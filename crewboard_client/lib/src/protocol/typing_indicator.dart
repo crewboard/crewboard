@@ -31,7 +31,7 @@ abstract class TypingIndicator implements _i1.SerializableModel {
     return TypingIndicator(
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       roomId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['roomId']),
-      isTyping: jsonSerialization['isTyping'] as bool,
+      isTyping: _i1.BoolJsonExtension.fromJson(jsonSerialization['isTyping']),
       userName: jsonSerialization['userName'] as String,
     );
   }

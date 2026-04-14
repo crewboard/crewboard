@@ -12,3 +12,4 @@ fields:
   creds: double
   assignees: List<UserModel>
   attachments: List<AttachmentModel>
+  completedAt: String?

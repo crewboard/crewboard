@@ -42,7 +42,7 @@ abstract class UserRoomMap
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastSeenMessageId'],
             ),
-      unreadCount: jsonSerialization['unreadCount'] as int,
+      unreadCount: jsonSerialization['unreadCount'] as int?,
     );
   }
 
@@ -296,7 +296,7 @@ class UserRoomMapRepository {
   /// );
   /// ```
   Future<List<UserRoomMap>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserRoomMapTable>? where,
     int? limit,
     int? offset,
@@ -304,6 +304,8 @@ class UserRoomMapRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserRoomMapTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<UserRoomMap>(
       where: where?.call(UserRoomMap.t),
@@ -313,6 +315,8 @@ class UserRoomMapRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -334,13 +338,15 @@ class UserRoomMapRepository {
   /// );
   /// ```
   Future<UserRoomMap?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserRoomMapTable>? where,
     int? offset,
     _i1.OrderByBuilder<UserRoomMapTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserRoomMapTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<UserRoomMap>(
       where: where?.call(UserRoomMap.t),
@@ -349,18 +355,24 @@ class UserRoomMapRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [UserRoomMap] by its [id] or null if no such row exists.
   Future<UserRoomMap?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<UserRoomMap>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -370,14 +382,20 @@ class UserRoomMapRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<UserRoomMap>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserRoomMap> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<UserRoomMap>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -385,7 +403,7 @@ class UserRoomMapRepository {
   ///
   /// The returned [UserRoomMap] will have its `id` field set.
   Future<UserRoomMap> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserRoomMap row, {
     _i1.Transaction? transaction,
   }) async {
@@ -401,7 +419,7 @@ class UserRoomMapRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<UserRoomMap>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserRoomMap> rows, {
     _i1.ColumnSelections<UserRoomMapTable>? columns,
     _i1.Transaction? transaction,
@@ -417,7 +435,7 @@ class UserRoomMapRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<UserRoomMap> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserRoomMap row, {
     _i1.ColumnSelections<UserRoomMapTable>? columns,
     _i1.Transaction? transaction,
@@ -432,7 +450,7 @@ class UserRoomMapRepository {
   /// Updates a single [UserRoomMap] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserRoomMap?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserRoomMapUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -447,7 +465,7 @@ class UserRoomMapRepository {
   /// Updates all [UserRoomMap]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<UserRoomMap>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<UserRoomMapUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<UserRoomMapTable> where,
     int? limit,
@@ -473,7 +491,7 @@ class UserRoomMapRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<UserRoomMap>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserRoomMap> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -485,7 +503,7 @@ class UserRoomMapRepository {
 
   /// Deletes a single [UserRoomMap].
   Future<UserRoomMap> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserRoomMap row, {
     _i1.Transaction? transaction,
   }) async {
@@ -497,7 +515,7 @@ class UserRoomMapRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<UserRoomMap>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<UserRoomMapTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -510,7 +528,7 @@ class UserRoomMapRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserRoomMapTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -518,6 +536,22 @@ class UserRoomMapRepository {
     return session.db.count<UserRoomMap>(
       where: where?.call(UserRoomMap.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [UserRoomMap] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<UserRoomMapTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<UserRoomMap>(
+      where: where(UserRoomMap.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

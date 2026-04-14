@@ -353,7 +353,7 @@ class FontSettingRepository {
   /// );
   /// ```
   Future<List<FontSetting>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FontSettingTable>? where,
     int? limit,
     int? offset,
@@ -361,6 +361,8 @@ class FontSettingRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<FontSettingTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FontSetting>(
       where: where?.call(FontSetting.t),
@@ -370,6 +372,8 @@ class FontSettingRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -391,13 +395,15 @@ class FontSettingRepository {
   /// );
   /// ```
   Future<FontSetting?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FontSettingTable>? where,
     int? offset,
     _i1.OrderByBuilder<FontSettingTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<FontSettingTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FontSetting>(
       where: where?.call(FontSetting.t),
@@ -406,18 +412,24 @@ class FontSettingRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [FontSetting] by its [id] or null if no such row exists.
   Future<FontSetting?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FontSetting>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -427,14 +439,20 @@ class FontSettingRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<FontSetting>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FontSetting> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<FontSetting>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -442,7 +460,7 @@ class FontSettingRepository {
   ///
   /// The returned [FontSetting] will have its `id` field set.
   Future<FontSetting> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FontSetting row, {
     _i1.Transaction? transaction,
   }) async {
@@ -458,7 +476,7 @@ class FontSettingRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<FontSetting>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FontSetting> rows, {
     _i1.ColumnSelections<FontSettingTable>? columns,
     _i1.Transaction? transaction,
@@ -474,7 +492,7 @@ class FontSettingRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<FontSetting> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FontSetting row, {
     _i1.ColumnSelections<FontSettingTable>? columns,
     _i1.Transaction? transaction,
@@ -489,7 +507,7 @@ class FontSettingRepository {
   /// Updates a single [FontSetting] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<FontSetting?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<FontSettingUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -504,7 +522,7 @@ class FontSettingRepository {
   /// Updates all [FontSetting]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<FontSetting>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<FontSettingUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<FontSettingTable> where,
     int? limit,
@@ -530,7 +548,7 @@ class FontSettingRepository {
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<FontSetting>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FontSetting> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -542,7 +560,7 @@ class FontSettingRepository {
 
   /// Deletes a single [FontSetting].
   Future<FontSetting> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FontSetting row, {
     _i1.Transaction? transaction,
   }) async {
@@ -554,7 +572,7 @@ class FontSettingRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<FontSetting>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<FontSettingTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -567,7 +585,7 @@ class FontSettingRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FontSettingTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -575,6 +593,22 @@ class FontSettingRepository {
     return session.db.count<FontSetting>(
       where: where?.call(FontSetting.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [FontSetting] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<FontSettingTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<FontSetting>(
+      where: where(FontSetting.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

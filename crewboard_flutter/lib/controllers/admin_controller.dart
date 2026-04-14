@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/admin/general_settings.dart';
 import '../screens/admin/users_settings.dart';
 import '../screens/admin/attendance/attendance.dart';
@@ -14,25 +14,31 @@ enum AdminPage {
   documentation,
 }
 
-class AdminController extends GetxController {
-  Rx<AdminPage> currentPage = AdminPage.general.obs;
+final adminProvider = NotifierProvider<AdminNotifier, AdminPage>(AdminNotifier.new);
 
-  Widget get currentPageWidget {
-    switch (currentPage.value) {
-      case AdminPage.general:
-        return const GeneralSettings();
-      case AdminPage.users:
-        return const UsersSettings();
-      case AdminPage.attendance:
-        return const AttendanceScreen();
-      case AdminPage.planner:
-        return const PlannerSettings();
-      case AdminPage.documentation:
-        return const DocumentationSettings();
-    }
+class AdminNotifier extends Notifier<AdminPage> {
+  @override
+  AdminPage build() {
+    return AdminPage.general;
   }
 
   void navigateTo(AdminPage page) {
-    currentPage.value = page;
+    state = page;
   }
 }
+
+final adminPageWidgetProvider = Provider<Widget>((ref) {
+  final currentPage = ref.watch(adminProvider);
+  switch (currentPage) {
+    case AdminPage.general:
+      return const GeneralSettings();
+    case AdminPage.users:
+      return const UsersSettings();
+    case AdminPage.attendance:
+      return const AttendanceScreen();
+    case AdminPage.planner:
+      return const PlannerSettings();
+    case AdminPage.documentation:
+      return const DocumentationSettings();
+  }
+});

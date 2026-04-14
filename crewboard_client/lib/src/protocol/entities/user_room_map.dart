@@ -41,7 +41,7 @@ abstract class UserRoomMap implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['lastSeenMessageId'],
             ),
-      unreadCount: jsonSerialization['unreadCount'] as int,
+      unreadCount: jsonSerialization['unreadCount'] as int?,
     );
   }
 

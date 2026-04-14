@@ -1,42 +1,73 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/emoji_service.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../main.dart'; // To access serverpod client 'client'
 
-class EmojiController extends GetxController {
+class EmojiState {
+  final bool isLoading;
+  final double syncProgress;
+  final int totalEmojis;
+  final int localCount;
+
+  EmojiState({
+    this.isLoading = true,
+    this.syncProgress = 0.0,
+    this.totalEmojis = 0,
+    this.localCount = 0,
+  });
+
+  EmojiState copyWith({
+    bool? isLoading,
+    double? syncProgress,
+    int? totalEmojis,
+    int? localCount,
+  }) {
+    return EmojiState(
+      isLoading: isLoading ?? this.isLoading,
+      syncProgress: syncProgress ?? this.syncProgress,
+      totalEmojis: totalEmojis ?? this.totalEmojis,
+      localCount: localCount ?? this.localCount,
+    );
+  }
+}
+
+final emojiProvider = NotifierProvider<EmojiNotifier, EmojiState>(EmojiNotifier.new);
+
+class EmojiNotifier extends Notifier<EmojiState> {
   final EmojiService _emojiService = EmojiService();
 
-  var isLoading = true.obs;
-  var syncProgress = 0.0.obs;
-  var totalEmojis = 0.obs;
-  var localCount = 0.obs;
-
   @override
-  void onInit() {
-    super.onInit();
-    syncEmojis();
+  EmojiState build() {
+    // Start sync immediately after initialization
+    Future.microtask(() => _syncEmojis());
+    return EmojiState();
   }
 
-  Future<void> syncEmojis() async {
+  Future<void> _syncEmojis() async {
     try {
       await _emojiService.init();
 
       // Get counts
-      localCount.value = await _emojiService.getCount();
-      totalEmojis.value = await client.emoji.getEmojiCount();
+      final localCount = await _emojiService.getCount();
+      final totalEmojis = await client.emoji.getEmojiCount();
 
       print('Emoji Sync: Local=$localCount, Server=$totalEmojis');
 
-      if (localCount.value < totalEmojis.value) {
-        isLoading.value = true;
-        await _downloadEmojis(offset: localCount.value);
+      state = state.copyWith(
+        localCount: localCount,
+        totalEmojis: totalEmojis,
+        isLoading: localCount < totalEmojis,
+      );
+
+      if (localCount < totalEmojis) {
+        await _downloadEmojis(offset: localCount);
       } else {
         print('Emoji Sync: Already up to date.');
       }
     } catch (e) {
       print('Emoji Sync Error: $e');
     } finally {
-      isLoading.value = false;
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -44,7 +75,7 @@ class EmojiController extends GetxController {
     const int batchSize = 100;
     int currentOffset = offset;
 
-    while (currentOffset < totalEmojis.value) {
+    while (currentOffset < state.totalEmojis) {
       try {
         print('Fetching emojis from $currentOffset...');
         final emojis = await client.emoji.getEmojis(
@@ -57,14 +88,15 @@ class EmojiController extends GetxController {
         await _emojiService.addEmojis(emojis);
 
         currentOffset += emojis.length;
-        localCount.value = currentOffset;
-        syncProgress.value = currentOffset / totalEmojis.value;
+        state = state.copyWith(
+          localCount: currentOffset,
+          syncProgress: currentOffset / state.totalEmojis,
+        );
 
-        // Tiny delay to yield to UI thread if needed, though await does that
-        await Future.delayed(Duration(milliseconds: 10));
+        // Tiny delay to yield to UI thread
+        await Future.delayed(const Duration(milliseconds: 10));
       } catch (e) {
         print('Error downloading batch at $currentOffset: $e');
-        // Stop on error, will resume next app start
         break;
       }
     }

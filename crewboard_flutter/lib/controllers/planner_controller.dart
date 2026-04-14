@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:crewboard_client/crewboard_client.dart';
 import 'package:crewboard_flutter/main.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:crewboard_flutter/screens/docs/flows/flows_controller.dart';
+import 'package:crewboard_flutter/screens/docs/flows/types.dart'; // Manual import for FlowSubPage maybe? No, it's in docs_sidebar usually.
 import 'package:crewboard_flutter/screens/docs/docs_sidebar.dart';
 import 'package:crewboard_flutter/screens/docs/document_editor_provider.dart';
 import 'package:crewboard_flutter/widgets/mention_text_box.dart';
@@ -17,88 +18,191 @@ import 'package:crewboard_flutter/config/palette.dart';
 
 enum PlannerSubPage { bucket, search }
 
-class PlannerController extends GetxController {
-  // Observable apps list (projects)
-  final RxList<PlannerApp> apps = <PlannerApp>[].obs;
+class PlannerState {
+  final List<PlannerApp> apps;
+  final UuidValue? selectedAppId;
+  final PlannerSubPage currentSubPage;
+  final bool isLoadingApps;
+  final bool isLoadingPlanner;
+  final List<BucketModel> buckets;
+  final List<PlannerTicket> allTickets;
+  final List<UserModel> users;
+  final List<StatusModel> statuses;
+  final List<PriorityModel> priorities;
+  final List<TypeModel> types;
+  final List<FlowModel> allFlows;
+  final List<Doc> allDocs;
+  final String mode;
+  final String error;
+  final String? deadline;
+  final List<UserModel> selectedUsers;
+  final List<CheckModel> checklist;
+  final List<CommentModel> comments;
+  final StatusModel? status;
+  final TypeModel? type;
+  final PriorityModel? priority;
+  final List<AttachmentModel> attachments;
+  final List<PlatformFile> pendingFiles;
+  final List<ThreadItemModel> ticketThread;
+  final ThreadItemModel? lastActivity;
+  final UuidValue? selectedTicketId;
+  final PlannerTicket? draggingTicket;
+  final UuidValue? draggingSourceBucketId;
+  final Map<String, String> editStack;
+  final DateTime? currentTicketCreatedAt;
 
-  // Observable selected app ID
-  final Rxn<UuidValue> selectedAppId = Rxn<UuidValue>();
+  PlannerState({
+    this.apps = const [],
+    this.selectedAppId,
+    this.currentSubPage = PlannerSubPage.bucket,
+    this.isLoadingApps = false,
+    this.isLoadingPlanner = false,
+    this.buckets = const [],
+    this.allTickets = const [],
+    this.users = const [],
+    this.statuses = const [],
+    this.priorities = const [],
+    this.types = const [],
+    this.allFlows = const [],
+    this.allDocs = const [],
+    this.mode = "none",
+    this.error = "",
+    this.deadline,
+    this.selectedUsers = const [],
+    this.checklist = const [],
+    this.comments = const [],
+    this.status,
+    this.type,
+    this.priority,
+    this.attachments = const [],
+    this.pendingFiles = const [],
+    this.ticketThread = const [],
+    this.lastActivity,
+    this.selectedTicketId,
+    this.draggingTicket,
+    this.draggingSourceBucketId,
+    this.editStack = const {},
+    this.currentTicketCreatedAt,
+  });
 
-  // Observable current subpage (buckets or search)
-  final Rx<PlannerSubPage> currentSubPage = PlannerSubPage.bucket.obs;
+  PlannerState copyWith({
+    List<PlannerApp>? apps,
+    UuidValue? selectedAppId,
+    PlannerSubPage? currentSubPage,
+    bool? isLoadingApps,
+    bool? isLoadingPlanner,
+    List<BucketModel>? buckets,
+    List<PlannerTicket>? allTickets,
+    List<UserModel>? users,
+    List<StatusModel>? statuses,
+    List<PriorityModel>? priorities,
+    List<TypeModel>? types,
+    List<FlowModel>? allFlows,
+    List<Doc>? allDocs,
+    String? mode,
+    String? error,
+    String? deadline,
+    List<UserModel>? selectedUsers,
+    List<CheckModel>? checklist,
+    List<CommentModel>? comments,
+    StatusModel? status,
+    TypeModel? type,
+    PriorityModel? priority,
+    List<AttachmentModel>? attachments,
+    List<PlatformFile>? pendingFiles,
+    List<ThreadItemModel>? ticketThread,
+    ThreadItemModel? lastActivity,
+    UuidValue? selectedTicketId,
+    PlannerTicket? draggingTicket,
+    UuidValue? draggingSourceBucketId,
+    Map<String, String>? editStack,
+    DateTime? currentTicketCreatedAt,
+    bool clearDeadline = false,
+    bool clearStatus = false,
+    bool clearType = false,
+    bool clearPriority = false,
+    bool clearLastActivity = false,
+    bool clearSelectedTicketId = false,
+    bool clearDraggingTicket = false,
+    bool clearDraggingSourceBucketId = false,
+  }) {
+    return PlannerState(
+      apps: apps ?? this.apps,
+      selectedAppId: selectedAppId ?? this.selectedAppId,
+      currentSubPage: currentSubPage ?? this.currentSubPage,
+      isLoadingApps: isLoadingApps ?? this.isLoadingApps,
+      isLoadingPlanner: isLoadingPlanner ?? this.isLoadingPlanner,
+      buckets: buckets ?? this.buckets,
+      allTickets: allTickets ?? this.allTickets,
+      users: users ?? this.users,
+      statuses: statuses ?? this.statuses,
+      priorities: priorities ?? this.priorities,
+      types: types ?? this.types,
+      allFlows: allFlows ?? this.allFlows,
+      allDocs: allDocs ?? this.allDocs,
+      mode: mode ?? this.mode,
+      error: error ?? this.error,
+      deadline: clearDeadline ? null : (deadline ?? this.deadline),
+      selectedUsers: selectedUsers ?? this.selectedUsers,
+      checklist: checklist ?? this.checklist,
+      comments: comments ?? this.comments,
+      status: clearStatus ? null : (status ?? this.status),
+      type: clearType ? null : (type ?? this.type),
+      priority: clearPriority ? null : (priority ?? this.priority),
+      attachments: attachments ?? this.attachments,
+      pendingFiles: pendingFiles ?? this.pendingFiles,
+      ticketThread: ticketThread ?? this.ticketThread,
+      lastActivity: clearLastActivity ? null : (lastActivity ?? this.lastActivity),
+      selectedTicketId: clearSelectedTicketId ? null : (selectedTicketId ?? this.selectedTicketId),
+      draggingTicket: clearDraggingTicket ? null : (draggingTicket ?? this.draggingTicket),
+      draggingSourceBucketId: clearDraggingSourceBucketId ? null : (draggingSourceBucketId ?? this.draggingSourceBucketId),
+      editStack: editStack ?? this.editStack,
+      currentTicketCreatedAt: currentTicketCreatedAt ?? this.currentTicketCreatedAt,
+    );
+  }
+}
 
-  // Observable loading state
-  final RxBool isLoadingApps = false.obs;
-  final RxBool isLoadingPlanner = false.obs;
+final plannerProvider = NotifierProvider<PlannerNotifier, PlannerState>(PlannerNotifier.new);
 
-  // Observable buckets with tickets
-  final RxList<BucketModel> buckets = <BucketModel>[].obs;
-
-  // Observable all tickets for search
-  final RxList<PlannerTicket> allTickets = <PlannerTicket>[].obs;
-
-  // Metadata for adding tickets
-  final RxList<UserModel> users = <UserModel>[].obs;
-  final RxList<StatusModel> statuses = <StatusModel>[].obs;
-  final RxList<PriorityModel> priorities = <PriorityModel>[].obs;
-  final RxList<TypeModel> types = <TypeModel>[].obs;
-  final RxList<FlowModel> allFlows = <FlowModel>[].obs;
-  // TODO: Add allDocs if we want to preload them here, for now we can fetch them on demand or reuse existing logic
-  final RxList<Doc> allDocs = <Doc>[].obs;
-
-  // New states for ticket creation and viewing
-  final RxString mode = "none".obs;
-  final RxString error = "".obs;
-  final Rx<TextEditingController> title = TextEditingController().obs;
-  final Rx<TextEditingController> body = TextEditingController().obs;
-  final Rx<TextEditingController> creds = TextEditingController(text: "0").obs;
-  final RxnString deadline = RxnString();
-  final RxList<UserModel> selectedUsers = <UserModel>[].obs;
-  final RxList<CheckModel> checklist = <CheckModel>[].obs;
-  final RxList<CommentModel> comments = <CommentModel>[].obs;
-  final Rxn<StatusModel> status = Rxn<StatusModel>();
-  final Rxn<TypeModel> type = Rxn<TypeModel>();
-  final Rxn<PriorityModel> priority = Rxn<PriorityModel>();
-  final Rx<TextEditingController> controller = TextEditingController().obs;
-  final RxList<Map<String, dynamic>> editStack = <Map<String, dynamic>>[].obs;
-  final RxList<AttachmentModel> attachments = <AttachmentModel>[].obs;
-  final RxList<PlatformFile> pendingFiles = <PlatformFile>[].obs;
-  final RxList<ThreadItemModel> ticketThread = <ThreadItemModel>[].obs;
-  final Rxn<ThreadItemModel> lastActivity = Rxn<ThreadItemModel>();
-  final Rxn<UuidValue> selectedTicketId = Rxn<UuidValue>();
-  // Drag and Drop state
-  final Rxn<PlannerTicket> draggingTicket = Rxn<PlannerTicket>();
-  final Rxn<UuidValue> draggingSourceBucketId = Rxn<UuidValue>();
+class PlannerNotifier extends Notifier<PlannerState> {
+  final TextEditingController title = TextEditingController();
+  final TextEditingController body = TextEditingController();
+  final TextEditingController creds = TextEditingController(text: "0");
+  final TextEditingController commentController = TextEditingController();
+  
   UuidValue? _lastHolderBucketId;
   int? _lastHolderIndex;
 
   @override
-  void onInit() {
-    super.onInit();
-    loadApps();
-    getAddTicketData();
+  PlannerState build() {
+    Future.microtask(() {
+      loadApps();
+      getAddTicketData();
+    });
+    ref.onDispose(() {
+      title.dispose();
+      body.dispose();
+      creds.dispose();
+      commentController.dispose();
+    });
+    return PlannerState();
   }
 
-  // Load apps (projects) from server
   Future<void> loadApps() async {
     try {
-      debugPrint("Loading apps in PlannerController...");
-      isLoadingApps.value = true;
+      state = state.copyWith(isLoadingApps: true);
       final response = await client.admin.getApps();
-      debugPrint("Apps loaded in PlannerController: ${response.length}");
-      apps.value = response;
+      state = state.copyWith(apps: response, isLoadingApps: false);
 
-      if (apps.isNotEmpty && selectedAppId.value == null) {
-        selectApp(apps.first.id!);
+      if (response.isNotEmpty && state.selectedAppId == null) {
+        selectApp(response.first.id!);
       }
     } catch (e) {
       debugPrint('Error loading apps: $e');
-    } finally {
-      isLoadingApps.value = false;
+      state = state.copyWith(isLoadingApps: false);
     }
   }
 
-  // Method to add a new app
   Future<void> addApp(String name, UuidValue colorId) async {
     try {
       await client.admin.addApp(name, colorId);
@@ -108,18 +212,16 @@ class PlannerController extends GetxController {
     }
   }
 
-  // Select an app and load its planner data
   void selectApp(UuidValue appId) {
-    selectedAppId.value = appId;
+    state = state.copyWith(selectedAppId: appId);
     loadPlannerData();
-    getAddTicketData(); // Pre-load metadata for the project context
+    getAddTicketData();
     loadAllTickets();
   }
 
-  // Change subpage (Kanban/Search)
   void changeSubPage(PlannerSubPage subPage) {
-    currentSubPage.value = subPage;
-    if (selectedAppId.value != null) {
+    state = state.copyWith(currentSubPage: subPage);
+    if (state.selectedAppId != null) {
       if (subPage == PlannerSubPage.search) {
         loadAllTickets();
       } else {
@@ -128,34 +230,28 @@ class PlannerController extends GetxController {
     }
   }
 
-  // Fetch Kanban data
   Future<void> loadPlannerData({bool showLoading = true}) async {
-    if (selectedAppId.value == null) return;
+    if (state.selectedAppId == null) return;
     try {
-      if (showLoading) isLoadingPlanner.value = true;
-      final response = await client.planner.getPlannerData(
-        selectedAppId.value!,
-      );
-      buckets.value = response.buckets;
+      if (showLoading) state = state.copyWith(isLoadingPlanner: true);
+      final response = await client.planner.getPlannerData(state.selectedAppId!);
+      state = state.copyWith(buckets: response.buckets, isLoadingPlanner: false);
     } catch (e) {
       debugPrint('Error loading planner data: $e');
-    } finally {
-      if (showLoading) isLoadingPlanner.value = false;
+      if (showLoading) state = state.copyWith(isLoadingPlanner: false);
     }
   }
 
-  // Fetch search view data
   Future<void> loadAllTickets() async {
-    if (selectedAppId.value == null) return;
+    if (state.selectedAppId == null) return;
     try {
-      final response = await client.planner.getAllTickets(selectedAppId.value!);
-      allTickets.value = response.tickets;
+      final response = await client.planner.getAllTickets(state.selectedAppId!);
+      state = state.copyWith(allTickets: response.tickets);
     } catch (e) {
       debugPrint('Error loading all tickets: $e');
     }
   }
 
-  // Fetch full ticket data
   Future<TicketModel?> getTicketData(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketData(ticketId);
@@ -166,21 +262,21 @@ class PlannerController extends GetxController {
     }
   }
 
-  // Fetch metadata for Add Ticket form
   Future<void> getAddTicketData() async {
     try {
       final response = await client.planner.getAddTicketData();
-      users.value = response.users;
-      statuses.value = response.statuses;
-      priorities.value = response.priorities;
-      types.value = response.types;
-      allFlows.value = response.flows;
+      state = state.copyWith(
+        users: response.users,
+        statuses: response.statuses,
+        priorities: response.priorities,
+        types: response.types,
+        allFlows: response.flows,
+      );
 
-      // Also try to load docs for the current app for autocomplete
-      if (selectedAppId.value != null) {
+      if (state.selectedAppId != null) {
         try {
-          final docs = await client.docs.getDocs(selectedAppId.value!);
-          allDocs.value = docs;
+          final docs = await client.docs.getDocs(state.selectedAppId!);
+          state = state.copyWith(allDocs: docs);
         } catch (e) {
           debugPrint("Error loading docs for suggestions: $e");
         }
@@ -192,73 +288,66 @@ class PlannerController extends GetxController {
 
   Future<List<MentionSuggestion>> searchMentionable(String query) async {
     final lowerQuery = query.toLowerCase();
-
-    // Flows
-    final flowSuggestions = allFlows
+    final flowSuggestions = state.allFlows
         .where((f) => f.name.toLowerCase().contains(lowerQuery))
-        .map(
-          (f) => MentionSuggestion(
-            id: f.id.toString(),
-            name: f.name,
-            type: 'flow',
-          ),
-        )
+        .map((f) => MentionSuggestion(id: f.id.toString(), name: f.name, type: 'flow'))
         .toList();
 
-    // Docs
-    // If not loaded yet, maybe we trigger load? But assume getAddTicketData tries to load them.
-    final docSuggestions = allDocs
+    final docSuggestions = state.allDocs
         .where((d) => d.name.toLowerCase().contains(lowerQuery))
-        .map(
-          (d) =>
-              MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'),
-        )
+        .map((d) => MentionSuggestion(id: d.id.toString(), name: d.name, type: 'doc'))
         .toList();
 
     return [...flowSuggestions, ...docSuggestions];
   }
 
-  // Clear data for adding a new ticket
   void getAddTicketDataForNew() {
-    title.value.clear();
-    body.value.clear();
-    creds.value.text = "0";
-    deadline.value = null;
-    selectedUsers.clear();
-    checklist.clear();
-    attachments.clear();
-    pendingFiles.clear();
-    status.value = null;
-    type.value = null;
-    priority.value = null;
-    error.value = "";
-    mode.value = "none";
+    title.clear();
+    body.clear();
+    creds.text = "0";
+    state = state.copyWith(
+      deadline: null,
+      selectedUsers: [],
+      checklist: [],
+      attachments: [],
+      pendingFiles: [],
+      status: null,
+      type: null,
+      priority: null,
+      error: "",
+      mode: "none",
+      currentTicketCreatedAt: DateTime.now(),
+    );
     getAddTicketData();
   }
 
-  // Load ticket data for viewing/editing
   Future<void> getTicketDataFull(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketData(ticketId);
       final ticket = response.ticket;
-      title.value.text = ticket.ticketName;
-      body.value.text = ticket.ticketBody;
-      creds.value.text = ticket.creds.toString();
+      title.text = ticket.ticketName;
+      body.text = ticket.ticketBody;
+      creds.text = ticket.creds.toString();
+      
+      String? deadlineStr;
       if (ticket.deadline != null) {
-        deadline.value = DateFormat(
-          'yyyy-MM-dd',
-        ).format(DateTime.parse(ticket.deadline!));
-      } else {
-        deadline.value = null;
+        deadlineStr = DateFormat('yyyy-MM-dd').format(DateTime.parse(ticket.deadline!));
       }
-      selectedUsers.assignAll(ticket.assignees);
-      checklist.assignAll(ticket.checklist);
-      attachments.assignAll(ticket.attachments);
-      pendingFiles.clear(); // Clear pending files when loading existing ticket
-      status.value = ticket.status;
-      priority.value = ticket.priority;
-      type.value = ticket.type;
-      editStack.clear();
+
+      final plannerTicket = state.allTickets.firstWhereOrNull((t) => t.id == ticketId);
+      final createdAt = plannerTicket?.createdAt ?? DateTime.now();
+
+      state = state.copyWith(
+        deadline: deadlineStr,
+        selectedUsers: ticket.assignees,
+        checklist: ticket.checklist,
+        attachments: ticket.attachments,
+        pendingFiles: [],
+        status: ticket.status,
+        priority: ticket.priority,
+        type: ticket.type,
+        currentTicketCreatedAt: createdAt,
+      );
     } catch (e) {
       debugPrint('Error getting ticket data: $e');
     }
@@ -267,7 +356,7 @@ class PlannerController extends GetxController {
   Future<void> getTicketCommentsFull(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketComments(ticketId);
-      comments.assignAll(response.comments);
+      state = state.copyWith(comments: response.comments);
     } catch (e) {
       debugPrint('Error getting comments: $e');
     }
@@ -276,190 +365,124 @@ class PlannerController extends GetxController {
   Future<void> getTicketThread(UuidValue ticketId) async {
     try {
       final response = await client.planner.getTicketThread(ticketId);
-      ticketThread.assignAll(response.items);
-      if (ticketThread.isNotEmpty) {
-        lastActivity.value = ticketThread.last;
-      }
+      state = state.copyWith(
+        ticketThread: response.items,
+        lastActivity: response.items.isNotEmpty ? response.items.last : null,
+      );
     } catch (e) {
       debugPrint('Error getting ticket thread: $e');
     }
   }
 
-  /// Upload pending files and return AttachmentModel list
   Future<List<AttachmentModel>> _uploadPendingAttachments() async {
     final uploadedAttachments = <AttachmentModel>[];
-
-    for (final file in pendingFiles) {
+    for (final file in state.pendingFiles) {
       try {
-        // Read file bytes - on desktop, bytes might be null, so use path
         Uint8List? bytes = file.bytes;
-
         if (bytes == null && file.path != null) {
-          try {
-            final fileObj = File(file.path!);
-            bytes = await fileObj.readAsBytes();
-          } catch (e) {
-            debugPrint('Error reading file from path: $e');
-          }
+          bytes = await File(file.path!).readAsBytes();
         }
+        if (bytes == null) continue;
 
-        if (bytes == null) {
-          continue;
-        }
-
-        // Upload to server
         final byteData = ByteData.view(bytes.buffer);
         final url = await client.upload.uploadFile(file.name, byteData);
 
         if (url != null) {
-          uploadedAttachments.add(
-            AttachmentModel(
-              id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
-              name: file.name,
-              size: file.size.toDouble(),
-              url: url,
-              type: file.extension ?? '',
-            ),
-          );
+          uploadedAttachments.add(AttachmentModel(
+            id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+            name: file.name,
+            size: file.size.toDouble(),
+            url: url,
+            type: file.extension ?? '',
+          ));
         }
       } catch (e) {
         debugPrint('Error uploading file ${file.name}: $e');
       }
     }
-
     return uploadedAttachments;
   }
 
   Future<void> save(UuidValue bucketId) async {
-    error.value = "";
-    if (title.value.text.isEmpty) {
-      error.value = "title cannot be empty";
-      return;
-    }
-    if (status.value == null) {
-      error.value = "status cannot be empty";
-      return;
-    }
-    if (type.value == null) {
-      error.value = "type cannot be empty";
-      return;
-    }
-    if (priority.value == null) {
-      error.value = "priority cannot be empty";
-      return;
-    }
-    if (deadline.value == null) {
-      error.value = "deadline cannot be empty";
-      return;
-    }
+    state = state.copyWith(error: "");
+    if (title.text.isEmpty) { state = state.copyWith(error: "title cannot be empty"); return; }
+    if (state.status == null) { state = state.copyWith(error: "status cannot be empty"); return; }
+    if (state.type == null) { state = state.copyWith(error: "type cannot be empty"); return; }
+    if (state.priority == null) { state = state.copyWith(error: "priority cannot be empty"); return; }
+    if (state.deadline == null) { state = state.copyWith(error: "deadline cannot be empty"); return; }
 
     try {
-      // Upload pending files
       final uploadedAttachments = await _uploadPendingAttachments();
-
-      // Combine with existing attachments
-      final allAttachments = [...attachments, ...uploadedAttachments];
+      final allAttachments = [...state.attachments, ...uploadedAttachments];
 
       final ticketModel = TicketModel(
-        id: UuidValue.fromString(
-          '00000000-0000-4000-8000-000000000000',
-        ), // Dummy
-        ticketName: title.value.text,
-        ticketBody: body.value.text,
-        status: status.value!,
-        priority: priority.value!,
-        type: type.value!,
-        assignees: selectedUsers,
-        creds: double.tryParse(creds.value.text) ?? 0.0,
-        deadline: deadline.value,
-        checklist: checklist,
+        id: UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
+        ticketName: title.text,
+        ticketBody: body.text,
+        status: state.status!,
+        priority: state.priority!,
+        type: state.type!,
+        assignees: state.selectedUsers,
+        creds: double.tryParse(creds.text) ?? 0.0,
+        deadline: state.deadline,
+        checklist: state.checklist,
         flows: "",
         attachments: allAttachments,
       );
 
       final success = await client.planner.addTicket(
-        AddTicketRequest(
-          appId: selectedAppId.value!,
-          bucketId: bucketId,
-          ticket: ticketModel,
-        ),
+        AddTicketRequest(appId: state.selectedAppId!, bucketId: bucketId, ticket: ticketModel),
       );
 
       if (success) {
-        error.value = "";
-        pendingFiles.clear();
+        state = state.copyWith(error: "", pendingFiles: []);
         loadPlannerData();
         loadAllTickets();
       } else {
-        error.value = "Failed to save ticket";
+        state = state.copyWith(error: "Failed to save ticket");
       }
     } catch (e) {
-      error.value = "Error saving ticket: $e";
-    }
-  }
-
-  void addToEditStack(String name, String value) {
-    int index = editStack.indexWhere((e) => e['name'] == name);
-    if (index != -1) {
-      editStack[index]['value'] = value;
-    } else {
-      editStack.add({'name': name, 'value': value});
+      state = state.copyWith(error: "Error saving ticket: $e");
     }
   }
 
   void addCheckItem(String label) {
-    checklist.add(CheckModel(label: label, selected: false));
+    state = state.copyWith(checklist: [...state.checklist, CheckModel(label: label, selected: false)]);
   }
 
   Future<void> updateTicket(UuidValue ticketId) async {
     debugPrint('Updating ticket $ticketId');
     try {
-      // Upload pending files
       final uploadedAttachments = await _uploadPendingAttachments();
-
-      // Combine with existing attachments
-      final allAttachments = [...attachments, ...uploadedAttachments];
+      final allAttachments = [...state.attachments, ...uploadedAttachments];
 
       final ticketModel = TicketModel(
         id: ticketId,
-        ticketName: title.value.text,
-        ticketBody: body.value.text,
-        status: status.value!,
-        priority: priority.value!,
-        type: type.value!,
-        assignees: selectedUsers,
-        creds: double.tryParse(creds.value.text) ?? 0.0,
-        deadline: deadline
-            .value, // Assuming format is already correct (yyyy-MM-dd) or null
-        checklist: checklist,
+        ticketName: title.text,
+        ticketBody: body.text,
+        status: state.status!,
+        priority: state.priority!,
+        type: state.type!,
+        assignees: state.selectedUsers,
+        creds: double.tryParse(creds.text) ?? 0.0,
+        deadline: state.deadline,
+        checklist: state.checklist,
         flows: "",
         attachments: allAttachments,
       );
 
       final success = await client.planner.updateTicket(ticketModel);
-
       if (success) {
-        editStack.clear(); // Clear stack as we just synced everything
-        pendingFiles.clear();
+        state = state.copyWith(pendingFiles: []);
         loadPlannerData();
         getTicketThread(ticketId);
-
-        // Also refresh individual ticket data just in case
         await getTicketDataFull(ticketId);
       }
     } catch (e) {
       debugPrint('Error updating ticket: $e');
-      Get.snackbar(
-        "Error",
-        "Failed to update ticket",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.1),
-        colorText: Colors.red,
-      );
     }
   }
 
-  // Move ticket between buckets
   Future<bool> changeBucket(ChangeBucketRequest request) async {
     try {
       final success = await client.planner.changeBucket(request);
@@ -473,16 +496,10 @@ class PlannerController extends GetxController {
     return false;
   }
 
-  // Add a new bucket
   Future<bool> addBucket(String name) async {
-    if (selectedAppId.value == null) return false;
+    if (state.selectedAppId == null) return false;
     try {
-      final success = await client.planner.addBucket(
-        AddBucketRequest(
-          appId: selectedAppId.value!,
-          bucketName: name,
-        ),
-      );
+      final success = await client.planner.addBucket(AddBucketRequest(appId: state.selectedAppId!, bucketName: name));
       if (success) {
         loadPlannerData();
         return true;
@@ -493,252 +510,147 @@ class PlannerController extends GetxController {
     return false;
   }
 
-  // Create a new ticket
-  Future<bool> addTicket({
-    required UuidValue bucketId,
-    required String title,
-    required String body,
-    required UuidValue statusId,
-    required UuidValue priorityId,
-    required UuidValue typeId,
-    required List<UuidValue> assigneeIds,
-    String? deadline,
-    double? creds,
-  }) async {
-    if (selectedAppId.value == null) return false;
-    try {
-      final ticketModel = TicketModel(
-        id: UuidValue.fromString(
-          '00000000-0000-4000-8000-000000000000',
-        ), // Server will assign
-        ticketName: title,
-        ticketBody: body,
-        status: statuses.firstWhere((s) => s.statusId == statusId),
-        priority: priorities.firstWhere((p) => p.priorityId == priorityId),
-        type: types.firstWhere((t) => t.typeId == typeId),
-        assignees: users.where((u) => assigneeIds.contains(u.userId)).toList(),
-        creds: creds ?? 0.0,
-        deadline: deadline,
-        checklist: [], // TODO: Support checklist
-        flows: "", // TODO: Support flows
-        attachments: [],
-      );
-
-      final success = await client.planner.addTicket(
-        AddTicketRequest(
-          appId: selectedAppId.value!,
-          bucketId: bucketId,
-          ticket: ticketModel,
-        ),
-      );
-
-      if (success) {
-        if (currentSubPage.value == PlannerSubPage.bucket) {
-          loadPlannerData();
-        } else {
-          loadAllTickets();
-        }
-        return true;
-      }
-    } catch (e) {
-      debugPrint('Error adding ticket: $e');
-    }
-    return false;
-  }
-
-  // Fetch comments for a ticket
-  Future<List<CommentModel>> getTicketComments(UuidValue ticketId) async {
-    try {
-      final response = await client.planner.getTicketComments(ticketId);
-      return response.comments;
-    } catch (e) {
-      debugPrint('Error getting comments: $e');
-      return [];
-    }
-  }
-
-  // Add a comment
-  Future<bool> addComment(AddCommentRequest request) async {
-    try {
-      return await client.planner.addComment(request);
-    } catch (e) {
-      debugPrint('Error adding comment: $e');
-      return false;
-    }
-  }
-
-  // Drag and Drop Logic
   void onDragStarted(PlannerTicket ticket, UuidValue bucketId) {
-    draggingTicket.value = ticket;
-    draggingSourceBucketId.value = bucketId;
+    state = state.copyWith(draggingTicket: ticket, draggingSourceBucketId: bucketId);
     _lastHolderBucketId = null;
     _lastHolderIndex = null;
   }
 
   void onDragUpdated(UuidValue bucketId, int index) {
-    if (draggingTicket.value == null) return;
+    if (state.draggingTicket == null) return;
     if (_lastHolderBucketId == bucketId && _lastHolderIndex == index) return;
 
     _lastHolderBucketId = bucketId;
     _lastHolderIndex = index;
 
-    // Find target bucket
-    final targetBucket = buckets.firstWhereOrNull(
-      (b) => b.bucketId == bucketId,
-    );
-    if (targetBucket == null) return;
-
+    final updatedBuckets = List<BucketModel>.from(state.buckets);
     bool needsUpdate = false;
 
-    // Remove existing holders
-    for (var b in buckets) {
+    for (var b in updatedBuckets) {
       if (b.tickets.any((t) => t.holder == 'true')) {
         b.tickets.removeWhere((t) => t.holder == 'true');
         needsUpdate = true;
       }
     }
 
-    // Insert placeholder
-    final placeholder = draggingTicket.value!.copyWith(holder: 'true');
-    final safeIndex = index.clamp(0, targetBucket.tickets.length);
-    targetBucket.tickets.insert(safeIndex, placeholder);
-    needsUpdate = true;
+    final targetBucketIndex = updatedBuckets.indexWhere((b) => b.bucketId == bucketId);
+    if (targetBucketIndex != -1) {
+      final targetBucket = updatedBuckets[targetBucketIndex];
+      final placeholder = state.draggingTicket!.copyWith(holder: 'true');
+      final safeIndex = index.clamp(0, targetBucket.tickets.length);
+      targetBucket.tickets.insert(safeIndex, placeholder);
+      needsUpdate = true;
+    }
 
     if (needsUpdate) {
-      buckets.refresh();
+      state = state.copyWith(buckets: updatedBuckets);
     }
   }
 
   void onDrop(UuidValue bucketId, int index) {
-    if (draggingTicket.value == null) return;
+    if (state.draggingTicket == null) return;
 
-    final ticket = draggingTicket.value!;
+    final ticket = state.draggingTicket!;
     final ticketId = ticket.id;
-    final sourceBucketId = draggingSourceBucketId.value;
+    final sourceBucketId = state.draggingSourceBucketId;
 
-    // Optimistic UI update: Remove from source, insert at target
-    // 1. Remove from source bucket
+    final updatedBuckets = List<BucketModel>.from(state.buckets);
     if (sourceBucketId != null) {
-      final sourceBucket = buckets.firstWhereOrNull(
-        (b) => b.bucketId == sourceBucketId,
-      );
-      if (sourceBucket != null) {
-        sourceBucket.tickets.removeWhere((t) => t.id == ticketId);
-      }
+      final sourceBucket = updatedBuckets.firstWhereOrNull((b) => b.bucketId == sourceBucketId);
+      sourceBucket?.tickets.removeWhere((t) => t.id == ticketId);
     }
 
-    // 2. Remove placeholder from target bucket and insert ticket
-    final targetBucket = buckets.firstWhereOrNull(
-      (b) => b.bucketId == bucketId,
-    );
+    final targetBucket = updatedBuckets.firstWhereOrNull((b) => b.bucketId == bucketId);
     if (targetBucket != null) {
       targetBucket.tickets.removeWhere((t) => t.holder == 'true');
       final safeIndex = index.clamp(0, targetBucket.tickets.length);
       targetBucket.tickets.insert(safeIndex, ticket);
     }
 
-    buckets.refresh();
+    state = state.copyWith(buckets: updatedBuckets, draggingTicket: null, draggingSourceBucketId: null);
 
-    // Trigger server update
-    changeBucket(
-      ChangeBucketRequest(
-        ticketId: ticketId,
-        newBucketId: bucketId,
-        newOrder: index + 1, // Server expects 1-indexed order
-        oldBucketId:
-            sourceBucketId ??
-            UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
-      ),
-    );
-
-    // Cleanup drag state
-    draggingTicket.value = null;
-    draggingSourceBucketId.value = null;
-    // Note: changeBucket already calls loadPlannerData(showLoading: false)
+    changeBucket(ChangeBucketRequest(
+      ticketId: ticketId,
+      newBucketId: bucketId,
+      newOrder: index + 1,
+      oldBucketId: sourceBucketId ?? UuidValue.fromString('00000000-0000-0000-0000-000000000000'),
+    ));
   }
 
   void onDragCancelled() {
-    draggingTicket.value = null;
-    draggingSourceBucketId.value = null;
+    state = state.copyWith(draggingTicket: null, draggingSourceBucketId: null);
     _lastHolderBucketId = null;
     _lastHolderIndex = null;
 
-    // Remove holders
-    for (var b in buckets) {
-      if (b.tickets.any((t) => t.holder == 'true')) {
-        b.tickets.removeWhere((t) => t.holder == 'true');
-      }
+    final updatedBuckets = List<BucketModel>.from(state.buckets);
+    for (var b in updatedBuckets) {
+      b.tickets.removeWhere((t) => t.holder == 'true');
     }
-    buckets.refresh();
+    state = state.copyWith(buckets: updatedBuckets);
   }
 
   void openLinkedFlow(String flowName) {
-    debugPrint("Opening linked flow: $flowName");
-    final flow = allFlows.firstWhereOrNull(
-      (f) => f.name.toLowerCase() == flowName.toLowerCase(),
-    );
-
+    final flow = state.allFlows.firstWhereOrNull((f) => f.name.toLowerCase() == flowName.toLowerCase());
     if (flow != null) {
-      // Close any open dialogs (like the ticket view)
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
-
-      // Find Flow Provider or Controller to switch context
-      final FlowsController flowsController = Get.put(FlowsController());
-
-      // Switching to Flows tab in Sidebar
-      if (Get.isRegistered<SidebarController>()) {
-        Get.find<SidebarController>().navigate(CurrentPage.documentation);
-      }
-
-      flowsController.sidebarMode.value = SidebarMode.flows;
-      flowsController.currentSubPage.value = FlowSubPage.flows;
-      flowsController.loadFlow(flow.id!);
+      ref.read(sidebarProvider.notifier).navigate(CurrentPage.documentation);
+      final flowsNotifier = ref.read(flowsProvider.notifier);
+      flowsNotifier.setSidebarMode(SidebarMode.flows);
+      flowsNotifier.setSubPage(FlowSubPage.flows);
+      flowsNotifier.loadFlow(flow.id!);
       return;
     }
 
-    final doc = allDocs.firstWhereOrNull(
-      (d) => d.name.toLowerCase() == flowName.toLowerCase(),
-    );
-
+    final doc = state.allDocs.firstWhereOrNull((d) => d.name.toLowerCase() == flowName.toLowerCase());
     if (doc != null) {
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
+      ref.read(sidebarProvider.notifier).navigate(CurrentPage.documentation);
+      final flowsNotifier = ref.read(flowsProvider.notifier);
+      if (state.selectedAppId != null) {
+        flowsNotifier.selectApp(state.selectedAppId!);
       }
-
-      if (Get.isRegistered<SidebarController>()) {
-        Get.find<SidebarController>().navigate(CurrentPage.documentation);
-      }
-
-      final FlowsController flowsController = Get.put(FlowsController());
-
-      // Sync selected app
-      if (selectedAppId.value != null) {
-        flowsController.selectedAppId.value = selectedAppId.value;
-      }
-
-      flowsController.sidebarMode.value = SidebarMode.flows;
-      flowsController.changeSubPage("docs");
-
-      if (!Get.isRegistered<DocumentEditorProvider>()) {
-        Get.put(DocumentEditorProvider());
-      }
-      final docProvider = Get.find<DocumentEditorProvider>();
-
-      // Use a slight delay to ensure the UI switch doesn't interfere,
-      // though typically GetX state should handle it.
-      // Also ensuring we don't await loadSavedDocs which is triggered by changeSubPage
-      docProvider.loadDoc(doc);
+      flowsNotifier.setSidebarMode(SidebarMode.flows);
+      flowsNotifier.changeSubPage("docs");
+      ref.read(documentEditorProvider.notifier).loadDoc(doc);
       return;
     }
+  }
+  
+  void addAttachedFile(PlatformFile file) {
+    state = state.copyWith(pendingFiles: [...state.pendingFiles, file]);
+  }
+  
+  void removeAttachedFile(PlatformFile file) {
+    state = state.copyWith(pendingFiles: state.pendingFiles.where((f) => f != file).toList());
+  }
 
-    Get.snackbar(
-      "Link Not Found",
-      "Could not find a flow or doc named '#$flowName'",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.redAccent,
-      colorText: Colors.white,
-    );
+  // Update state helpers
+  void setStatus(StatusModel? s) => state = state.copyWith(status: s);
+  void setType(TypeModel? t) => state = state.copyWith(type: t);
+  void setPriority(PriorityModel? p) => state = state.copyWith(priority: p);
+  void setDeadline(String? d) => state = state.copyWith(deadline: d);
+  void copyWithMode(String mode) => state = state.copyWith(mode: mode);
+  void setSelectedUsers(List<UserModel> users) => state = state.copyWith(selectedUsers: users);
+
+  void setSelectedTicketId(UuidValue? id) {
+    if (id == null) {
+      state = state.copyWith(clearSelectedTicketId: true);
+    } else {
+      state = state.copyWith(selectedTicketId: id);
+    }
+  }
+
+  void addToEditStack(String key, String value) {
+    final newStack = Map<String, String>.from(state.editStack);
+    newStack[key] = value;
+    state = state.copyWith(editStack: newStack);
+  }
+
+  Future<bool> addComment(AddCommentRequest request) async {
+    try {
+      final response = await client.planner.addComment(request);
+      return response;
+    } catch (e) {
+      debugPrint('Error adding comment: $e');
+      return false;
+    }
   }
 }

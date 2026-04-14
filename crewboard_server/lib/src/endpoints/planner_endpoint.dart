@@ -14,6 +14,9 @@ class PlannerEndpoint extends Endpoint {
     UuidValue appId,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final appIdVal = appId;
 
     // Check if app belongs to the same organization
@@ -27,15 +30,24 @@ class PlannerEndpoint extends Endpoint {
 
     final userId = user.id!;
 
-    // Fetch buckets for app
+    // Fetch buckets for app and user
     final buckets = await Bucket.db.find(
       session,
-      where: (t) => t.appId.equals(appIdVal),
+      where: (t) => t.appId.equals(appIdVal) & t.userId.equals(userId),
     );
 
     if (buckets.isEmpty) {
       return GetPlannerDataResponse(buckets: []);
     }
+
+    // Pre-fetch completion times for all tickets in the buckets we are about to process
+    final bucketIds = buckets.map((b) => b.id!).toSet();
+    final allTicketMaps = await BucketTicketMap.db.find(
+      session,
+      where: (t) => t.bucketId.inSet(bucketIds),
+    );
+    final allTicketIds = allTicketMaps.map((m) => m.ticketId).toList();
+    final completionTimes = await _getCompletionTimes(session, allTicketIds);
 
     final bucketsWithTickets = <BucketModel>[];
 
@@ -94,6 +106,9 @@ class PlannerEndpoint extends Endpoint {
             creds: ticket.creds.toDouble(),
             hasNewActivity: await _hasNewActivity(session, ticket.id!, userId),
             latestActivity: await _getLatestActivity(session, ticket.id!),
+            working: ticket.status?.working ?? false,
+            completed: ticket.status?.completed ?? false,
+            completedAt: completionTimes[ticket.id],
             attachments: attachmentModels,
           ),
         );
@@ -117,6 +132,9 @@ class PlannerEndpoint extends Endpoint {
     Session session,
   ) async {
     final userRec = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(userRec, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final users = await User.db.find(
       session,
       where: (t) => t.organizationId.equals(userRec.organizationId),
@@ -136,7 +154,12 @@ class PlannerEndpoint extends Endpoint {
 
     final statuses = await Status.db.find(session);
     final statusModels = statuses
-        .map((s) => StatusModel(statusId: s.id!, statusName: s.statusName))
+        .map((s) => StatusModel(
+              statusId: s.id!,
+              statusName: s.statusName,
+              working: s.working,
+              completed: s.completed,
+            ))
         .toList();
 
     final priorities = await Priority.db.find(session);
@@ -183,6 +206,9 @@ class PlannerEndpoint extends Endpoint {
     AddTicketRequest request,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
 
     // Validate app
     final app = await PlannerApp.db.findById(session, request.appId);
@@ -284,6 +310,9 @@ class PlannerEndpoint extends Endpoint {
     UuidValue appId,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
 
     // Check if app belongs to the same organization
     final app = await PlannerApp.db.findById(session, appId);
@@ -304,6 +333,8 @@ class PlannerEndpoint extends Endpoint {
     );
 
     final ticketModels = <PlannerTicket>[];
+    final completionTimes =
+        await _getCompletionTimes(session, tickets.map((t) => t.id!).toList());
     for (final ticket in tickets) {
       ticketModels.add(
         PlannerTicket(
@@ -321,6 +352,9 @@ class PlannerEndpoint extends Endpoint {
           creds: ticket.creds.toDouble(),
           hasNewActivity: await _hasNewActivity(session, ticket.id!, user.id!),
           latestActivity: await _getLatestActivity(session, ticket.id!),
+          working: ticket.status?.working ?? false,
+          completed: ticket.status?.completed ?? false,
+          completedAt: completionTimes[ticket.id],
         ),
       );
     }
@@ -334,6 +368,9 @@ class PlannerEndpoint extends Endpoint {
     UuidValue ticketId,
   ) async {
     final userRec = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(userRec, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final ticket = await Ticket.db.findById(
       session,
       ticketId,
@@ -404,6 +441,8 @@ class PlannerEndpoint extends Endpoint {
             ticket.status?.id ??
             UuidValue.fromString('00000000-0000-4000-8000-000000000000'),
         statusName: ticket.status?.statusName ?? '',
+        working: ticket.status?.working ?? false,
+        completed: ticket.status?.completed ?? false,
       ),
       priority: PriorityModel(
         priorityId:
@@ -428,6 +467,8 @@ class PlannerEndpoint extends Endpoint {
       creds: ticket.creds.toDouble(),
       assignees: assigneesList,
       attachments: attachmentModels,
+      completedAt: (await _getCompletionTimes(session, [ticket.id!]))[ticket.id]
+          ?.toIso8601String(),
     );
 
     return GetTicketDataResponse(ticket: ticketModel);
@@ -438,6 +479,10 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     UuidValue ticketId,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final activities = await PlannerActivity.db.find(
       session,
       where: (t) => t.ticketId.equals(ticketId),
@@ -465,7 +510,6 @@ class PlannerEndpoint extends Endpoint {
     }
 
     // Record view
-    final user = await AuthHelper.getAuthenticatedUser(session);
     final userId = user.id!;
     final existingView = await TicketView.db.findFirstRow(
       session,
@@ -494,6 +538,10 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     UuidValue ticketId,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final comments = await TicketComment.db.find(
       session,
       where: (t) => t.ticketId.equals(ticketId),
@@ -524,6 +572,9 @@ class PlannerEndpoint extends Endpoint {
     AddCommentRequest request,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final userId = user.id!;
 
     await TicketComment.db.insertRow(
@@ -561,6 +612,9 @@ class PlannerEndpoint extends Endpoint {
     AddBucketRequest request,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
 
     // Validate app
     final app = await PlannerApp.db.findById(session, request.appId);
@@ -587,9 +641,22 @@ class PlannerEndpoint extends Endpoint {
     Session session,
     ChangeBucketRequest request,
   ) async {
+    final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     final ticketId = request.ticketId;
     final oldBucketId = request.oldBucketId;
     final newBucketId = request.newBucketId;
+
+    // Verify buckets belong to the user
+    final oldBucket = await Bucket.db.findById(session, oldBucketId);
+    final newBucket = await Bucket.db.findById(session, newBucketId);
+    
+    if (oldBucket == null || oldBucket.userId != user.id || 
+        newBucket == null || newBucket.userId != user.id) {
+      throw Exception('Unauthorized bucket access');
+    }
 
     // Remove from old bucket
     final oldMaps = await BucketTicketMap.db.find(
@@ -653,7 +720,6 @@ class PlannerEndpoint extends Endpoint {
           ticket.statusId = newStatus.id!;
           await Ticket.db.updateRow(session, ticket);
 
-          final user = await AuthHelper.getAuthenticatedUser(session);
           await TicketStatusChange.db.insertRow(
             session,
             TicketStatusChange(
@@ -699,6 +765,9 @@ class PlannerEndpoint extends Endpoint {
     TicketModel updatedTicket,
   ) async {
     final user = await AuthHelper.getAuthenticatedUser(session);
+    if (!AuthHelper.hasPermission(user, 'manage_planner')) {
+      throw Exception('Permission denied: manage_planner');
+    }
     // Find the existing ticket in DB
     final ticket = await Ticket.db.findById(session, updatedTicket.id);
     if (ticket == null) {
@@ -928,18 +997,58 @@ class PlannerEndpoint extends Endpoint {
   }
 
   /// Add or update a status
-  Future<bool> addStatus(Session session, UuidValue? id, String name) async {
+  Future<bool> addStatus(
+    Session session,
+    UuidValue? id,
+    String name,
+    bool working,
+    bool completed,
+  ) async {
+    // Validation: Only one working status allowed
+    if (working) {
+      final existingWorking = await Status.db.find(
+        session,
+        where: (t) => t.working.equals(true),
+      );
+      for (final s in existingWorking) {
+        if (s.id != id) {
+          s.working = false;
+          await Status.db.updateRow(session, s);
+        }
+      }
+    }
+
+    // Validation: Only one completed status allowed
+    if (completed) {
+      final existingCompleted = await Status.db.find(
+        session,
+        where: (t) => t.completed.equals(true),
+      );
+      for (final s in existingCompleted) {
+        if (s.id != id) {
+          s.completed = false;
+          await Status.db.updateRow(session, s);
+        }
+      }
+    }
+
     if (id != null) {
       final status = await Status.db.findById(session, id);
       if (status != null) {
         status.statusName = name;
+        status.working = working;
+        status.completed = completed;
         await Status.db.updateRow(session, status);
         return true;
       }
     }
     await Status.db.insertRow(
       session,
-      Status(statusName: name),
+      Status(
+        statusName: name,
+        working: working,
+        completed: completed,
+      ),
     );
     return true;
   }
@@ -1124,5 +1233,34 @@ class PlannerEndpoint extends Endpoint {
     if (latestStatusChange != null) return true;
 
     return false;
+  }
+
+  Future<Map<UuidValue, DateTime>> _getCompletionTimes(
+    Session session,
+    List<UuidValue> ticketIds,
+  ) async {
+    if (ticketIds.isEmpty) return {};
+    final completedStatuses = await Status.db.find(
+      session,
+      where: (t) => t.completed.equals(true),
+    );
+    final completedStatusIds = completedStatuses.map((s) => s.id!).toSet();
+    if (completedStatusIds.isEmpty) return {};
+    final changes = await TicketStatusChange.db.find(
+      session,
+      where: (t) =>
+          t.ticketId.inSet(ticketIds.toSet()) &
+          t.newStatusId.inSet(completedStatusIds),
+      orderBy: (t) => t.changedAt,
+    );
+    final completionMap = <UuidValue, DateTime>{};
+    for (final change in changes) {
+      if (change.changedAt == null) continue;
+      final existing = completionMap[change.ticketId];
+      if (existing == null || change.changedAt!.isAfter(existing)) {
+        completionMap[change.ticketId] = change.changedAt!;
+      }
+    }
+    return completionMap;
   }
 }

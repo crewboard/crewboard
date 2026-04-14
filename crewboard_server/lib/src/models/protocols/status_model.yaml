@@ -2,3 +2,5 @@ class: StatusModel
 fields:
   statusId: UuidValue
   statusName: String
+  working: bool
+  completed: bool

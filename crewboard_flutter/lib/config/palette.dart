@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:collection/collection.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:crewboard_client/crewboard_client.dart';
 import '../controllers/theme_controller.dart';
@@ -24,11 +24,16 @@ class Window {
   static double width = 0;
   static double height = 0;
   static double sideBarWidth = 280;
-  static Rx<String> subPage = ''.obs;
   static bool active = true;
 }
 
 class Pallet {
+  static AppTheme _currentTheme = AppTheme.glassDark;
+
+  static void setTheme(AppTheme theme) {
+    _currentTheme = theme;
+  }
+
   static Color theme = Colors.black;
   static const Color background = Color(0xFFFAFAFA);
   static const Color insideFont = Color(0xFF1F2937);
@@ -39,138 +44,65 @@ class Pallet {
     end: Alignment.bottomLeft,
   );
 
+  static bool get _isLight =>
+      _currentTheme == AppTheme.glassLight ||
+      _currentTheme == AppTheme.classicLight;
+
+
   // Dynamic colors based on theme
   static Color get divider {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight
-          ? const Color(0xFF728b99).withOpacity(0.3)
-          : const Color(0xFF728b99).withOpacity(0.3);
-    } catch (e) {
-      return const Color(0xFF728b99).withOpacity(0.3);
-    }
+    return const Color(0xFF728b99).withOpacity(0.3);
   }
 
   static Color get font1 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
-    } catch (e) {
-      return const Color(0xFFe6e8ed);
-    }
+    return _isLight ? const Color(0xFF1F2937) : const Color(0xFFe6e8ed);
   }
 
   static Color get font2 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight ? const Color(0xFF4B5563) : const Color(0xFFc9ccd3);
-    } catch (e) {
-      return const Color(0xFFc9ccd3);
-    }
+    return _isLight ? const Color(0xFF4B5563) : const Color(0xFFc9ccd3);
   }
 
   static Color get font3 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight ? const Color(0xFF6B7280) : const Color(0xFF728b99);
-    } catch (e) {
-      return const Color(0xFF728b99);
-    }
+    return _isLight ? const Color(0xFF6B7280) : const Color(0xFF728b99);
   }
 
   static Color get inside1 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight
-          ? Colors.black.withOpacity(0.05)
-          : Colors.white.withOpacity(0.1);
-    } catch (e) {
-      return Colors.white.withOpacity(0.1);
-    }
+    return _isLight
+        ? Colors.black.withOpacity(0.05)
+        : Colors.white.withOpacity(0.1);
   }
 
   static Color get inside2 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight
-          ? Colors.black.withOpacity(0.08)
-          : Colors.white.withOpacity(0.15);
-    } catch (e) {
-      return Colors.white.withOpacity(0.15);
-    }
+    return _isLight
+        ? Colors.black.withOpacity(0.08)
+        : Colors.white.withOpacity(0.15);
   }
 
   static Color get inside3 {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
-      return isLight
-          ? Colors.black.withOpacity(0.1)
-          : Colors.white.withOpacity(0.2);
-    } catch (e) {
-      return Colors.white.withOpacity(0.2);
-    }
+    return _isLight
+        ? Colors.black.withOpacity(0.1)
+        : Colors.white.withOpacity(0.2);
   }
 
   static WindowButtonColors get windowButtonColors {
-    try {
-      final themeController = Get.find<ThemeController>();
-      final isLight =
-          themeController.currentTheme == AppTheme.glassLight ||
-          themeController.currentTheme == AppTheme.classicLight;
+    // Use theme colors
+    final iconColor = _isLight
+        ? const Color(0xFF1F2937)
+        : const Color(0xFFe6e8ed);
+    final hoverColor = _isLight
+        ? Colors.black.withOpacity(0.1)
+        : Colors.white.withOpacity(0.1);
+    final mouseDownColor = _isLight
+        ? Colors.black.withOpacity(0.2)
+        : Colors.white.withOpacity(0.2);
 
-      // Use theme colors
-      final iconColor = isLight
-          ? const Color(0xFF1F2937)
-          : const Color(0xFFe6e8ed);
-      // Amber for hover/pressed as originally requested or consistent with theme?
-      // User said: "currently it is amber when i hover ... make the task bar also according to the theme"
-      // So they want to REMOVE the amber if it doesn't match, or make it theme consistent.
-      // I will use a subtle hover color based on theme.
-      final hoverColor = isLight
-          ? Colors.black.withOpacity(0.1)
-          : Colors.white.withOpacity(0.1);
-      final mouseDownColor = isLight
-          ? Colors.black.withOpacity(0.2)
-          : Colors.white.withOpacity(0.2);
-
-      return WindowButtonColors(
-        iconNormal: iconColor,
-        mouseOver: hoverColor,
-        mouseDown: mouseDownColor,
-        iconMouseOver: iconColor,
-        iconMouseDown: iconColor,
-      );
-    } catch (e) {
-      // Fallback
-      return WindowButtonColors(
-        iconNormal: const Color(0xFFe6e8ed),
-        mouseOver: Colors.white.withOpacity(0.1),
-        mouseDown: Colors.white.withOpacity(0.2),
-        iconMouseOver: const Color(0xFFe6e8ed),
-        iconMouseDown: const Color(0xFFe6e8ed),
-      );
-    }
+    return WindowButtonColors(
+      iconNormal: iconColor,
+      mouseOver: hoverColor,
+      mouseDown: mouseDownColor,
+      iconMouseOver: iconColor,
+      iconMouseDown: iconColor,
+    );
   }
 
   static WindowButtonColors get closeWindowButtonColors {

@@ -82,10 +82,27 @@ Future<void> seedDatabase(Session session) async {
     adminType = UserTypes(
       userType: 'admin',
       isAdmin: true,
-      permissions: 'all',
+      permissions: jsonEncode({
+        'manage_users': true,
+        'manage_user_data': true,
+        'manage_chat': true,
+        'manage_planner': true,
+        'manage_flowie': true,
+      }),
       colorId: defaultColor.id!,
     );
     adminType = await UserTypes.db.insertRow(session, adminType);
+  } else {
+    // Ensure permissions are updated to JSON format
+    adminType.permissions = jsonEncode({
+      'manage_users': true,
+      'manage_user_data': true,
+      'manage_chat': true,
+      'manage_planner': true,
+      'manage_flowie': true,
+    });
+    adminType.isAdmin = true;
+    await UserTypes.db.updateRow(session, adminType);
   }
 
   var userType = await UserTypes.db.findFirstRow(
@@ -98,10 +115,27 @@ Future<void> seedDatabase(Session session) async {
     userType = UserTypes(
       userType: 'user',
       isAdmin: false,
-      permissions: 'limited',
+      permissions: jsonEncode({
+        'manage_users': false,
+        'manage_user_data': false,
+        'manage_chat': true,
+        'manage_planner': true,
+        'manage_flowie': true,
+      }),
       colorId: defaultColor.id!,
     );
     await UserTypes.db.insertRow(session, userType);
+  } else {
+    // Ensure permissions are updated to JSON format
+    userType.permissions = jsonEncode({
+      'manage_users': false,
+      'manage_user_data': false,
+      'manage_chat': true,
+      'manage_planner': true,
+      'manage_flowie': true,
+    });
+    userType.isAdmin = false;
+    await UserTypes.db.updateRow(session, userType);
   }
 
   // 3. Seed LeaveConfig

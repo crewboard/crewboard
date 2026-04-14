@@ -78,7 +78,8 @@ class _EmojiButtonState extends State<EmojiButton> {
 
   @override
   void dispose() {
-    _closeDropdown();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     super.dispose();
   }
 

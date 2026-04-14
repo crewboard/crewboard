@@ -5,20 +5,46 @@ import '../../../../widgets/widgets.dart';
 import '../../../../config/palette.dart';
 
 class AddController extends StatefulWidget {
-  const AddController({super.key, required this.type});
+  const AddController({
+    super.key,
+    required this.type,
+    this.id,
+    this.initialName,
+    this.initialColorId,
+    this.initialWorking,
+    this.initialCompleted,
+    this.child,
+  });
   final String type; // "status", "type", "priority"
+  final UuidValue? id;
+  final String? initialName;
+  final UuidValue? initialColorId;
+  final bool? initialWorking;
+  final bool? initialCompleted;
+  final Widget? child;
 
   @override
   State<AddController> createState() => _AddControllerState();
 }
 
 class _AddControllerState extends State<AddController> {
-  TextEditingController name = TextEditingController();
+  late TextEditingController name;
   UuidValue? selectedColorId;
+  bool working = false;
+  bool completed = false;
   double height = 0, width = 0, initX = 0, initY = 0;
   GlobalKey actionKey = GlobalKey();
   OverlayEntry? dropdown;
   bool isOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    name = TextEditingController(text: widget.initialName);
+    selectedColorId = widget.initialColorId;
+    working = widget.initialWorking ?? false;
+    completed = widget.initialCompleted ?? false;
+  }
 
   void findDropDownData() {
     RenderBox renderBox =
@@ -56,15 +82,11 @@ class _AddControllerState extends State<AddController> {
                     left: initX,
                     top: initY + height + 5,
                     child: Material(
-                      elevation: 60,
                       color: Colors.transparent,
-                      child: Container(
+                      child: GlassMorph(
                         width: 220,
                         padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Pallet.inside3, // Closer match to popup
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        borderRadius: 10,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -114,6 +136,22 @@ class _AddControllerState extends State<AddController> {
                                   ),
                                 ],
                               ),
+                            if (widget.type == "status")
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildToggleRow("Working", working, (val) {
+                                    setState(() => working = val);
+                                  }),
+                                  const SizedBox(height: 10),
+                                  _buildToggleRow("Completed", completed, (
+                                    val,
+                                  ) {
+                                    setState(() => completed = val);
+                                  }),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -133,13 +171,15 @@ class _AddControllerState extends State<AddController> {
 
                                     if (widget.type == "status") {
                                       await client.planner.addStatus(
-                                        null,
+                                        widget.id,
                                         name.text,
+                                        working,
+                                        completed,
                                       );
                                     } else if (widget.type == "type") {
                                       if (selectedColorId != null) {
                                         await client.planner.addTicketType(
-                                          null,
+                                          widget.id,
                                           name.text,
                                           selectedColorId!,
                                         );
@@ -148,7 +188,7 @@ class _AddControllerState extends State<AddController> {
                                       }
                                     } else if (widget.type == "priority") {
                                       await client.planner.addPriority(
-                                        null,
+                                        widget.id,
                                         name.text,
                                       );
                                     }
@@ -176,20 +216,53 @@ class _AddControllerState extends State<AddController> {
 
   @override
   Widget build(BuildContext context) {
+    final VoidCallback onTap = () {
+      if (isOpen) {
+        dropdown?.remove();
+      } else {
+        findDropDownData();
+        dropdown = _createDropDown();
+        Overlay.of(context).insert(dropdown!);
+      }
+
+      isOpen = !isOpen;
+      setState(() {});
+    };
+
+    if (widget.child != null) {
+      return InkWell(
+        key: actionKey,
+        onTap: onTap,
+        child: widget.child!,
+      );
+    }
+
     return AddButton(
       key: actionKey,
-      onPress: () {
-        if (isOpen) {
-          dropdown?.remove();
-        } else {
-          findDropDownData();
-          dropdown = _createDropDown();
-          Overlay.of(context).insert(dropdown!);
-        }
+      onPress: onTap,
+    );
+  }
 
-        isOpen = !isOpen;
-        setState(() {});
-      },
+  Widget _buildToggleRow(String label, bool value, Function(bool) onChanged) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Pallet.font1,
+          ),
+        ),
+        Transform.scale(
+          scale: 0.7,
+          child: Switch(
+            value: value,
+            onChanged: onChanged,
+            activeColor: Colors.blue,
+          ),
+        ),
+      ],
     );
   }
 }
